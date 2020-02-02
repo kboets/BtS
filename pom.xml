@@ -10,11 +10,12 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>boets</groupId>
+    <groupId>boets.bts</groupId>
     <artifactId>bts-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>frontend</module>
         <module>backend</module>
     </modules>
 
