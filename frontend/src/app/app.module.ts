@@ -8,6 +8,7 @@ import { LanguageTranslationModule } from './shared/modules/language-translation
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
+import {DateService} from "./layout/service/date.service";
 
 @NgModule({
     imports: [
