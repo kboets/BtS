@@ -26,12 +26,21 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
+        //console.log("Entering the ngOninit");
         this.pushRightClass = 'push-right';
         this.dateService.getCurrentTime().subscribe(
-            (result:Date) => this.currentDate=result,
+            (result:any) => this.createDate(result),
             (error: any) => console.log(error)
         );
+        console.log("leaving the ngOninit on " +this.currentDate);
 
+    }
+
+    createDate(dateString: string) {
+        let newDate = new Date(dateString);
+        console.log(newDate);
+        this.currentDate = newDate;
+        console.log("leaving  on " +this.currentDate);
     }
 
     isToggled(): boolean {

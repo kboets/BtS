@@ -12,7 +12,7 @@ export class DateService {
   constructor(private http: HttpClient) { }
 
   getCurrentTime() : Observable<Date | GeneralError> {
-      return this.http.get<Date>("/bst/api/current")
+      return this.http.get<Date>("/bts/api/current")
           .pipe(
               catchError(err => this.handleHttpError(err))
           );
