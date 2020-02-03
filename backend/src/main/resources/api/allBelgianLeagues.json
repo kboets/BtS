@@ -1,0 +1,493 @@
+{
+    "api": {
+        "results": 18,
+        "leagues": [
+            {
+                "league_id": 656,
+                "name": "Jupiler Pro League",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-07-26",
+                "season_end": "2020-03-15",
+                "logo": "https://media.api-football.com/leagues/34.png",
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": true,
+                        "lineups": true,
+                        "statistics": true,
+                        "players_statistics": false
+                    },
+                    "players": true,
+                    "topScorers": true,
+                    "predictions": true,
+                    "odds": true
+                }
+            },
+            {
+                "league_id": 763,
+                "name": "2e Klasse",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-02",
+                "season_end": "2020-02-28",
+                "logo": "https://media.api-football.com/leagues/173.jpg",
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": true,
+                        "lineups": true,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": true,
+                    "topScorers": true,
+                    "predictions": true,
+                    "odds": true
+                }
+            },
+            {
+                "league_id": 880,
+                "name": "Cup",
+                "type": "Cup",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-07-26",
+                "season_end": "2020-02-06",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 0,
+                "is_current": 1,
+                "coverage": {
+                    "standings": false,
+                    "fixtures": {
+                        "events": true,
+                        "lineups": true,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": true,
+                    "topScorers": true,
+                    "predictions": true,
+                    "odds": true
+                }
+            },
+            {
+                "league_id": 916,
+                "name": "Super League Women",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-23",
+                "season_end": "2020-04-03",
+                "logo": "https://media.api-football.com/leagues/216.png",
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 0,
+                "is_current": 1,
+                "coverage": {
+                    "standings": false,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": true
+                }
+            },
+            {
+                "league_id": 1112,
+                "name": "Second Amateur Division - ACFF",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-24",
+                "season_end": "2020-04-25",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1113,
+                "name": "Second Amateur Division - Group A",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-25",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1114,
+                "name": "Second Amateur Division - Group B",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-25",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1115,
+                "name": "Third Amateur Division - Group A",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-25",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1116,
+                "name": "Third Amateur Division - Group B",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-25",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1121,
+                "name": "Provincial - Antwerpen",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-30",
+                "season_end": "2020-04-19",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1122,
+                "name": "Provincial - Brabant",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-05-03",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1123,
+                "name": "Provincial - Hainaut",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-24",
+                "season_end": "2020-05-01",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1124,
+                "name": "Provincial - Liege",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-17",
+                "season_end": "2020-04-26",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1125,
+                "name": "Provincial - Limburg",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-19",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1126,
+                "name": "Provincial - Luxembourg",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-26",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1127,
+                "name": "Provincial - Namur",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-16",
+                "season_end": "2020-04-26",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1128,
+                "name": "Provincial - Oost-Vlaanderen",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-26",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            },
+            {
+                "league_id": 1129,
+                "name": "Provincial - West-Vlaanderen",
+                "type": "League",
+                "country": "Belgium",
+                "country_code": "BE",
+                "season": 2019,
+                "season_start": "2019-08-31",
+                "season_end": "2020-04-19",
+                "logo": null,
+                "flag": "https://media.api-football.com/flags/be.svg",
+                "standings": 1,
+                "is_current": 1,
+                "coverage": {
+                    "standings": true,
+                    "fixtures": {
+                        "events": false,
+                        "lineups": false,
+                        "statistics": false,
+                        "players_statistics": false
+                    },
+                    "players": false,
+                    "topScorers": false,
+                    "predictions": true,
+                    "odds": false
+                }
+            }
+        ]
+    }
+}
