@@ -1,4 +1,4 @@
-package boets.bts.backend.dto;
+package boets.bts.backend.web.dto;
 
 public class LeagueDto {
 

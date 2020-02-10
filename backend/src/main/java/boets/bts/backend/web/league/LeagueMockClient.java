@@ -1,17 +1,12 @@
-package boets.bts.backend.web;
+package boets.bts.backend.web.league;
 
-import boets.bts.backend.dto.LeagueDto;
+import boets.bts.backend.web.dto.LeagueDto;
+import boets.bts.backend.web.WebUtils;
 import com.google.gson.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Profile("mock")
 @Service
