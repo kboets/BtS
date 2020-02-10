@@ -1,5 +1,7 @@
 package boets.bts.backend.web;
 
+import okhttp3.Request;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -10,6 +12,8 @@ import java.util.Optional;
 public class WebUtils {
 
     private static final String API = "api";
+
+
 
     public static Optional<String> readJsonFileFromApi(String fileName) {
         try {
@@ -29,4 +33,14 @@ public class WebUtils {
         builder.append(fileName);
         return builder.toString();
     }
+
+    public static Request createRequest(String url) {
+        return new Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("x-rapidapi-host", "api-football-v1.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "to be fetched")
+                .build();
+    }
+
 }
