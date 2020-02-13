@@ -1,12 +1,15 @@
 package boets.bts.backend.web.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class LeagueDto {
 
     private String league_id;
     private String name;
     private String season;
-    private String start_season;
-    private String end_season;
+    private LocalDate start_season;
+    private LocalDate end_season;
     private String logo;
     private String  flag;
     private boolean isCurrent;
@@ -35,19 +38,19 @@ public class LeagueDto {
         this.season = season;
     }
 
-    public String getStart_season() {
+    public LocalDate getStart_season() {
         return start_season;
     }
 
-    public void setStart_season(String start_season) {
+    public void setStart_season(LocalDate start_season) {
         this.start_season = start_season;
     }
 
-    public String getEnd_season() {
+    public LocalDate getEnd_season() {
         return end_season;
     }
 
-    public void setEnd_season(String end_season) {
+    public void setEnd_season(LocalDate end_season) {
         this.end_season = end_season;
     }
 
