@@ -10,7 +10,7 @@ public class League implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LEAGUE_ID")
+    @Column(name = "league_id")
     private Long id;
 
     @Column(nullable = false)

@@ -12,6 +12,7 @@ public class LeagueDto {
     private LocalDate end_season;
     private String logo;
     private String  flag;
+    private String countryCode;
     private boolean isCurrent;
 
     public String getLeague_id() {
@@ -68,6 +69,14 @@ public class LeagueDto {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public boolean isCurrent() {

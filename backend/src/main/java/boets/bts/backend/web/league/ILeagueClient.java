@@ -41,6 +41,7 @@ public interface ILeagueClient {
                 dto.setLogo(leagueJson.get("logo").getAsString());
             }
             dto.setName(leagueJson.get("name").getAsString());
+            dto.setCountryCode(leagueJson.get("country_code").getAsString());
             dtos.add(dto);
         }
 
