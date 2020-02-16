@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface LeagueRepository extends JpaRepository<League, Long> {
 
-    //List<League> findByCountryCodeAndYear();
+    List<League> findByCountryCodeAndSeason(String countryCode, int year);
 }

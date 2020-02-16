@@ -21,11 +21,14 @@ public class LeagueService  {
         this.leagueRepository = leagueRepository;
     }
 
-    public List<LeagueDto> getLeaguesForYearAndCountry(String countryCode, int year) {
+    public List<LeagueDto> getLeaguesForCountryAndSeason(String countryCode, int year) {
         //1. check if data is available in database
-
-        //1a. data not available -> retrieve data from webservice
-        //1b. save all this data to db
+        List<League> leagues = leagueRepository.findByCountryCodeAndSeason(countryCode, year);
+        if(leagues == null || leagues.isEmpty()) {
+            //1a. data not available -> retrieve data from webservice
+            //leagues = leagueClient.retrieveAllLeagues(countryCode,year);
+            //1b. save all this data to db
+        }
         //2a. data is available -> run checks if data is still up-to-date
         //3. data is not up-to-date -> redo 1a
         //4. data is up to date -> return data
