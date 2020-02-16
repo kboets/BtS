@@ -42,6 +42,7 @@ public interface ILeagueClient {
             }
             dto.setName(leagueJson.get("name").getAsString());
             dto.setCountryCode(leagueJson.get("country_code").getAsString());
+            dto.setSeason(Integer.parseInt(leagueJson.get("season").getAsString()));
             dtos.add(dto);
         }
 

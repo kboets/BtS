@@ -7,7 +7,7 @@ public class LeagueDto {
 
     private String league_id;
     private String name;
-    private String season;
+    private int season;
     private LocalDate start_season;
     private LocalDate end_season;
     private String logo;
@@ -31,11 +31,11 @@ public class LeagueDto {
         this.name = name;
     }
 
-    public String getSeason() {
+    public int getSeason() {
         return season;
     }
 
-    public void setSeason(String season) {
+    public void setSeason(int season) {
         this.season = season;
     }
 

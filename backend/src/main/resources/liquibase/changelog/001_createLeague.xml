@@ -22,6 +22,9 @@
             </column>
             <column name="is_current" type="boolean">
             </column>
+            <column name="season" type="int">
+                <constraints nullable="false" />
+            </column>
             <column name="logo" type="varchar(250)"></column>
             <column name="flag" type="varchar(250)"></column>
         </createTable>
