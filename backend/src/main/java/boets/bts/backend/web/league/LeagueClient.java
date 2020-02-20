@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class LeagueClient implements ILeagueClient {
 
-    Logger logger = LoggerFactory.getLogger(LeagueClient.class);
+    private Logger logger = LoggerFactory.getLogger(LeagueClient.class);
 
     private static String BASE_URL = "https://api-football-v1.p.rapidapi.com/v2/";
 

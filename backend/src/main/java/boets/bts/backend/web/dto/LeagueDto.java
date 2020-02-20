@@ -8,8 +8,8 @@ public class LeagueDto {
     private String league_id;
     private String name;
     private int season;
-    private LocalDate start_season;
-    private LocalDate end_season;
+    private LocalDate startSeason;
+    private LocalDate endSeason;
     private String logo;
     private String  flag;
     private String countryCode;
@@ -39,20 +39,20 @@ public class LeagueDto {
         this.season = season;
     }
 
-    public LocalDate getStart_season() {
-        return start_season;
+    public LocalDate getStartSeason() {
+        return startSeason;
     }
 
-    public void setStart_season(LocalDate start_season) {
-        this.start_season = start_season;
+    public void setStartSeason(LocalDate startSeason) {
+        this.startSeason = startSeason;
     }
 
-    public LocalDate getEnd_season() {
-        return end_season;
+    public LocalDate getEndSeason() {
+        return endSeason;
     }
 
-    public void setEnd_season(LocalDate end_season) {
-        this.end_season = end_season;
+    public void setEndSeason(LocalDate endSeason) {
+        this.endSeason = endSeason;
     }
 
     public String getLogo() {

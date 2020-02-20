@@ -8,7 +8,7 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface LeagueMapper  {
 
     @Mappings({
@@ -20,4 +20,7 @@ public interface LeagueMapper  {
 
     @InheritInverseConfiguration
     League toLeague(LeagueDto leagueDto);
+
+    @InheritInverseConfiguration
+    List<League> toLeagues(List<LeagueDto> leagueDtoList);
 }

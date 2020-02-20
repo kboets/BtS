@@ -33,9 +33,9 @@ public interface ILeagueClient {
             leagueJson.get("is_current");
             dto.setCurrent(leagueJson.get("is_current").getAsBoolean());
             String endDate = leagueJson.get("season_end").getAsString();
-            dto.setEnd_season(LocalDate.parse(endDate, dateFormatter));
+            dto.setEndSeason(LocalDate.parse(endDate, dateFormatter));
             String startDate = leagueJson.get("season_start").getAsString();
-            dto.setStart_season(LocalDate.parse(startDate, dateFormatter));
+            dto.setStartSeason(LocalDate.parse(startDate, dateFormatter));
             dto.setFlag(leagueJson.get("flag").getAsString());
             if(!leagueJson.get("logo").isJsonNull()) {
                 dto.setLogo(leagueJson.get("logo").getAsString());

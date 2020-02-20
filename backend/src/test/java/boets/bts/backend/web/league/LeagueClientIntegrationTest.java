@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class LeagueClientTest {
+public class LeagueClientIntegrationTest {
 
     @Autowired
     private LeagueClient leagueClient;

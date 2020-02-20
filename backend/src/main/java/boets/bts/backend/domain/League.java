@@ -19,14 +19,17 @@ public class League implements Serializable {
     @Column(nullable = false)
     private boolean isCurrent;
 
-    @Column(nullable = false)
-    private LocalDate start_season;
+    @Column(nullable = false, name = "start_season")
+    private LocalDate startSeason;
 
-    @Column(nullable = false)
-    private LocalDate end_season;
+    @Column(nullable = false, name = "end_season")
+    private LocalDate endSeason;
 
     @Column(nullable = false)
     private int season;
+
+    @Column(nullable = false, name = "country_code")
+    private String countryCode;
 
     @Column
     private String logo;
@@ -58,20 +61,28 @@ public class League implements Serializable {
         isCurrent = current;
     }
 
-    public LocalDate getStart_season() {
-        return start_season;
+    public LocalDate getStartSeason() {
+        return startSeason;
     }
 
-    public void setStart_season(LocalDate start_season) {
-        this.start_season = start_season;
+    public void setStartSeason(LocalDate startSeason) {
+        this.startSeason = startSeason;
     }
 
-    public LocalDate getEnd_season() {
-        return end_season;
+    public LocalDate getEndSeason() {
+        return endSeason;
     }
 
-    public void setEnd_season(LocalDate end_season) {
-        this.end_season = end_season;
+    public void setEndSeason(LocalDate endSeason) {
+        this.endSeason = endSeason;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public String getLogo() {
