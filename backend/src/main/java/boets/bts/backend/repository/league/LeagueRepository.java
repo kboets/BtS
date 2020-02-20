@@ -1,4 +1,4 @@
-package boets.bts.backend.repository;
+package boets.bts.backend.repository.league;
 
 import boets.bts.backend.domain.League;
 import org.springframework.data.jpa.repository.JpaRepository;

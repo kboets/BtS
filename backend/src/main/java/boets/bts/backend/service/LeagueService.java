@@ -1,15 +1,13 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.repository.LeagueRepository;
+import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.web.dto.LeagueDto;
 import boets.bts.backend.web.dto.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
-import boets.bts.backend.web.league.LeagueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
