@@ -20,7 +20,7 @@
             <column name="end_season" type="date">
                 <constraints nullable="false" />
             </column>
-            <column name="is_current" type="boolean">
+            <column name="current" type="boolean">
             </column>
             <column name="season" type="int">
                 <constraints nullable="false" />

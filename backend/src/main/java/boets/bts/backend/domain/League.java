@@ -16,8 +16,8 @@ public class League implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private boolean isCurrent;
+    @Column(nullable = false, name = "current")
+    private boolean current;
 
     @Column(nullable = false, name = "start_season")
     private LocalDate startSeason;
@@ -54,11 +54,11 @@ public class League implements Serializable {
     }
 
     public boolean isCurrent() {
-        return isCurrent;
+        return current;
     }
 
     public void setCurrent(boolean current) {
-        isCurrent = current;
+        this.current = current;
     }
 
     public LocalDate getStartSeason() {
@@ -107,5 +107,84 @@ public class League implements Serializable {
 
     public void setSeason(int season) {
         this.season = season;
+    }
+
+
+    public static final class LeagueBuilder {
+        private Long id;
+        private String name;
+        private boolean current;
+        private LocalDate startSeason;
+        private LocalDate endSeason;
+        private int season;
+        private String countryCode;
+        private String logo;
+        private String  flag;
+
+        private LeagueBuilder() {
+        }
+
+        public static LeagueBuilder aLeague() {
+            return new LeagueBuilder();
+        }
+
+        public LeagueBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public LeagueBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public LeagueBuilder withIsCurrent(boolean isCurrent) {
+            this.current = isCurrent;
+            return this;
+        }
+
+        public LeagueBuilder withStartSeason(LocalDate startSeason) {
+            this.startSeason = startSeason;
+            return this;
+        }
+
+        public LeagueBuilder withEndSeason(LocalDate endSeason) {
+            this.endSeason = endSeason;
+            return this;
+        }
+
+        public LeagueBuilder withSeason(int season) {
+            this.season = season;
+            return this;
+        }
+
+        public LeagueBuilder withCountryCode(String countryCode) {
+            this.countryCode = countryCode;
+            return this;
+        }
+
+        public LeagueBuilder withLogo(String logo) {
+            this.logo = logo;
+            return this;
+        }
+
+        public LeagueBuilder withFlag(String flag) {
+            this.flag = flag;
+            return this;
+        }
+
+        public League build() {
+            League league = new League();
+            league.setId(id);
+            league.setName(name);
+            league.setStartSeason(startSeason);
+            league.setEndSeason(endSeason);
+            league.setSeason(season);
+            league.setCountryCode(countryCode);
+            league.setLogo(logo);
+            league.setFlag(flag);
+            league.current = this.current;
+            return league;
+        }
     }
 }
