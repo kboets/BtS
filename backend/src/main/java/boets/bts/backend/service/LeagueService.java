@@ -33,11 +33,13 @@ public class LeagueService  {
 
     }
 
-    public LeagueDto getLeagueById(Long leagueId) {
+    public Optional<LeagueDto> getLeagueById(Long leagueId) {
         Optional<League> leagueOptional = leagueRepository.findById(leagueId);
-        return leagueOptional
-                .map(leagueMapper::toLeagueDto)
-                .orElseGet(LeagueDto::new);
+        if(leagueOptional.isPresent()) {
+            return leagueOptional
+                    .map(leagueMapper::toLeagueDto);
+        }
+        return Optional.empty();
     }
 
     public List<LeagueDto> getCurrentSeasonLeaguesForCountry(String countryCode) {
