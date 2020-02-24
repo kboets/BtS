@@ -30,8 +30,8 @@ public interface ILeagueClient {
             LeagueDto dto = new LeagueDto();
             JsonObject leagueJson = leagueJsonElement.getAsJsonObject();
             dto.setLeague_id(leagueJson.get("league_id").getAsString());
-            leagueJson.get("is_current");
-            dto.setCurrent(leagueJson.get("is_current").getAsBoolean());
+            int isCurrent = leagueJson.get("is_current").getAsInt();
+            dto.setCurrent(isCurrent != 0);
             String endDate = leagueJson.get("season_end").getAsString();
             dto.setEndSeason(LocalDate.parse(endDate, dateFormatter));
             String startDate = leagueJson.get("season_start").getAsString();
