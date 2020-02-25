@@ -23,14 +23,6 @@ export class LeagueService {
         );
 
 
-    // leaguesForCountry$ = of('BE')
-    //     .pipe(
-    //         //tap(data => console.log('leagues', JSON.stringify(data))),
-    //         map(countryCode => this.http.get<League[]>(`/bts/api/currentLeagueForCountry/${countryCode}`)),
-    //         catchError(this.handleHttpError)
-    //     );
-
-
     private handleHttpError(error: HttpErrorResponse) {
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
