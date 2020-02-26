@@ -12,9 +12,10 @@ import java.util.List;
 public interface CountryMapper {
 
     CountryDto toCountryDto(Country country);
+    @InheritInverseConfiguration
+    List<CountryDto> toCountryDtoList(List<Country> countryList);
 
     Country toCountry(CountryDto countryDto);
 
-    @InheritInverseConfiguration
-    List<CountryDto> toCountryDtos(List<Country> countryList);
+    List<Country> toCountries(List<CountryDto> countryDtos);
 }
