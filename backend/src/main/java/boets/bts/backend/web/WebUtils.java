@@ -12,7 +12,7 @@ import java.util.Optional;
 public class WebUtils {
 
     private static final String API = "api";
-
+    private static String BASE_URL = "https://api-football-v1.p.rapidapi.com/v2/";
 
 
     public static Optional<String> readJsonFileFromApi(String fileName) {
@@ -34,12 +34,22 @@ public class WebUtils {
         return builder.toString();
     }
 
-    public static Request createRequest(String url) {
+    public static synchronized String buildUrl(String... vars) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(BASE_URL);
+        for(String arg: vars) {
+            builder.append(arg);
+            builder.append("/");
+        }
+        return builder.toString();
+    }
+
+    public static synchronized Request createRequest(String url) {
         return new Request.Builder()
                 .get()
                 .url(url)
                 .addHeader("x-rapidapi-host", "api-football-v1.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "to be fetched")
+                .addHeader("x-rapidapi-key", "")
                 .build();
     }
 

@@ -21,15 +21,11 @@ public class LeagueClient implements ILeagueClient {
 
     private Logger logger = LoggerFactory.getLogger(LeagueClient.class);
 
-    private static String BASE_URL = "https://api-football-v1.p.rapidapi.com/v2/";
-
-
-
     @Override
     public List<LeagueDto> retrieveAllLeagues(String countryCode, int year) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
-        String url = buildUrl("leagues", "country", countryCode, Integer.toString(year));
+        String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));
         Request request = WebUtils.createRequest(url);
         try {
             Response response = client.newCall(request).execute();
@@ -45,13 +41,4 @@ public class LeagueClient implements ILeagueClient {
         return Collections.emptyList();
     }
 
-    private String buildUrl(String... vars) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(BASE_URL);
-        for(String arg: vars) {
-            builder.append(arg);
-            builder.append("/");
-        }
-        return builder.toString();
-    }
 }
