@@ -22,7 +22,7 @@ public class LeagueClient implements ILeagueClient {
     private Logger logger = LoggerFactory.getLogger(LeagueClient.class);
 
     @Override
-    public List<LeagueDto> retrieveAllLeagues(String countryCode, int year) {
+    public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));

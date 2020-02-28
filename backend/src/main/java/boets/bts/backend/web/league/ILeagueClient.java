@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ILeagueClient {
 
-    List<LeagueDto> retrieveAllLeagues(String countryCode, int year);
+    List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year);
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 

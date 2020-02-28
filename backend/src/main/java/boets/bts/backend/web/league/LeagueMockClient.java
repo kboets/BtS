@@ -14,7 +14,7 @@ public class LeagueMockClient implements ILeagueClient{
 
     private static String allLeaguesFile = "allBelgianLeagues.json";
     @Override
-    public List<LeagueDto> retrieveAllLeagues(String countryCode, int year) {
+    public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make fake call
         String dataJson = WebUtils.readJsonFileFromApi(allLeaguesFile).orElseGet(String::new);
         //2. parse data

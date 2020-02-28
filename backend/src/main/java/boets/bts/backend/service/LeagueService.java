@@ -36,6 +36,7 @@ public class LeagueService  {
     public Optional<LeagueDto> getLeagueById(Long leagueId) {
         Optional<League> leagueOptional = leagueRepository.findById(leagueId);
         if(leagueOptional.isPresent()) {
+
             return leagueOptional
                     .map(leagueMapper::toLeagueDto);
         }
@@ -62,7 +63,7 @@ public class LeagueService  {
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueByCountryAndSeason(countryCode, year));
         if(leagues.isEmpty()) {
             logger.info(String.format("no leagues found for country %s and for season start year %s", countryCode, year));
-            List<LeagueDto> leagueDtos = leagueClient.retrieveAllLeagues(countryCode,year);
+            List<LeagueDto> leagueDtos = leagueClient.allLeaguesFromCountryForSeason(countryCode,year);
             leagues =  leagueMapper.toLeagues(leagueDtos);
             leagueRepository.saveAll(leagues);
             return leagueDtos;
@@ -76,5 +77,9 @@ public class LeagueService  {
             return now.getYear() - 1;
         }
         return  now.getYear();
+    }
+
+    private void addTeamsToLeague(League league) {
+
     }
 }

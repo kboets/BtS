@@ -22,7 +22,7 @@ public class LeagueMockClientTest {
 
     @Test
     public void testRetrieveAllLeagues_givenCorrectFile_shouldReturnDto() {
-        List<LeagueDto> leagues = mockClient.retrieveAllLeagues("BE", 2019);
+        List<LeagueDto> leagues = mockClient.allLeaguesFromCountryForSeason("BE", 2019);
         assertThat(leagues.size()).isEqualTo(18);
     }
 
