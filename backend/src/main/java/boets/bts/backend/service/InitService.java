@@ -12,6 +12,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InitService {
@@ -36,8 +37,17 @@ public class InitService {
     public void initAllCountries() {
         List<Country> countryList = countryRepository.findAll();
         if(countryList.isEmpty()) {
-            List<CountryDto> dtos = countryClient.getAllCountries();
-            countryRepository.saveAll(countryMapper.toCountries(dtos));
+            logger.info("No country codes yet available, start download.");
+            this.handleCountryDtos(countryClient.getAllCountries());
+        }
+    }
+
+    private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {
+        if(countryDtos.isPresent()) {
+            logger.info("download of country codes done, saving in repository");
+            countryRepository.saveAll(countryMapper.toCountries(countryDtos.get()));
+        } else {
+            logger.info("download of country codes not successful ...");
         }
     }
 }

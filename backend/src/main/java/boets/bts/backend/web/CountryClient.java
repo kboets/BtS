@@ -18,13 +18,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryClient {
 
     private Logger logger = LoggerFactory.getLogger(CountryClient.class);
 
-    public List<CountryDto> getAllCountries() {
+    public Optional<List<CountryDto>> getAllCountries() {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("countries");
@@ -35,12 +36,12 @@ public class CountryClient {
                 //2. parse data
                 JsonArray countries = parseAllCountriesRawJson(response.body().string());
                 //3. map data to dto
-                return mapJsonToCountryDto(countries);
+                return Optional.of(mapJsonToCountryDto(countries));
             }
         } catch (IOException e) {
-            logger.warn("Exception on calling retrieveAllLeagues" + e);
+            logger.warn("Exception on calling retrieveAllCountries" + e);
         }
-        return Collections.EMPTY_LIST;
+        return Optional.empty();
     }
 
     private JsonArray parseAllCountriesRawJson(String jsonAsString) {

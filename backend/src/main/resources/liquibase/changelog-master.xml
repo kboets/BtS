@@ -7,4 +7,5 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="/liquibase/changelog/001_createLeague.xml" />
+    <include file="/liquibase/changelog/002_createInit.xml" />
 </databaseChangeLog>

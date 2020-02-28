@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,8 +21,9 @@ public class CountryClientIntegrationTest {
 
     @Test
     public void testGetAllCountries_shouldReturnNotEmptyList() {
-        List<CountryDto> allCountries = countryClient.getAllCountries();
-        assertThat(allCountries.size()).isGreaterThan(0);
+        Optional<List<CountryDto>> allCountries = countryClient.getAllCountries();
+        assertThat(allCountries.isPresent()).isTrue();
+        assertThat(allCountries.get().size()).isGreaterThan(0);
     }
 
 }
