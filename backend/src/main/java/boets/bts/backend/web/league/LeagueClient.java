@@ -27,8 +27,9 @@ public class LeagueClient implements ILeagueClient {
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));
         Request request = WebUtils.createRequest(url);
+        Response response = null;
         try {
-            Response response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
             if(response.isSuccessful()) {
                 //2. parse data
                 JsonArray leagues = parseAllBelgianLeaguesRawJson(response.body().string());
@@ -37,6 +38,10 @@ public class LeagueClient implements ILeagueClient {
             }
         } catch (IOException e) {
             logger.warn("Exception on calling retrieveAllLeagues" + e);
+        } finally {
+            if(response != null && response.body()!= null) {
+                response.body().close();
+            }
         }
         return Collections.emptyList();
     }
