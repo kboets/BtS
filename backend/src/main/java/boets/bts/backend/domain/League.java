@@ -3,6 +3,8 @@ package boets.bts.backend.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "LEAGUE")
@@ -35,6 +37,10 @@ public class League implements Serializable {
 
     @Column
     private String  flag;
+
+    @OneToMany(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "ID", referencedColumnName = "ID")
+    private List<Team> teams;
 
     public Long getId() {
         return id;
@@ -108,6 +114,16 @@ public class League implements Serializable {
         this.season = season;
     }
 
+    public List<Team> getTeams() {
+        if(this.teams == null) {
+            return new ArrayList<>();
+        }
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
 
     public static final class LeagueBuilder {
         private Long id;

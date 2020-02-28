@@ -18,6 +18,15 @@
         </createTable>
     </changeSet>
 
+<!--    <changeSet id="add_foreign_keys_league" author="kboets">-->
+<!--        <addForeignKeyConstraint-->
+<!--                constraintName="fk_league_teams"-->
+<!--                referencedTableName="LEAGUE"-->
+<!--                baseColumnNames="league_id"-->
+<!--                baseTableName="TEAM" referencedColumnNames="team_id" />-->
+
+<!--    </changeSet>-->
+
 
 
 </databaseChangeLog>

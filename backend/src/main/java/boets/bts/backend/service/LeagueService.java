@@ -6,6 +6,7 @@ import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.web.dto.LeagueDto;
 import boets.bts.backend.web.dto.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
+import boets.bts.backend.web.team.TeamClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,20 +24,22 @@ public class LeagueService  {
 
     private final LeagueRepository leagueRepository;
     private final ILeagueClient leagueClient;
+    private final TeamClient teamClient;
     private final LeagueMapper leagueMapper;
 
 
-    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper) {
+
+    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamClient teamClient) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
-
+        this.teamClient = teamClient;
     }
 
     public Optional<LeagueDto> getLeagueById(Long leagueId) {
         Optional<League> leagueOptional = leagueRepository.findById(leagueId);
         if(leagueOptional.isPresent()) {
-
+            addTeamsToLeague(leagueOptional.get());
             return leagueOptional
                     .map(leagueMapper::toLeagueDto);
         }
@@ -80,6 +83,8 @@ public class LeagueService  {
     }
 
     private void addTeamsToLeague(League league) {
-
+        if(league.getTeams().isEmpty()) {
+            //call the
+        }
     }
 }
