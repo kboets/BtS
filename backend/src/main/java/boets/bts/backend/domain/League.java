@@ -38,8 +38,7 @@ public class League implements Serializable {
     @Column
     private String  flag;
 
-    @OneToMany(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "ID", referencedColumnName = "ID")
+    @OneToMany(mappedBy = "league" , cascade = CascadeType.DETACH)
     private List<Team> teams;
 
     public Long getId() {

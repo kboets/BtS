@@ -8,4 +8,5 @@
 
     <include file="/liquibase/changelog/001_createLeague.xml" />
     <include file="/liquibase/changelog/002_createCountry.xml" />
+    <include file="/liquibase/changelog/003_createTeam.xml" />
 </databaseChangeLog>

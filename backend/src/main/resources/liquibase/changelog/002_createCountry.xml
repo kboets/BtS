@@ -8,7 +8,7 @@
 
     <changeSet id="create_country" author="kboets">
         <createTable tableName="COUNTRY">
-            <column autoIncrement="false" name="country_code" type="bigint">
+            <column autoIncrement="false" name="country_code" type="varchar(50)">
                 <constraints nullable="false" primaryKey="true" />
             </column>
             <column name="country" type="varchar(150)">
@@ -17,16 +17,5 @@
             <column name="flag" type="varchar(250)"/>
         </createTable>
     </changeSet>
-
-<!--    <changeSet id="add_foreign_keys_league" author="kboets">-->
-<!--        <addForeignKeyConstraint-->
-<!--                constraintName="fk_league_teams"-->
-<!--                referencedTableName="LEAGUE"-->
-<!--                baseColumnNames="league_id"-->
-<!--                baseTableName="TEAM" referencedColumnNames="team_id" />-->
-
-<!--    </changeSet>-->
-
-
 
 </databaseChangeLog>
