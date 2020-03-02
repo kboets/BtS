@@ -24,24 +24,24 @@ public class LeagueService  {
 
     private final LeagueRepository leagueRepository;
     private final ILeagueClient leagueClient;
-    private final TeamClient teamClient;
     private final LeagueMapper leagueMapper;
+    private final TeamService teamService;
 
 
 
-    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamClient teamClient) {
+
+    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
-        this.teamClient = teamClient;
+        this.teamService = teamService;
     }
 
     public Optional<LeagueDto> getLeagueById(Long leagueId) {
         Optional<League> leagueOptional = leagueRepository.findById(leagueId);
         if(leagueOptional.isPresent()) {
-            addTeamsToLeague(leagueOptional.get());
-            return leagueOptional
-                    .map(leagueMapper::toLeagueDto);
+            League league = teamService.updateLeagueWithTeams(leagueOptional.get());
+            return Optional.ofNullable(leagueMapper.toLeagueDto(league));
         }
         return Optional.empty();
     }
@@ -51,7 +51,7 @@ public class LeagueService  {
         //1. check if data in db is still up to date -> check isCurrent still ok
         LocalDate now = LocalDate.now();
         if(leagueDtos.stream().anyMatch(leagueDto -> now.isAfter(leagueDto.getEndSeason()) && leagueDto.isCurrent())) {
-            logger.info(String.format("Updating the current league to not current as the current date %s is after the end date $S", now, leagueDtos.get(0).getEndSeason()));
+            logger.info(String.format("Updating the current league to not current as the current date %s is after the end date %S", now, leagueDtos.get(0).getEndSeason()));
             List<LeagueDto> updatedList = leagueDtos.stream().peek(leagueDto -> leagueDto.setCurrent(false)).collect(Collectors.toList());
             leagueRepository.saveAll(leagueMapper.toLeagues(updatedList));
         }
@@ -82,9 +82,5 @@ public class LeagueService  {
         return  now.getYear();
     }
 
-    private void addTeamsToLeague(League league) {
-        if(league.getTeams().isEmpty()) {
-            //call the
-        }
-    }
+
 }

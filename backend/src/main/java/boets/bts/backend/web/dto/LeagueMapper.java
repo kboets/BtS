@@ -1,6 +1,7 @@
 package boets.bts.backend.web.dto;
 
 import boets.bts.backend.domain.League;
+import boets.bts.backend.domain.Team;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -8,11 +9,12 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TeamMapper.class)
 public interface LeagueMapper  {
 
     @Mappings({
-            @Mapping(target = "league_id", source = "id")
+            @Mapping(target = "league_id", source = "id"),
+            @Mapping(target = "teamDtos", source = "teams"),
     })
     LeagueDto toLeagueDto(League league);
 

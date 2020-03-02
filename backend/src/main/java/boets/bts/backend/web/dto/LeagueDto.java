@@ -2,6 +2,7 @@ package boets.bts.backend.web.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class LeagueDto {
 
@@ -14,6 +15,7 @@ public class LeagueDto {
     private String  flag;
     private String countryCode;
     private boolean isCurrent;
+    private List<TeamDto> teamDtos;
 
     public String getLeague_id() {
         return league_id;
@@ -85,5 +87,13 @@ public class LeagueDto {
 
     public void setCurrent(boolean current) {
         isCurrent = current;
+    }
+
+    public List<TeamDto> getTeamDtos() {
+        return teamDtos;
+    }
+
+    public void setTeamDtos(List<TeamDto> teamDtos) {
+        this.teamDtos = teamDtos;
     }
 }
