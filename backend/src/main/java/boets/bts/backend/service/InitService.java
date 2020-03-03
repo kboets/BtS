@@ -30,7 +30,7 @@ public class InitService {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void doSomethingAfterStartup() {
+    public void initMetaData() {
         this.initAllCountries();
     }
 

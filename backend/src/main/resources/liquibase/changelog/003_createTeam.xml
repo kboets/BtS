@@ -25,7 +25,7 @@
             <addForeignKeyConstraint
                     constraintName="fk_league_teams"
                     referencedTableName="LEAGUE"
-                    baseColumnNames="team_id"
+                    baseColumnNames="league_id"
                     baseTableName="TEAM" referencedColumnNames="league_id" />
         </changeSet>
 

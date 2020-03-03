@@ -41,6 +41,9 @@ public class League implements Serializable {
     @OneToMany(mappedBy = "league" , cascade = CascadeType.MERGE)
     private List<Team> teams;
 
+    @OneToMany(mappedBy = "league" , cascade = CascadeType.MERGE)
+    private List<Round> rounds;
+
     public Long getId() {
         return id;
     }
@@ -124,81 +127,11 @@ public class League implements Serializable {
         this.teams = teams;
     }
 
-    public static final class LeagueBuilder {
-        private Long id;
-        private String name;
-        private boolean current;
-        private LocalDate startSeason;
-        private LocalDate endSeason;
-        private int season;
-        private String countryCode;
-        private String logo;
-        private String  flag;
+    public List<Round> getRounds() {
+        return rounds;
+    }
 
-        private LeagueBuilder() {
-        }
-
-        public static LeagueBuilder aLeague() {
-            return new LeagueBuilder();
-        }
-
-        public LeagueBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public LeagueBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public LeagueBuilder withIsCurrent(boolean isCurrent) {
-            this.current = isCurrent;
-            return this;
-        }
-
-        public LeagueBuilder withStartSeason(LocalDate startSeason) {
-            this.startSeason = startSeason;
-            return this;
-        }
-
-        public LeagueBuilder withEndSeason(LocalDate endSeason) {
-            this.endSeason = endSeason;
-            return this;
-        }
-
-        public LeagueBuilder withSeason(int season) {
-            this.season = season;
-            return this;
-        }
-
-        public LeagueBuilder withCountryCode(String countryCode) {
-            this.countryCode = countryCode;
-            return this;
-        }
-
-        public LeagueBuilder withLogo(String logo) {
-            this.logo = logo;
-            return this;
-        }
-
-        public LeagueBuilder withFlag(String flag) {
-            this.flag = flag;
-            return this;
-        }
-
-        public League build() {
-            League league = new League();
-            league.setId(id);
-            league.setName(name);
-            league.setStartSeason(startSeason);
-            league.setEndSeason(endSeason);
-            league.setSeason(season);
-            league.setCountryCode(countryCode);
-            league.setLogo(logo);
-            league.setFlag(flag);
-            league.current = this.current;
-            return league;
-        }
+    public void setRounds(List<Round> rounds) {
+        this.rounds = rounds;
     }
 }

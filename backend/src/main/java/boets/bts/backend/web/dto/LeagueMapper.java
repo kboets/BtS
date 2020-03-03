@@ -9,12 +9,13 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = TeamMapper.class)
+@Mapper(componentModel = "spring", uses = {TeamMapper.class, RoundMapper.class})
 public interface LeagueMapper  {
 
     @Mappings({
             @Mapping(target = "league_id", source = "id"),
             @Mapping(target = "teamDtos", source = "teams"),
+            @Mapping(target = "roundDtos", source = "rounds")
     })
     LeagueDto toLeagueDto(League league);
 

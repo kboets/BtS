@@ -16,6 +16,7 @@ public class LeagueDto {
     private String countryCode;
     private boolean isCurrent;
     private List<TeamDto> teamDtos;
+    private List<RoundDto> roundDtos;
 
     public String getLeague_id() {
         return league_id;
@@ -95,5 +96,13 @@ public class LeagueDto {
 
     public void setTeamDtos(List<TeamDto> teamDtos) {
         this.teamDtos = teamDtos;
+    }
+
+    public List<RoundDto> getRoundDtos() {
+        return roundDtos;
+    }
+
+    public void setRoundDtos(List<RoundDto> roundDtos) {
+        this.roundDtos = roundDtos;
     }
 }
