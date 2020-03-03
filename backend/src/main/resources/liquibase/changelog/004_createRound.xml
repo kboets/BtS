@@ -17,6 +17,7 @@
             <column name="season" type="int">
                 <constraints nullable="false" />
             </column>
+            <column name="league_id" type="bigint"/>
         </createTable>
     </changeSet>
 

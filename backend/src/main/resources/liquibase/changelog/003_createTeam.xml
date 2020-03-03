@@ -14,10 +14,11 @@
             <column name="name" type="varchar(150)">
                 <constraints nullable="false" />
             </column>
-            <column name="stadium_name" type="varchar(150)"></column>
-            <column name="city" type="varchar(150)"></column>
-            <column name="stadium_capacity" type="int"></column>
-            <column name="logo" type="varchar(250)"></column>
+            <column name="stadium_name" type="varchar(150)"/>
+            <column name="city" type="varchar(150)"/>
+            <column name="stadium_capacity" type="int"/>
+            <column name="logo" type="varchar(250)"/>
+            <column name="league_id" type="bigint"/>
         </createTable>
     </changeSet>
 
