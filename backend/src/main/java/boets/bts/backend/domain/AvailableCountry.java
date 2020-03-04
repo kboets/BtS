@@ -1,0 +1,54 @@
+package boets.bts.backend.domain;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "AVAILABLE_COUNTRY")
+public class AvailableCountry implements Serializable {
+
+    @Id
+    @Column(name = "country_code")
+    private String countryCode;
+    @Column
+    private String country;
+    @Column
+    private String flag;
+    @Column
+    private int season;
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+    }
+}

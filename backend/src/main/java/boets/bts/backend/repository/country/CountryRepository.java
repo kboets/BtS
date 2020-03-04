@@ -1,4 +1,4 @@
-package boets.bts.backend.repository;
+package boets.bts.backend.repository.country;
 
 import boets.bts.backend.domain.Country;
 import org.springframework.data.jpa.repository.JpaRepository;
