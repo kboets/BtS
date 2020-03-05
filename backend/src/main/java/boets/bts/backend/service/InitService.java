@@ -3,8 +3,10 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.AvailableCountry;
 import boets.bts.backend.domain.Country;
 import boets.bts.backend.repository.country.AvailableCountryRepository;
+import boets.bts.backend.repository.country.CountrySpecs;
 import boets.bts.backend.repository.country.CountryRepository;
 import boets.bts.backend.web.CountryClient;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.dto.CountryDto;
 import boets.bts.backend.web.dto.CountryMapper;
 import org.slf4j.Logger;
@@ -44,9 +46,10 @@ public class InitService {
     private void initDefaultAvailableCountry() {
         List<AvailableCountry> availableCountries = availableCountryRepository.findAll();
         if(availableCountries.isEmpty()) {
-            //TODO retrieve country from repo
+            Optional<Country> countryOptional = countryRepository.findOne(CountrySpecs.getAvailableCountryByCountryCode("BE"));
+            AvailableCountry availableCountry = countryOptional.map(AvailableCountry::new).orElseGet(this::createDefaultBelgiumCountry);
+            availableCountryRepository.save(availableCountry);
         }
-
     }
 
     public void initAllCountries() {
@@ -65,4 +68,15 @@ public class InitService {
             logger.info("download of country codes not successful ...");
         }
     }
+
+
+    private AvailableCountry createDefaultBelgiumCountry() {
+        AvailableCountry belgium = new AvailableCountry();
+        belgium.setCountryCode("BE");
+        belgium.setCountry("Belgium");
+        belgium.setSeason(WebUtils.getCurrentSeason());
+        return belgium;
+    }
+
+
 }

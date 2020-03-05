@@ -7,6 +7,8 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Optional;
 
 public class WebUtils {
@@ -51,6 +53,14 @@ public class WebUtils {
                 .addHeader("x-rapidapi-host", "api-football-v1.p.rapidapi.com")
                 .addHeader("x-rapidapi-key", "")
                 .build();
+    }
+
+    public static synchronized int getCurrentSeason() {
+        LocalDate now = LocalDate.now();
+        if(now.getMonthValue() < Month.JULY.getValue()) {
+            return now.getYear() - 1;
+        }
+        return  now.getYear();
     }
 
 }

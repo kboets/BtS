@@ -1,5 +1,7 @@
 package boets.bts.backend.domain;
 
+import boets.bts.backend.web.WebUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,6 +21,16 @@ public class AvailableCountry implements Serializable {
     private String flag;
     @Column
     private int season;
+
+    public AvailableCountry(Country country) {
+        this.country = country.getCountry();
+        this.countryCode = country.getCountryCode();
+        this.flag = country.getFlag();
+        this.season = WebUtils.getCurrentSeason();
+    }
+
+    public AvailableCountry() {
+    }
 
     public String getCountryCode() {
         return countryCode;

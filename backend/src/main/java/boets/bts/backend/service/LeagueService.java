@@ -3,6 +3,7 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.dto.LeagueDto;
 import boets.bts.backend.web.dto.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
@@ -47,7 +48,7 @@ public class LeagueService  {
     }
 
     public List<LeagueDto> getCurrentSeasonLeaguesForCountry(String countryCode) {
-        List<LeagueDto> leagueDtos = this.getLeaguesForCountryAndSeason(countryCode, getCurrentSeason());
+        List<LeagueDto> leagueDtos = this.getLeaguesForCountryAndSeason(countryCode, WebUtils.getCurrentSeason());
         //1. check if data in db is still up to date -> check isCurrent still ok
         LocalDate now = LocalDate.now();
         if(leagueDtos.stream().anyMatch(leagueDto -> now.isAfter(leagueDto.getEndSeason()) && leagueDto.isCurrent())) {
@@ -72,14 +73,6 @@ public class LeagueService  {
             return leagueDtos;
         }
         return leagueMapper.toLeagueDtoList(leagues);
-    }
-
-    private int getCurrentSeason() {
-        LocalDate now = LocalDate.now();
-        if(now.getMonthValue() < Month.JULY.getValue()) {
-            return now.getYear() - 1;
-        }
-        return  now.getYear();
     }
 
 
