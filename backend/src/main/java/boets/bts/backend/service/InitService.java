@@ -5,7 +5,7 @@ import boets.bts.backend.domain.Country;
 import boets.bts.backend.repository.country.AvailableCountryRepository;
 import boets.bts.backend.repository.country.CountrySpecs;
 import boets.bts.backend.repository.country.CountryRepository;
-import boets.bts.backend.web.CountryClient;
+import boets.bts.backend.web.country.CountryClient;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.dto.CountryDto;
 import boets.bts.backend.web.dto.CountryMapper;
