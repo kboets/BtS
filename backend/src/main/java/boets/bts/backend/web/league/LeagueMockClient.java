@@ -1,6 +1,5 @@
 package boets.bts.backend.web.league;
 
-import boets.bts.backend.web.dto.LeagueDto;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.*;
 import org.springframework.context.annotation.Profile;

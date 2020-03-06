@@ -1,7 +1,6 @@
 package boets.bts.backend.web.league;
 
 import boets.bts.backend.service.LeagueService;
-import boets.bts.backend.web.dto.LeagueDto;
 import boets.bts.backend.web.exception.NotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +22,7 @@ public class LeagueResource {
 
 
     @GetMapping("currentLeagueForCountry/{countryId}")
-    public List<LeagueDto> getCurrentLeaguesForCountry(@PathVariable(name = "countryId", required = false) String countryId) {
-        if(countryId == null) {
-            countryId = "BE";
-        }
+    public List<LeagueDto> getCurrentLeaguesForCountry(@PathVariable(name = "countryId") String countryId) {
         return leagueService.getCurrentSeasonLeaguesForCountry(countryId);
     }
 

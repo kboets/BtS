@@ -1,10 +1,8 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.country;
 
 import boets.bts.backend.domain.Country;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import java.util.List;
 

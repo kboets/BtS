@@ -1,7 +1,6 @@
 package boets.bts.backend.service;
 
-import boets.bts.backend.web.dto.LeagueDto;
-import org.assertj.core.api.Assertions;
+import boets.bts.backend.web.league.LeagueDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

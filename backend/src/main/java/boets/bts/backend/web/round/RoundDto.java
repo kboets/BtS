@@ -1,4 +1,6 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.round;
+
+import boets.bts.backend.web.league.LeagueDto;
 
 public class RoundDto {
 

@@ -1,4 +1,4 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.country;
 
 public class CountryDto {
 

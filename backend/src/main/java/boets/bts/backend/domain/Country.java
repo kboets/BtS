@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "COUNTRY")
@@ -40,5 +41,19 @@ public class Country implements Serializable {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Country)) return false;
+        Country country1 = (Country) o;
+        return countryCode.equals(country1.countryCode) &&
+                country.equals(country1.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(countryCode, country);
     }
 }

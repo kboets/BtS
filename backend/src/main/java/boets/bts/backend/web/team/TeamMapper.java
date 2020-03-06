@@ -1,4 +1,4 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.team;
 
 import boets.bts.backend.domain.Team;
 import org.mapstruct.InheritInverseConfiguration;

@@ -1,10 +1,8 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.repository.league.LeagueRepository;
-import boets.bts.backend.repository.team.TeamRepository;
-import boets.bts.backend.web.dto.TeamDto;
-import boets.bts.backend.web.dto.TeamMapper;
+import boets.bts.backend.web.team.TeamDto;
+import boets.bts.backend.web.team.TeamMapper;
 import boets.bts.backend.web.team.TeamClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

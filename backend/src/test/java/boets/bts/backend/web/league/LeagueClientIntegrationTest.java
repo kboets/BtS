@@ -1,6 +1,5 @@
 package boets.bts.backend.web.league;
 
-import boets.bts.backend.web.dto.LeagueDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

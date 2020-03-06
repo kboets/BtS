@@ -1,7 +1,7 @@
 package boets.bts.backend.web;
 
 import boets.bts.backend.web.country.CountryClient;
-import boets.bts.backend.web.dto.CountryDto;
+import boets.bts.backend.web.country.CountryDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

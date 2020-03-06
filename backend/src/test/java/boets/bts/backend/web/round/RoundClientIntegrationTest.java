@@ -1,7 +1,5 @@
 package boets.bts.backend.web.round;
 
-import boets.bts.backend.web.dto.RoundDto;
-import boets.bts.backend.web.dto.TeamDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

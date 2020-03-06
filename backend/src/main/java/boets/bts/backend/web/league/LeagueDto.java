@@ -1,7 +1,9 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.league;
+
+import boets.bts.backend.web.round.RoundDto;
+import boets.bts.backend.web.team.TeamDto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class LeagueDto {

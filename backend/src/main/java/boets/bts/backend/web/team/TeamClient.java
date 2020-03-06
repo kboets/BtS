@@ -1,7 +1,6 @@
 package boets.bts.backend.web.team;
 
 import boets.bts.backend.web.WebUtils;
-import boets.bts.backend.web.dto.TeamDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -4,16 +4,14 @@ import boets.bts.backend.domain.League;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.web.WebUtils;
-import boets.bts.backend.web.dto.LeagueDto;
-import boets.bts.backend.web.dto.LeagueMapper;
+import boets.bts.backend.web.league.LeagueDto;
+import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
-import boets.bts.backend.web.team.TeamClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

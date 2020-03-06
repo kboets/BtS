@@ -1,7 +1,8 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.league;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.domain.Team;
+import boets.bts.backend.web.round.RoundMapper;
+import boets.bts.backend.web.team.TeamMapper;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

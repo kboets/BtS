@@ -1,4 +1,4 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.round;
 
 import boets.bts.backend.domain.Round;
 import org.mapstruct.InheritInverseConfiguration;

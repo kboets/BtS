@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "AVAILABLE_COUNTRY")
@@ -62,5 +63,19 @@ public class AvailableCountry implements Serializable {
 
     public void setSeason(int season) {
         this.season = season;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AvailableCountry)) return false;
+        AvailableCountry that = (AvailableCountry) o;
+        return countryCode.equals(that.countryCode) &&
+                country.equals(that.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(countryCode, country);
     }
 }

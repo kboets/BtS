@@ -1,6 +1,6 @@
-package boets.bts.backend.web.dto;
+package boets.bts.backend.web.team;
 
-import boets.bts.backend.domain.League;
+import boets.bts.backend.web.league.LeagueDto;
 
 public class TeamDto {
 
