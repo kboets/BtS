@@ -22,7 +22,7 @@ public class CountryService {
     private CountryMapper countryMapper;
     private AvailableCountryMapper availableCountryMapper;
 
-    static final List<String> allowedCountries = Arrays.asList("BE", "GB", "NL", "IT", "ES", "DE", "FR", "IT", "PT");
+    static final List<String> allowedCountries = Arrays.asList("BE", "GB", "NL", "IT", "ES", "DE", "FR", "PT");
 
     public CountryService(CountryRepository countryRepository, AvailableCountryRepository availableCountryRepository, CountryMapper countryMapper, AvailableCountryMapper availableCountryMapper) {
         this.countryRepository = countryRepository;

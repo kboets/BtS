@@ -5,12 +5,11 @@ import boets.bts.backend.web.league.LeagueDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BelgianLeagueBettingDefiner implements LeagueBettingDefiner {
-
+public class FRLeagueBettingDefiner implements LeagueBettingDefiner {
     @Override
     public List<LeagueDto> retieveAllowedBettingLeague(List<LeagueDto> allLeagues) {
         return allLeagues.stream()
-                .filter(leagueDto -> leagueDto.getName().contains("Jupiler") || leagueDto.getName().contains("Klasse"))
+                .filter(leagueDto -> leagueDto.getName().contains("Ligue 1"))
                 .collect(Collectors.toList());
     }
 }
