@@ -1,13 +1,8 @@
 package boets.bts.backend.web.country;
 
-import boets.bts.backend.domain.AvailableCountry;
 import boets.bts.backend.service.CountryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -21,7 +16,7 @@ public class CountryResource {
     }
 
     @GetMapping("getAllSelectableCountries")
-    public List<CountryDto> retrieveAllCountries() {
+    public List<CountryDto> retrieveAllSelectableCountries() {
         List<CountryDto> countryDtoList = countryService.retrieveAllSelectableCountries();
         return countryDtoList;
     }
@@ -29,5 +24,10 @@ public class CountryResource {
     @GetMapping("getAllAvailableCountries")
     public List<AvailableCountryDto> retrieveAllAvailableCountries() {
         return countryService.retrieveAllAvailableCountries();
+    }
+
+    @PostMapping("saveAvailableCountries")
+    public void saveAvailableCountries(@RequestBody List<CountryDto> countryDtoList) {
+        countryService.saveAvailableCountries(countryDtoList);
     }
 }

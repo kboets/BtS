@@ -44,4 +44,13 @@ public class CountryService {
     public List<AvailableCountryDto> retrieveAllAvailableCountries() {
         return availableCountryMapper.toAvailableCountryDtos(availableCountryRepository.findAll());
     }
+
+    public void saveAvailableCountries(List<CountryDto> countryList) {
+        List<AvailableCountry> availableCountries = countryList.stream()
+                .map(countryDto -> countryMapper.toCountry(countryDto))
+                .map(AvailableCountry::new)
+                .collect(Collectors.toList());
+
+        availableCountryRepository.saveAll(availableCountries);
+    }
 }
