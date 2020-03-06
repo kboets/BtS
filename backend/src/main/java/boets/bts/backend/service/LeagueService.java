@@ -3,6 +3,8 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
+import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
+import boets.bts.backend.service.leagueDefiner.LeagueBettingDefinerFactory;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
@@ -25,15 +27,16 @@ public class LeagueService  {
     private final ILeagueClient leagueClient;
     private final LeagueMapper leagueMapper;
     private final TeamService teamService;
+    private final LeagueBettingDefinerFactory leagueBettingDefinerFactory;
 
 
 
-
-    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService) {
+    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService, LeagueBettingDefinerFactory leagueBettingDefinerFactory) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
         this.teamService = teamService;
+        this.leagueBettingDefinerFactory = leagueBettingDefinerFactory;
     }
 
     public Optional<LeagueDto> getLeagueById(Long leagueId) {
@@ -54,10 +57,9 @@ public class LeagueService  {
             List<LeagueDto> updatedList = leagueDtos.stream().peek(leagueDto -> leagueDto.setCurrent(false)).collect(Collectors.toList());
             leagueRepository.saveAll(leagueMapper.toLeagues(updatedList));
         }
-        //2. only available on betting sites (1 + 2 klasse)
-        return leagueDtos.stream()
-                .filter(leagueDto -> leagueDto.getName().contains("Jupiler") || leagueDto.getName().contains("Klasse"))
-                .collect(Collectors.toList());
+        LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
+        return leagueBettingDefiner.retieveAllowedBettingLeague(leagueDtos);
+
     }
 
     public List<LeagueDto> getLeaguesForCountryAndSeason(String countryCode, int year) {
