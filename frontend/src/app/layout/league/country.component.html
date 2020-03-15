@@ -1,0 +1,35 @@
+<div class="page-header">
+    <h1>Beschikbare competities</h1>
+    <hr>
+</div>
+
+<ng-container *ngIf="selectableCountries$ | async as countries">
+    <div class="row">
+        <div class="col-sm-4" *ngFor="let country of countries">
+            <div class="card bg-light mb-3">
+                <div class="card-header">{{country.country}}</div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<div class="page-header">
+    <h1>Geselecteerde competities</h1>
+    <hr>
+</div>
+
+<ng-container *ngIf="availableCountries$ | async as availableCountries">
+    <div class="row">
+        <div class="col-sm-4" *ngFor="let acountry of availableCountries">
+            <div class="card bg-light mb-3">
+                <div class="card-header">{{acountry.country}}</div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

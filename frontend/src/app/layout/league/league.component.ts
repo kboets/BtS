@@ -6,7 +6,7 @@ import {GeneralError} from "../../general/generalError";
 import {EMPTY} from "rxjs";
 
 @Component({
-    selector: 'app-league',
+    selector: 'bts-league',
     templateUrl: './league.component.html',
     animations: [routerTransition()]
 })
