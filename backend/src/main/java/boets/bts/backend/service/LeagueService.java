@@ -58,6 +58,7 @@ public class LeagueService  {
             leagueRepository.saveAll(leagueMapper.toLeagues(updatedList));
         }
         LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
+
         return leagueBettingDefiner.retieveAllowedBettingLeague(leagueDtos);
 
     }

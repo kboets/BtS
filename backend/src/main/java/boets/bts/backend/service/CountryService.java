@@ -32,11 +32,12 @@ public class CountryService {
     }
 
     public List<CountryDto> retrieveAllSelectableCountries() {
-        List<AvailableCountry> availableCountries = availableCountryRepository.findAll();
+        List<String> availableCountriesCodes = availableCountryRepository.findAll()
+                .stream().map(availableCountry -> availableCountry.getCountryCode()).collect(Collectors.toList());
         List<Country> countryList = countryRepository.findAll();
         List<Country> selectableCountries = countryList.stream()
                 .filter(country -> allowedCountries.contains(country.getCountryCode()))
-                .filter(country -> !availableCountries.contains(country))
+                .filter(country -> !availableCountriesCodes.contains(country.getCountryCode()))
                 .collect(Collectors.toList());
         return countryMapper.toCountryDtoList(selectableCountries);
     }

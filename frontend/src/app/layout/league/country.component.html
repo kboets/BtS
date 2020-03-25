@@ -9,7 +9,6 @@
             <div class="card bg-light mb-3">
                 <div class="card-header">{{country.country}}</div>
                 <div class="card-body">
-
                 </div>
             </div>
         </div>
@@ -23,9 +22,9 @@
 
 <ng-container *ngIf="availableCountries$ | async as availableCountries">
     <div class="row">
-        <div class="col-sm-4" *ngFor="let acountry of availableCountries">
+        <div class="col-sm-4" *ngFor="let avcountry of availableCountries">
             <div class="card bg-light mb-3">
-                <div class="card-header">{{acountry.country}}</div>
+                <div class="card-header">{{avcountry.country}}</div>
                 <div class="card-body">
 
                 </div>
