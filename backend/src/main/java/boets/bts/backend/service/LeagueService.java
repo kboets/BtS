@@ -48,6 +48,13 @@ public class LeagueService  {
         return Optional.empty();
     }
 
+//    public List<LeagueDto> getAllCurrentLeagues() {
+//        List<League> leagueDtos = leagueRepository.findAll();
+//        //1. check if data in db is still up to date -> check isCurrent still ok
+//        LocalDate now = LocalDate.now();
+//
+//    }
+
     public List<LeagueDto> getCurrentSeasonLeaguesForCountry(String countryCode) {
         List<LeagueDto> leagueDtos = this.getLeaguesForCountryAndSeason(countryCode, WebUtils.getCurrentSeason());
         //1. check if data in db is still up to date -> check isCurrent still ok

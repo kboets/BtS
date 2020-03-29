@@ -17,9 +17,14 @@ public class LeagueMockClient implements ILeagueClient{
         //1. make fake call
         String dataJson = WebUtils.readJsonFileFromApi(allLeaguesFile).orElseGet(String::new);
         //2. parse data
-        JsonArray leagues = parseAllBelgianLeaguesRawJson(dataJson);
+        JsonArray leagues = parseAllLeaguesRawJson(dataJson);
         //3. map data to dto
         return mapJsonToLeagueDto(leagues);
+    }
+
+    @Override
+    public List<LeagueDto> allLeaguesForSeason(int year) {
+        return allLeaguesFromCountryForSeason("BE", 2019);
     }
 
 

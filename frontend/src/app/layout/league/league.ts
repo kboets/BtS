@@ -8,5 +8,6 @@ export interface League {
     logo?:string;
     flag?:string;
     countryCode:string;
+    country?:string
     isCurrent:boolean;
 }

@@ -21,15 +21,27 @@ public class LeagueClient implements ILeagueClient {
     @Override
     public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make call
-        OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));
         Request request = WebUtils.createRequest(url);
+        return this.handleAndMapResponse(request);
+    }
+
+    @Override
+    public List<LeagueDto> allLeaguesForSeason(int year) {
+        //1. make call
+        String url = WebUtils.buildUrl("leagues", "season", Integer.toString(year));
+        Request request = WebUtils.createRequest(url);
+        return this.handleAndMapResponse(request);
+    }
+
+    private List<LeagueDto> handleAndMapResponse(Request request) {
+        OkHttpClient client = new OkHttpClient();
         Response response = null;
         try {
             response = client.newCall(request).execute();
             if(response.isSuccessful()) {
                 //2. parse data
-                JsonArray leagues = parseAllBelgianLeaguesRawJson(response.body().string());
+                JsonArray leagues = parseAllLeaguesRawJson(response.body().string());
                 //3. map data to dto
                 return mapJsonToLeagueDto(leagues);
             }

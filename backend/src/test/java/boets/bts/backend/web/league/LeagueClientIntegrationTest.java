@@ -18,8 +18,16 @@ public class LeagueClientIntegrationTest {
     private LeagueClient leagueClient;
 
     @Test
-    public void testRetrieveAllLeagues_givenCorrectFile_shouldReturnDto() {
+    public void testRetrieveAllLeaguesFromCountry_givenCorrectFile_shouldReturnDto() {
         List<LeagueDto> leagues = leagueClient.allLeaguesFromCountryForSeason("BE", 2019);
-        assertThat(leagues.size()).isEqualTo(18);
+        assertThat(leagues.size()).isGreaterThan(1);
     }
+
+    @Test
+    public void testRetrieveAllLeagues_givenCorrectYear_shouldReturnDto() {
+        List<LeagueDto> leagues = leagueClient.allLeaguesForSeason(2019);
+        assertThat(leagues.size()).isGreaterThan(1);
+    }
+
+
 }

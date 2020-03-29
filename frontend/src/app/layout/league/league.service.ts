@@ -4,23 +4,26 @@ import {League} from "./league";
 import {catchError, map, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
 import {of, throwError} from "rxjs";
+import {CountryService} from "./country.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class LeagueService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private countryService: CountryService) {
     }
 
     countryCode:string = 'BE';
 
     //all leagues
-    leagues$ =  this.http.get<League[]>(`/bts/api/currentLeagueForCountry/${this.countryCode}`)
+    leagueForCountry$ =  this.http.get<League[]>(`/bts/api/currentLeagueForCountry/${this.countryCode}`)
         .pipe(
             tap(data => console.log('leagues', JSON.stringify(data))),
             catchError(this.handleHttpError)
         );
+
+    //leagues$ = this.http.get(<League[])(`/bts/api/`)
 
 
     private handleHttpError(error: HttpErrorResponse) {
