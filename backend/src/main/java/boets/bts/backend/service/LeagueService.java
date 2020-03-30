@@ -12,6 +12,7 @@ import boets.bts.backend.web.league.ILeagueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import static boets.bts.backend.service.CountryService.allowedCountries;
 
 @Service
+@Transactional
 public class LeagueService  {
 
     private Logger logger = LoggerFactory.getLogger(LeagueService.class);

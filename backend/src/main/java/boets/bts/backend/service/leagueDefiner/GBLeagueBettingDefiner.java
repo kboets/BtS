@@ -10,7 +10,7 @@ public class GBLeagueBettingDefiner implements LeagueBettingDefiner {
     @Override
     public List<LeagueDto> retieveAllowedBettingLeague(List<LeagueDto> allLeagues) {
         return allLeagues.stream()
-                .filter(leagueDto -> leagueDto.getName().contains("Premier League"))
+                .filter(leagueDto -> leagueDto.getName().contains("Premier League") && !leagueDto.getName().contains("Women"))
                 .collect(Collectors.toList());
     }
 }

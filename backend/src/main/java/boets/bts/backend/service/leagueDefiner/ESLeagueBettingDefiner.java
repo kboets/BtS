@@ -10,7 +10,7 @@ public class ESLeagueBettingDefiner implements LeagueBettingDefiner {
     @Override
     public List<LeagueDto> retieveAllowedBettingLeague(List<LeagueDto> allLeagues) {
         return allLeagues.stream()
-                .filter(leagueDto -> leagueDto.getName().contains("Primera Division"))
+                .filter(leagueDto -> leagueDto.getName().contains("Primera Division") && !leagueDto.getName().contains("Women"))
                 .collect(Collectors.toList());
     }
 }

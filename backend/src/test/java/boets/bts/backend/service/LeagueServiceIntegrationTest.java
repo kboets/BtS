@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,6 +39,16 @@ public class LeagueServiceIntegrationTest {
     public void testGetLeaguesForCountryAndSeason_given2019_shouldReturnThreeLeagues() {
         List<LeagueDto> result = leagueService.getLeaguesForCountryAndSeason("BE", 2019);
         assertThat(result.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testGetLeagues_shouldReturnTwoLeaguesForBelgian() {
+        List<LeagueDto> result = leagueService.getAllCurrentLeagues();
+        //test for Belgian
+        List<LeagueDto> belgianLeagues = result.stream()
+                .filter(leagueDto -> leagueDto.getCountryCode().equals("BE"))
+                .collect(Collectors.toList());
+        assertThat(belgianLeagues.size()).isEqualTo(2);
     }
 
 

@@ -9,7 +9,7 @@ public class PTLeagueBettingDefiner implements LeagueBettingDefiner {
     @Override
     public List<LeagueDto> retieveAllowedBettingLeague(List<LeagueDto> allLeagues) {
         return allLeagues.stream()
-                .filter(leagueDto -> leagueDto.getName().contains("Primeira Liga"))
+                .filter(leagueDto -> leagueDto.getName().contains("Primeira Liga") && !leagueDto.getName().contains("Women") )
                 .collect(Collectors.toList());
     }
 }
