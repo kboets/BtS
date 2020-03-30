@@ -14,9 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static boets.bts.backend.service.CountryService.allowedCountries;
 
 @Service
 public class LeagueService  {
@@ -28,7 +32,6 @@ public class LeagueService  {
     private final LeagueMapper leagueMapper;
     private final TeamService teamService;
     private final LeagueBettingDefinerFactory leagueBettingDefinerFactory;
-
 
 
     public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService, LeagueBettingDefinerFactory leagueBettingDefinerFactory) {
@@ -48,22 +51,32 @@ public class LeagueService  {
         return Optional.empty();
     }
 
-//    public List<LeagueDto> getAllCurrentLeagues() {
-//        List<League> leagueDtos = leagueRepository.findAll();
-//        //1. check if data in db is still up to date -> check isCurrent still ok
-//        LocalDate now = LocalDate.now();
-//
-//    }
+    public List<LeagueDto> getAllCurrentLeagues() {
+        int currentSeason = WebUtils.getCurrentSeason();
+        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
+        if(leagues.isEmpty()) {
+            logger.info(String.format("no leagues found for season start year %s", currentSeason));
+            List<LeagueDto> leagueDtos = leagueClient.allLeaguesForSeason(currentSeason);
+            leagues =  leagueMapper.toLeagues(leagueDtos);
+            leagueRepository.saveAll(leagues);
+        }
+        verifyPersistedLeagueIsCurrent(leagues);
+        Map<String, List<League>> leaguesForCountry = leagues.stream()
+                .filter(league -> allowedCountries.contains(league.getCountryCode()))
+                .collect(Collectors.groupingBy(League::getCountryCode));
+        List<LeagueDto> leagueDtos = new ArrayList<>();
+        for(String countryCode: leaguesForCountry.keySet()) {
+            LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
+            leagueDtos.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leagueMapper.toLeagueDtoList(leaguesForCountry.get(countryCode))));
+        }
+        return leagueDtos;
+    }
 
     public List<LeagueDto> getCurrentSeasonLeaguesForCountry(String countryCode) {
         List<LeagueDto> leagueDtos = this.getLeaguesForCountryAndSeason(countryCode, WebUtils.getCurrentSeason());
         //1. check if data in db is still up to date -> check isCurrent still ok
         LocalDate now = LocalDate.now();
-        if(leagueDtos.stream().anyMatch(leagueDto -> now.isAfter(leagueDto.getEndSeason()) && leagueDto.isCurrent())) {
-            logger.info(String.format("Updating the current league to not current as the current date %s is after the end date %S", now, leagueDtos.get(0).getEndSeason()));
-            List<LeagueDto> updatedList = leagueDtos.stream().peek(leagueDto -> leagueDto.setCurrent(false)).collect(Collectors.toList());
-            leagueRepository.saveAll(leagueMapper.toLeagues(updatedList));
-        }
+        verifyPersistedLeagueIsCurrent(leagueMapper.toLeagues(leagueDtos));
         LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
 
         return leagueBettingDefiner.retieveAllowedBettingLeague(leagueDtos);
@@ -81,6 +94,15 @@ public class LeagueService  {
             return leagueDtos;
         }
         return leagueMapper.toLeagueDtoList(leagues);
+    }
+
+    private void verifyPersistedLeagueIsCurrent(List<League> leagues) {
+        LocalDate now = LocalDate.now();
+        if(leagues.stream().anyMatch(league -> now.isAfter(league.getEndSeason()) && league.isCurrent())) {
+            logger.info(String.format("Updating the current league to not current as the current date %s is after the end date %S", now, leagues.get(0).getEndSeason()));
+            List<League> updatedList = leagues.stream().peek(league -> league.setCurrent(false)).collect(Collectors.toList());
+            leagueRepository.saveAll(updatedList);
+        }
     }
 
 

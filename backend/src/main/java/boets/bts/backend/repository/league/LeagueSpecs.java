@@ -17,4 +17,12 @@ public class LeagueSpecs {
             return predicate;
         };
     }
+
+    public static Specification<League> getLeagueBySeason(int season) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("season"), season);
+
+            return predicate;
+        };
+    }
 }

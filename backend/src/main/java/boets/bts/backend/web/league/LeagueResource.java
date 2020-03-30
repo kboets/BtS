@@ -20,6 +20,10 @@ public class LeagueResource {
         this.leagueService = leagueService;
     }
 
+    @GetMapping("currentLeagues")
+    public List<LeagueDto> getCurrentLeagues() {
+        return leagueService.getAllCurrentLeagues();
+    }
 
     @GetMapping("currentLeagueForCountry/{countryId}")
     public List<LeagueDto> getCurrentLeaguesForCountry(@PathVariable(name = "countryId") String countryId) {
