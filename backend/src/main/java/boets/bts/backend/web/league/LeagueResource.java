@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/api/")
+@RequestMapping(value = "/api/league/")
 public class LeagueResource {
 
     private LeagueService leagueService;
@@ -20,14 +20,19 @@ public class LeagueResource {
         this.leagueService = leagueService;
     }
 
-    @GetMapping("currentLeagues")
-    public List<LeagueDto> getCurrentLeagues() {
-        return leagueService.getAllCurrentLeagues();
+    @GetMapping("availableCurrentSeason")
+    public List<LeagueDto> getCurrentAvailableLeagues() {
+        return leagueService.getLeaguesCurrentSeason(false);
+    }
+
+    @GetMapping("selectedCurrentSeason")
+    public List<LeagueDto> getCurrentSelectedLeagues() {
+        return leagueService.getLeaguesCurrentSeason(true);
     }
 
     @GetMapping("currentLeagueForCountry/{countryId}")
     public List<LeagueDto> getCurrentLeaguesForCountry(@PathVariable(name = "countryId") String countryId) {
-        return leagueService.getCurrentSeasonLeaguesForCountry(countryId);
+        return leagueService.getLeaguesForCurrentSeasonForCountry(countryId);
     }
 
     @GetMapping("getLeagueById/{leagueId}")

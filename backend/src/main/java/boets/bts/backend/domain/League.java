@@ -38,6 +38,9 @@ public class League implements Serializable {
     @Column
     private String  flag;
 
+    @Column
+    private boolean selected;
+
     @OneToMany(mappedBy = "league" , cascade = CascadeType.MERGE)
     private List<Team> teams;
 
@@ -133,5 +136,13 @@ public class League implements Serializable {
 
     public void setRounds(List<Round> rounds) {
         this.rounds = rounds;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

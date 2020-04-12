@@ -16,7 +16,7 @@ export class CountryComponent {
     constructor(private countryService: CountryService) {
     }
 
-    selectableCountries$ =  this.countryService.selectableCountries$
+    selectableCountries$ =  this.countryService.countries$
         .pipe(
             catchError(err => {
                 this.errorMessage = err;
@@ -24,7 +24,7 @@ export class CountryComponent {
             })
         );
 
-    availableCountries$ = this.countryService.availableCountries$
+    availableCountries$ = this.countryService.countries$
         .pipe(
             catchError(err => {
                 this.errorMessage = err;

@@ -30,6 +30,7 @@
             </column>
             <column name="logo" type="varchar(250)"/>
             <column name="flag" type="varchar(250)"/>
+            <column name="selected" type="boolean"/>
         </createTable>
     </changeSet>
 

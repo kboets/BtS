@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {routerTransition} from "../../router.animations";
 import {LeagueService} from "./league.service";
-import {catchError} from "rxjs/operators";
+import {catchError, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
 import {EMPTY} from "rxjs";
 
@@ -16,7 +16,7 @@ export class LeagueComponent {
     constructor(private leagueService : LeagueService) {
     }
 
-    leagues$ = this.leagueService.leagues$
+    availableLeaguesWithCountries$ = this.leagueService.availableLeaguesWithCountries$
         .pipe(
             catchError(err => {
                 this.errorMessage = err;

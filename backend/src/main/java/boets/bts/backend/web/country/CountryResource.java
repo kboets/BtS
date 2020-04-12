@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/")
+@RequestMapping(value = "/api/country/")
 public class CountryResource {
 
     private CountryService countryService;
@@ -15,19 +15,14 @@ public class CountryResource {
         this.countryService = countryService;
     }
 
-    @GetMapping("getAllSelectableCountries")
+    @GetMapping("get")
     public List<CountryDto> retrieveAllSelectableCountries() {
-        List<CountryDto> countryDtoList = countryService.retrieveAllSelectableCountries();
+        List<CountryDto> countryDtoList = countryService.retrieveAllCountries();
         return countryDtoList;
     }
 
-    @GetMapping("getAllAvailableCountries")
-    public List<AvailableCountryDto> retrieveAllAvailableCountries() {
-        return countryService.retrieveAllAvailableCountries();
-    }
-
-    @PostMapping("saveAvailableCountries")
-    public void saveAvailableCountries(@RequestBody List<CountryDto> countryDtoList) {
-        countryService.saveAvailableCountries(countryDtoList);
-    }
+//    @PostMapping("save")
+//    public void saveAvailableCountries(@RequestBody List<CountryDto> countryDtoList) {
+//        countryServi(countryDtoList);
+//    }
 }

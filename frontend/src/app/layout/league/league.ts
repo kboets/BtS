@@ -1,4 +1,6 @@
 /** League entity */
+import {Country} from "./country";
+
 export interface League {
     league_id: string;
     name: string;

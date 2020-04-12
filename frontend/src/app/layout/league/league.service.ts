@@ -3,7 +3,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {League} from "./league";
 import {catchError, map, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
-import {of, throwError} from "rxjs";
+import {combineLatest, of, throwError} from "rxjs";
 import {CountryService} from "./country.service";
 
 @Injectable({
@@ -17,14 +17,26 @@ export class LeagueService {
     countryCode:string = 'BE';
 
     //all leagues
-    leagueForCountry$ =  this.http.get<League[]>(`/bts/api/currentLeagueForCountry/${this.countryCode}`)
+    leagueForCountry$ =  this.http.get<League[]>(`/bts/api/league/currentLeagueForCountry/${this.countryCode}`)
         .pipe(
-            tap(data => console.log('leagues', JSON.stringify(data))),
             catchError(this.handleHttpError)
         );
 
-    //leagues$ = this.http.get(<League[])(`/bts/api/`)
+    availableLeagues$ = this.http.get<League[]>(`/bts/api/league/availableCurrentSeason`)
+        .pipe(
+            tap(data => console.log('selectable leagues ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
 
+    availableLeaguesWithCountries$ = combineLatest([this.availableLeagues$, this.countryService.countries$])
+        .pipe(
+            map(([leagues, countries]) =>
+                leagues.map(league => ({
+                    ...league,
+                    country : countries.find(c => c.countryCode === league.countryCode).country
+                }) as League)
+            )
+        );
 
     private handleHttpError(error: HttpErrorResponse) {
         let dataError = new GeneralError();
