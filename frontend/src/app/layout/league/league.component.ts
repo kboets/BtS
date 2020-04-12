@@ -12,17 +12,23 @@ import {EMPTY} from "rxjs";
 })
 export class LeagueComponent {
 
-    errorMessage: GeneralError;
+    error: GeneralError;
     constructor(private leagueService : LeagueService) {
     }
 
     availableLeaguesWithCountries$ = this.leagueService.availableLeaguesWithCountries$
         .pipe(
             catchError(err => {
-                this.errorMessage = err;
+                this.error = err;
                 return EMPTY;
             })
         );
 
-
+    selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
+        .pipe(
+            catchError(err => {
+                this.error = err;
+                return EMPTY;
+            })
+        );
 }

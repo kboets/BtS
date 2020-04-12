@@ -24,7 +24,13 @@ export class LeagueService {
 
     availableLeagues$ = this.http.get<League[]>(`/bts/api/league/availableCurrentSeason`)
         .pipe(
-            tap(data => console.log('selectable leagues ', JSON.stringify(data))),
+            //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
+
+    selectedLeagues$ = this.http.get<League[]>(`/bts/api/league/selectedCurrentSeason`)
+        .pipe(
+            //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
             catchError(this.handleHttpError)
         );
 
@@ -38,7 +44,18 @@ export class LeagueService {
             )
         );
 
+    selectedLeaguesWithCountries$ = combineLatest([this.selectedLeagues$, this.countryService.countries$])
+        .pipe(
+            map(([leagues, countries]) =>
+                leagues.map(league => ({
+                    ...league,
+                    country : countries.find(c => c.countryCode === league.countryCode).country
+                }) as League)
+            )
+        );
+
     private handleHttpError(error: HttpErrorResponse) {
+        //console.log("entering the handleHttpError of league service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;
