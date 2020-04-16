@@ -112,7 +112,10 @@ public class LeagueService  {
             logger.info(String.format("no leagues found for season start year %s", currentSeason));
             List<LeagueDto> leagueDtos = leagueClient.allLeaguesForSeason(currentSeason);
             leagues =  leagueMapper.toLeagues(leagueDtos);
-            leagueRepository.saveAll(leagues);
+            List<League> availableLeagues = leagues.stream()
+                    .filter(league -> allowedCountries.contains(league.getCountryCode()))
+                    .collect(Collectors.toList());
+            leagueRepository.saveAll(availableLeagues);
         }
         verifyPersistedLeagueIsCurrent(leagues);
         return leagues;
