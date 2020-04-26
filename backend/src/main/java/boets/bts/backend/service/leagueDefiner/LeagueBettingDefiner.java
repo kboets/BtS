@@ -12,5 +12,5 @@ public interface LeagueBettingDefiner {
      * @param allLeagues - all leagues available
      * @return a list of Leagues allowed for betting purpose.
      */
-    public List<LeagueDto> retieveAllowedBettingLeague(List<LeagueDto> allLeagues);
+    List<League> retieveAllowedBettingLeague(List<League> allLeagues);
 }

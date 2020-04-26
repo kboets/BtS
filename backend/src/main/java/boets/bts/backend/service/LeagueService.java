@@ -1,8 +1,6 @@
 package boets.bts.backend.service;
 
-import boets.bts.backend.domain.Country;
 import boets.bts.backend.domain.League;
-import boets.bts.backend.repository.country.CountryRepository;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
@@ -57,41 +55,48 @@ public class LeagueService  {
     }
 
     public List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
-        List<League> leagues = getOrRetrieveLeaguesCurrentSeason();
+        int currentSeason = WebUtils.getCurrentSeason();
+        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
+        if(leagues.isEmpty()) {
+            //make call to webservice
+            logger.info(String.format("no leagues found for season start year %s", currentSeason));
+            leagues = retrieveLeaguesFromWebService(currentSeason);
+            persistLeagues(leagues);
+        }
         Map<String, List<League>> leaguesForCountry = leagues.stream()
                 .filter(league -> allowedCountries.contains(league.getCountryCode()))
                 .filter(league -> league.isSelected() == isSelected)
                 .collect(Collectors.groupingBy(League::getCountryCode));
-        List<LeagueDto> leagueDtos = new ArrayList<>();
+
+        List<League> selectedLeagues = new ArrayList<>();
+        //select only the leagues available on betting sites of the country
         for(String countryCode: leaguesForCountry.keySet()) {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
-            leagueDtos.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leagueMapper.toLeagueDtoList(leaguesForCountry.get(countryCode))));
+            selectedLeagues.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
-        return leagueDtos;
+        verifyPersistedLeagueIsCurrent(leagues);
+        return leagueMapper.toLeagueDtoList(selectedLeagues);
     }
 
     public List<LeagueDto> getLeaguesForCurrentSeasonForCountry(String countryCode) {
-        List<LeagueDto> leagueDtos = this.getLeaguesForCountryAndSeason(countryCode, WebUtils.getCurrentSeason());
-        //1. check if data in db is still up to date -> check isCurrent still ok
-        LocalDate now = LocalDate.now();
-        verifyPersistedLeagueIsCurrent(leagueMapper.toLeagues(leagueDtos));
+        List<League> leagues = this.getLeaguesForCountryAndSeason(countryCode, WebUtils.getCurrentSeason());
+        verifyPersistedLeagueIsCurrent(leagues);
+        //only select the one from the betting sites
         LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
-
-        return leagueBettingDefiner.retieveAllowedBettingLeague(leagueDtos);
-
+        List<League> selectedLeagues = leagueBettingDefiner.retieveAllowedBettingLeague(leagues);
+        return leagueMapper.toLeagueDtoList(selectedLeagues);
     }
 
-    public List<LeagueDto> getLeaguesForCountryAndSeason(String countryCode, int year) {
+    public List<League> getLeaguesForCountryAndSeason(String countryCode, int year) {
         //1. check if data is available in database
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueByCountryAndSeason(countryCode, year));
         if(leagues.isEmpty()) {
             logger.info(String.format("no leagues found for country %s and for season start year %s", countryCode, year));
             List<LeagueDto> leagueDtos = leagueClient.allLeaguesFromCountryForSeason(countryCode,year);
             leagues =  leagueMapper.toLeagues(leagueDtos);
-            leagueRepository.saveAll(leagues);
-            return leagueDtos;
+            persistLeagues(leagues);
         }
-        return leagueMapper.toLeagueDtoList(leagues);
+        return leagues;
     }
 
     private void verifyPersistedLeagueIsCurrent(List<League> leagues) {
@@ -105,21 +110,25 @@ public class LeagueService  {
         }
     }
 
-    private List<League> getOrRetrieveLeaguesCurrentSeason() {
-        int currentSeason = WebUtils.getCurrentSeason();
-        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
-        if(leagues.isEmpty()) {
-            logger.info(String.format("no leagues found for season start year %s", currentSeason));
-            List<LeagueDto> leagueDtos = leagueClient.allLeaguesForSeason(currentSeason);
-            leagues =  leagueMapper.toLeagues(leagueDtos);
-            List<League> availableLeagues = leagues.stream()
-                    .filter(league -> allowedCountries.contains(league.getCountryCode()))
-                    .collect(Collectors.toList());
-            leagueRepository.saveAll(availableLeagues);
-        }
-        verifyPersistedLeagueIsCurrent(leagues);
-        return leagues;
+    private List<League> retrieveLeaguesFromWebService(int currentSeason) {
+        List<LeagueDto> leagueDtos = leagueClient.allLeaguesForSeason(currentSeason);
+        List<League> leagues =  leagueMapper.toLeagues(leagueDtos);
+        return leagues.stream()
+                .filter(league -> allowedCountries.contains(league.getCountryCode()))
+                .collect(Collectors.toList());
     }
+
+    private void persistLeagues(List<League> leagues) {
+        List<League> toBePersisted = new ArrayList<>();
+        for(League league: leagues) {
+            String countryCode = league.getCountryCode();
+            LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(league.getCountryCode());
+            List<League> leaguesForCountry = leagues.stream().filter(league1 -> league1.getCountryCode().equals(countryCode)).collect(Collectors.toList());
+            toBePersisted.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leaguesForCountry));
+        }
+        leagueRepository.saveAll(toBePersisted);
+    }
+
 
 
 }

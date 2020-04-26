@@ -1,5 +1,6 @@
 package boets.bts.backend.service;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.web.league.LeagueDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,13 +32,13 @@ public class LeagueServiceIntegrationTest {
 
     @Test
     public void testGetLeaguesForCountryAndSeason_given2018_shouldReturnOneResult() {
-        List<LeagueDto> result = leagueService.getLeaguesForCountryAndSeason("BE", 2018);
+        List<League> result = leagueService.getLeaguesForCountryAndSeason("BE", 2018);
         assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
     public void testGetLeaguesForCountryAndSeason_given2019_shouldReturnThreeLeagues() {
-        List<LeagueDto> result = leagueService.getLeaguesForCountryAndSeason("BE", 2019);
+        List<League> result = leagueService.getLeaguesForCountryAndSeason("BE", 2019);
         assertThat(result.size()).isEqualTo(3);
     }
 
