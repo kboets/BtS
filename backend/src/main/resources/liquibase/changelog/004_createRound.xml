@@ -8,7 +8,7 @@
 
     <changeSet id="create_round" author="kboets">
         <createTable tableName="ROUND">
-            <column autoIncrement="false" name="round_id" type="int">
+            <column autoIncrement="true" name="round_id" type="bigint">
                 <constraints nullable="false" primaryKey="true" />
             </column>
             <column name="round" type="varchar(150)">

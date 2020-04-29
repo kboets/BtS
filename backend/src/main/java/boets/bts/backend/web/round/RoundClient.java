@@ -25,7 +25,7 @@ public class RoundClient {
     public Optional<List<RoundDto>> getAllRoundsForLeagueAndSeason(int season, long leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
-        String url = WebUtils.buildUrl("rounds", "league", Long.toString(leagueId));
+        String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId));
         Request request = WebUtils.createRequest(url);
         Response response = null;
         try {
@@ -54,15 +54,12 @@ public class RoundClient {
     }
 
     private List<RoundDto> mapJsonToRoundDto(JsonArray jsonArray, int season) {
-        int roundNumber = 1;
         List<RoundDto> roundDtos = new ArrayList<>();
         for(JsonElement roundJsonElement : jsonArray) {
             RoundDto roundDto = new RoundDto();
-            JsonObject roundJson = roundJsonElement.getAsJsonObject();
-            roundDto.setRound(roundJson.getAsString());
+            roundDto.setRound(roundJsonElement.getAsString());
             roundDto.setSeason(season);
-            roundDto.setRoundId(Integer.toString(roundNumber));
-            roundNumber++;
+            roundDtos.add(roundDto);
         }
 
         return roundDtos;

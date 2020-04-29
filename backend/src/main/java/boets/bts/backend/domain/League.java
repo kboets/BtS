@@ -41,7 +41,7 @@ public class League implements Serializable {
     @Column
     private boolean selected;
 
-    @OneToMany(mappedBy = "league" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     private List<Team> teams;
 
     @OneToMany(mappedBy = "league" , cascade = CascadeType.ALL)

@@ -9,7 +9,8 @@ public class Round implements Serializable {
 
     @Id
     @Column(name="round_id")
-    private Integer id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String round;
@@ -17,16 +18,16 @@ public class Round implements Serializable {
     @Column(nullable = false)
     private int season;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

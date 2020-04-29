@@ -1,7 +1,6 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
@@ -10,7 +9,6 @@ import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
-import boets.bts.backend.web.round.RoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static boets.bts.backend.service.CountryService.allowedCountries;
@@ -50,26 +47,25 @@ public class LeagueService  {
     }
 
     public List<LeagueDto> getCurrentSelectedLeagues() {
-        boolean needUpdate = false;
+        boolean isChanged = false;
         List<LeagueDto> availableLeagues = this.getLeaguesCurrentSeason(true);
         //check teams
-        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())){
-            needUpdate = true;
-            List<League> leagueList = leagueMapper.toLeagues(availableLeagues);
+        List<League> leagueList = leagueMapper.toLeagues(availableLeagues);
+        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
+            isChanged = true;
             for(League league: leagueList) {
                 teamService.updateLeagueWithTeams(league);
             }
-            leagueRepository.saveAll(leagueList);
-            availableLeagues.clear();
-            availableLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
         }
         //check rounds
-        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())){
-            needUpdate = true;
-            List<League> leagueList = leagueMapper.toLeagues(availableLeagues);
+        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
+            isChanged = true;
             for(League league: leagueList) {
                 roundService.updateLeagueWithRounds(league);
             }
+        }
+        if(isChanged) {
+            leagueRepository.saveAll(leagueList);
             availableLeagues.clear();
             availableLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
         }

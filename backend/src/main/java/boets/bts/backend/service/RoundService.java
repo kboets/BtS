@@ -1,8 +1,11 @@
-package boets.bts.backend.web.round;
+package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
-import boets.bts.backend.web.team.TeamDto;
+import boets.bts.backend.repository.round.RoundRepository;
+import boets.bts.backend.web.round.RoundClient;
+import boets.bts.backend.web.round.RoundDto;
+import boets.bts.backend.web.round.RoundMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,10 +20,12 @@ public class RoundService {
 
     private RoundMapper roundMapper;
     private RoundClient roundClient;
+    private RoundRepository roundRepository;
 
-    public RoundService(RoundMapper roundMapper, RoundClient roundClient) {
+    public RoundService(RoundMapper roundMapper, RoundClient roundClient, RoundRepository roundRepository) {
         this.roundMapper = roundMapper;
         this.roundClient = roundClient;
+        this.roundRepository = roundRepository;
     }
 
     /**
@@ -35,7 +40,9 @@ public class RoundService {
                 logger.info("Could retrieve {} rounds for league {} ", optionalRoundDtos.get().size(), league.getName());
                 List<Round> rounds = roundMapper.toRounds(optionalRoundDtos.get());
                 rounds.forEach(round -> round.setLeague(league));
-                league.setRounds(roundMapper.toRounds(optionalRoundDtos.get()));
+                roundRepository.saveAll(rounds);
+                roundRepository.flush();
+                league.setRounds(rounds);
             }
         }
     }
