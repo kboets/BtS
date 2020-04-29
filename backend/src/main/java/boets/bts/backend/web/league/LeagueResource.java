@@ -27,21 +27,8 @@ public class LeagueResource {
 
     @GetMapping("selectedCurrentSeason")
     public List<LeagueDto> getCurrentSelectedLeagues() {
-        return leagueService.getLeaguesCurrentSeason(true);
+        return leagueService.getCurrentSelectedLeagues();
     }
 
-    @GetMapping("currentLeagueForCountry/{countryId}")
-    public List<LeagueDto> getCurrentLeaguesForCountry(@PathVariable(name = "countryId") String countryId) {
-        return leagueService.getLeaguesForCurrentSeasonForCountry(countryId);
-    }
 
-    @GetMapping("getLeagueById/{leagueId}")
-    public LeagueDto getLeagueById(@PathVariable(name = "leagueId") Long leagueId) {
-         Optional<LeagueDto> leagueDtoOptional = leagueService.getLeagueById(leagueId);
-         if(!leagueDtoOptional.isPresent()) {
-             throw new NotFoundException(String.format("No league found with id %s", leagueId));
-         }
-
-         return leagueDtoOptional.get();
-    }
 }

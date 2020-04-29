@@ -17,7 +17,7 @@ public class Team implements Serializable {
     @Column
     private String logo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 

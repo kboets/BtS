@@ -14,14 +14,6 @@ export class LeagueService {
     constructor(private http: HttpClient, private countryService: CountryService) {
     }
 
-    countryCode:string = 'BE';
-
-    //all leagues
-    leagueForCountry$ =  this.http.get<League[]>(`/bts/api/league/currentLeagueForCountry/${this.countryCode}`)
-        .pipe(
-            catchError(this.handleHttpError)
-        );
-
     availableLeagues$ = this.http.get<League[]>(`/bts/api/league/availableCurrentSeason`)
         .pipe(
             //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
