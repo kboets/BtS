@@ -1,5 +1,7 @@
 /** League entity */
-import {Country} from "./country";
+import {Rounds} from "./rounds";
+import {Teams} from "./teams";
+
 
 export interface League {
     league_id: string;
@@ -12,4 +14,6 @@ export interface League {
     countryCode:string;
     country?:string
     isCurrent:boolean;
+    roundDtos: Rounds[];
+    teamDtos: Teams[];
 }

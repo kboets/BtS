@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {League} from "./league";
+import {League} from "../../general/league";
 import {catchError, map, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
 import {combineLatest, of, throwError} from "rxjs";
