@@ -41,7 +41,7 @@ public class TeamService {
                 List<Team> teams = teamMapper.toTeams(optionalTeamDtos.get());
                 teams.forEach(team -> team.setLeague(league));
                 teamRepository.saveAll(teams);
-                teamRepository.flush();
+                //teamRepository.flush();
                 league.setTeams(teams);
             }
         }

@@ -12,19 +12,16 @@
 <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
     <div class="row">
         <div class="col-sm-4" *ngFor="let league of leagues">
-            <div class="card bg-light mb-3">
+            <div class="card bg-light mb-3" (click)="toggleChild()">
                 <div class="card-header">{{league.country}}</div>
                 <div class="card-body">
                     <h4 class="card-title">{{league.name}}</h4>
                     <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
                     <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
                     <div class="card-text">Aantal teams : {{league.teamDtos.length}}</div>
-                    <p class="card-text"></p>
-                    <ng-container *ngIf="league.countryCode !== 'FR' ">
-                        <img [src]="league.logo" alt="" class="img-responsive">
-                    </ng-container>
                 </div>
             </div>
         </div>
     </div>
 </ng-container>
+<bts-standing [showStanding]="showStanding"></bts-standing>
