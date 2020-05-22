@@ -4,6 +4,7 @@ import {catchError, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
 import {EMPTY, Subject} from "rxjs";
 import {LeagueService} from "../league/league.service";
+import {TeamsService} from "./teams.service";
 
 @Component({
     selector: 'bts-league',
@@ -13,15 +14,12 @@ import {LeagueService} from "../league/league.service";
 export class TeamsComponent {
 
     error: GeneralError;
-    private leagueSelectedSubject;
     showStanding: boolean = false;
-    leagueSelectedAction$;
+    leagueSelectedSubject = new Subject();
+    leagueSelectedAction$ = this.leagueSelectedSubject.asObservable();
 
-    constructor(private leagueService : LeagueService) {
-        this.leagueSelectedSubject = new Subject();
-        this.leagueSelectedSubject = this.leagueSelectedSubject.asObservable();
+    constructor(private leagueService : LeagueService, private teamsService : TeamsService) {
     }
-
 
     selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
         .pipe(
@@ -31,7 +29,10 @@ export class TeamsComponent {
             })
         );
 
-    toggleChild(){
+
+
+    toggleStanding(league_id: string){
         this.showStanding = !this.showStanding;
+        this.teamsService.selectedLeagueChanged(+league_id);
     }
 }

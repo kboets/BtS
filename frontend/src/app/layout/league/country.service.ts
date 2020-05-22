@@ -1,6 +1,6 @@
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Country} from "./country";
+import {Country} from "../../general/country";
 import {catchError, tap} from "rxjs/operators";
 import {GeneralError} from "../../general/generalError";
 import {throwError} from "rxjs";
