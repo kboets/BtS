@@ -16,10 +16,14 @@ public class StandingResource {
 
     private Logger logger = LoggerFactory.getLogger(StandingResource.class);
 
+    private StandingClient standingClient;
+
+    public StandingResource(StandingClient standingClient) {
+        this.standingClient = standingClient;
+    }
     @GetMapping("/league/{league_id}")
     public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") String league_id) {
-
-
-        return Collections.emptyList();
+        //TODO foresee a service who checks if the latest stand is in db, otherwise retrieve via client
+        return standingClient.getLatestStandForLeague(league_id).orElse(Collections.emptyList());
     }
 }

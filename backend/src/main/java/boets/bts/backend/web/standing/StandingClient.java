@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class StandingClient {
 
     private Logger logger = LoggerFactory.getLogger(StandingClient.class);
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public Optional<List<StandingDto>> getLatestStandForLeague(String leagueId) {
         //1. make call
@@ -32,11 +36,12 @@ public class StandingClient {
             response = client.newCall(request).execute();
             if(response.isSuccessful()) {
                 //2. parse data
-                JsonArray leagueJsonArray = parseAllRoundsForLeaguesRawJson(response.body().string());
+                JsonArray standingJsonArray = parseAllRoundsForLeaguesRawJson(response.body().string());
+
                 //3. map data to dto
-                return Optional.ofNullable(mapJsonToStandingDto(leagueJsonArray));
+                return Optional.of(mapJsonToStandingDto(standingJsonArray, leagueId));
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             logger.warn("Exception on calling getAllRoundsForLeagueAndSeason" + e);
         } finally {
             if(response != null && response.body()!= null) {
@@ -46,15 +51,44 @@ public class StandingClient {
         return Optional.empty();
     }
 
-    private List<StandingDto> mapJsonToStandingDto(JsonArray jsonArray) {
+    private List<StandingDto> mapJsonToStandingDto(JsonArray jsonArray, String leagueId) throws ParseException {
         List<StandingDto> dtos = new ArrayList<>();
-        for(JsonElement leagueJsonElement : jsonArray) {
-            JsonObject standingJson = leagueJsonElement.getAsJsonObject();
-            StandingDto standingDto = new StandingDto();
-            
+        for(JsonElement standingJsonElement1 : jsonArray) {
+            for(JsonElement standingJsonElement :standingJsonElement1.getAsJsonArray()) {
+                JsonObject standingJson = standingJsonElement.getAsJsonObject();
+                StandingDto standingDto = new StandingDto();
+                standingDto.setLeague_id(leagueId);
+                standingDto.setPoints(standingJson.get("points").getAsInt());
+                standingDto.setRank(standingJson.get("rank").getAsInt());
+                standingDto.setTeam_id(standingJson.get("team_id").getAsString());
+                standingDto.setLastUpdate(dateFormat.parse(standingJson.get("lastUpdate").getAsString()));
+                JsonObject allSubstanding = standingJson.getAsJsonObject("all");
+                JsonObject awaySubstanding = standingJson.getAsJsonObject("away");
+                JsonObject homeSubstanding = standingJson.getAsJsonObject("home");
+                if(!allSubstanding.isJsonNull()) {
+                    standingDto.setAllSubStanding(retrieveSubStanding(allSubstanding));
+                }
+                if(!awaySubstanding.isJsonNull()) {
+                    standingDto.setAwaySubStanding(retrieveSubStanding(awaySubstanding));
+                }
+                if(!homeSubstanding.isJsonNull()) {
+                    standingDto.setHomeSubStanding(retrieveSubStanding(awaySubstanding));
+                }
+                dtos.add(standingDto);
+            }
         }
-
         return dtos;
+    }
+
+    private SubStandingDto retrieveSubStanding(JsonObject subStandingJson) {
+        SubStandingDto subStandingDto = new SubStandingDto();
+        subStandingDto.setMatchPlayed(subStandingJson.get("matchsPlayed").getAsInt());
+        subStandingDto.setDraw(subStandingJson.get("draw").getAsInt());
+        subStandingDto.setWin(subStandingJson.get("win").getAsInt());
+        subStandingDto.setLose(subStandingJson.get("lose").getAsInt());
+        subStandingDto.setGoalsFor(subStandingJson.get("goalsFor").getAsInt());
+        subStandingDto.setGoalsAgainst(subStandingJson.get("goalsAgainst").getAsInt());
+        return subStandingDto;
     }
 
     private JsonArray parseAllRoundsForLeaguesRawJson(String jsonAsString) {
