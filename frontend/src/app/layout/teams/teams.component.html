@@ -12,7 +12,7 @@
 <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
     <div class="row">
         <div class="col-sm-4" *ngFor="let league of leagues">
-            <div class="card bg-light mb-3" (click)="toggleStanding(league.league_id)">
+            <div class="card bg-light mb-3" (dblclick)="toggleStanding(league.league_id)">
                 <div class="card-header">{{league.country}}</div>
                 <div class="card-body">
                     <h4 class="card-title">{{league.name}}</h4>

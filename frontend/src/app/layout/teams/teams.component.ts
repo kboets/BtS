@@ -15,8 +15,6 @@ export class TeamsComponent {
 
     error: GeneralError;
     showStanding: boolean = false;
-    leagueSelectedSubject = new Subject();
-    leagueSelectedAction$ = this.leagueSelectedSubject.asObservable();
 
     constructor(private leagueService : LeagueService, private teamsService : TeamsService) {
     }
@@ -30,8 +28,7 @@ export class TeamsComponent {
         );
 
 
-
-    toggleStanding(league_id: string){
+    toggleStanding(league_id: string) {
         this.showStanding = !this.showStanding;
         this.teamsService.selectedLeagueChanged(+league_id);
     }

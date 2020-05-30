@@ -1,10 +1,16 @@
-<div class="card mb-3" *ngIf="showStanding && selectedLeagueWithTeamStanding$ | async as teamsWithStanding">
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <div class="alert alert-danger">
+        <strong>{{errorMessage}}</strong><br/> Bijkomende info :<br/>
+        {{errorMessage}}
+    </div>
+</ng-container>
+<div class="card mb-3" *ngIf="showStanding">
     <div class="card-header">Overzicht stand</div>
     <div class="card-body table-responsive">
-        <table class="table table-inverse">
+        <table class="table table-inverse"  *ngIf="standingsForSelectedLeague$ | async as teamsWithStanding">
             <thead>
             <tr>
-                <th>Plaats</th>
+                <th>Plaats </th>
                 <th>Club</th>
                 <th>Punten</th>
                 <th>Winst</th>
@@ -13,14 +19,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let team of teamsWithStanding">
-                <th scope="row">{{team.standing.rank}}</th>
-                <td>{{team.name}}</td>
-                <td>{{team.standing.points}}</td>
-                <td>{{team.standing.allStanding.win}}</td>
-                <td>{{team.standing.allStanding.draw}}</td>
-                <td>{{team.standing.allStanding.lose}}</td>
-            </tr>
+<!--            <tr *ngFor="let team of teamsWithStanding">-->
+<!--                <th scope="row">{{team.standing.rank}}</th>-->
+<!--                <td>{{team.name}}</td>-->
+<!--                <td>{{team.standing.points}}</td>-->
+<!--                <td>{{team.standing.allStanding.win}}</td>-->
+<!--                <td>{{team.standing.allStanding.draw}}</td>-->
+<!--                <td>{{team.standing.allStanding.lose}}</td>-->
+<!--            </tr>-->
             </tbody>
         </table>
     </div>
