@@ -22,8 +22,11 @@ export class TeamsService {
     standings$ = this.leagueSelectedAction$
         .pipe(
             switchMap(leagueId =>
-                this.http.get<Standing>(`/bts/api/standing/league/${leagueId}`)),
-            toArray()
+                this.http.get<Standing[]>(`/bts/api/standing/league/${leagueId}`))
+        )
+        .pipe(
+            tap(data => console.log('standing ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
         );
 
     //retrieve the league
