@@ -1,9 +1,11 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {LeagueService} from "../league/league.service";
-import {BehaviorSubject, combineLatest, from, Subject} from "rxjs";
-import {filter, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, from, Subject, throwError} from "rxjs";
+import {catchError, filter, map, mergeMap, switchMap, tap, toArray} from "rxjs/operators";
 import {Standing} from "../../general/standing";
+import {League} from "../../general/league";
+import {GeneralError} from "../../general/generalError";
 
 @Injectable({
     providedIn: 'root'
@@ -16,43 +18,37 @@ export class TeamsService {
     private leagueSelectedSubject = new BehaviorSubject<number>(0);
     leagueSelectedAction$ = this.leagueSelectedSubject.asObservable();
 
-    //1. league (with country) when clicked on overview
-    selectedLeague$ = combineLatest([
-        this.leagueService.selectedLeaguesWithCountries$,
-        this.leagueSelectedAction$
-    ]).pipe(
-        map(([leagues, selectedLeagueId]) =>
-            leagues.find(league => +league.league_id === selectedLeagueId)
-        ),
-        tap(league => console.log('selected league 1 ' +league.league_id))
-    );
-
-    //2. retrieve standings for league
-    standingsForSelectedLeague$ = this.selectedLeague$
+    //retrieve the standing
+    standings$ = this.leagueSelectedAction$
         .pipe(
-            switchMap(selectedLeague =>
-                 this.http.get<Standing>(`/bts/api/standing/league/${selectedLeague.league_id}`)),
-                        toArray(),
-            tap(data => console.log(JSON.stringify(data)))
-         );
+            switchMap(leagueId =>
+                this.http.get<Standing>(`/bts/api/standing/league/${leagueId}`)),
+            toArray()
+        );
 
-    //3. selected league with the standing of each team
-    selectedLeagueWithTeamStanding$ = combineLatest([
-        this.selectedLeague$,
-        this.standingsForSelectedLeague$]
-    ).pipe(
-        tap(data => console.log('before selectedLeagueWithTeamStanding$')),
-        map(([leagues, standing]) =>
-            leagues.teamDtos.map(teamDto =>({
-                ...teamDto,
-                standing: standing.find(s => s.team_id === teamDto.teamId)
-            })),
-            tap(league => console.log('league with standing ', JSON.stringify(league))
+    //retrieve the league
+    leagueWithId$ = this.leagueSelectedAction$
+        .pipe(
+            switchMap(leagueId => this.leagueService.getLeagueById(leagueId))
         )
-    ));
+        .pipe(
+            //tap(data => console.log('league ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
+
 
     selectedLeagueChanged(selectedLeagueId : number) {
         //console.log("team service : selectedLeagueChanged " +selectedLeagueId);
-        this.leagueSelectedSubject.next(selectedLeagueId)
+        this.leagueSelectedSubject.next(selectedLeagueId);
     }
+
+    private handleHttpError(error: HttpErrorResponse) {
+        //console.log("entering the handleHttpError of league service "+error.message);
+        let dataError = new GeneralError();
+        dataError.errorNumber = error.status;
+        dataError.errorMessage = error.message;
+        dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de leagues";
+        return throwError(dataError);
+    }
+
 }

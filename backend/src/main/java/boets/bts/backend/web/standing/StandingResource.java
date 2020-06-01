@@ -23,9 +23,11 @@ public class StandingResource {
     }
 
     @GetMapping("/league/{league_id}")
-    public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") String league_id) {
+    public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") Long league_id) {
         //TODO foresee a service who checks if the latest stand is in db, otherwise retrieve via client
-        List<StandingDto> standingDtos = standingClient.getLatestStandForLeague(league_id).orElse(Collections.emptyList());
+        logger.info("Arrived in the getAllStandingForLeague {}", league_id);
+        List<StandingDto> standingDtos = standingClient.getLatestStandForLeague(league_id.toString()).orElse(Collections.emptyList());
+        logger.info("Standings found {}", standingDtos.size());
         return standingDtos;
     }
 }

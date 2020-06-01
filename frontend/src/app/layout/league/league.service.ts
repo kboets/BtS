@@ -26,6 +26,12 @@ export class LeagueService {
             catchError(this.handleHttpError)
         );
 
+    //selectedLeagueForId
+    getLeagueById(id:number)  {
+        return this.http.get<League>(`/bts/api/league/get/${id}`)
+    }
+
+
     availableLeaguesWithCountries$ = combineLatest([this.availableLeagues$, this.countryService.countries$])
         .pipe(
             map(([leagues, countries]) =>
@@ -45,6 +51,9 @@ export class LeagueService {
                 }) as League)
             )
         );
+
+
+
 
     private handleHttpError(error: HttpErrorResponse) {
         //console.log("entering the handleHttpError of league service "+error.message);

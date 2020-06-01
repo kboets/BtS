@@ -1,6 +1,10 @@
 package boets.bts.backend.web.team;
 
 import boets.bts.backend.web.league.LeagueDto;
+import boets.bts.backend.web.standing.StandingDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamDto {
 
@@ -11,6 +15,7 @@ public class TeamDto {
     private String stadiumName;
     private int stadiumCapacity;
     private String city;
+    private List<StandingDto> standings;
 
     public String getTeamId() {
         return teamId;
@@ -68,7 +73,16 @@ public class TeamDto {
         this.city = city;
     }
 
+    public List<StandingDto> getStandings() {
+        if(standings == null) {
+            standings = new ArrayList<>();
+        }
+        return standings;
+    }
 
+    public void setStandings(List<StandingDto> standings) {
+        this.standings = standings;
+    }
 
     public static final class TeamDtoBuilder {
         private String teamId;

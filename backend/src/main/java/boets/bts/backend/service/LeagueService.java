@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static boets.bts.backend.service.CountryService.allowedCountries;
@@ -44,6 +45,14 @@ public class LeagueService  {
         this.teamService = teamService;
         this.leagueBettingDefinerFactory = leagueBettingDefinerFactory;
         this.roundService = roundService;
+    }
+
+    public LeagueDto getLeagueById(Long id) {
+        Optional<League> leagueOptional = leagueRepository.findById(id);
+        if(leagueOptional.isPresent()){
+            return leagueMapper.toLeagueDto(leagueOptional.get());
+        }
+        return new LeagueDto();
     }
 
     public List<LeagueDto> getCurrentSelectedLeagues() {

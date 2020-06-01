@@ -7,7 +7,7 @@
 <div class="card mb-3" *ngIf="showStanding">
     <div class="card-header">Overzicht stand</div>
     <div class="card-body table-responsive">
-        <table class="table table-inverse"  *ngIf="standingsForSelectedLeague$ | async as teamsWithStanding">
+        <table class="table table-inverse"  *ngIf="selectedLeagueWithTeamStanding$ | async as teamsWithStanding">
             <thead>
             <tr>
                 <th>Plaats </th>
@@ -19,14 +19,14 @@
             </tr>
             </thead>
             <tbody>
-<!--            <tr *ngFor="let team of teamsWithStanding">-->
-<!--                <th scope="row">{{team.standing.rank}}</th>-->
-<!--                <td>{{team.name}}</td>-->
-<!--                <td>{{team.standing.points}}</td>-->
-<!--                <td>{{team.standing.allStanding.win}}</td>-->
-<!--                <td>{{team.standing.allStanding.draw}}</td>-->
-<!--                <td>{{team.standing.allStanding.lose}}</td>-->
-<!--            </tr>-->
+            <tr *ngFor="let team of teamsWithStanding">
+                <th scope="row">{{team.standing.rank}}</th>
+                <td>{{team.name}}</td>
+                <td>{{team.standing.points}}</td>
+                <td>{{team.standing.allStanding.win}}</td>
+                <td>{{team.standing.allStanding.draw}}</td>
+                <td>{{team.standing.allStanding.lose}}</td>
+            </tr>
             </tbody>
         </table>
     </div>
