@@ -15,7 +15,7 @@ public class TeamDto {
     private String stadiumName;
     private int stadiumCapacity;
     private String city;
-    private List<StandingDto> standings;
+    private StandingDto standing;
 
     public String getTeamId() {
         return teamId;
@@ -73,15 +73,12 @@ public class TeamDto {
         this.city = city;
     }
 
-    public List<StandingDto> getStandings() {
-        if(standings == null) {
-            standings = new ArrayList<>();
-        }
-        return standings;
+    public StandingDto getStanding() {
+        return standing;
     }
 
-    public void setStandings(List<StandingDto> standings) {
-        this.standings = standings;
+    public void setStanding(StandingDto standing) {
+        this.standing = standing;
     }
 
     public static final class TeamDtoBuilder {

@@ -25,7 +25,7 @@ export class TeamsService {
                 this.http.get<Standing[]>(`/bts/api/standing/league/${leagueId}`))
         )
         .pipe(
-            tap(data => console.log('standing ', JSON.stringify(data))),
+            //tap(data => console.log('standing ', JSON.stringify(data))),
             catchError(this.handleHttpError)
         );
 

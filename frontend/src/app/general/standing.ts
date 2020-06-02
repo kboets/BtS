@@ -6,7 +6,7 @@ export interface Standing {
     rank: number;
     points:number;
     lastUpdate:Date;
-    homeStanding:SubStanding;
-    awayStanding:SubStanding;
-    allStanding:SubStanding;
+    homeSubStanding?:SubStanding;
+    awaySubStanding?:SubStanding;
+    allSubStanding?:SubStanding;
 }

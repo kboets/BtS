@@ -1,11 +1,10 @@
 import {Component, Input} from "@angular/core";
-import {routerTransition} from "../../../router.animations";
-import {League} from "../../../general/league";
 import {TeamsService} from "../teams.service";
 import {catchError, map, tap} from "rxjs/operators";
 import {combineLatest, EMPTY, Subject} from "rxjs";
-import {GeneralError} from "../../../general/generalError";
 import {LeagueService} from "../../league/league.service";
+import * as _ from 'underscore';
+import {Standing} from "../../../general/standing";
 
 @Component({
     selector: 'bts-standing',
@@ -19,15 +18,13 @@ export class StandingComponent {
     private errorMessageSubject = new Subject<string>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
-
     constructor(private teamsService: TeamsService, private leagueService: LeagueService) { }
 
     //standings
     standings$ = this.teamsService.standings$
         .pipe(
-            tap(data => console.log('standings ', JSON.stringify(data))),
+            //tap(data => console.log('standings ', JSON.stringify(data))),
             catchError(err => {
-                console.log('error occured');
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })
@@ -36,6 +33,7 @@ export class StandingComponent {
     //league
     leagueWithId$ = this.teamsService.leagueWithId$
         .pipe(
+            //tap(data => console.log('league ', JSON.stringify(data))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
@@ -44,16 +42,30 @@ export class StandingComponent {
 
     //selected league with the standing of each team
     selectedLeagueWithTeamStanding$ = combineLatest([
-        this.standings$,
-        this.leagueWithId$]
+        this.leagueWithId$,
+        this.standings$]
     ).pipe(
-        tap(data =>  console.log('data retrieved in combineLatest ', JSON.stringify(data))),
-        map(([standings, league]) =>
-            league.teamDtos.map(teamDto =>({
+        map(([league, standings, ]) =>
+            league.teamDtos.map(
+                teamDto =>({
                 ...teamDto,
-                standing: standings.find(s => s.team_id === teamDto.teamId)
+                //standing: _.sortBy(_.findWhere(standings, {team_id: teamDto.teamId}), "rank")
+                standing: _.findWhere(standings, {team_id: teamDto.teamId})
             }))
         )
     );
 
+    //selected league with sorted standing of each team
+    selectedLeagueWithTeamStandingSorted$ = this.selectedLeagueWithTeamStanding$
+        .pipe(
+            map(items => items.sort(this.sortByStandingRank)
+        ));
+
+    private sortByStandingRank(a,b) {
+        if(a.standing.rank > b.standing.rank) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 }
