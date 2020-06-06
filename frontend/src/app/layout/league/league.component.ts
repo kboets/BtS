@@ -8,11 +8,14 @@ import {EMPTY} from "rxjs";
 @Component({
     selector: 'bts-league',
     templateUrl: './league.component.html',
+    styleUrls: ['./league.component.scss'],
     animations: [routerTransition()]
 })
 export class LeagueComponent {
 
     error: GeneralError;
+    selectedLeagues: string[] = [];
+
     constructor(private leagueService : LeagueService) {
     }
 
@@ -31,4 +34,8 @@ export class LeagueComponent {
                 return EMPTY;
             })
         );
+
+    handleSelectedLeagues() {
+        console.log('entered the handle selected leagues ' +this.selectedLeagues.length);
+    }
 }

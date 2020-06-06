@@ -57,17 +57,17 @@ public class LeagueService  {
 
     public List<LeagueDto> getCurrentSelectedLeagues() {
         boolean isChanged = false;
-        List<LeagueDto> availableLeagues = this.getLeaguesCurrentSeason(true);
+        List<LeagueDto> selectedLeagues = this.getLeaguesCurrentSeason(true);
         //check teams
-        List<League> leagueList = leagueMapper.toLeagues(availableLeagues);
-        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
+        List<League> leagueList = leagueMapper.toLeagues(selectedLeagues);
+        if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
             isChanged = true;
             for(League league: leagueList) {
                 teamService.updateLeagueWithTeams(league);
             }
         }
         //check rounds
-        if(availableLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
+        if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
             isChanged = true;
             for(League league: leagueList) {
                 roundService.updateLeagueWithRounds(league);
@@ -75,40 +75,52 @@ public class LeagueService  {
         }
         if(isChanged) {
             leagueRepository.saveAll(leagueList);
-            availableLeagues.clear();
-            availableLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
+            selectedLeagues.clear();
+            selectedLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
         }
 
-       return availableLeagues;
+       return selectedLeagues;
     }
 
 
-    public List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
+    public synchronized List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
         int currentSeason = WebUtils.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty()) {
-            //make call to webservice
-            logger.info(String.format("no leagues found for season start year %s", currentSeason));
-            leagues = retrieveLeaguesFromWebService(currentSeason);
+            return this.retrieveAndFilterAndPersistLeagues(currentSeason, isSelected);
         }
+        List<League> requestedLeagues = leagues.stream()
+                .filter(league -> league.isSelected() == isSelected)
+                .collect(Collectors.toList());
+
+        verifyPersistedLeagueIsCurrent(requestedLeagues);
+        return leagueMapper.toLeagueDtoList(requestedLeagues);
+    }
+
+    private List<LeagueDto> retrieveAndFilterAndPersistLeagues(int currentSeason, boolean isSelected) {
+        logger.info(String.format("No leagues found in database for season start year %s, start retrieving", currentSeason));
+        //1 make call to webservice to retrieve all Leagues of current season
+        List<League> leagues = retrieveLeaguesFromWebService(currentSeason);
+        //2. filter the leagues for the allowed country's
         Map<String, List<League>> leaguesForCountry = leagues.stream()
                 .filter(league -> allowedCountries.contains(league.getCountryCode()))
-                .filter(league -> league.isSelected() == isSelected)
                 .collect(Collectors.groupingBy(League::getCountryCode));
-
+        //3. filter the leagues further for the allowed betting sides
         List<League> selectedLeagues = new ArrayList<>();
-        //select only the leagues available on betting sites of the country
         for(String countryCode: leaguesForCountry.keySet()) {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
             selectedLeagues.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
-        if(leagues.isEmpty()) {
-            leagueRepository.saveAll(selectedLeagues);
-        }
+        //4. persist to database
+        leagueRepository.saveAll(selectedLeagues);
+        //5. make check if league is still current
         verifyPersistedLeagueIsCurrent(selectedLeagues);
-        return leagueMapper.toLeagueDtoList(selectedLeagues);
+        //6. only return the requested type of league
+        List<League> requestedLeagues = selectedLeagues.stream()
+                .filter(league -> league.isSelected() == isSelected)
+                .collect(Collectors.toList());
+        return leagueMapper.toLeagueDtoList(requestedLeagues);
     }
-
     private void verifyPersistedLeagueIsCurrent(List<League> leagues) {
         LocalDate now = LocalDate.now();
         if(leagues.stream().anyMatch(league -> now.isAfter(league.getEndSeason()) && league.isCurrent())) {
