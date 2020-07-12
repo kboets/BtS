@@ -10,4 +10,5 @@
     <include file="/liquibase/changelog/002_createCountry.xml" />
     <include file="/liquibase/changelog/003_createTeam.xml" />
     <include file="/liquibase/changelog/004_createRound.xml" />
+    <include file="/liquibase/changelog/005_createResult.xml" />
 </databaseChangeLog>

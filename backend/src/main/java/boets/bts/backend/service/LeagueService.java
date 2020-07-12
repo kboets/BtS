@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static boets.bts.backend.service.CountryService.allowedCountries;
 
@@ -121,6 +122,18 @@ public class LeagueService  {
                 .collect(Collectors.toList());
         return leagueMapper.toLeagueDtoList(requestedLeagues);
     }
+
+    public void updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
+        List<League> updatedLeagues = leagueIds.stream()
+                .map(id -> leagueRepository.findById(id))
+                .flatMap(league -> league.isPresent() ? Stream.of(league.get()) : Stream.empty())
+                .peek(league -> league.setSelected(toSelected))
+                .collect(Collectors.toList());
+
+        leagueRepository.saveAll(updatedLeagues);
+    }
+
+
     private void verifyPersistedLeagueIsCurrent(List<League> leagues) {
         LocalDate now = LocalDate.now();
         if(leagues.stream().anyMatch(league -> now.isAfter(league.getEndSeason()) && league.isCurrent())) {
@@ -136,5 +149,7 @@ public class LeagueService  {
         List<LeagueDto> leagueDtos = leagueClient.allLeaguesForSeason(currentSeason);
         return leagueMapper.toLeagues(leagueDtos);
     }
+
+
 
 }

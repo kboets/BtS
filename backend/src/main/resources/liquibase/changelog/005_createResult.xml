@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_result" author="kboets">
+        <createTable tableName="RESULT">
+            <column autoIncrement="true" name="result_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="eventDate" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="goalsHomeTeam" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="goalsAwayTeam" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="league_id" type="bigint"/>
+            <column name="homeTeam_id" type="bigint"/>
+            <column name="awayTeam_id" type="bigint"/>
+            <column name="round_id" type="bigint"/>
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="fk_league_result"
+                referencedTableName="LEAGUE"
+                baseColumnNames="league_id"
+                baseTableName="RESULT" referencedColumnNames="league_id" />
+        <addForeignKeyConstraint
+                constraintName="fk_league_result_HT"
+                referencedTableName="TEAM"
+                baseColumnNames="homeTeam_id"
+                baseTableName="RESULT" referencedColumnNames="team_id" />
+        <addForeignKeyConstraint
+                constraintName="fk_league_result_AT"
+                referencedTableName="TEAM"
+                baseColumnNames="awayTeam_id"
+                baseTableName="RESULT" referencedColumnNames="team_id" />
+        <addForeignKeyConstraint
+                constraintName="fk_league_result_round"
+                referencedTableName="ROUND"
+                baseColumnNames="round_id"
+                baseTableName="RESULT" referencedColumnNames="round_id" />
+    </changeSet>
+
+
+</databaseChangeLog>

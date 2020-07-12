@@ -56,11 +56,12 @@ public class WebUtils {
     }
 
     public static synchronized int getCurrentSeason() {
-        LocalDate now = LocalDate.now();
-        if(now.getMonthValue() < Month.JULY.getValue()) {
-            return now.getYear() - 1;
-        }
-        return  now.getYear();
+//        LocalDate now = LocalDate.now();
+//        if(now.getMonthValue() < Month.JULY.getValue()) {
+//            return now.getYear() - 1;
+//        }
+//        return  now.getYear();
+        return 2019;
     }
 
 }
