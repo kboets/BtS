@@ -3,6 +3,8 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.round.RoundRepository;
+import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.RoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
@@ -29,7 +31,7 @@ public class RoundService {
     }
 
     /**
-     * Retrieves the rounds of a league when not yet present.
+     * Retrieves and saves the rounds of a league when not yet present.
      * @param league - the League to be checked
      * @return League - the updated League
      */
@@ -44,6 +46,19 @@ public class RoundService {
                //roundRepository.flush();
                 league.setRounds(rounds);
             }
+        }
+    }
+
+    public Round getCurrentRound(Long leagueId, int season) {
+        RoundDto latestRound = roundClient.getCurrentRoundForLeagueAndSeason(season, leagueId).orElseThrow(RuntimeException::new);
+        return roundMapper.toRound(latestRound);
+    }
+
+    public Round getRoundByName(String name) {
+        if(roundRepository.findOne(RoundSpecs.getRoundByName(name)).isPresent()) {
+            return roundRepository.findOne(RoundSpecs.getRoundByName(name)).get();
+        } else {
+            throw new NotFoundException("Could not find Round with name " +name);
         }
     }
 }

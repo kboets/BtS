@@ -6,6 +6,7 @@ import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefinerFactory;
 import boets.bts.backend.web.WebUtils;
+import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.league.ILeagueClient;
@@ -48,12 +49,21 @@ public class LeagueService  {
         this.roundService = roundService;
     }
 
-    public LeagueDto getLeagueById(Long id) {
+    public LeagueDto getLeagueDtoById(Long id) {
         Optional<League> leagueOptional = leagueRepository.findById(id);
         if(leagueOptional.isPresent()){
             return leagueMapper.toLeagueDto(leagueOptional.get());
         }
         return new LeagueDto();
+    }
+
+    public League getLeagueById(Long id) {
+        Optional<League> leagueOptional = leagueRepository.findById(id);
+        if(leagueOptional.isPresent()){
+            return leagueOptional.get();
+        } else {
+            throw new NotFoundException("Could not find league with id " +id);
+        }
     }
 
     public List<LeagueDto> getCurrentSelectedLeagues() {

@@ -3,6 +3,7 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Team;
 import boets.bts.backend.repository.team.TeamRepository;
+import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.team.TeamDto;
 import boets.bts.backend.web.team.TeamMapper;
 import boets.bts.backend.web.team.TeamClient;
@@ -45,5 +46,15 @@ public class TeamService {
                 league.setTeams(teams);
             }
         }
+    }
+
+    public Team getTeamById(Long teamId) {
+        Optional<Team> teamOptional = teamRepository.findById(teamId);
+        if(teamOptional.isPresent()) {
+            return teamOptional.get();
+        } else {
+            throw new NotFoundException("Could not find team with id " +teamId);
+        }
+
     }
 }

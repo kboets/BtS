@@ -16,10 +16,10 @@ public class Result implements Serializable {
     @Column(nullable = false, name = "event_date")
     private LocalDate eventDate;
 
-    @Column(nullable = false, name = "goalsHomeTeam")
+    @Column(nullable = false, name = "goals_home_team")
     private int goalsHomeTeam;
 
-    @Column(nullable = false, name = "goalsAwayTeam")
+    @Column(nullable = false, name = "goals_away_team")
     private int goalsAwayTeam;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -27,11 +27,11 @@ public class Result implements Serializable {
     private League league;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "homeTeam_id", referencedColumnName = "team_id")
+    @JoinColumn(name = "hometeam_id", referencedColumnName = "team_id")
     private Team homeTeam;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "awayTeam_id", referencedColumnName = "team_id")
+    @JoinColumn(name = "awayteam_id", referencedColumnName = "team_id")
     private Team awayTeam;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

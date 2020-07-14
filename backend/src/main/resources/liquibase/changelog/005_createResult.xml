@@ -11,18 +11,18 @@
             <column autoIncrement="true" name="result_id" type="bigint">
                 <constraints nullable="false" primaryKey="true" />
             </column>
-            <column name="eventDate" type="date">
+            <column name="event_date" type="date">
                 <constraints nullable="false" />
             </column>
-            <column name="goalsHomeTeam" type="int">
+            <column name="goals_home_team" type="int">
                 <constraints nullable="false" />
             </column>
-            <column name="goalsAwayTeam" type="int">
+            <column name="goals_away_team" type="int">
                 <constraints nullable="false" />
             </column>
             <column name="league_id" type="bigint"/>
-            <column name="homeTeam_id" type="bigint"/>
-            <column name="awayTeam_id" type="bigint"/>
+            <column name="hometeam_id" type="bigint"/>
+            <column name="awayteam_id" type="bigint"/>
             <column name="round_id" type="bigint"/>
         </createTable>
         <addForeignKeyConstraint
@@ -33,12 +33,12 @@
         <addForeignKeyConstraint
                 constraintName="fk_league_result_HT"
                 referencedTableName="TEAM"
-                baseColumnNames="homeTeam_id"
+                baseColumnNames="hometeam_id"
                 baseTableName="RESULT" referencedColumnNames="team_id" />
         <addForeignKeyConstraint
                 constraintName="fk_league_result_AT"
                 referencedTableName="TEAM"
-                baseColumnNames="awayTeam_id"
+                baseColumnNames="awayteam_id"
                 baseTableName="RESULT" referencedColumnNames="team_id" />
         <addForeignKeyConstraint
                 constraintName="fk_league_result_round"

@@ -4,16 +4,27 @@ import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.team.TeamDto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ResultDto {
+
+    private String result_id;
     private LeagueDto league;
-    private Date eventDate;
+    private LocalDate eventDate;
     private RoundDto round;
     private TeamDto homeTeam;
     private TeamDto awayTeam;
     private int goalsHomeTeam;
     private int goalsAwayTeam;
+
+    public String getResult_id() {
+        return result_id;
+    }
+
+    public void setResult_id(String result_id) {
+        this.result_id = result_id;
+    }
 
     public LeagueDto getLeague() {
         return league;
@@ -23,11 +34,11 @@ public class ResultDto {
         this.league = league;
     }
 
-    public Date getEventDate() {
+    public LocalDate getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(LocalDate eventDate) {
         this.eventDate = eventDate;
     }
 

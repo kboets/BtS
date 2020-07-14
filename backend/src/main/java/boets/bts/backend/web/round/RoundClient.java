@@ -22,6 +22,31 @@ public class RoundClient {
 
     private Logger logger = LoggerFactory.getLogger(RoundClient.class);
 
+    public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(int season, long leagueId) {
+        //1. make call
+        OkHttpClient client = new OkHttpClient();
+        String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId), "current");
+        Request request = WebUtils.createRequest(url);
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+            if(response.isSuccessful()) {
+                //2. parse data
+                JsonArray leagueJsonArray = parseAllRoundsForLeaguesRawJson(response.body().string());
+                //3. map data to dto
+                List<RoundDto> roundDtos = mapJsonToRoundDto(leagueJsonArray, season);
+                return Optional.ofNullable(roundDtos.get(0));
+            }
+        } catch (IOException e) {
+            logger.warn("Exception on calling getAllRoundsForLeagueAndSeason" + e);
+        } finally {
+            if(response != null && response.body()!= null) {
+                response.body().close();
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<List<RoundDto>> getAllRoundsForLeagueAndSeason(int season, long leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
