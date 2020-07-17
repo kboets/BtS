@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/league/")
@@ -35,13 +36,15 @@ public class LeagueResource {
     }
 
     @PutMapping("/toSelected")
-    public void updateToSelectedLeagues(@RequestBody List<Long> leagueIds) {
-        leagueService.updateLeagueAvailableOrSelectable(leagueIds, true);
+    public boolean updateToSelectedLeagues(@RequestBody List<String> leagueIds) {
+        List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
+        return leagueService.updateLeagueAvailableOrSelectable(ids, true);
     }
 
     @PutMapping("/toAvailable")
-    public void updateToAvailableLeagues(@RequestBody List<Long> leagueIds) {
-        leagueService.updateLeagueAvailableOrSelectable(leagueIds, false);
+    public boolean updateToAvailableLeagues(@RequestBody List<String> leagueIds) {
+        List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
+        return leagueService.updateLeagueAvailableOrSelectable(ids, false);
     }
 
 }

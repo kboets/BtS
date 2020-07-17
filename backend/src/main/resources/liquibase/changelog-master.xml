@@ -11,4 +11,5 @@
     <include file="/liquibase/changelog/003_createTeam.xml" />
     <include file="/liquibase/changelog/004_createRound.xml" />
     <include file="/liquibase/changelog/005_createResult.xml" />
+    <include file="/liquibase/changelog/006_updateRound.xml" />
 </databaseChangeLog>

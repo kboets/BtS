@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "LEAGUE")
@@ -144,5 +145,26 @@ public class League implements Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        League league = (League) o;
+        return current == league.current &&
+                season == league.season &&
+                selected == league.selected &&
+                name.equals(league.name) &&
+                Objects.equals(startSeason, league.startSeason) &&
+                Objects.equals(endSeason, league.endSeason) &&
+                countryCode.equals(league.countryCode) &&
+                Objects.equals(logo, league.logo) &&
+                Objects.equals(flag, league.flag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, current, startSeason, endSeason, season, countryCode, logo, flag, selected);
     }
 }

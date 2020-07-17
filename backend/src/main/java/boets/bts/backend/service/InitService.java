@@ -25,16 +25,19 @@ public class InitService {
     private CountryClient countryClient;
     private CountryRepository countryRepository;
     private CountryMapper countryMapper;
+    private LeagueService leagueService;
 
-    public InitService(CountryRepository countryRepository, CountryClient countryClient, CountryMapper countryMapper) {
+    public InitService(CountryRepository countryRepository, CountryClient countryClient, CountryMapper countryMapper, LeagueService leagueService) {
         this.countryClient = countryClient;
         this.countryRepository = countryRepository;
         this.countryMapper = countryMapper;
+        this.leagueService = leagueService;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void initMetaData() {
         this.initAllCountries();
+        this.initAllAvailableLeagues();
     }
 
 
@@ -44,6 +47,10 @@ public class InitService {
             logger.info("No country codes yet available, start download.");
             this.handleCountryDtos(countryClient.getAllCountries());
         }
+    }
+
+    public void initAllAvailableLeagues() {
+        leagueService.getLeaguesCurrentSeason(false);
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {

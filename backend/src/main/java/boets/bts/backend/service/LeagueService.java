@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,21 +68,28 @@ public class LeagueService  {
         List<LeagueDto> selectedLeagues = this.getLeaguesCurrentSeason(true);
         //check teams
         List<League> leagueList = leagueMapper.toLeagues(selectedLeagues);
+        Set<League> toBeUpdated = new HashSet<>();
         if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
             isChanged = true;
             for(League league: leagueList) {
-                teamService.updateLeagueWithTeams(league);
+                if(league.getTeams().isEmpty()) {
+                    teamService.updateLeagueWithTeams(league);
+                    toBeUpdated.add(league);
+                }
             }
         }
         //check rounds
         if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
             isChanged = true;
             for(League league: leagueList) {
-                roundService.updateLeagueWithRounds(league);
+                if(league.getRounds().isEmpty()) {
+                    roundService.updateLeagueWithRounds(league);
+                    toBeUpdated.add(league);
+                }
             }
         }
         if(isChanged) {
-            leagueRepository.saveAll(leagueList);
+            leagueRepository.saveAll(toBeUpdated);
             selectedLeagues.clear();
             selectedLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
         }
@@ -94,7 +98,7 @@ public class LeagueService  {
     }
 
 
-    public synchronized List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
+    public List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
         int currentSeason = WebUtils.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty()) {
@@ -133,7 +137,7 @@ public class LeagueService  {
         return leagueMapper.toLeagueDtoList(requestedLeagues);
     }
 
-    public void updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
+    public boolean updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
         List<League> updatedLeagues = leagueIds.stream()
                 .map(id -> leagueRepository.findById(id))
                 .flatMap(league -> league.isPresent() ? Stream.of(league.get()) : Stream.empty())
@@ -141,6 +145,7 @@ public class LeagueService  {
                 .collect(Collectors.toList());
 
         leagueRepository.saveAll(updatedLeagues);
+        return true;
     }
 
 

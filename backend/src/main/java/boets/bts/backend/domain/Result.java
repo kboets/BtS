@@ -34,7 +34,7 @@ public class Result implements Serializable {
     @JoinColumn(name = "awayteam_id", referencedColumnName = "team_id")
     private Team awayTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "round_id", referencedColumnName = "round_id")
     private Round round;
 

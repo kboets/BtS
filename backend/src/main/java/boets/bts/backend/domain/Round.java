@@ -2,6 +2,7 @@ package boets.bts.backend.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "ROUND")
@@ -18,7 +19,13 @@ public class Round implements Serializable {
     @Column(nullable = false)
     private int season;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @Column
+    private Boolean current;
+
+    @Column(name = "actual_date")
+    private LocalDate currentDate;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 
@@ -53,5 +60,21 @@ public class Round implements Serializable {
 
     public void setLeague(League league) {
         this.league = league;
+    }
+
+    public Boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Boolean current) {
+        this.current = current;
+    }
+
+    public LocalDate getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(LocalDate currentDate) {
+        this.currentDate = currentDate;
     }
 }

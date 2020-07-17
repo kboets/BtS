@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RoundService {
@@ -36,22 +38,34 @@ public class RoundService {
      * @return League - the updated League
      */
     public void updateLeagueWithRounds(League league) {
-        if(league.getRounds().isEmpty()) {
-            Optional<List<RoundDto>> optionalRoundDtos = roundClient.getAllRoundsForLeagueAndSeason(league.getSeason(), league.getId());
-            if(optionalRoundDtos.isPresent()) {
-                logger.info("Could retrieve {} rounds for league {} ", optionalRoundDtos.get().size(), league.getName());
-                List<Round> rounds = roundMapper.toRounds(optionalRoundDtos.get());
-                rounds.forEach(round -> round.setLeague(league));
-                roundRepository.saveAll(rounds);
-               //roundRepository.flush();
-                league.setRounds(rounds);
-            }
+        Optional<List<RoundDto>> optionalRoundDtos = roundClient.getAllRoundsForLeagueAndSeason(league.getSeason(), league.getId());
+        if(optionalRoundDtos.isPresent()) {
+            logger.info("Could retrieve {} rounds for league {} ", optionalRoundDtos.get().size(), league.getName());
+            List<Round> rounds = roundMapper.toRounds(optionalRoundDtos.get());
+            rounds.forEach(round -> round.setLeague(league));
+            roundRepository.saveAll(rounds);
+            //roundRepository.flush();
+            league.setRounds(rounds);
         }
     }
 
-    public Round getCurrentRound(Long leagueId, int season) {
-        RoundDto latestRound = roundClient.getCurrentRoundForLeagueAndSeason(season, leagueId).orElseThrow(RuntimeException::new);
-        return roundMapper.toRound(latestRound);
+    public Round getCurrentRoundForLeagueAndSeason(Long leagueId, int season) {
+        Optional<Round> roundOptional = roundRepository.findOne(RoundSpecs.getCurrentRound());
+        if(!roundOptional.isPresent() || !roundOptional.get().getCurrentDate().equals(LocalDate.now())) {
+            RoundDto latestRound = roundClient.getCurrentRoundForLeagueAndSeason(season, leagueId).orElseThrow(RuntimeException::new);
+            List<Round> rounds = roundRepository.findAll();
+            List<Round> updatedRound = rounds.stream().peek(round -> round.setCurrent(false)).collect(Collectors.toList());
+            for(Round round : updatedRound) {
+                if(round.getRound().equals(latestRound.getRound())){
+                    round.setCurrent(true);
+                    round.setCurrentDate(LocalDate.now());
+                }
+            }
+            roundRepository.saveAll(updatedRound);
+            roundOptional = roundRepository.findOne(RoundSpecs.getCurrentRound());
+            return roundOptional.orElseThrow(RuntimeException::new);
+        }
+        return roundOptional.get();
     }
 
     public Round getRoundByName(String name) {

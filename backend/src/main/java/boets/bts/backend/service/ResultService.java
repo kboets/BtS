@@ -2,6 +2,7 @@ package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
+import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.web.results.ResultClient;
@@ -39,7 +40,7 @@ public class ResultService {
         this.teamService = teamService;
     }
 
-    public List<ResultDto> retrieveAllResultsForLeague(Long leagueId) {
+    public List<ResultDto> retrieveAllResultsForLeague(Long leagueId, int season) {
         League league = leagueService.getLeagueById(leagueId);
         List<Result> results = resultRepository.findAll(ResultSpecs.getResultByLeagueAndSeason(league));
         if(results.isEmpty()) {
@@ -53,6 +54,13 @@ public class ResultService {
                     .collect(Collectors.toList());
             resultListWith = resultRepository.saveAll(resultListWith);
             return resultMapper.toResultDtos(resultListWith);
+        }
+        //check if db is up to date
+        Round upcomingRound = roundService.getCurrentRoundForLeagueAndSeason(leagueId, season);
+        Result lastResult = results.get(results.size() - 1);
+        if((upcomingRound.getId()-1) != lastResult.getRound().getId()) {
+            //TODO Implement this
+            logger.info("needs update ! ");
         }
         return resultMapper.toResultDtos(results);
     }

@@ -15,4 +15,11 @@ public class RoundSpecs {
             return predicate;
         };
     }
+
+    public static Specification<Round> getCurrentRound() {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("current"), true);
+            return predicate;
+        };
+    }
 }
