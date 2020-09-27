@@ -1,31 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
+/* tslint:disable:no-unused-variable */
 
+import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
+import { AppMenuComponent } from './app.menu.component';
 
 describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
-
-  beforeEach(
-    async(() => {
-      TestBed.configureTestingModule({
-        imports: [AppModule],
-        providers: [
-          { provide: APP_BASE_HREF, useValue: '/' },
-        ]
-      }).compileComponents();
-    })
-  );
-
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      imports: [ RouterTestingModule ],
+      declarations: [ AppComponent,
+        AppMenuComponent
+      ]
+    });
+    TestBed.compileComponents();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create the app', async(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
+  }));
 });

@@ -1,14 +1,14 @@
-import { AppPage } from './app.po';
+import {OmegaPage} from './app.po';
 
-describe('test-ng8 App', () => {
-  let page: AppPage;
+describe('Omega App', () => {
+    let page: OmegaPage;
 
-  beforeEach(() => {
-    page = new AppPage();
-  });
+    beforeEach(() => {
+        page = new OmegaPage();
+    });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('SB Admin BS4 Angular8');
-  });
+    it('should display welcome message', () => {
+        page.navigateTo();
+        expect(page.getTitleText()).toEqual('Welcome to Omega!');
+    });
 });

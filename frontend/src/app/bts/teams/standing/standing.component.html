@@ -1,0 +1,33 @@
+<!--<ng-container *ngIf="errorMessage$ | async as errorMessage">-->
+<!--    <div class="alert alert-danger">-->
+<!--        <strong>{{errorMessage}}</strong><br/> Bijkomende info :<br/>-->
+<!--        {{errorMessage}}-->
+<!--    </div>-->
+<!--</ng-container>-->
+<div class="ui-g-12" *ngIf="showStanding">
+    <ng-container *ngIf="selectedLeagueWithTeamStandingSorted$ | async as teams">
+        <p-table [value]="teams" class="ui-g-12" [columns]="cols">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-team>
+                <tr>
+                    <td>{{team.standing.rank}}</td>
+                    <td>{{team.name}}</td>
+                    <td>{{team.standing.points}}</td>
+                    <td>{{team.standing.allSubStanding.matchPlayed}}</td>
+                    <td>{{team.standing.allSubStanding.win}}</td>
+                    <td>{{team.standing.allSubStanding.draw}}</td>
+                    <td>{{team.standing.allSubStanding.lose}}</td>
+                </tr>
+
+            </ng-template>
+        </p-table>
+    </ng-container>
+
+</div>
+

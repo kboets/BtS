@@ -1,0 +1,249 @@
+<div class="ui-g ui-fluid dashboard">
+    <div class="ui-g-12 ui-md-4">
+        <div class="card clearfix summary">
+            <span class="title">Users</span>
+            <span class="detail">Number of visitors</span>
+            <span class="count visitors">12</span>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+        <div class="card clearfix summary">
+            <span class="title">Sales</span>
+            <span class="detail">Number of purchases</span>
+            <span class="count purchases">534</span>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+        <div class="card clearfix summary">
+            <span class="title">Revenue</span>
+            <span class="detail">Income for today</span>
+            <span class="count revenue">$3,200</span>
+        </div>
+    </div>
+
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+        <div class="highlight-box">
+            <div class="initials" style="background-color:#007be5;color:#00448f">TV</div>
+            <div class="card">
+                <span class="fa fa-eye"></span>
+                <span>Total Views</span>
+                <span class="count">523</span>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+        <div class="highlight-box">
+            <div class="initials" style="background-color:#ef6262;color:#a83d3b">TI</div>
+            <div class="card">
+                <span class="fa fa-question-circle"></span>
+                <span>Total Issues</span>
+                <span class="count">81</span>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+        <div class="highlight-box">
+            <div class="initials" style="background-color:#20d077;color:#038d4a">OI</div>
+            <div class="card">
+                <span class="fa fa-question-circle-o"></span>
+                <span>Open Issues</span>
+                <span class="count">21</span>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+        <div class="highlight-box">
+            <div class="initials" style="background-color:#f9c851;color:#b58c2b">CI</div>
+            <div class="card">
+                <span class="fa fa-check"></span>
+                <span>Closed Issues</span>
+                <span class="count">60</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-g-12 ui-md-6 ui-lg-4">
+        <p-panel header="Tasks" [style]="{'height':'100%'}">
+            <ul class="task-list">
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Sales reports</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Pay the invoices</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Dinner with Tony</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Team meeting</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Plan the new theme</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+                <li>
+                    <p-checkbox binary="true"></p-checkbox>
+                    <span class="task-name">Client meeting</span>
+                    <button type="button" pButton icon="fa fa-check"></button>
+                </li>
+            </ul>
+        </p-panel>
+    </div>
+
+    <div class="ui-g-12 ui-md-6 ui-lg-4">
+        <p-panel header="Contact Us" [style]="{'text-align':'center','background':'#fff','height':'100%'}">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p-dropdown [options]="cities" [(ngModel)]="selectedCity"></p-dropdown>
+                </div>
+                <div class="ui-g-12">
+                    <input id="name" type="text" pInputText placeholder="Name"/>
+                </div>
+                <div class="ui-g-12">
+                    <input id="age" type="text" pInputText placeholder="Age"/>
+                </div>
+                <div class="ui-g-12">
+                    <input id="message" type="text" pInputText placeholder="Message"/>
+                </div>
+                <div class="ui-g-12">
+                    <button type="button" label="Send" icon="fa fa-send" pButton></button>
+                </div>
+            </div>
+        </p-panel>
+    </div>
+    <div class="ui-g-12 ui-lg-4">
+        <p-panel header="Contacts" [style]="{'height':'100%'}">
+            <ul class="contacts">
+                <li>
+                    <a href="#">
+                        <img src="assets/layout/images/avatar_1.png" width="35">
+                        <span class="name">Claire Williams</span>
+                        <span class="email">clare@pf-omega.com</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="assets/layout/images/avatar_2.png" width="35">
+                        <span class="name">Jason Dourne</span>
+                        <span class="email">jason@pf-omega.com</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="assets/layout/images/avatar_3.png" width="35">
+                        <span class="name">Jane Davidson</span>
+                        <span class="email">jane@pf-omega.com</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="assets/layout/images/avatar_4.png" width="35">
+                        <span class="name">Tony Corleone</span>
+                        <span class="email">tony@pf-omega.com</span>
+                    </a>
+                </li>
+            </ul>
+        </p-panel>
+    </div>
+
+    <div class="ui-g-12 ui-md-4">
+        <div class="card">
+            <h1 style="font-size:16px">Recent Sales</h1>
+            <p-table [columns]="cols" [value]="cars" selectionMode="single" dataKey="vin" [(selection)]="selectedCar">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                      </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                      <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                      </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+        <div class="card">
+            <p-chart type="line" [data]="chartData" responsive="true"></p-chart>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-8">
+        <p-panel header="Calendar" [style]="{'height':'100%'}">
+            <p-fullCalendar [events]="events" [options]="fullcalendarOptions" ></p-fullCalendar>
+        </p-panel>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+        <p-panel header="Activity" [style]="{'height':'100%'}">
+            <div class="activity-header">
+                <div class="ui-g">
+                    <div class="ui-g-6">
+                        <span style="font-weight:bold">Last Activity</span>
+                        <p>Updated 1 minute ago</p>
+                    </div>
+                    <div class="ui-g-6" style="text-align:right">
+                        <button type="button" label="Refresh" icon="fa fa-refresh" pButton></button>
+                    </div>
+                </div>
+            </div>
+            <ul class="activity-list">
+                <li>
+                    <div class="count">$900</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Income</div>
+                        <div class="ui-g-6">95%</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="count" style="background-color:#f9c851">$250</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Tax</div>
+                        <div class="ui-g-6">24%</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="count" style="background-color:#20d077">$125</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Invoices</div>
+                        <div class="ui-g-6">55%</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="count" style="background-color:#f9c851">$250</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Expenses</div>
+                        <div class="ui-g-6">15%</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="count" style="background-color:#007be5">$350</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Bonus</div>
+                        <div class="ui-g-6">5%</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="count" style="background-color:#ef6262">$500</div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">Revenue</div>
+                        <div class="ui-g-6">25%</div>
+                    </div>
+                </li>
+            </ul>
+        </p-panel>
+    </div>
+</div>

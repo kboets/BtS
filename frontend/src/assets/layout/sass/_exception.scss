@@ -1,0 +1,85 @@
+/* Exception */
+.exception-body {
+    height: 100%;
+    font-family: "latoregular", "Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size: 16px; 
+    margin: 0;
+    background-image: linear-gradient(to top, #6b77a1, #737ea5 3%, #9599b3 15%, #b1b0bf 28%, #c7c1c8 41%, #d6cdcf 57%, #dfd5d3 74%, #e2d7d4);
+    background-image: -ms-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%, #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);
+    background-image: -moz-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%, #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);
+    background-image: -o-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%, #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #6B77A1), color-stop(3, #737EA5), color-stop(15, #9599B3), color-stop(28, #B1B0BF), color-stop(41, #C7C1C8), color-stop(57, #D6CDCF), color-stop(74, #DFD5D3), color-stop(100, #E2D7D4));
+    background-image: -webkit-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%, #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E2D7D4', endColorstr='#6B77A1',GradientType=0 );
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.exception-wrapper {
+    margin: 0 auto;
+    width: 500px;
+    height: 100%;
+    background-color: #e82424;
+	opacity: 0.6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    text-align: center;
+    padding-top: 100px;
+    color: #ffffff;
+    box-sizing: border-box;
+    
+    &.error {
+        background-color: #e82424;
+        
+        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+            background-color: #ffffff;
+            color: #e82424;
+        }
+    }
+    
+    &.notfound {
+        background-color: #66719c;
+        
+        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+            background-color: #ffffff;
+            color: #66719c;
+        }
+    }
+    
+    &.access {
+        background-color: #e88524;
+        
+        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+            background-color: #ffffff;
+            color: #e88524;
+        }
+    }
+    
+    .message-title {
+        font-size: 24px;
+        font-weight: bold;    
+    }
+    
+    a, a.ui-link, a.ui-commandlink {
+        display: inline-block;;
+        text-decoration: none;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+        margin: 120px 0 100px 0;
+        padding: 10px;
+        font-size: 16px;
+        @include transition(color .15s);
+    }
+    
+    .footer {
+        color: #ffffff;
+        font-size: $fontSize;
+        margin-top: 50px;
+    }
+}
+
+@media (max-width: 40em) {    
+    .exception-wrapper {
+        width: 100%;
+    }
+}

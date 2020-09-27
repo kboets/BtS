@@ -3,39 +3,48 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "test-ng7": {
+    "omega-cli": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/omega",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": false,
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/upload.php"
             ],
             "styles": [
-              "node_modules/font-awesome/css/font-awesome.css",
-              "src/styles/app.scss"
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "node_modules/primeng/resources/themes/nova-light/theme.css",
+              "src/assets/layout/css/layout.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/@fullcalendar/core/main.min.css",
+              "node_modules/@fullcalendar/daygrid/main.min.css",
+              "node_modules/@fullcalendar/timegrid/main.min.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "src/assets/demo/css/codehighlight.css",
+              "src/styles.css"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js"
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/quill/dist/quill.js"
             ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -45,6 +54,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -58,18 +73,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "test-ng7:build"
+            "browserTarget": "omega-cli:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "test-ng7:build:production"
+              "browserTarget": "omega-cli:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "test-ng7:build"
+            "browserTarget": "omega-cli:build"
           }
         },
         "test": {
@@ -77,18 +92,28 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js"
+              "node_modules/chart.js/dist/Chart.js",
+              "node_modules/quill/dist/quill.js"
             ],
             "styles": [
-              "node_modules/font-awesome/css/font-awesome.css",
-              "src/styles/app.scss"
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "node_modules/primeng/resources/themes/nova-light/theme.css",
+              "src/assets/layout/css/layout.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/@fullcalendar/core/main.min.css",
+              "node_modules/@fullcalendar/daygrid/main.min.css",
+              "node_modules/@fullcalendar/timegrid/main.min.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "src/styles.css"
             ],
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/upload.php"
             ]
           }
         },
@@ -96,55 +121,31 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "test-ng7-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "test-ng7:serve"
+            "devServerTarget": "omega-cli:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "test-ng7:serve:production"
+              "devServerTarget": "omega-cli:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
     }
   },
-  "defaultProject": "test-ng7",
-  "schematics": {
-    "@schematics/angular:component": {
-      "prefix": "app",
-      "styleext": "scss"
-    },
-    "@schematics/angular:directive": {
-      "prefix": "app"
-    }
-  },
+  "defaultProject": "omega-cli",
   "cli": {
     "analytics": false
   }

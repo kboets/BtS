@@ -1,0 +1,289 @@
+body {
+    /*Green Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.green-button {
+                background-color: $greenButton;
+                border-color: $greenButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $greenButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($greenButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $greenButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Yellow Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.yellow-button {
+                background-color: $yellowButton;
+                border-color: $yellowButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $yellowButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($yellowButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $yellowButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Red Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.red-button {
+                background-color: $redButton;
+                border-color: $redButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $redButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($redButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $redButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Aqua Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.aqua-button {
+                background-color: $aquaButton;
+                border-color: $aquaButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $aquaButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($aquaButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $aquaButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Navy Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.navy-button {
+                background-color: $navyButton;
+                border-color: $navyButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $navyButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($navyButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $navyButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Black Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.black-button {
+                background-color: $blackButton;
+                border-color: $blackButtonBorder;
+
+                &:enabled:hover {
+                    background-color: $blackButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($blackButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $blackButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Grey Button*/
+    .ui-button {
+        &.ui-state-default {
+            &.gray-button {
+                background-color: $greyButton;
+                border-color: $greyButtonBorder;
+
+                &.ui-button {
+                    span.ui-button-text {
+                        color: $greyButtonText;
+                    }
+                }
+
+                &:enabled:hover {
+                    background-color: $greyButtonHover;
+                }
+
+                &:enabled:focus {
+                    background-color: lighten($greyButtonHover, 5%);
+                }
+
+                &:enabled:active {
+                    background-color: $greyButtonActive;
+                }
+            }
+        }
+    }
+
+    /*Severity Buttons*/
+    .ui-button.ui-state-default.ui-button-secondary, .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default  {
+        &:enabled:focus {
+            outline: 0 none;
+        }
+    }
+
+    .ui-button.ui-state-default.ui-button-info, .ui-buttonset.ui-button-info > .ui-button.ui-state-default  {
+        background-color: $blueButton;
+        border-color: $blueButtonBorder;
+
+        &:enabled:hover {
+            background-color:  $blueButtonHover;
+            border-color: $blueButtonBorder;
+        }
+
+        &:enabled:focus {
+            outline: 0 none;
+            background-color:  lighten($blueButtonHover, 5%);
+            border-color: $blueButtonBorder;
+        }
+
+        &:enabled:active {
+            outline: 0 none;
+            background-color: $blueButtonActive;
+            border-color: $blueButtonBorder;
+        }
+    }
+
+    .ui-button.ui-state-default.ui-button-success, .ui-buttonset.ui-button-success > .ui-button.ui-state-default  {
+        background-color: $greenButton;
+        border-color: $greenButtonBorder;
+
+        &:enabled:hover {
+            background-color:  $greenButtonHover;
+            border-color: $greenButtonBorder;
+        }
+
+        &:enabled:focus {
+            outline: 0 none;
+            background-color:  lighten($greenButtonHover, 5%);
+            border-color: $greenButtonBorder;
+        }
+
+        &:enabled:active {
+            outline: 0 none;
+            background-color: $greenButtonActive;
+            border-color: $greenButtonBorder;
+        }
+    }
+
+    .ui-button.ui-state-default.ui-button-warning, .ui-buttonset.ui-button-warning > .ui-button.ui-state-default  {
+        background-color: $yellowButton;
+        border-color: $yellowButtonBorder;
+
+        &:enabled:hover {
+            background-color:  $yellowButtonHover;
+            border-color: $yellowButtonBorder;
+        }
+
+        &:enabled:focus {
+            outline: 0 none;
+            background-color:  lighten($yellowButtonHover, 5%);
+            border-color: $yellowButtonBorder;
+        }
+
+        &:enabled:active {
+            outline: 0 none;
+            background-color: $yellowButtonActive;
+            border-color: $yellowButtonBorder;
+        }
+    }
+
+    .ui-button.ui-state-default.ui-button-danger, .ui-buttonset.ui-button-danger > .ui-button.ui-state-default  {
+        background-color: $redButton;
+        border-color: $redButtonBorder;
+
+        &:enabled:hover {
+            background-color:  $redButtonHover;
+            border-color: $redButtonBorder;
+        }
+
+        &:enabled:focus {
+            outline: 0 none;
+            background-color:  lighten($redButtonHover, 5%);
+            border-color: $redButtonBorder;
+        }
+
+        &:enabled:active {
+            outline: 0 none;
+            background-color: $redButtonActive;
+            border-color: $redButtonBorder;
+        }
+    }
+
+    .ui-datepicker {
+        width: auto;
+    }
+
+    .ui-calendar .ui-datepicker {
+        min-width: 17em;
+    }
+
+    .ui-splitbutton.ui-buttonset .ui-menu {
+        width: 100%;
+        min-width: 12.5em;
+    }
+
+    .ui-megamenu .ui-megamenu-panel {
+        background-color: #f6f7f9;
+    }
+
+    .ui-fluid .ui-button-icon-only {
+        width: auto;
+    }
+
+    .ui-toolbar-separator {
+        margin: 0 .5em;
+    }
+
+    .ui-virtualscroller {
+        .ui-virtualscroller-list {
+            li {
+                border-bottom: 1px solid #d9d9d9;
+            }
+        }
+    }
+}
