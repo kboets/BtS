@@ -57,21 +57,22 @@ public class LeagueService  {
     public League getLeagueById(Long id) {
         Optional<League> leagueOptional = leagueRepository.findById(id);
         if(leagueOptional.isPresent()){
+            League league = leagueOptional.get();
+            //update the current round
+            roundService.updateCurrentRoundRorLeagueAndSeason(league.getId(), league.getSeason());
             return leagueOptional.get();
         } else {
             throw new NotFoundException("Could not find league with id " +id);
         }
     }
 
-    public List<LeagueDto> getCurrentSelectedLeagues() {
+    public List<LeagueDto> getCurrentLeagues() {
         boolean isChanged = false;
-        List<LeagueDto> selectedLeagues = this.getLeaguesCurrentSeason(true);
-        //check teams
-        List<League> leagueList = leagueMapper.toLeagues(selectedLeagues);
+        List<League> leaguesCurrentSeason = this.getLeaguesCurrentSeason();
         Set<League> toBeUpdated = new HashSet<>();
-        if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
+        if(leaguesCurrentSeason.stream().anyMatch(league -> league.getTeams().isEmpty())) {
             isChanged = true;
-            for(League league: leagueList) {
+            for(League league: leaguesCurrentSeason) {
                 if(league.getTeams().isEmpty()) {
                     teamService.updateLeagueWithTeams(league);
                     toBeUpdated.add(league);
@@ -79,9 +80,9 @@ public class LeagueService  {
             }
         }
         //check rounds
-        if(selectedLeagues.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
+        if(leaguesCurrentSeason.stream().anyMatch(league -> league.getRounds().isEmpty())) {
             isChanged = true;
-            for(League league: leagueList) {
+            for(League league: leaguesCurrentSeason) {
                 if(league.getRounds().isEmpty()) {
                     roundService.updateLeagueWithRounds(league);
                     toBeUpdated.add(league);
@@ -90,29 +91,25 @@ public class LeagueService  {
         }
         if(isChanged) {
             leagueRepository.saveAll(toBeUpdated);
-            selectedLeagues.clear();
-            selectedLeagues.addAll(leagueMapper.toLeagueDtoList(leagueList));
+            List<League> updatedLeagues = this.getLeaguesCurrentSeason();
+            List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(updatedLeagues);
+            return leagueDtoList;
         }
-
-       return selectedLeagues;
+       List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(leaguesCurrentSeason);
+       return leagueDtoList;
     }
 
-
-    public List<LeagueDto> getLeaguesCurrentSeason(boolean isSelected) {
+    public List<League> getLeaguesCurrentSeason() {
         int currentSeason = WebUtils.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty()) {
-            return this.retrieveAndFilterAndPersistLeagues(currentSeason, isSelected);
+            return this.retrieveAndFilterAndPersistLeagues(currentSeason);
         }
-        List<League> requestedLeagues = leagues.stream()
-                .filter(league -> league.isSelected() == isSelected)
-                .collect(Collectors.toList());
-
-        verifyPersistedLeagueIsCurrent(requestedLeagues);
-        return leagueMapper.toLeagueDtoList(requestedLeagues);
+        verifyPersistedLeagueIsCurrent(leagues);
+        return leagues;
     }
 
-    private List<LeagueDto> retrieveAndFilterAndPersistLeagues(int currentSeason, boolean isSelected) {
+    private List<League> retrieveAndFilterAndPersistLeagues(int currentSeason) {
         logger.info(String.format("No leagues found in database for season start year %s, start retrieving", currentSeason));
         //1 make call to webservice to retrieve all Leagues of current season
         List<League> leagues = retrieveLeaguesFromWebService(currentSeason);
@@ -130,22 +127,18 @@ public class LeagueService  {
         leagueRepository.saveAll(selectedLeagues);
         //5. make check if league is still current
         verifyPersistedLeagueIsCurrent(selectedLeagues);
-        //6. only return the requested type of league
-        List<League> requestedLeagues = selectedLeagues.stream()
-                .filter(league -> league.isSelected() == isSelected)
-                .collect(Collectors.toList());
-        return leagueMapper.toLeagueDtoList(requestedLeagues);
+        return selectedLeagues;
     }
 
-    public boolean updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
+    public List<LeagueDto> updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
         List<League> updatedLeagues = leagueIds.stream()
                 .map(id -> leagueRepository.findById(id))
                 .flatMap(league -> league.isPresent() ? Stream.of(league.get()) : Stream.empty())
                 .peek(league -> league.setSelected(toSelected))
                 .collect(Collectors.toList());
 
-        leagueRepository.saveAll(updatedLeagues);
-        return true;
+        List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(leagueRepository.saveAll(updatedLeagues));
+        return leagueDtoList;
     }
 
 

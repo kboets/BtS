@@ -17,6 +17,7 @@ public class LeagueDto {
     private String  flag;
     private String countryCode;
     private boolean isCurrent;
+    private boolean selected;
     private List<TeamDto> teamDtos;
     private List<RoundDto> roundDtos;
 
@@ -106,5 +107,13 @@ public class LeagueDto {
 
     public void setRoundDtos(List<RoundDto> roundDtos) {
         this.roundDtos = roundDtos;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

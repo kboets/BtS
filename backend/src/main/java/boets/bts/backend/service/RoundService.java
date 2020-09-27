@@ -50,22 +50,25 @@ public class RoundService {
     }
 
     public Round getCurrentRoundForLeagueAndSeason(Long leagueId, int season) {
-        Optional<Round> roundOptional = roundRepository.findOne(RoundSpecs.getCurrentRound());
-        if(!roundOptional.isPresent() || !roundOptional.get().getCurrentDate().equals(LocalDate.now())) {
-            RoundDto latestRound = roundClient.getCurrentRoundForLeagueAndSeason(season, leagueId).orElseThrow(RuntimeException::new);
-            List<Round> rounds = roundRepository.findAll();
-            List<Round> updatedRound = rounds.stream().peek(round -> round.setCurrent(false)).collect(Collectors.toList());
-            for(Round round : updatedRound) {
-                if(round.getRound().equals(latestRound.getRound())){
-                    round.setCurrent(true);
-                    round.setCurrentDate(LocalDate.now());
-                }
-            }
-            roundRepository.saveAll(updatedRound);
-            roundOptional = roundRepository.findOne(RoundSpecs.getCurrentRound());
-            return roundOptional.orElseThrow(RuntimeException::new);
+        this.updateCurrentRoundRorLeagueAndSeason(leagueId,season);
+        return roundRepository.findOne(RoundSpecs.getCurrentRound()).orElseThrow(() -> new RuntimeException("Could not find current round for league with id "+leagueId));
+    }
+
+
+    public void updateCurrentRoundRorLeagueAndSeason(Long leagueId, int season) {
+        Optional<RoundDto> currentRound = roundClient.getCurrentRoundForLeagueAndSeason(season, leagueId);
+        if(!currentRound.isPresent()) {
+            throw new RuntimeException("Could not retrieve current round for league id " + leagueId);
         }
-        return roundOptional.get();
+        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(leagueId));
+        List<Round> roundsToBeChecked = rounds.stream().peek(round -> round.setCurrent(false)).collect(Collectors.toList());
+        for(Round round : roundsToBeChecked) {
+            if(round.getRound().equals(currentRound.get().getRound())){
+                round.setCurrent(true);
+                round.setCurrentDate(LocalDate.now());
+            }
+        }
+        roundRepository.saveAll(roundsToBeChecked);
     }
 
     public Round getRoundByName(String name) {

@@ -25,7 +25,7 @@ public class Round implements Serializable {
     @Column(name = "actual_date")
     private LocalDate currentDate;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 

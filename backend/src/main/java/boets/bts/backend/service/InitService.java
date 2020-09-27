@@ -37,7 +37,7 @@ public class InitService {
     @EventListener(ApplicationReadyEvent.class)
     public void initMetaData() {
         this.initAllCountries();
-        this.initAllAvailableLeagues();
+        //this.initAllAvailableLeagues();
     }
 
 
@@ -50,7 +50,7 @@ public class InitService {
     }
 
     public void initAllAvailableLeagues() {
-        leagueService.getLeaguesCurrentSeason(false);
+        leagueService.getLeaguesCurrentSeason();
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {

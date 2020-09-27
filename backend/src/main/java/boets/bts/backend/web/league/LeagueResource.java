@@ -1,5 +1,6 @@
 package boets.bts.backend.web.league;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.service.LeagueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,9 @@ public class LeagueResource {
         this.leagueService = leagueService;
     }
 
-    @GetMapping("availableCurrentSeason")
-    public List<LeagueDto> getCurrentAvailableLeagues() {
-        return leagueService.getLeaguesCurrentSeason(false);
-    }
-
-    @GetMapping("selectedCurrentSeason")
-    public List<LeagueDto> getCurrentSelectedLeagues() {
-        return leagueService.getCurrentSelectedLeagues();
+    @GetMapping("leaguesCurrentSeason")
+    public List<LeagueDto> getLeaguesCurrentSeason() {
+        return leagueService.getCurrentLeagues();
     }
 
     @GetMapping("get/{id}")
@@ -36,13 +32,13 @@ public class LeagueResource {
     }
 
     @PutMapping("/toSelected")
-    public boolean updateToSelectedLeagues(@RequestBody List<String> leagueIds) {
+    public List<LeagueDto> updateToSelectedLeagues(@RequestBody List<String> leagueIds) {
         List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
         return leagueService.updateLeagueAvailableOrSelectable(ids, true);
     }
 
     @PutMapping("/toAvailable")
-    public boolean updateToAvailableLeagues(@RequestBody List<String> leagueIds) {
+    public List<LeagueDto> updateToAvailableLeagues(@RequestBody List<String> leagueIds) {
         List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
         return leagueService.updateLeagueAvailableOrSelectable(ids, false);
     }

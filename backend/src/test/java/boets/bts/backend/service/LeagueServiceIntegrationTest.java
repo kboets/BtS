@@ -25,9 +25,9 @@ public class LeagueServiceIntegrationTest {
 
     @Test
     public void testGetLeagues_shouldReturnTwoLeaguesForBelgian() {
-        List<LeagueDto> result = leagueService.getLeaguesCurrentSeason(false);
+        List<League> result = leagueService.getLeaguesCurrentSeason();
         //test for Belgian
-        List<LeagueDto> belgianLeagues = result.stream()
+        List<League> belgianLeagues = result.stream()
                 .filter(leagueDto -> leagueDto.getCountryCode().equals("BE"))
                 .collect(Collectors.toList());
         assertThat(belgianLeagues.size()).isEqualTo(2);
@@ -52,19 +52,12 @@ public class LeagueServiceIntegrationTest {
 
 
     @Test
-    public void testGetCurrentSelectedLeagues_givenJupilerLeague_shouldAddRoundsAndTeams() {
-        //setup
-        List<Long> availableLeagueIds = new ArrayList<>();
-        League jupilerLeague = leagueService.getLeagueById(656L);
-        availableLeagueIds.add(jupilerLeague.getId());
-        leagueService.updateLeagueAvailableOrSelectable(availableLeagueIds, true);
+    public void testGetCurrentLeagues_shouldAddRoundsAndTeams() {
         //test
-        List<LeagueDto> currentSelectedLeagues = leagueService.getCurrentSelectedLeagues();
-        assertThat(currentSelectedLeagues.size()).isEqualTo(1);
-        assertThat(currentSelectedLeagues.get(0).getLeague_id()).isEqualTo("656");
-
-        //reset test
-        leagueService.updateLeagueAvailableOrSelectable(availableLeagueIds, false);
+        List<LeagueDto> currentLeagues = leagueService.getCurrentLeagues();
+        assertThat(currentLeagues.size()).isEqualTo(9);
+        assertThat(currentLeagues.get(0).getRoundDtos().size()).isGreaterThan(0) ;
+        assertThat(currentLeagues.get(0).getTeamDtos().size()).isGreaterThan(0);
     }
 
 

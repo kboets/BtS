@@ -22,19 +22,19 @@ public class Result implements Serializable {
     @Column(nullable = false, name = "goals_away_team")
     private int goalsAwayTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hometeam_id", referencedColumnName = "team_id")
     private Team homeTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "awayteam_id", referencedColumnName = "team_id")
     private Team awayTeam;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "round_id", referencedColumnName = "round_id")
     private Round round;
 
