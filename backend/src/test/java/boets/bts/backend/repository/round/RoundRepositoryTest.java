@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class RoundRepositoryTest {
 
     @Test
     public void testUpdate() {
+        System.out.println(LocalDate.now());
         List<Round> rounds = roundRepository.findAll();
         List<Round> updatedRound = rounds.stream().peek(round -> round.setCurrent(false)).collect(Collectors.toList());
         updatedRound = roundRepository.saveAll(updatedRound);

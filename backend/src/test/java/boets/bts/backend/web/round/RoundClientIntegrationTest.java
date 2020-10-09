@@ -27,9 +27,10 @@ public class RoundClientIntegrationTest {
 
     @Test
     public void testgetCurrentRoundForLeagueAndSeason_givenJupilerLeague_shouldReturnOneResult() {
-        Optional<RoundDto> roundDto = roundClient.getCurrentRoundForLeagueAndSeason(2019, 656L);
+        Optional<RoundDto> roundDto = roundClient.getCurrentRoundForLeagueAndSeason(656L, 2019);
         assertThat(roundDto.isPresent()).isTrue();
-        assertThat(roundDto.get().getRound()).isEqualTo("Regular_Season_-_30");
+        assertThat(roundDto.get().isCurrent()).isTrue();
+
     }
 
 

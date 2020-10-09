@@ -2,9 +2,9 @@ package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
+import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.results.ResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
@@ -56,12 +56,12 @@ public class ResultService {
             return resultMapper.toResultDtos(resultListWith);
         }
         //check if db is up to date
-        Round upcomingRound = roundService.getCurrentRoundForLeagueAndSeason(leagueId, season);
-        Result lastResult = results.get(results.size() - 1);
-        if((upcomingRound.getId()-1) != lastResult.getRound().getId()) {
-            //TODO Implement this
-            logger.info("needs update ! ");
-        }
+//        Round upcomingRound = roundService.getCurrentRoundForLeagueAndSeason(leagueId, season);
+//        Result lastResult = results.get(results.size() - 1);
+//        if((upcomingRound.getId()-1) != lastResult.getRound().getId()) {
+//            //TODO Implement this
+//            logger.info("needs update ! ");
+//        }
         return resultMapper.toResultDtos(results);
     }
 

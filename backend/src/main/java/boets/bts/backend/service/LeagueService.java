@@ -5,6 +5,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefinerFactory;
+import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.league.LeagueDto;
@@ -59,7 +60,7 @@ public class LeagueService  {
         if(leagueOptional.isPresent()){
             League league = leagueOptional.get();
             //update the current round
-            roundService.updateCurrentRoundRorLeagueAndSeason(league.getId(), league.getSeason());
+            //roundService.updateCurrentRoundRorLeagueAndSeason(league.getId(), league.getSeason());
             return leagueOptional.get();
         } else {
             throw new NotFoundException("Could not find league with id " +id);

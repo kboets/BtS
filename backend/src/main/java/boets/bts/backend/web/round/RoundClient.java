@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class RoundClient {
 
     private Logger logger = LoggerFactory.getLogger(RoundClient.class);
 
-    public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(int season, long leagueId) {
+    public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(long leagueId, int season) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId), "current");
@@ -35,7 +36,12 @@ public class RoundClient {
                 JsonArray leagueJsonArray = parseAllRoundsForLeaguesRawJson(response.body().string());
                 //3. map data to dto
                 List<RoundDto> roundDtos = mapJsonToRoundDto(leagueJsonArray, season);
-                return Optional.ofNullable(roundDtos.get(0));
+                RoundDto roundDto = roundDtos.get(0);
+                if(roundDto != null) {
+                    roundDto.setCurrent(true);
+                    roundDto.setCurrentDate(LocalDate.now());
+                }
+                return Optional.ofNullable(roundDto);
             }
         } catch (IOException e) {
             logger.warn("Exception on calling getAllRoundsForLeagueAndSeason" + e);

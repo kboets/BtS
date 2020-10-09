@@ -1,6 +1,7 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.service.round.RoundService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ public class RoundServiceIntegrationTest {
     private RoundService roundService;
 
     @Test
-    public void testGetCurrentRoundForLeagueAndSeason_givenJupilerLeague2019_shouldReturnRound() {
-        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason(656L, 2019);
+    public void testGetCurrentRoundForLeagueAndSeason_givenJupilerLeague2019_shouldReturnRound() throws  Exception {
+        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason( 656L,219);
         assertThat(currentRound).isNotNull();
+        assertThat(currentRound.isCurrent()).isTrue();
     }
 }
