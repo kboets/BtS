@@ -39,7 +39,6 @@ export class LeagueComponent implements OnInit {
                 this.getLeaguesCurrentSeason();
             })
         this.getLeaguesCurrentSeason();
-
     }
 
     private getLeaguesCurrentSeason() {
@@ -81,7 +80,7 @@ export class LeagueComponent implements OnInit {
     }
 
     updateToSelectedLeagues() {
-        console.log('update to selected leagues..'+this.selectedLeagues);
+        //console.log('update to selected leagues..'+this.selectedLeagues);
         this.leagueService.updateToSelectedLeague(this.selectedLeagues)
             .subscribe(
             (result ) => {

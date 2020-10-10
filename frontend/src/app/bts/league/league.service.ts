@@ -22,7 +22,7 @@ export class LeagueService {
     }
 
 
-    leagues$ = this.http.get<League[]>(`/bts/api/league/selectedCurrentSeason`)
+    leagues$ = this.http.get<League[]>(`/bts/api/league/leaguesCurrentSeason`)
         .pipe(
             //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
             catchError(this.handleHttpError)
