@@ -18,7 +18,7 @@ public class ResultServiceIntegrationTest {
     @Autowired
     public ResultService resultService;
 
-    @Test
+    //@Test
     public void testGetAllResults_givenJupilerLeague_shouldReturnList() {
         List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(656L, 2019);
         assertThat(resultDtos.size()).isGreaterThan(0);

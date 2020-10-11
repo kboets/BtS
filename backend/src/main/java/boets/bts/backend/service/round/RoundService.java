@@ -44,9 +44,7 @@ public class RoundService {
             logger.info("Could retrieve {} rounds for league {} ", optionalRoundDtos.get().size(), league.getName());
             List<Round> rounds = roundMapper.toRounds(optionalRoundDtos.get());
             rounds.forEach(round -> round.setLeague(league));
-            roundRepository.saveAll(rounds);
-            //roundRepository.flush();
-            league.setRounds(rounds);
+            league.getRounds().addAll(rounds);
         }
     }
 

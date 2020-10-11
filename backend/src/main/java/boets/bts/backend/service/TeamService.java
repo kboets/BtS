@@ -40,8 +40,7 @@ public class TeamService {
             logger.info("Could retrieve {} teams for league {} ", optionalTeamDtos.get().size(), league.getName());
             List<Team> teams = teamMapper.toTeams(optionalTeamDtos.get());
             teams.forEach(team -> team.setLeague(league));
-            teamRepository.saveAll(teams);
-            league.setTeams(teams);
+            league.getTeams().addAll(teams);
         }
     }
 

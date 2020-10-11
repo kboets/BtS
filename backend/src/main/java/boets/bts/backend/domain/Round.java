@@ -13,6 +13,10 @@ public class Round implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "league_id", referencedColumnName = "league_id", updatable = false, insertable = false)
+    private League league;
+
     @Column(nullable = false)
     private String round;
 
@@ -25,9 +29,6 @@ public class Round implements Serializable {
     @Column(name = "actual_date")
     private LocalDate currentDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "league_id", referencedColumnName = "league_id")
-    private League league;
 
 
     public Long getId() {

@@ -42,10 +42,10 @@ public class League implements Serializable {
     @Column
     private boolean selected;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Team> teams;
 
-    @OneToMany(mappedBy = "league" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Round> rounds;
 
     public Long getId() {
@@ -122,7 +122,7 @@ public class League implements Serializable {
 
     public List<Team> getTeams() {
         if(this.teams == null) {
-            return new ArrayList<>();
+            teams = new ArrayList<>();
         }
         return teams;
     }
@@ -132,6 +132,9 @@ public class League implements Serializable {
     }
 
     public List<Round> getRounds() {
+        if(this.rounds == null) {
+            rounds = new ArrayList<>();
+        }
         return rounds;
     }
 

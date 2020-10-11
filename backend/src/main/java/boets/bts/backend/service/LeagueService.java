@@ -69,7 +69,7 @@ public class LeagueService  {
 
     public List<LeagueDto> getCurrentLeagues() {
         boolean isChanged = false;
-        List<League> leaguesCurrentSeason = this.getLeaguesCurrentSeason();
+        List<League> leaguesCurrentSeason = this.getAndVerifyPersistedLeaguesCurrentSeason();
         Set<League> toBeUpdated = new HashSet<>();
         if(leaguesCurrentSeason.stream().anyMatch(league -> league.getTeams().isEmpty())) {
             isChanged = true;
@@ -92,7 +92,7 @@ public class LeagueService  {
         }
         if(isChanged) {
             leagueRepository.saveAll(toBeUpdated);
-            List<League> updatedLeagues = this.getLeaguesCurrentSeason();
+            List<League> updatedLeagues = this.getAndVerifyPersistedLeaguesCurrentSeason();
             List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(updatedLeagues);
             return leagueDtoList;
         }
@@ -100,7 +100,7 @@ public class LeagueService  {
        return leagueDtoList;
     }
 
-    public List<League> getLeaguesCurrentSeason() {
+    private List<League> getAndVerifyPersistedLeaguesCurrentSeason() {
         int currentSeason = WebUtils.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty()) {

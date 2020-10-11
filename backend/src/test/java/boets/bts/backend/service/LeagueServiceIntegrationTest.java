@@ -25,9 +25,9 @@ public class LeagueServiceIntegrationTest {
 
     @Test
     public void testGetLeagues_shouldReturnTwoLeaguesForBelgian() {
-        List<League> result = leagueService.getLeaguesCurrentSeason();
+        List<LeagueDto> result = leagueService.getCurrentLeagues();
         //test for Belgian
-        List<League> belgianLeagues = result.stream()
+        List<LeagueDto> belgianLeagues = result.stream()
                 .filter(leagueDto -> leagueDto.getCountryCode().equals("BE"))
                 .collect(Collectors.toList());
         assertThat(belgianLeagues.size()).isEqualTo(2);
