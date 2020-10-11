@@ -2,7 +2,6 @@ package boets.bts.backend.web.results;
 
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
-import liquibase.pro.packaged.I;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ import java.util.Optional;
 
 @Profile("mock")
 @Service
-public class ResultsMockClient implements IResultsClient {
+public class ResultMockClient implements IResultClient {
 
     private static String fixtures_jupilerLeagues_2020 = "fixtures_jupilerLeague_2020.json";
     private static final Map<Long, String> fixturesForLeagueAndSeason;

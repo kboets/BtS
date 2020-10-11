@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ResultsMockClientTest {
 
     @Autowired
-    private ResultsMockClient resultsMockClient;
+    private ResultMockClient resultsMockClient;
 
     private Long jupilerLeague2020_id;
 
