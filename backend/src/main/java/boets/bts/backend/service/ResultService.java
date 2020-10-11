@@ -44,7 +44,7 @@ public class ResultService {
         League league = leagueService.getLeagueById(leagueId);
         List<Result> results = resultRepository.findAll(ResultSpecs.getResultByLeagueAndSeason(league));
         if(results.isEmpty()) {
-            List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId).orElseGet(Collections::emptyList);
+            List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, season).orElseGet(Collections::emptyList);
             List<Result> resultList = resultMapper.toResults(resultDtos);
             List<Result> resultListWith = resultList.stream()
                     .peek(result -> result.setRound(roundService.getRoundByName(result.getRound().getRound())))

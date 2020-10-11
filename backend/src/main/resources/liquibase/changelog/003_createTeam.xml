@@ -8,8 +8,11 @@
 
     <changeSet id="create_team" author="kboets">
         <createTable tableName="TEAM">
-            <column autoIncrement="false" name="team_id" type="bigint">
+            <column autoIncrement="false" name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="team_id" type="bigint">
+                <constraints nullable="false" />
             </column>
             <column name="name" type="varchar(150)">
                 <constraints nullable="false" />

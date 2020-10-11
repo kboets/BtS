@@ -8,6 +8,7 @@ import java.util.List;
 
 public class TeamDto {
 
+    private String id;
     private String teamId;
     private String name;
     private String logo;
@@ -16,6 +17,14 @@ public class TeamDto {
     private int stadiumCapacity;
     private String city;
     private StandingDto standing;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTeamId() {
         return teamId;

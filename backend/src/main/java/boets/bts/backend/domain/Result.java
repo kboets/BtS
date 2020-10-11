@@ -27,11 +27,11 @@ public class Result implements Serializable {
     private League league;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hometeam_id", referencedColumnName = "team_id")
+    @JoinColumn(name = "hometeam_id", referencedColumnName = "id")
     private Team homeTeam;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "awayteam_id", referencedColumnName = "team_id")
+    @JoinColumn(name = "awayteam_id", referencedColumnName = "id")
     private Team awayTeam;
 
     @ManyToOne(fetch = FetchType.LAZY)

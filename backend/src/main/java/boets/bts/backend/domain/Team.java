@@ -8,8 +8,11 @@ import java.io.Serializable;
 public class Team implements Serializable {
 
     @Id
-    @Column(name = "team_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "team_id")
+    private Long teamId;
 
     @Column(nullable = false)
     private String name;
@@ -29,6 +32,14 @@ public class Team implements Serializable {
 
     @Column
     private String city;
+
+    public Long getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
+    }
 
     public Long getId() {
         return id;

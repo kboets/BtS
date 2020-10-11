@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-
 public class ResultClientIntegrationTest {
 
     @Autowired
@@ -21,7 +20,7 @@ public class ResultClientIntegrationTest {
 
     @Test
     public void testRetrieveAllResultForLeague_givenJupilierLeague_shouldReturnList() {
-        Optional<List<ResultDto>> resultDtosOptional = resultClient.retrieveAllResultForLeague(656L);
+        Optional<List<ResultDto>> resultDtosOptional = resultClient.retrieveAllResultForLeague(656L, 2019);
         assertThat(resultDtosOptional.isPresent()).isTrue();
         assertThat(resultDtosOptional.get().size()).isGreaterThan(0);
     }

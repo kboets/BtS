@@ -27,10 +27,31 @@ public class WebUtils {
         }
     }
 
+    public static Optional<String> readJsonFileFromApi(String fileName, int season) {
+        try {
+            File jsonFile = ResourceUtils.getFile(createFullPathName(fileName, season));
+            String fileAsString = new String(Files.readAllBytes(jsonFile.toPath()));
+            return Optional.of(fileAsString);
+        } catch (IOException io) {
+            return Optional.empty();
+        }
+    }
+
     private static String createFullPathName(String fileName) {
         StringBuilder builder = new StringBuilder();
         builder.append("classpath:");
         builder.append(API);
+        builder.append("/");
+        builder.append(fileName);
+        return builder.toString();
+    }
+
+    private static String createFullPathName(String fileName, int season) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("classpath:");
+        builder.append(API);
+        builder.append("/");
+        builder.append(season);
         builder.append("/");
         builder.append(fileName);
         return builder.toString();

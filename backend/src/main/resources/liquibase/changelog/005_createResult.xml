@@ -34,12 +34,12 @@
                 constraintName="fk_league_result_HT"
                 referencedTableName="TEAM"
                 baseColumnNames="hometeam_id"
-                baseTableName="RESULT" referencedColumnNames="team_id" />
+                baseTableName="RESULT" referencedColumnNames="id" />
         <addForeignKeyConstraint
                 constraintName="fk_league_result_AT"
                 referencedTableName="TEAM"
                 baseColumnNames="awayteam_id"
-                baseTableName="RESULT" referencedColumnNames="team_id" />
+                baseTableName="RESULT" referencedColumnNames="id" />
         <addForeignKeyConstraint
                 constraintName="fk_league_result_round"
                 referencedTableName="ROUND"
