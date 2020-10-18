@@ -9,6 +9,7 @@ import boets.bts.backend.web.country.CountryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ public class InitService {
         this.countryMapper = countryMapper;
         this.leagueService = leagueService;
     }
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void initMetaData() {

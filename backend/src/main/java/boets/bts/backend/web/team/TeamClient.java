@@ -59,6 +59,7 @@ public class TeamClient {
         for(JsonElement teamJsonElement : jsonArray) {
             TeamDto dto = new TeamDto();
             JsonObject teamJson = teamJsonElement.getAsJsonObject();
+            dto.setId(null);
             dto.setTeamId(teamJson.get("team_id").getAsString());
             dto.setName(teamJson.get("name").getAsString());
             if(!teamJson.get("logo").isJsonNull()) {

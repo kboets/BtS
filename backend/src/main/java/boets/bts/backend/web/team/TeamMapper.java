@@ -12,7 +12,6 @@ import java.util.List;
 public interface TeamMapper {
 
     @Mappings({
-            @Mapping(target = "teamId", source = "id"),
             @Mapping(target = "leagueDto", source = "league"),
     })
     TeamDto toTeamDto(Team team);

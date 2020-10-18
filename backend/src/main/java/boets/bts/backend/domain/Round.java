@@ -14,7 +14,7 @@ public class Round implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "league_id", referencedColumnName = "league_id", updatable = false, insertable = false)
+    @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 
     @Column(nullable = false)

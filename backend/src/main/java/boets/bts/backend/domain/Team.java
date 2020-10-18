@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class Team implements Serializable {
 
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
@@ -21,7 +22,7 @@ public class Team implements Serializable {
     private String logo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "league_id", referencedColumnName = "league_id", updatable = false, insertable = false)
+    @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 
     @Column(name = "stadium_name")
