@@ -50,7 +50,7 @@ public class RoundService {
     }
 
     public Round getCurrentRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
-        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRound());
+        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(leagueId, season));
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerFactory.getCurrentRoundHandler(currentPersistedRound.isPresent());
         return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, leagueId, season);
     }

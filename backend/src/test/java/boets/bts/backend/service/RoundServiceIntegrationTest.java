@@ -18,9 +18,12 @@ public class RoundServiceIntegrationTest {
     private RoundService roundService;
 
     @Test
-    public void testGetCurrentRoundForLeagueAndSeason_givenJupilerLeague2019_shouldReturnRound() throws  Exception {
-        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason( 656L,219);
+    public void getCurrentRoundForLeagueAndSeason_givenLeagueWithoutCurrentRound_shouldReturnCurrentRound() throws  Exception {
+        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason( 754L,219);
         assertThat(currentRound).isNotNull();
         assertThat(currentRound.isCurrent()).isTrue();
+        //undo
+        currentRound.setCurrent(false);
+        currentRound.setCurrentDate(null);
     }
 }

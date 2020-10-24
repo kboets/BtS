@@ -60,8 +60,8 @@ public class LeagueService  {
         if(leagueOptional.isPresent()){
             League league = leagueOptional.get();
             //update the current round
-            //roundService.updateCurrentRoundRorLeagueAndSeason(league.getId(), league.getSeason());
-            return leagueOptional.get();
+            roundService.updateLeagueWithRounds(league);
+            return league;
         } else {
             throw new NotFoundException("Could not find league with id " +id);
         }

@@ -38,9 +38,11 @@ public class ExistingCurrentRoundHandler implements CurrentRoundHandler {
                 round.setCurrentDate(LocalDate.now());
             } else {
                 logger.info("current round {} is no longer current, update with latest", round.getRound());
-                Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByName(currentRoundUpdated.getRound())).orElseThrow(() -> new Exception(String.format("Could not find round in db with name", currentRoundUpdated.getRound())));
+                Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(leagueId, currentRoundUpdated.getRound())).orElseThrow(() -> new Exception(String.format("Could not find round in db with name", currentRoundUpdated.getRound())));
                 roundToBeUpdated.setCurrentDate(LocalDate.now());
                 roundToBeUpdated.setCurrent(true);
+                roundRepository.save(roundToBeUpdated);
+                round.setCurrent(false);
             }
             return roundRepository.save(round);
         }
