@@ -40,7 +40,7 @@ public class NonExistingRoundHandler implements CurrentRoundHandler {
             return roundRepository.save(persisted);
         } else {
             logger.warn("No round found for leagueId {} and name {} ", leagueId, updatedRound.getRound());
-            return null;
+            throw new Exception(String.format("Could not find round in db for league with id %s with name %s", leagueId, updatedRound.getRound()));
         }
     }
 

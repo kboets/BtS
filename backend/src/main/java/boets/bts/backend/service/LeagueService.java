@@ -47,12 +47,12 @@ public class LeagueService  {
         this.roundService = roundService;
     }
 
-    public LeagueDto getLeagueDtoById(Long id) {
+    public Optional<LeagueDto> getLeagueDtoById(Long id)  {
         Optional<League> leagueOptional = leagueRepository.findById(id);
-        if(leagueOptional.isPresent()){
-            return leagueMapper.toLeagueDto(leagueOptional.get());
+        if(leagueOptional.isPresent()) {
+            return Optional.of(leagueMapper.toLeagueDto(leagueOptional.get()));
         }
-        return new LeagueDto();
+        return Optional.empty();
     }
 
     public League getLeagueById(Long id) {
