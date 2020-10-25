@@ -1,5 +1,10 @@
 package boets.bts.backend.service;
 
+import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.service.result.ResultService;
+import boets.bts.backend.service.round.RoundService;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.results.ResultDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +22,15 @@ public class ResultServiceIntegrationTest {
 
     @Autowired
     public ResultService resultService;
+    @Autowired
+    public RoundService roundService;
 
-    //@Test
-    public void testGetAllResults_givenJupilerLeague_shouldReturnList() {
-        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(656L, 2019);
-        assertThat(resultDtos.size()).isGreaterThan(0);
-
+    @Test
+    public void retrieveAllResultsForLeague_givingJupilerLeague2020_shouldReturnResult() throws Exception{
+        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        assertThat(resultDtos.isEmpty()).isFalse();
+        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason(2660L, WebUtils.getCurrentSeason());
+        assertThat(currentRound).isNotNull();
+        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo(currentRound.getRound());
     }
 }

@@ -23,7 +23,7 @@
             <column name="league_id" type="bigint"/>
             <column name="hometeam_id" type="bigint"/>
             <column name="awayteam_id" type="bigint"/>
-            <column name="round_id" type="bigint"/>
+            <column name="round" type="varchar(100)"/>
         </createTable>
         <addForeignKeyConstraint
                 constraintName="fk_league_result"
@@ -40,11 +40,6 @@
                 referencedTableName="TEAM"
                 baseColumnNames="awayteam_id"
                 baseTableName="RESULT" referencedColumnNames="id" />
-        <addForeignKeyConstraint
-                constraintName="fk_league_result_round"
-                referencedTableName="ROUND"
-                baseColumnNames="round_id"
-                baseTableName="RESULT" referencedColumnNames="round_id" />
     </changeSet>
 
 

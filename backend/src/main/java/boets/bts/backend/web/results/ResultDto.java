@@ -12,7 +12,7 @@ public class ResultDto {
     private String result_id;
     private LeagueDto league;
     private LocalDate eventDate;
-    private RoundDto round;
+    private String round;
     private TeamDto homeTeam;
     private TeamDto awayTeam;
     private int goalsHomeTeam;
@@ -42,11 +42,11 @@ public class ResultDto {
         this.eventDate = eventDate;
     }
 
-    public RoundDto getRound() {
+    public String getRound() {
         return round;
     }
 
-    public void setRound(RoundDto round) {
+    public void setRound(String round) {
         this.round = round;
     }
 

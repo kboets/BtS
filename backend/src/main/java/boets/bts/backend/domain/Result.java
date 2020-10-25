@@ -34,9 +34,8 @@ public class Result implements Serializable {
     @JoinColumn(name = "awayteam_id", referencedColumnName = "id")
     private Team awayTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "round_id", referencedColumnName = "round_id")
-    private Round round;
+    @Column(nullable = false)
+    private String round;
 
     public Long getId() {
         return id;
@@ -94,11 +93,11 @@ public class Result implements Serializable {
         this.awayTeam = awayTeam;
     }
 
-    public Round getRound() {
+    public String getRound() {
         return round;
     }
 
-    public void setRound(Round round) {
+    public void setRound(String round) {
         this.round = round;
     }
 }

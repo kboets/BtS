@@ -8,10 +8,20 @@ import javax.persistence.criteria.Predicate;
 
 public class ResultSpecs {
 
-    public static Specification<Result> getResultByLeagueAndSeason(League league) {
+    public static Specification<Result> getResultByLeague(Long leagueId) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league.getId());
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
 
+            return predicate;
+        };
+    }
+
+    public static Specification<Result> getResultByLeagueAndRound(Long leagueId, String round) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("round"), round);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("league"), leagueId));
             return predicate;
         };
     }

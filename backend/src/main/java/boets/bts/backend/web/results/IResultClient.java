@@ -40,10 +40,8 @@ public interface IResultClient {
                 String eventDate = resultJson.get("event_date").getAsString();
                 String eventDateRemoved = StringUtils.substringBefore(eventDate, "T");
                 dto.setEventDate(LocalDate.parse(eventDateRemoved, dateFormatter));
-                RoundDto roundDto = new RoundDto();
                 String roundName = resultJson.get("round").getAsString();
-                roundDto.setRound(StringUtils.replace(roundName," ", "_" ));
-                dto.setRound(roundDto);
+                dto.setRound(StringUtils.replace(roundName," ", "_" ));
                 dto.setGoalsAwayTeam(resultJson.get("goalsAwayTeam").getAsInt());
                 dto.setGoalsHomeTeam(resultJson.get("goalsHomeTeam").getAsInt());
                 TeamDto awayTeamDto = new TeamDto();
