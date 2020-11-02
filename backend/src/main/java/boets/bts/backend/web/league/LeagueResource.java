@@ -2,6 +2,7 @@ package boets.bts.backend.web.league;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.service.LeagueService;
+import boets.bts.backend.web.exception.GeneralException;
 import boets.bts.backend.web.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,19 @@ public class LeagueResource {
 
     @GetMapping("get/{id}")
     public LeagueDto getLeagueById(@PathVariable("id") Long id)  {
-        logger.info("Arrived in the getLeagueById with {} ",id);
-        Optional<LeagueDto> leagueDto = leagueService.getLeagueDtoById(id);
-        if(!leagueDto.isPresent()) {
-            throw new NotFoundException(String.format("No league found with id %s", id));
+        logger.info("GetLeagueById with id {} ",id);
+
+        try {
+            Optional<LeagueDto> leagueDto = leagueService.getLeagueDtoById(id);
+            if(!leagueDto.isPresent()) {
+                throw new NotFoundException(String.format("No league found with id %s", id));
+            }
+            return leagueDto.get();
+        } catch (Exception e) {
+            throw new GeneralException(e.getMessage());
         }
-        return leagueDto.get();
+
+
     }
 
     @PutMapping("/toSelected")

@@ -19,11 +19,17 @@ public class RoundServiceIntegrationTest {
 
     @Test
     public void getCurrentRoundForLeagueAndSeason_givenLeagueWithoutCurrentRound_shouldReturnCurrentRound() throws  Exception {
-        Round currentRound = roundService.getCurrentRoundForLeagueAndSeason( 754L,219);
+        Round currentRound = roundService.retrieveCurrentRoundForLeagueAndSeason( 754L,219);
         assertThat(currentRound).isNotNull();
         assertThat(currentRound.isCurrent()).isTrue();
-        //undo
-        currentRound.setCurrent(false);
-        currentRound.setCurrentDate(null);
+    }
+
+    @Test
+    public void getPreviousRoundForLeague_givenJupilerLeague_shouldReturnPreviousRound()  throws Exception {
+        Round currentRound = roundService.retrieveCurrentRoundForLeagueAndSeason( 2660L,2020);
+        assertThat(currentRound).isNotNull();
+        assertThat(currentRound.isCurrent()).isTrue();
+        Round previousCurrentRound = roundService.getPreviousCurrentRoundForLeague(currentRound.getLeague().getId());
+        assertThat(previousCurrentRound.getId()).isEqualTo(currentRound.getId()-1);
     }
 }

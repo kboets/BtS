@@ -17,6 +17,7 @@ public class ResultDto {
     private TeamDto awayTeam;
     private int goalsHomeTeam;
     private int goalsAwayTeam;
+    private String matchStatus;
 
     public String getResult_id() {
         return result_id;
@@ -80,5 +81,13 @@ public class ResultDto {
 
     public void setGoalsAwayTeam(int goalsAwayTeam) {
         this.goalsAwayTeam = goalsAwayTeam;
+    }
+
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
     }
 }

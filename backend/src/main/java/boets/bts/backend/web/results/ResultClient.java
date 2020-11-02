@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,17 @@ public class ResultClient implements IResultClient {
     public Optional<List<ResultDto>> retrieveAllResultForLeague(Long leagueId, int season) {
         //1. make call
         String url = WebUtils.buildUrl("fixtures", "league", leagueId.toString());
+        return makeCallAndMap(url);
+    }
+
+    @Override
+    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round) {
+        //1. make call
+        String url = WebUtils.buildUrl("fixtures", "league", leagueId.toString(), round);
+        return makeCallAndMap(url);
+    }
+
+    private Optional<List<ResultDto>> makeCallAndMap(String url) {
         Request request = WebUtils.createRequest(url);
         OkHttpClient client = new OkHttpClient();
         Response response = null;

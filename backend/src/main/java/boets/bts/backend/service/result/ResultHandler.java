@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface ResultHandler {
 
-    List<Result> getResultForLeague(Long leagueId) ;
+    List<Result> getResultForLeague(Long leagueId) throws Exception;
 }

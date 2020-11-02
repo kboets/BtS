@@ -33,4 +33,9 @@ public class ResultMockClient implements IResultClient {
         //4. map data to dto
         return mapJsonToResultDto(results);
     }
+
+    @Override
+    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round) {
+        return Optional.empty();
+    }
 }

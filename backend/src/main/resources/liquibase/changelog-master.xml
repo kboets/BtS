@@ -12,4 +12,5 @@
     <include file="/liquibase/changelog/004_createRound.xml" />
     <include file="/liquibase/changelog/005_createResult.xml" />
     <include file="/liquibase/changelog/006_updateRound.xml" />
+    <include file="/liquibase/changelog/007_updateResult_addStatus.xml" />
 </databaseChangeLog>

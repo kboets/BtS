@@ -17,9 +17,12 @@ import java.util.Optional;
 
 public interface IResultClient {
 
+
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     Optional<List<ResultDto>> retrieveAllResultForLeague(Long leagueId, int season);
+
+    Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round);
 
     default JsonArray parseAllResultsRawJson(String jsonAsString) {
         JsonElement jsonElement = JsonParser.parseString(jsonAsString);
@@ -32,8 +35,9 @@ public interface IResultClient {
         List<ResultDto> dtos = new ArrayList<>();
         for(JsonElement resultJsonElement : jsonArray) {
             JsonObject resultJson = resultJsonElement.getAsJsonObject();
-            if(resultJson.get("status").getAsString().equals("Match Finished")) {
+            if(!resultJson.get("status").getAsString().equals("Not Started")) {
                 ResultDto dto = new ResultDto();
+                dto.setMatchStatus(resultJson.get("status").getAsString());
                 LeagueDto leagueDto = new LeagueDto();
                 leagueDto.setLeague_id(resultJson.get("league_id").getAsString());
                 dto.setLeague(leagueDto);
@@ -42,8 +46,12 @@ public interface IResultClient {
                 dto.setEventDate(LocalDate.parse(eventDateRemoved, dateFormatter));
                 String roundName = resultJson.get("round").getAsString();
                 dto.setRound(StringUtils.replace(roundName," ", "_" ));
-                dto.setGoalsAwayTeam(resultJson.get("goalsAwayTeam").getAsInt());
-                dto.setGoalsHomeTeam(resultJson.get("goalsHomeTeam").getAsInt());
+                if(!resultJson.get("goalsAwayTeam").isJsonNull()) {
+                    dto.setGoalsAwayTeam(resultJson.get("goalsAwayTeam").getAsInt());
+                }
+                if(!resultJson.get("goalsHomeTeam").isJsonNull()) {
+                    dto.setGoalsHomeTeam(resultJson.get("goalsHomeTeam").getAsInt());
+                }
                 TeamDto awayTeamDto = new TeamDto();
                 JsonObject awayTeamJsonObject = resultJson.getAsJsonObject("awayTeam");
                 awayTeamDto.setTeamId(awayTeamJsonObject.get("team_id").getAsString());

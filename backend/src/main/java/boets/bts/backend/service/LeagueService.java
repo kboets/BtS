@@ -47,9 +47,10 @@ public class LeagueService  {
         this.roundService = roundService;
     }
 
-    public Optional<LeagueDto> getLeagueDtoById(Long id)  {
+    public Optional<LeagueDto> getLeagueDtoById(Long id) throws Exception {
         Optional<League> leagueOptional = leagueRepository.findById(id);
         if(leagueOptional.isPresent()) {
+            roundService.retrieveCurrentRoundForLeagueAndSeason(id, WebUtils.getCurrentSeason());
             return Optional.of(leagueMapper.toLeagueDto(leagueOptional.get()));
         }
         return Optional.empty();

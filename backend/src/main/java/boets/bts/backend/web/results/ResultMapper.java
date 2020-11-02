@@ -15,7 +15,8 @@ import java.util.List;
 public interface ResultMapper {
 
     @Mappings({
-            @Mapping(target = "result_id", source = "id")
+            @Mapping(target = "result_id", source = "id"),
+            @Mapping(target = "matchStatus", source = "matchStatus")
     })
     ResultDto toResultDto(Result result);
 

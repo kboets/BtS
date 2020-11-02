@@ -66,9 +66,9 @@ public class InitService {
         leagues.stream()
             .forEach(league -> {
                 try {
-                    roundService.getCurrentRoundForLeagueAndSeason(league.getId(), WebUtils.getCurrentSeason());
+                    roundService.retrieveCurrentRoundForLeagueAndSeason(league.getId(), WebUtils.getCurrentSeason());
                 } catch (Exception e) {
-                    logger.warn("Something went wrong while update current round " +e.getStackTrace());
+                    logger.warn("Something went wrong while update current round " +e);
                 }
             });
     }

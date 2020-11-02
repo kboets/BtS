@@ -42,7 +42,6 @@ public class RoundRepositoryTest {
 
     @Test
     public void testUpdate() {
-        System.out.println(LocalDate.now());
         List<Round> rounds = roundRepository.findAll();
         List<Round> updatedRound = rounds.stream().peek(round -> round.setCurrent(false)).collect(Collectors.toList());
         updatedRound = roundRepository.saveAll(updatedRound);

@@ -4,6 +4,7 @@ import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.RoundClient;
 import boets.bts.backend.web.round.RoundDto;
@@ -49,7 +50,7 @@ public class RoundService {
         }
     }
 
-    public Round getCurrentRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
+    public Round retrieveCurrentRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(leagueId, season));
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerFactory.getCurrentRoundHandler(currentPersistedRound.isPresent());
         return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, leagueId, season);
@@ -63,4 +64,11 @@ public class RoundService {
             throw new NotFoundException("Could not find Round with name " +name);
         }
     }
+
+    public Round getPreviousCurrentRoundForLeague(Long leagueId) throws Exception {
+        Round currentRound = retrieveCurrentRoundForLeagueAndSeason(leagueId, WebUtils.getCurrentSeason());
+        Round previousRound = roundRepository.getOne(currentRound.getId()-1);
+        return previousRound;
+    }
+
 }

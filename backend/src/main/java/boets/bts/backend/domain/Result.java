@@ -37,6 +37,10 @@ public class Result implements Serializable {
     @Column(nullable = false)
     private String round;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private MatchStatus matchStatus;
+
     public Long getId() {
         return id;
     }
@@ -99,5 +103,13 @@ public class Result implements Serializable {
 
     public void setRound(String round) {
         this.round = round;
+    }
+
+    public MatchStatus getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(MatchStatus matchStatus) {
+        this.matchStatus = matchStatus;
     }
 }
