@@ -6,6 +6,7 @@ import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
@@ -23,11 +24,11 @@ public class RoundService {
     private Logger logger = LoggerFactory.getLogger(RoundService.class);
 
     private RoundMapper roundMapper;
-    private RoundClient roundClient;
+    private IRoundClient roundClient;
     private RoundRepository roundRepository;
     private CurrentRoundHandlerFactory currentRoundHandlerFactory;
 
-    public RoundService(RoundMapper roundMapper, RoundClient roundClient, RoundRepository roundRepository, CurrentRoundHandlerFactory currentRoundHandlerFactory) {
+    public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, CurrentRoundHandlerFactory currentRoundHandlerFactory) {
         this.roundMapper = roundMapper;
         this.roundClient = roundClient;
         this.roundRepository = roundRepository;

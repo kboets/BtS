@@ -38,8 +38,8 @@ public class Result implements Serializable {
     private String round;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private MatchStatus matchStatus;
+    //@Enumerated(EnumType.STRING)
+    private String matchStatus;
 
     public Long getId() {
         return id;
@@ -105,11 +105,11 @@ public class Result implements Serializable {
         this.round = round;
     }
 
-    public MatchStatus getMatchStatus() {
+    public String getMatchStatus() {
         return matchStatus;
     }
 
-    public void setMatchStatus(MatchStatus matchStatus) {
+    public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
     }
 }

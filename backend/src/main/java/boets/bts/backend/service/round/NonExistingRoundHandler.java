@@ -3,6 +3,7 @@ package boets.bts.backend.service.round;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
@@ -17,11 +18,11 @@ import java.util.Optional;
 public class NonExistingRoundHandler implements CurrentRoundHandler {
 
     private Logger logger = LoggerFactory.getLogger(ExistingCurrentRoundHandler.class);
-    private RoundClient roundClient;
+    private IRoundClient roundClient;
     private RoundMapper roundMapper;
     private RoundRepository roundRepository;
 
-    public NonExistingRoundHandler(RoundClient roundClient, RoundMapper roundMapper, RoundRepository roundRepository) {
+    public NonExistingRoundHandler(IRoundClient roundClient, RoundMapper roundMapper, RoundRepository roundRepository) {
         this.roundClient = roundClient;
         this.roundMapper = roundMapper;
         this.roundRepository = roundRepository;

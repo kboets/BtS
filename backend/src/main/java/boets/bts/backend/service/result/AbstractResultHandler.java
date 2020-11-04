@@ -8,6 +8,7 @@ import boets.bts.backend.repository.team.TeamRepository;
 import boets.bts.backend.repository.team.TeamSpecs;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultClient;
 import boets.bts.backend.web.results.ResultMapper;
 
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
 public abstract class AbstractResultHandler implements ResultHandler {
 
     protected ResultRepository resultRepository;
-    protected ResultClient resultClient;
+    protected IResultClient resultClient;
     protected ResultMapper resultMapper;
     protected TeamRepository teamRepository;
     protected LeagueRepository leagueRepository;
     protected RoundService roundService;
     protected RoundRepository roundRepository;
 
-    public AbstractResultHandler(ResultRepository resultRepository, ResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
+    public AbstractResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
         this.resultRepository = resultRepository;
         this.resultClient = resultClient;
         this.resultMapper = resultMapper;

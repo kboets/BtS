@@ -7,6 +7,7 @@ import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
+import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
@@ -22,7 +23,7 @@ import java.util.List;
 public class EmptyResultHandler extends AbstractResultHandler {
 
 
-    public EmptyResultHandler(ResultRepository resultRepository, ResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
+    public EmptyResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
         super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository);
     }
 

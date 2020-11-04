@@ -35,7 +35,8 @@ public interface IResultClient {
         List<ResultDto> dtos = new ArrayList<>();
         for(JsonElement resultJsonElement : jsonArray) {
             JsonObject resultJson = resultJsonElement.getAsJsonObject();
-            if(!resultJson.get("status").getAsString().equals("Not Started")) {
+            String matchStatus = resultJson.get("status").getAsString();
+            if(!matchStatus.equals("Not Started") && !matchStatus.equals("Time to be defined")) {
                 ResultDto dto = new ResultDto();
                 dto.setMatchStatus(resultJson.get("status").getAsString());
                 LeagueDto leagueDto = new LeagueDto();

@@ -10,6 +10,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoundClient {
+@Profile("!mock")
+public class RoundClient implements IRoundClient{
 
     private Logger logger = LoggerFactory.getLogger(RoundClient.class);
 
@@ -77,22 +79,5 @@ public class RoundClient {
         return Optional.empty();
     }
 
-    private JsonArray parseAllRoundsForLeaguesRawJson(String jsonAsString) {
-        JsonElement jsonElement = JsonParser.parseString(jsonAsString);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonObject api =  jsonObject.getAsJsonObject("api");
-        return api.getAsJsonArray("fixtures");
-    }
 
-    private List<RoundDto> mapJsonToRoundDto(JsonArray jsonArray, int season) {
-        List<RoundDto> roundDtos = new ArrayList<>();
-        for(JsonElement roundJsonElement : jsonArray) {
-            RoundDto roundDto = new RoundDto();
-            roundDto.setRound(roundJsonElement.getAsString());
-            roundDto.setSeason(season);
-            roundDtos.add(roundDto);
-        }
-
-        return roundDtos;
-    }
 }
