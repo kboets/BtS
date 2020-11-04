@@ -1,0 +1,349 @@
+{
+  "api": {
+    "results": 9,
+    "fixtures": [
+      {
+        "fixture_id": 581166,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-21T17:00:00+00:00",
+        "event_timestamp": 1598029200,
+        "firstHalfStart": 1598029200,
+        "secondHalfStart": 1598032800,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Guldensporenstadion",
+        "referee": "J. Boterberg",
+        "homeTeam": {
+          "team_id": 734,
+          "team_name": "Kortrijk",
+          "logo": "https://media.api-sports.io/football/teams/734.png"
+        },
+        "awayTeam": {
+          "team_id": 739,
+          "team_name": "AS Eupen",
+          "logo": "https://media.api-sports.io/football/teams/739.png"
+        },
+        "goalsHomeTeam": 0,
+        "goalsAwayTeam": 0,
+        "score": {
+          "halftime": "0-0",
+          "fulltime": "0-0",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581164,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-22T14:15:00+00:00",
+        "event_timestamp": 1598105700,
+        "firstHalfStart": 1598105700,
+        "secondHalfStart": 1598109300,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Regenboogstadion",
+        "referee": "L. D'hondt",
+        "homeTeam": {
+          "team_id": 600,
+          "team_name": "Zulte Waregem",
+          "logo": "https://media.api-sports.io/football/teams/600.png"
+        },
+        "awayTeam": {
+          "team_id": 738,
+          "team_name": "Waasland-beveren",
+          "logo": "https://media.api-sports.io/football/teams/738.png"
+        },
+        "goalsHomeTeam": 4,
+        "goalsAwayTeam": 1,
+        "score": {
+          "halftime": "1-0",
+          "fulltime": "4-1",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581165,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-22T16:30:00+00:00",
+        "event_timestamp": 1598113800,
+        "firstHalfStart": 1598113800,
+        "secondHalfStart": 1598117400,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "AFAS-stadion Achter de Kazerne",
+        "referee": "K. Van Damme",
+        "homeTeam": {
+          "team_id": 266,
+          "team_name": "KV Mechelen",
+          "logo": "https://media.api-sports.io/football/teams/266.png"
+        },
+        "awayTeam": {
+          "team_id": 741,
+          "team_name": "Cercle Brugge",
+          "logo": "https://media.api-sports.io/football/teams/741.png"
+        },
+        "goalsHomeTeam": 2,
+        "goalsAwayTeam": 3,
+        "score": {
+          "halftime": "1-0",
+          "fulltime": "2-3",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581168,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-22T16:30:00+00:00",
+        "event_timestamp": 1598113800,
+        "firstHalfStart": 1598113800,
+        "secondHalfStart": 1598117400,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "King Power at Den Dreef Stadion",
+        "referee": "E. Lambrechts",
+        "homeTeam": {
+          "team_id": 260,
+          "team_name": "OH Leuven",
+          "logo": "https://media.api-sports.io/football/teams/260.png"
+        },
+        "awayTeam": {
+          "team_id": 736,
+          "team_name": "Charleroi",
+          "logo": "https://media.api-sports.io/football/teams/736.png"
+        },
+        "goalsHomeTeam": 1,
+        "goalsAwayTeam": 3,
+        "score": {
+          "halftime": "1-1",
+          "fulltime": "1-3",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581163,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-22T18:45:00+00:00",
+        "event_timestamp": 1598121900,
+        "firstHalfStart": 1598121900,
+        "secondHalfStart": 1598125500,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Bosuilstadion",
+        "referee": "J. Lardot",
+        "homeTeam": {
+          "team_id": 740,
+          "team_name": "Antwerp",
+          "logo": "https://media.api-sports.io/football/teams/740.png"
+        },
+        "awayTeam": {
+          "team_id": 631,
+          "team_name": "Gent",
+          "logo": "https://media.api-sports.io/football/teams/631.png"
+        },
+        "goalsHomeTeam": 1,
+        "goalsAwayTeam": 0,
+        "score": {
+          "halftime": "1-0",
+          "fulltime": "1-0",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581162,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-23T11:30:00+00:00",
+        "event_timestamp": 1598182200,
+        "firstHalfStart": 1598182200,
+        "secondHalfStart": 1598185800,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Stade Maurice Dufrasne",
+        "referee": "N. Laforge",
+        "homeTeam": {
+          "team_id": 733,
+          "team_name": "Standard Liege",
+          "logo": "https://media.api-sports.io/football/teams/733.png"
+        },
+        "awayTeam": {
+          "team_id": 742,
+          "team_name": "Genk",
+          "logo": "https://media.api-sports.io/football/teams/742.png"
+        },
+        "goalsHomeTeam": 0,
+        "goalsAwayTeam": 0,
+        "score": {
+          "halftime": "0-0",
+          "fulltime": "0-0",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581160,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-23T14:00:00+00:00",
+        "event_timestamp": 1598191200,
+        "firstHalfStart": 1598191200,
+        "secondHalfStart": 1598194800,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Jan Breydelstadion",
+        "referee": "A. Boucaut",
+        "homeTeam": {
+          "team_id": 569,
+          "team_name": "Club Brugge KV",
+          "logo": "https://media.api-sports.io/football/teams/569.png"
+        },
+        "awayTeam": {
+          "team_id": 263,
+          "team_name": "Beerschot Wilrijk",
+          "logo": "https://media.api-sports.io/football/teams/263.png"
+        },
+        "goalsHomeTeam": 0,
+        "goalsAwayTeam": 1,
+        "score": {
+          "halftime": "0-1",
+          "fulltime": "0-1",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581161,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-23T16:15:00+00:00",
+        "event_timestamp": 1598199300,
+        "firstHalfStart": 1598199300,
+        "secondHalfStart": 1598202900,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Lotto Park",
+        "referee": "W. Smet",
+        "homeTeam": {
+          "team_id": 554,
+          "team_name": "Anderlecht",
+          "logo": "https://media.api-sports.io/football/teams/554.png"
+        },
+        "awayTeam": {
+          "team_id": 743,
+          "team_name": "Royal Excel Mouscron",
+          "logo": "https://media.api-sports.io/football/teams/743.png"
+        },
+        "goalsHomeTeam": 1,
+        "goalsAwayTeam": 1,
+        "score": {
+          "halftime": "0-0",
+          "fulltime": "1-1",
+          "extratime": null,
+          "penalty": null
+        }
+      },
+      {
+        "fixture_id": 581167,
+        "league_id": 2660,
+        "league": {
+          "name": "Jupiler Pro League",
+          "country": "Belgium",
+          "logo": "https://media.api-sports.io/football/leagues/144.png",
+          "flag": "https://media.api-sports.io/flags/be.svg"
+        },
+        "event_date": "2020-08-24T18:45:00+00:00",
+        "event_timestamp": 1598294700,
+        "firstHalfStart": 1598294700,
+        "secondHalfStart": 1598298300,
+        "round": "Regular Season - 3",
+        "status": "Match Finished",
+        "statusShort": "FT",
+        "elapsed": 90,
+        "venue": "Stayen",
+        "referee": "F. Geldhof",
+        "homeTeam": {
+          "team_id": 735,
+          "team_name": "St. Truiden",
+          "logo": "https://media.api-sports.io/football/teams/735.png"
+        },
+        "awayTeam": {
+          "team_id": 624,
+          "team_name": "Oostende",
+          "logo": "https://media.api-sports.io/football/teams/624.png"
+        },
+        "goalsHomeTeam": 0,
+        "goalsAwayTeam": 0,
+        "score": {
+          "halftime": "0-0",
+          "fulltime": "0-0",
+          "extratime": null,
+          "penalty": null
+        }
+      }
+    ]
+  }
+}

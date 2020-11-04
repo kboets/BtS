@@ -1,0 +1,49 @@
+<dataset>
+
+    <COUNTRY country_code="BE" country="Belgium" flag="null" />
+
+    <LEAGUE league_id="2660" name="Jupiler Pro League" start_season="2020-08-08" end_season="2021-04-16" current="1" season="2020" country_code="BE" logo="null" flag="null" selected="0"/>
+
+    <ROUND round_id="35" round="Regular_Season_-_1" season="2020" league_id="2660" current="0" actual_date="null" />
+    <ROUND round_id="36" round="Regular_Season_-_2" season="2020" league_id="2660" current="0" actual_date="null" />
+    <ROUND round_id="37" round="Regular_Season_-_3" season="2020" league_id="2660" current="0" actual_date="null" />
+
+    <TEAM id="103" team_id="569" name="Club Brugge KV" stadium_name="Jan Breydelstadion" city="Bruges" stadium_capacity="29062" logo="null" league_id="2660" />
+    <TEAM id="104" team_id="736" name="Charleroi" stadium_name="Stade du Pays de Charleroi" city="Charleroi" stadium_capacity="14967" logo="null" league_id="2660" />
+    <TEAM id="105" team_id="740" name="Antwerp" stadium_name="Bosuilstadion" city="Deurne" stadium_capacity="16649" logo="null" league_id="2660" />
+    <TEAM id="106" team_id="743" name="Royal Excel Mouscron" stadium_name="Stade Le Canonnier" city="Moeskron" stadium_capacity="10571" logo="null" league_id="2660" />
+    <TEAM id="107" team_id="733" name="Standard Liege" stadium_name="Stade Maurice Dufrasne" city="Luik" stadium_capacity="27670" logo="null" league_id="2660" />
+    <TEAM id="108" team_id="741" name="Cercle Brugge" stadium_name="Jan Breydelstadion" city="Brugge" stadium_capacity="29062" logo="null" league_id="2660" />
+    <TEAM id="109" team_id="735" name="St. Truiden" stadium_name="Stayen" city="St.-Trond" stadium_capacity="14600" logo="null" league_id="2660" />
+    <TEAM id="110" team_id="631" name="Gent" stadium_name="GHELAMCO-arena" city="Gent" stadium_capacity="20000" logo="null" league_id="2660" />
+    <TEAM id="111" team_id="600" name="Zulte Waregem" stadium_name="Regenboogstadion" city="Waregem" stadium_capacity="12300" logo="null" league_id="2660" />
+    <TEAM id="112" team_id="742" name="Genk" stadium_name="Luminus Arena" city="Genk" stadium_capacity="24956" logo="null" league_id="2660" />
+    <TEAM id="113" team_id="266" name="KV Mechelen" stadium_name="AFAS-stadion" city="Malines" stadium_capacity="16715" logo="null" league_id="2660" />
+    <TEAM id="114" team_id="554" name="Anderlecht" stadium_name="Lotto Park" city="Brussel" stadium_capacity="28063" logo="null" league_id="2660" />
+    <TEAM id="115" team_id="734" name="Kortrijk" stadium_name="Guldensporenstadion" city="Kortrijk" stadium_capacity="9399" logo="null" league_id="2660" />
+    <TEAM id="116" team_id="738" name="Waasland-beveren" stadium_name="Freethielstadion" city="Beveren" stadium_capacity="8235" logo="null" league_id="2660" />
+    <TEAM id="117" team_id="260" name="OH Leuven" stadium_name="King Power" city="Heverlee" stadium_capacity="12500" logo="null" league_id="2660" />
+    <TEAM id="118" team_id="739" name="AS Eupen" stadium_name="Stadion am Kehrweg" city="Eupen" stadium_capacity="8363" logo="null" league_id="2660" />
+    <TEAM id="119" team_id="624" name="Oostende" stadium_name="Diaz Arena" city="Oostende" stadium_capacity="8432" logo="null" league_id="2660" />
+    <TEAM id="120" team_id="263" name="Beerschot" stadium_name="Olympisch Stadion" city="Anvers" stadium_capacity="13405" logo="null" league_id="2660" />
+
+    <RESULT result_id="165" event_date="2020-08-08" goals_home_team="0" goals_away_team="1" league_id="2660" hometeam_id="103" awayteam_id="104" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="166" event_date="2020-08-08" goals_home_team="1" goals_away_team="1" league_id="2660" hometeam_id="105" awayteam_id="106" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="167" event_date="2020-08-08" goals_home_team="1" goals_away_team="0" league_id="2660" hometeam_id="107" awayteam_id="108" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="168" event_date="2020-08-09" goals_home_team="2" goals_away_team="1" league_id="2660" hometeam_id="109" awayteam_id="110" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="169" event_date="2020-08-09" goals_home_team="1" goals_away_team="2" league_id="2660" hometeam_id="111" awayteam_id="112" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="170" event_date="2020-08-09" goals_home_team="2" goals_away_team="2" league_id="2660" hometeam_id="113" awayteam_id="114" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="171" event_date="2020-08-09" goals_home_team="1" goals_away_team="3" league_id="2660" hometeam_id="115" awayteam_id="116" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="172" event_date="2020-08-10" goals_home_team="1" goals_away_team="1" league_id="2660" hometeam_id="117" awayteam_id="118" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="173" event_date="2020-08-10" goals_home_team="1" goals_away_team="2" league_id="2660" hometeam_id="119" awayteam_id="120" round="Regular_Season_-_1" status="FINISHED"/>
+    <RESULT result_id="174" event_date="2020-08-14" goals_home_team="0" goals_away_team="1" league_id="2660" hometeam_id="106" awayteam_id="113" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="175" event_date="2020-08-15" goals_home_team="1" goals_away_team="1" league_id="2660" hometeam_id="112" awayteam_id="117" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="176" event_date="2020-08-15" goals_home_team="1" goals_away_team="2" league_id="2660" hometeam_id="110" awayteam_id="115" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="177" event_date="2020-08-15" goals_home_team="1" goals_away_team="0" league_id="2660" hometeam_id="104" awayteam_id="119" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="178" event_date="2020-08-16" goals_home_team="2" goals_away_team="1" league_id="2660" hometeam_id="108" awayteam_id="105" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="179" event_date="2020-08-16" goals_home_team="3" goals_away_team="1" league_id="2660" hometeam_id="120" awayteam_id="111" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="180" event_date="2020-08-16" goals_home_team="0" goals_away_team="4" league_id="2660" hometeam_id="118" awayteam_id="103" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="181" event_date="2020-08-16" goals_home_team="3" goals_away_team="1" league_id="2660" hometeam_id="114" awayteam_id="109" round="Regular_Season_-_2" status="FINISHED"/>
+    <RESULT result_id="182" event_date="2020-08-17" goals_home_team="1" goals_away_team="2" league_id="2660" hometeam_id="116" awayteam_id="107" round="Regular_Season_-_2" status="FINISHED"/>
+
+</dataset>
