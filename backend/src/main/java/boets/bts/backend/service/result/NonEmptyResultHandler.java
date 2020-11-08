@@ -18,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,39 +37,41 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
     @Override
     public List<Result> getResultForLeague(Long leagueId) {
         try {
-            //TODO CHECK if previous or current round should be taken
             Round previousRound = roundService.getPreviousCurrentRoundForLeague(leagueId);
             List<Result> resultForRound = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(leagueId, previousRound.getRound()));
-            if(resultForRound.isEmpty()) {
+            List<Result> nonFinishedLeagueResult = resultForRound.stream()
+                    .filter(result -> !result.getMatchStatus().equals(MatchStatus.FINISHED.getName()))
+                    .collect(Collectors.toList());
+            if(nonFinishedLeagueResult.isEmpty()) {
                 resultForRound = handleAllMissingResult(leagueId,previousRound);
+                return expandAndSaveResult(resultForRound);
             }
-            if(resultForRound.size() != 9) {
-                resultForRound = handleMissingResultForRound(leagueId, previousRound);
+
+            if(nonFinishedLeagueResult.size() != 9) {
+                resultForRound = handleMissingResultForRound(previousRound, nonFinishedLeagueResult);
+                return expandAndSaveResult(resultForRound);
             }
-            return expandAndSaveResult(resultForRound);
+            return nonFinishedLeagueResult;
+
         } catch (Exception e) {
             logger.error("Could not retrieve current round for league with id {}", leagueId);
+            return Collections.EMPTY_LIST;
         }
-        return null;
     }
 
-    private List<Result> handleMissingResultForRound(Long leagueId, Round previousRound) {
+    private List<Result> handleMissingResultForRound(Round previousRound, List<Result> nonFinishedLeagueResult) {
         List<Result> toBeHandled = new ArrayList<>();
-        //1.  get results for this round and league
-        List<Result> resultsForRound = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(leagueId, previousRound.getRound()));
-        //2. find results that don't have result finished
-        List<Result> nonFinishedLeagueResult = resultsForRound.stream()
-                .filter(result -> !result.getMatchStatus().equals(MatchStatus.FINISHED))
-                .collect(Collectors.toList());
-        Optional<List<ResultDto>> resultOptionalDtos = resultClient.retrieveAllResultForLeagueAndRound(leagueId, previousRound.getRound());
-        if(resultOptionalDtos.isPresent()) {
-            List<ResultDto> resultDtos = resultOptionalDtos.get();
-            for(Result missingResult: nonFinishedLeagueResult) {
-                for(ResultDto resultDto: resultDtos) {
-                    if(missingResult.getLeague().getId().equals(resultDto.getLeague().getLeague_id())) {
-                        toBeHandled.add(resultMapper.toResult(resultDto));
-                        continue;
-                    }
+        Optional<List<ResultDto>> resultOptionalDtos = resultClient.retrieveAllResultForLeagueAndRound(nonFinishedLeagueResult.get(0).getLeague().getId(), previousRound.getRound());
+        if(!resultOptionalDtos.isPresent()) {
+            return toBeHandled;
+        }
+        List<ResultDto> resultDtos = resultOptionalDtos.get();
+        List<ResultDto> nonFinishedResultDtos = resultMapper.toResultDtos(nonFinishedLeagueResult);
+        for(ResultDto missingResult: nonFinishedResultDtos) {
+            for(ResultDto resultDto: resultDtos) {
+                if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())) {
+                    toBeHandled.add(resultMapper.toResult(resultDto));
+                    continue;
                 }
             }
         }

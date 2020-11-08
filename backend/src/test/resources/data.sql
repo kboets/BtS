@@ -6,15 +6,15 @@ VALUES (2660, 'Jupiler Pro League', '2020-08-08', '2021-04-16', '1', 2020, 'BE',
 
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (35, 'Regular_Season_-_1', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (36, 'Regular_Season_-_2', 2020, 2660, '0', NULL);
-INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (37, 'Regular_Season_-_3', 2020, 2660, '0', NULL);
+INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (37, 'Regular_Season_-_3', 2020, 2660, '1', '2020-11-04');
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (38, 'Regular_Season_-_4', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (39, 'Regular_Season_-_5', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (40, 'Regular_Season_-_6', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (41, 'Regular_Season_-_7', 2020, 2660, '0', NULL);
-INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (42, 'Regular_Season_-_8', 2020, 2660, '1', '2020-11-04');
+INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (42, 'Regular_Season_-_8', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (43, 'Regular_Season_-_9', 2020, 2660, '0', NULL);
-INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (44, 'Regular_Season_-_10', 2020, 2660, '0', '2020-10-26');
-INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (45, 'Regular_Season_-_11', 2020, 2660, '0', '2020-11-02');
+INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (44, 'Regular_Season_-_10', 2020, 2660, '0', NULL);
+INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (45, 'Regular_Season_-_11', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (46, 'Regular_Season_-_12', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (47, 'Regular_Season_-_13', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (48, 'Regular_Season_-_14', 2020, 2660, '0', NULL);

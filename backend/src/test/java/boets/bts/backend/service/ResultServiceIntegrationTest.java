@@ -6,6 +6,7 @@ import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.results.ResultDto;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,23 @@ public class ResultServiceIntegrationTest {
     public void retrieveAllResultsForLeague_givingEmptyResult_shouldReturnResult() throws Exception{
         List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
-        Round currentRound = roundService.retrieveCurrentRoundForLeagueAndSeason(2660L, WebUtils.getCurrentSeason());
-        assertThat(currentRound).isNotNull();
-        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo(currentRound.getRound());
+        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
     }
+
+    @Test
+    @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest.xml")
+    public void retrieveAllResultsForLeague_givingEmpytResultForRound_shouldReturnResult() throws Exception{
+        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        assertThat(resultDtos.isEmpty()).isFalse();
+        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
+    }
+
+    @Test
+    @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest2.xml")
+    public void retrieveAllResultsForLeague_givingNonCompleteResultForRound_shouldReturnResult() throws Exception{
+        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        assertThat(resultDtos.isEmpty()).isFalse();
+        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
+    }
+
 }

@@ -16,7 +16,7 @@ public class RoundMockClient implements IRoundClient {
     public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(long leagueId, int season) {
         RoundDto roundDto = new RoundDto();
         roundDto.setCurrent(true);
-        roundDto.setRound("Regular_Season_-_11");
+        roundDto.setRound("Regular_Season_-_3");
         LeagueDto leagueDto = new LeagueDto();
         leagueDto.setLeague_id(Long.toString(leagueId));
         roundDto.setLeagueDto(leagueDto);

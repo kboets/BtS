@@ -15,13 +15,13 @@ import java.util.Optional;
 public class ResultMockClient implements IResultClient {
 
     private static String fixtures_jupilerLeagues_2020 = "fixtures_jupilerLeague_2020.json";
-    private static String fixtures_jupilerLeagues_2020Round3 = "fixtures_jupilerLeague_2020Round3.json";
+    private static String fixtures_jupilerLeagues_2020Round2 = "fixtures_jupilerLeague_2020Round2.json";
     private static final Map<Long, String> fixturesForLeagueAndSeason;
 
     static {
         fixturesForLeagueAndSeason = new HashMap<>();
         fixturesForLeagueAndSeason.put(2660L, fixtures_jupilerLeagues_2020);
-        fixturesForLeagueAndSeason.put(2661L, fixtures_jupilerLeagues_2020Round3);
+        fixturesForLeagueAndSeason.put(2661L, fixtures_jupilerLeagues_2020Round2);
 
     }
 

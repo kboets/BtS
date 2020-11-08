@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Profile("!mock")
 public class LeagueClient implements ILeagueClient {
 
     private Logger logger = LoggerFactory.getLogger(LeagueClient.class);

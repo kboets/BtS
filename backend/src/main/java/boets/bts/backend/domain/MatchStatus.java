@@ -4,14 +4,14 @@ public enum MatchStatus {
 
     FINISHED("Match Finished"), POSTPONED("Match Postponed"), CANCELLED("Match Cancelled"), NOT_STARTED("Not Started");
 
-    private String type;
+    private String name;
 
-    MatchStatus(String type) {
-        this.type = type;
+    MatchStatus(String name) {
+        this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     public static MatchStatus getMatchStatusByName(String name) {
