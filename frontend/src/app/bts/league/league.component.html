@@ -44,7 +44,7 @@
             <ng-container *ngIf="currentLeagues as leagues">
                 <ng-container *ngFor="let league of leagues">
                     <ng-container *ngIf="league.selected === false">
-                        <p-card header="{{league.name}} - {{league.selected}}" class="ui-g-3">
+                        <p-card header="{{league.name}} " class="ui-g-3">
                             <p-header>
                                 <p-checkbox label="Selecteer" class="select" name="availableCheckBox"
                                             value="{{league.league_id}}"

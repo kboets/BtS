@@ -98,6 +98,8 @@ import {MenuService} from './app.menu.service';
 import {LeagueComponent} from "./bts/league/league.component";
 import {TeamsComponent} from "./bts/teams/teams.component";
 import {StandingComponent} from "./bts/teams/standing/standing.component";
+import {ResultsComponent} from "./bts/results/results.component";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
     imports: [
@@ -171,7 +173,8 @@ import {StandingComponent} from "./bts/teams/standing/standing.component";
         TreeTableModule,
         VirtualScrollerModule,
         BrowserAnimationsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        FontAwesomeModule
     ],
     declarations: [
         AppComponent,
@@ -194,7 +197,8 @@ import {StandingComponent} from "./bts/teams/standing/standing.component";
         DocumentationComponent,
         LeagueComponent,
         TeamsComponent,
-        StandingComponent
+        StandingComponent,
+        ResultsComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

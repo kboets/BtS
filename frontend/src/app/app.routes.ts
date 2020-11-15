@@ -16,11 +16,13 @@ import {UtilsDemoComponent} from './demo/view/utilsdemo.component';
 import {DocumentationComponent} from './demo/view/documentation.component';
 import {LeagueComponent} from "./bts/league/league.component";
 import {TeamsComponent} from "./bts/teams/teams.component";
+import {ResultsComponent} from "./bts/results/results.component";
 
 export const routes: Routes = [
     {path: '', component: DashboardDemoComponent},
     {path: 'leagues', component: LeagueComponent},
     {path: 'teams', component: TeamsComponent},
+    {path: 'result', component: ResultsComponent},
     {path: 'components/sample', component: SampleDemoComponent},
     {path: 'components/forms', component: FormsDemoComponent},
     {path: 'components/data', component: DataDemoComponent},

@@ -19,6 +19,7 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             {label: 'Leagues', icon: 'fa fa-fw fa-futbol-o', routerLink: ['/leagues']},
             {label: 'Teams', icon: 'fa fa-user-plus', routerLink: ['/teams']},
+            {label: 'Result', icon: 'fa fa-address-card', routerLink: ['/result']},
             {label: 'Dashboard', icon: 'fa fa-fw fa-home', routerLink: ['/']},
             {
                 label: 'Components', icon: 'fa fa-fw fa-home', badge: '2', routerLink: ['/components'],
