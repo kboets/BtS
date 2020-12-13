@@ -112,4 +112,84 @@ public class Result implements Serializable {
     public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
     }
+
+
+    public static final class ResultBuilder {
+        private Long id;
+        private LocalDate eventDate;
+        private int goalsHomeTeam;
+        private int goalsAwayTeam;
+        private League league;
+        private Team homeTeam;
+        private Team awayTeam;
+        private String round;
+        //@Enumerated(EnumType.STRING)
+        private String matchStatus;
+
+        private ResultBuilder() {
+        }
+
+        public static ResultBuilder aResult() {
+            return new ResultBuilder();
+        }
+
+        public ResultBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ResultBuilder withEventDate(LocalDate eventDate) {
+            this.eventDate = eventDate;
+            return this;
+        }
+
+        public ResultBuilder withGoalsHomeTeam(int goalsHomeTeam) {
+            this.goalsHomeTeam = goalsHomeTeam;
+            return this;
+        }
+
+        public ResultBuilder withGoalsAwayTeam(int goalsAwayTeam) {
+            this.goalsAwayTeam = goalsAwayTeam;
+            return this;
+        }
+
+        public ResultBuilder withLeague(League league) {
+            this.league = league;
+            return this;
+        }
+
+        public ResultBuilder withHomeTeam(Team homeTeam) {
+            this.homeTeam = homeTeam;
+            return this;
+        }
+
+        public ResultBuilder withAwayTeam(Team awayTeam) {
+            this.awayTeam = awayTeam;
+            return this;
+        }
+
+        public ResultBuilder withRound(String round) {
+            this.round = round;
+            return this;
+        }
+
+        public ResultBuilder withMatchStatus(String matchStatus) {
+            this.matchStatus = matchStatus;
+            return this;
+        }
+
+        public Result build() {
+            Result result = new Result();
+            result.setId(id);
+            result.setEventDate(eventDate);
+            result.setGoalsHomeTeam(goalsHomeTeam);
+            result.setGoalsAwayTeam(goalsAwayTeam);
+            result.setLeague(league);
+            result.setHomeTeam(homeTeam);
+            result.setAwayTeam(awayTeam);
+            result.setRound(round);
+            result.setMatchStatus(matchStatus);
+            return result;
+        }
+    }
 }

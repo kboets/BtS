@@ -50,7 +50,7 @@ public class LeagueService  {
     public Optional<LeagueDto> getLeagueDtoById(Long id) throws Exception {
         Optional<League> leagueOptional = leagueRepository.findById(id);
         if(leagueOptional.isPresent()) {
-            roundService.retrieveCurrentRoundForLeagueAndSeason(id, WebUtils.getCurrentSeason());
+            roundService.retrieveUpComingRoundForLeagueAndSeason(id, WebUtils.getCurrentSeason());
             return Optional.of(leagueMapper.toLeagueDto(leagueOptional.get()));
         }
         return Optional.empty();

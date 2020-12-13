@@ -47,6 +47,4 @@ public abstract class AbstractResultHandler implements ResultHandler {
 
         return resultRepository.saveAll(resultWithObjects);
     }
-
-    public abstract List<Result> getResultForLeague(Long leagueId);
 }

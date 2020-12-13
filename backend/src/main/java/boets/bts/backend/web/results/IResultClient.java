@@ -36,33 +36,32 @@ public interface IResultClient {
         for(JsonElement resultJsonElement : jsonArray) {
             JsonObject resultJson = resultJsonElement.getAsJsonObject();
             String matchStatus = resultJson.get("status").getAsString();
-            if(!matchStatus.equals("Not Started") && !matchStatus.equals("Time to be defined")) {
-                ResultDto dto = new ResultDto();
-                dto.setMatchStatus(resultJson.get("status").getAsString());
-                LeagueDto leagueDto = new LeagueDto();
-                leagueDto.setLeague_id(resultJson.get("league_id").getAsString());
-                dto.setLeague(leagueDto);
-                String eventDate = resultJson.get("event_date").getAsString();
-                String eventDateRemoved = StringUtils.substringBefore(eventDate, "T");
-                dto.setEventDate(LocalDate.parse(eventDateRemoved, dateFormatter));
-                String roundName = resultJson.get("round").getAsString();
-                dto.setRound(StringUtils.replace(roundName," ", "_" ));
-                if(!resultJson.get("goalsAwayTeam").isJsonNull()) {
-                    dto.setGoalsAwayTeam(resultJson.get("goalsAwayTeam").getAsInt());
-                }
-                if(!resultJson.get("goalsHomeTeam").isJsonNull()) {
-                    dto.setGoalsHomeTeam(resultJson.get("goalsHomeTeam").getAsInt());
-                }
-                TeamDto awayTeamDto = new TeamDto();
-                JsonObject awayTeamJsonObject = resultJson.getAsJsonObject("awayTeam");
-                awayTeamDto.setTeamId(awayTeamJsonObject.get("team_id").getAsString());
-                dto.setAwayTeam(awayTeamDto);
-                TeamDto homeTeamDto = new TeamDto();
-                JsonObject homeTeamJsonObject = resultJson.getAsJsonObject("homeTeam");
-                homeTeamDto.setTeamId(homeTeamJsonObject.get("team_id").getAsString());
-                dto.setHomeTeam(homeTeamDto);
-                dtos.add(dto);
+            ResultDto dto = new ResultDto();
+            dto.setMatchStatus(matchStatus);
+            dto.setMatchStatus(resultJson.get("status").getAsString());
+            LeagueDto leagueDto = new LeagueDto();
+            leagueDto.setLeague_id(resultJson.get("league_id").getAsString());
+            dto.setLeague(leagueDto);
+            String eventDate = resultJson.get("event_date").getAsString();
+            String eventDateRemoved = StringUtils.substringBefore(eventDate, "T");
+            dto.setEventDate(LocalDate.parse(eventDateRemoved, dateFormatter));
+            String roundName = resultJson.get("round").getAsString();
+            dto.setRound(StringUtils.replace(roundName," ", "_" ));
+            if(!resultJson.get("goalsAwayTeam").isJsonNull()) {
+                dto.setGoalsAwayTeam(resultJson.get("goalsAwayTeam").getAsInt());
             }
+            if(!resultJson.get("goalsHomeTeam").isJsonNull()) {
+                dto.setGoalsHomeTeam(resultJson.get("goalsHomeTeam").getAsInt());
+            }
+            TeamDto awayTeamDto = new TeamDto();
+            JsonObject awayTeamJsonObject = resultJson.getAsJsonObject("awayTeam");
+            awayTeamDto.setTeamId(awayTeamJsonObject.get("team_id").getAsString());
+            dto.setAwayTeam(awayTeamDto);
+            TeamDto homeTeamDto = new TeamDto();
+            JsonObject homeTeamJsonObject = resultJson.getAsJsonObject("homeTeam");
+            homeTeamDto.setTeamId(homeTeamJsonObject.get("team_id").getAsString());
+            dto.setHomeTeam(homeTeamDto);
+            dtos.add(dto);
         }
         return Optional.of(dtos);
     }

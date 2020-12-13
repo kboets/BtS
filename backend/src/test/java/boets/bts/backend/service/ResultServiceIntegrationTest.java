@@ -37,15 +37,8 @@ public class ResultServiceIntegrationTest {
     public RoundService roundService;
 
     @Test
-    public void retrieveAllResultsForLeague_givingEmptyResult_shouldReturnResult() throws Exception{
-        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
-        assertThat(resultDtos.isEmpty()).isFalse();
-        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
-    }
-
-    @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest.xml")
-    public void retrieveAllResultsForLeague_givingEmpytResultForRound_shouldReturnResult() throws Exception{
+    public void retrieveAllResultsForLeague_givingEmptyResultForRound_shouldReturnResult() throws Exception{
         List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
         assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");

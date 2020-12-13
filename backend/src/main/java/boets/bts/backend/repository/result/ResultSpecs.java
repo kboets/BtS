@@ -25,4 +25,21 @@ public class ResultSpecs {
             return predicate;
         };
     }
+
+    public static Specification<Result> getAllNonFinishedResultUntilRound(Long leagueId, String round) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.lessThanOrEqualTo(
+                            root.get("round"), round));
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.notEqual(
+                            root.get("matchStatus"), "Match Finished"));
+
+            return predicate;
+        };
+
+
+    }
+
 }

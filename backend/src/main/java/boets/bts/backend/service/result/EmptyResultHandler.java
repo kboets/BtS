@@ -1,6 +1,7 @@
 package boets.bts.backend.service.result;
 
 import boets.bts.backend.domain.Result;
+import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Retrieves and saves all result for league for all matches
+ * Retrieves result when no results could be find.
  */
 @Component
 public class EmptyResultHandler extends AbstractResultHandler {
@@ -28,7 +29,12 @@ public class EmptyResultHandler extends AbstractResultHandler {
     }
 
     @Override
-    public List<Result> getResultForLeague(Long leagueId) {
+    public boolean accepts(List<Result> allResults, List<Result> allNonFinishedResult, String currentRound) {
+        return allResults.isEmpty();
+    }
+
+    @Override
+    public List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception {
         List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, WebUtils.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<Result> resultList = resultMapper.toResults(resultDtos);
         return expandAndSaveResult(resultList);

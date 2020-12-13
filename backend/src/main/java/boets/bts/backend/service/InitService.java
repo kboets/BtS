@@ -66,7 +66,7 @@ public class InitService {
         leagues.stream()
             .forEach(league -> {
                 try {
-                    roundService.retrieveCurrentRoundForLeagueAndSeason(league.getId(), WebUtils.getCurrentSeason());
+                    roundService.retrieveUpComingRoundForLeagueAndSeason(league.getId(), WebUtils.getCurrentSeason());
                 } catch (Exception e) {
                     logger.warn("Something went wrong while update current round " +e);
                 }

@@ -23,7 +23,7 @@ public class ResultResource {
         this.resultService = resultService;
     }
 
-    @GetMapping("resultForLeague/{id}")
+    @GetMapping("all/{id}")
     public List<ResultDto> retrieveResultForLeague(@PathVariable("id") Long leagueId) {
         logger.info("get result for league  with id {} ", leagueId);
         try {

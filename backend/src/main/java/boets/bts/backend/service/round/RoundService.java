@@ -7,18 +7,18 @@ import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
-import boets.bts.backend.web.round.RoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class RoundService {
 
     private Logger logger = LoggerFactory.getLogger(RoundService.class);
@@ -51,7 +51,7 @@ public class RoundService {
         }
     }
 
-    public Round retrieveCurrentRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
+    public Round retrieveUpComingRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(leagueId, season));
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerFactory.getCurrentRoundHandler(currentPersistedRound.isPresent());
         return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, leagueId, season);
@@ -66,10 +66,18 @@ public class RoundService {
         }
     }
 
-    public Round getPreviousCurrentRoundForLeague(Long leagueId) throws Exception {
-        Round currentRound = retrieveCurrentRoundForLeagueAndSeason(leagueId, WebUtils.getCurrentSeason());
-        Round previousRound = roundRepository.getOne(currentRound.getId()-1);
-        return previousRound;
+    public Round getCurrentRoundForLeague(Long leagueId)  {
+        try {
+            Round upcomingRound = retrieveUpComingRoundForLeagueAndSeason(leagueId, WebUtils.getCurrentSeason());
+            if(upcomingRound != null) {
+                return roundRepository.getOne(upcomingRound.getId()-1);
+            }
+            logger.warn("Could not find upcoming round for league id {} ", leagueId);
+            return null;
+        } catch (Exception e) {
+            logger.warn("An exception occurred while returning current round for league id {} ", leagueId);
+            throw  new NotFoundException("Could not find current Round for league "+leagueId);
+        }
     }
 
 }

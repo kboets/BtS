@@ -78,4 +78,62 @@ public class Round implements Serializable {
     public void setCurrentDate(LocalDate currentDate) {
         this.currentDate = currentDate;
     }
+
+
+    public static final class RoundBuilder {
+        private Long id;
+        private League league;
+        private String round;
+        private int season;
+        private Boolean current;
+        private LocalDate currentDate;
+
+        private RoundBuilder() {
+        }
+
+        public static RoundBuilder aRound() {
+            return new RoundBuilder();
+        }
+
+        public RoundBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RoundBuilder withLeague(League league) {
+            this.league = league;
+            return this;
+        }
+
+        public RoundBuilder withRound(String round) {
+            this.round = round;
+            return this;
+        }
+
+        public RoundBuilder withSeason(int season) {
+            this.season = season;
+            return this;
+        }
+
+        public RoundBuilder withCurrent(Boolean current) {
+            this.current = current;
+            return this;
+        }
+
+        public RoundBuilder withCurrentDate(LocalDate currentDate) {
+            this.currentDate = currentDate;
+            return this;
+        }
+
+        public Round build() {
+            Round round = new Round();
+            round.setId(id);
+            round.setLeague(league);
+            round.setRound(round.getRound());
+            round.setSeason(season);
+            round.setCurrent(current);
+            round.setCurrentDate(currentDate);
+            return round;
+        }
+    }
 }
