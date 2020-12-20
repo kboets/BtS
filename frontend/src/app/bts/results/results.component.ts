@@ -17,6 +17,7 @@ export class ResultsComponent implements OnInit {
 
     private currentRound : Rounds;
     private results : Result[];
+    private currentRoundString: string;
 
 
     constructor(private resultService: ResultService, private leagueService: LeagueService) {
@@ -31,16 +32,24 @@ export class ResultsComponent implements OnInit {
         );
 
     ngOnInit(): void {
-
     }
 
     toggleResult(league_id: string) {
         this.resultService.getCurrentRoundForLeague(+league_id)
-            .subscribe((result: Rounds) => this.currentRound = result);
+            .subscribe(
+                (result: Rounds) => {
+                    this.currentRound = result;
+                    this.currentRoundString = this.getCurrentRoundString(this.currentRound);
+                });
 
         this.resultService.getAllResultForLeague(+league_id)
             .subscribe((data: Result[]) => this.results = data);
-
     }
+
+    getCurrentRoundString(round : Rounds): string {
+        console.log('current round ' +round.round);
+        return this.resultService.getCurrentRound(round.round);
+    }
+
 
 }
