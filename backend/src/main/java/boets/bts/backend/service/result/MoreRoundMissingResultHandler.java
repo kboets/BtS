@@ -45,7 +45,8 @@ public class MoreRoundMissingResultHandler extends AbstractResultHandler {
         List<ResultDto> missingResultDtos = resultMapper.toResultDtos(allNonFinishedResult);
         for(ResultDto missingResult: missingResultDtos) {
             for(ResultDto resultDto: resultDtos) {
-                if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())) {
+                if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())
+                        && missingResult.getAwayTeam().getTeamId().equals(resultDto.getAwayTeam().getTeamId())) {
                     toBeHandled.add(resultMapper.toResult(resultDto));
                     continue;
                 }

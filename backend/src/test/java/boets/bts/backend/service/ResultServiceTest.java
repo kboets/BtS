@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,12 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@Transactional
 @ActiveProfiles("mock")
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
-public class ResultServiceIntegrationTest {
+public class ResultServiceTest {
 
     @Autowired
     public ResultService resultService;
@@ -41,7 +43,7 @@ public class ResultServiceIntegrationTest {
     public void retrieveAllResultsForLeague_givingEmptyResultForRound_shouldReturnResult() throws Exception{
         List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
-        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
+        assertThat(resultDtos.size()).isEqualTo(8);
     }
 
     @Test
@@ -49,7 +51,15 @@ public class ResultServiceIntegrationTest {
     public void retrieveAllResultsForLeague_givingNonCompleteResultForRound_shouldReturnResult() throws Exception{
         List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
-        assertThat(resultDtos.get(resultDtos.size()-1).getRound()).isEqualTo("Regular_Season_-_2");
+        assertThat(resultDtos.size()).isEqualTo(19);
+    }
+
+    @Test
+    @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest3.xml")
+    public void retrieveAllResultsForLeague_givingResultForMoreRoundMissing_shouldReturnResult() throws Exception{
+        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        assertThat(resultDtos.isEmpty()).isFalse();
+        assertThat(resultDtos.size()).isEqualTo(20);
     }
 
 }
