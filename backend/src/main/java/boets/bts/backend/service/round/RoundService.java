@@ -2,9 +2,9 @@ package boets.bts.backend.service.round;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
@@ -26,13 +26,15 @@ public class RoundService {
     private RoundMapper roundMapper;
     private IRoundClient roundClient;
     private RoundRepository roundRepository;
-    private CurrentRoundHandlerFactory currentRoundHandlerFactory;
+    private LeagueRepository leagueRepository;
+    private CurrentRoundHandlerSelector currentRoundHandlerSelector;
 
-    public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, CurrentRoundHandlerFactory currentRoundHandlerFactory) {
+    public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, LeagueRepository leagueRepository, CurrentRoundHandlerSelector currentRoundHandlerSelector) {
         this.roundMapper = roundMapper;
         this.roundClient = roundClient;
         this.roundRepository = roundRepository;
-        this.currentRoundHandlerFactory = currentRoundHandlerFactory;
+        this.leagueRepository = leagueRepository;
+        this.currentRoundHandlerSelector = currentRoundHandlerSelector;
     }
 
     /**
@@ -51,33 +53,17 @@ public class RoundService {
         }
     }
 
-    public Round retrieveUpComingRoundForLeagueAndSeason(Long leagueId, int season) throws Exception {
-        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(leagueId, season));
-        CurrentRoundHandler currentRoundHandler = currentRoundHandlerFactory.getCurrentRoundHandler(currentPersistedRound.isPresent());
-        return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, leagueId, season);
-    }
-
-
-    public Round getRoundByName(String name) {
-        if(roundRepository.findOne(RoundSpecs.getRoundByName(name)).isPresent()) {
-            return roundRepository.findOne(RoundSpecs.getRoundByName(name)).get();
-        } else {
-            throw new NotFoundException("Could not find Round with name " +name);
+    public Round getCurrentRoundForLeague(Long leagueId, int season)  {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
+        Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
+        if(!currentRoundHandlerOptional.isPresent()) {
+            logger.warn("Could not retrieve a current round handler for league {} ", league.getName());
+            throw new NotFoundException("Could not retrieve a current round handler");
         }
-    }
+        CurrentRoundHandler currentRoundHandler = currentRoundHandlerOptional.get();
+        return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, league, season);
 
-    public Round getCurrentRoundForLeague(Long leagueId)  {
-        try {
-            Round upcomingRound = retrieveUpComingRoundForLeagueAndSeason(leagueId, WebUtils.getCurrentSeason());
-            if(upcomingRound != null) {
-                return roundRepository.getOne(upcomingRound.getId()-1);
-            }
-            logger.warn("Could not find upcoming round for league id {} ", leagueId);
-            return null;
-        } catch (Exception e) {
-            logger.warn("An exception occurred while returning current round for league id {} ", leagueId);
-            throw  new NotFoundException("Could not find current Round for league "+leagueId);
-        }
     }
 
 }

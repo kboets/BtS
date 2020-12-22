@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable, throwError} from "rxjs";
+import {Observable, Subject, throwError} from "rxjs";
 import {League} from "../domain/league";
 import {catchError, shareReplay, tap} from "rxjs/operators";
 import {Rounds} from "../domain/rounds";
@@ -50,6 +50,9 @@ export class ResultService {
         ["Regular_Season_-_34", "Ronde 34"],
     ]);
 
+    private errorMessageSubject = new Subject<GeneralError>();
+    errorMessage$ = this.errorMessageSubject.asObservable();
+
     constructor(private http: HttpClient) {  }
 
 
@@ -57,6 +60,7 @@ export class ResultService {
         return this.http.get<Rounds>(`/bts/api/round/current/${id}`)
             .pipe(
                 //tap(data => console.log('getCurrent round for league  '+id, JSON.stringify(data))),
+                shareReplay(1),
                 catchError(this.handleHttpError)
             );
     }
@@ -64,23 +68,24 @@ export class ResultService {
     getAllResultForLeague(id: number): Observable<Result[]> {
         return this.http.get<Result[]>(`/bts/api/result/all/${id}`)
             .pipe(
-                //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
+                tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
+                //shareReplay(1),
                 catchError(this.handleHttpError)
             );
     }
 
     getCurrentRound(round : string): string {
-        console.log(this.roundMap.get(round));
         return this.roundMap.get(round);
     }
 
 
     private handleHttpError(error: HttpErrorResponse) {
-        //console.log("entering the handleHttpError of league service "+error.message);
+        console.log("entering the handleHttpError of result service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;
         dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de round";
+        this.errorMessageSubject.next(dataError);
         return throwError(dataError);
     }
 }

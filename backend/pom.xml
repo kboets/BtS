@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<map.construct.version>1.3.0.Final</map.construct.version>
+		<map.construct.version>1.4.1.Final</map.construct.version>
 		<liquibase-maven-plugin.version>3.8.6</liquibase-maven-plugin.version>
 		<liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
 		<validation-api.version>2.0.0.Final</validation-api.version>

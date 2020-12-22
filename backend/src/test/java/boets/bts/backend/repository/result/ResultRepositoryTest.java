@@ -1,7 +1,9 @@
 package boets.bts.backend.repository.result;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.service.round.RoundService;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -32,25 +34,31 @@ public class ResultRepositoryTest {
 
     @Autowired
     private ResultRepository resultRepository;
+    @Autowired
+    private LeagueRepository leagueRepository;
+    private long leagueId;
+    private League league;
 
     private String round;
 
     @Before
     public void init()  {
         round = "Regular_Season_-_3";
+        leagueId=2660L;
+        league = leagueRepository.findById(leagueId).orElse(null);
     }
 
     @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest4.xml")
     public void getResultByLeagueAndRound_givingJupiler2020_shouldReturnResult()  {
-        List<Result> result = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(2660L, round));
+        List<Result> result = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(league, round));
         assertThat(result.isEmpty()).isFalse();
     }
 
     @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest3.xml")
     public void getAllNonFinishedResultUntilRound_givingJupiler2020()  {
-        List<Result> result = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(2660L, round));
+        List<Result> result = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, round));
         assertThat(result.isEmpty()).isFalse();
         assertThat(result.size()).isEqualTo(3);
     }

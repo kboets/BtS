@@ -3,11 +3,13 @@ package boets.bts.backend.service.result;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.round.RoundService;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import liquibase.pro.packaged.A;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,16 @@ public class EmptyResultHandlerTest {
     private EmptyResultHandler resultHandler;
     @Autowired
     private ResultRepository resultRepository;
+    @Autowired
+    private LeagueRepository leagueRepository;
+    private long leagueId;
+    private League league;
+
+    @Before
+    public void init()  {
+        leagueId= 2660L;
+        league = leagueRepository.findById(leagueId).orElse(null);
+    }
 
     @Test
     public void accepts_givenEmptyAllResultHandler_shouldReturnTrue() {
@@ -56,7 +68,7 @@ public class EmptyResultHandlerTest {
     @Test
     public void getResult_givenJupilerLeague_shouldReturnList() throws Exception {
         long jupilerLeague2020 = 2660L;
-        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getResultByLeague(jupilerLeague2020));
+        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         assertThat(allMissingResults.isEmpty()).isTrue();
         List<Result> result = resultHandler.getResult(jupilerLeague2020, Collections.emptyList(), "Regular_Season_-_2");
         assertThat(result.size()).isEqualTo(27);

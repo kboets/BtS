@@ -1,3 +1,10 @@
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <div class="alert alert-danger">
+        <strong>{{errorMessage.userFriendlyMessage}}</strong><br/> Bijkomende info :<br/>
+        {{errorMessage.errorMessage}}
+    </div>
+</ng-container>
+
 <p-panel header="Results">
     <div class="ui-g">
         <div class="ui-g-12">
@@ -21,47 +28,29 @@
                 </ng-container>
             </ng-container>
         </ng-container>
-
-        <!-- show results -->
-        <ng-container *ngIf="currentRound">
-            <div class="ui-g-12" >
-                <div class="ui-g-12">
-                    <div class="page-header">
-                        <h1>Huidige ronde : {{currentRoundString}}</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="ui-g ui-fluid">
-                <div class="ui-g-12 ui-lg-6">
-                    <div class="card card-w-title">
-                        <h1>InputText</h1>
-                        <div class="ui-g form-group">
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText placeholder="Name">
-                            </div>
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText placeholder="E-mail">
-                            </div>
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText placeholder="Phone">
-                            </div>
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText placeholder="Address">
-                            </div>
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText placeholder="Disabled" disabled="disabled">
-                            </div>
-                            <div class="ui-g-12 ui-md-4">
-                                <input type="text" pInputText class="ng-dirty ng-invalid" readonly="true" placeholder="Invalid">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-
-
-
     </div>
 </p-panel>
+<!-- show results -->
+<ng-container *ngIf="currentRound">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-lg-6">
+            <div class="card card-w-title">
+                <h1>Huidige ronde : {{currentRoundString}}</h1>
+                <p-dataView [value]="results">
+                    <ng-template let-result pTemplate="listItem">
+                        <div>
+                            {{result.homeTeam}} - {{result.awayTeam}} : {{result.goalsHomeTeam}} {{result.goalsAwayTeam}}
+                        </div>
+                    </ng-template>
+                </p-dataView>
+
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+
+
+
+
 

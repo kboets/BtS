@@ -1,5 +1,8 @@
 package boets.bts.backend.web.exception;
 
+import boets.bts.backend.web.results.ResultResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,11 @@ import java.util.Locale;
 public class CustomizedResponseEntityHandler extends ResponseEntityExceptionHandler {
 
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
+    private Logger logger = LoggerFactory.getLogger(CustomizedResponseEntityHandler.class);
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) throws Exception {
+        logger.error("Handling the current general exception {} ", ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDate.now(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

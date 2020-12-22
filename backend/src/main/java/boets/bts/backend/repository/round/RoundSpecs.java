@@ -17,17 +17,17 @@ public class RoundSpecs {
         };
     }
 
-    public static Specification<Round> getRoundByNameAndLeague(long leagueId, String roundName) {
+    public static Specification<Round> getRoundByNameAndLeague(League league, String roundName) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("round"), roundName);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("league"), leagueId));
+                            root.get("league"), league));
             return predicate;
         };
     }
 
-    public static Specification<Round> getCurrentRoundForSeason(long leagueId, int season) {
+    public static Specification<Round> getCurrentRoundForSeason(League league, int season) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("current"), true);
             predicate = criteriaBuilder.and(
@@ -36,7 +36,7 @@ public class RoundSpecs {
 
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("league"), leagueId));
+                            root.get("league"), league));
 
             return predicate;
         };

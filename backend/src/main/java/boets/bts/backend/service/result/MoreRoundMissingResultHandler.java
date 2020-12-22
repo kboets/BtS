@@ -42,17 +42,21 @@ public class MoreRoundMissingResultHandler extends AbstractResultHandler {
     public List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception {
         List<Result> toBeHandled = new ArrayList<>();
         List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, WebUtils.getCurrentSeason()).orElseGet(Collections::emptyList);
-        List<ResultDto> missingResultDtos = resultMapper.toResultDtos(allNonFinishedResult);
-        for(ResultDto missingResult: missingResultDtos) {
+        for(Result missingResult: allNonFinishedResult) {
             for(ResultDto resultDto: resultDtos) {
                 if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())
                         && missingResult.getAwayTeam().getTeamId().equals(resultDto.getAwayTeam().getTeamId())) {
-                    toBeHandled.add(resultMapper.toResult(resultDto));
+                    toBeHandled.add(missingResult);
                     continue;
                 }
             }
         }
-        return expandAndSaveResult(toBeHandled);
+        if(!toBeHandled.isEmpty()) {
+            return expandAndSaveResult(toBeHandled);
+        } else {
+            return toBeHandled;
+        }
+
     }
 
 

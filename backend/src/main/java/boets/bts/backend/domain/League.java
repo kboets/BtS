@@ -42,10 +42,10 @@ public class League implements Serializable {
     @Column
     private boolean selected;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "league", orphanRemoval = true)
     private List<Team> teams;
 
-    @OneToMany(mappedBy = "league" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "league", orphanRemoval = true)
     private List<Round> rounds;
 
     public Long getId() {

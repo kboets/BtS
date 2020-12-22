@@ -8,27 +8,27 @@ import javax.persistence.criteria.Predicate;
 
 public class ResultSpecs {
 
-    public static Specification<Result> getResultByLeague(Long leagueId) {
+    public static Specification<Result> getResultByLeague(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
 
             return predicate;
         };
     }
 
-    public static Specification<Result> getResultByLeagueAndRound(Long leagueId, String round) {
+    public static Specification<Result> getResultByLeagueAndRound(League league, String round) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("round"), round);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("league"), leagueId));
+                            root.get("league"), league));
             return predicate;
         };
     }
 
-    public static Specification<Result> getAllNonFinishedResultUntilRound(Long leagueId, String round) {
+    public static Specification<Result> getAllNonFinishedResultUntilRound(League league, String round) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.lessThanOrEqualTo(
                             root.get("round"), round));

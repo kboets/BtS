@@ -63,14 +63,7 @@ public class InitService {
     }
 
     public void initCurrentRounds(List<League> leagues) {
-        leagues.stream()
-            .forEach(league -> {
-                try {
-                    roundService.retrieveUpComingRoundForLeagueAndSeason(league.getId(), WebUtils.getCurrentSeason());
-                } catch (Exception e) {
-                    logger.warn("Something went wrong while update current round " +e);
-                }
-            });
+        leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason()));
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {

@@ -2,6 +2,7 @@ package boets.bts.backend.web.round;
 
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.service.round.RoundService;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.standing.StandingResource;
 import org.slf4j.Logger;
@@ -27,11 +28,7 @@ public class RoundResource {
 
     @GetMapping("/current/{league_id}")
     public RoundDto getCurrentRoundForLeague(@PathVariable("league_id") Long league_id) {
-        Round currentRound = roundService.getCurrentRoundForLeague(league_id);
-        if(currentRound == null) {
-            throw new NotFoundException("Could not found current round for league "+league_id);
-        }
+        Round currentRound = roundService.getCurrentRoundForLeague(league_id, WebUtils.getCurrentSeason());
         return roundMapper.toRoundDto(currentRound);
-
     }
 }

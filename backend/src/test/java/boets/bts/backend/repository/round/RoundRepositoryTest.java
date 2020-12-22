@@ -1,6 +1,8 @@
 package boets.bts.backend.repository.round;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.league.LeagueRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,12 @@ public class RoundRepositoryTest {
 
     @Autowired
     private RoundRepository roundRepository;
+    @Autowired
+    private LeagueRepository leagueRepository;
+    private long leagueId;
+    private League league;
+
+
 
     @Before
     public void init() {
@@ -29,6 +37,8 @@ public class RoundRepositoryTest {
         Round first = rounds.get(0);
         first.setCurrent(true);
         first.setCurrentDate(LocalDate.now());
+        leagueId= 2660L;
+        league = leagueRepository.findById(leagueId).orElse(null);
         roundRepository.save(first);
     }
 
@@ -56,7 +66,7 @@ public class RoundRepositoryTest {
 
     @Test
     public void testGetCurrentRoundForSeason_givingJupilerLeague2019_shouldReturnRound() {
-        Optional<Round> currentRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(656L, 2019));
+        Optional<Round> currentRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, 2019));
         assertThat(currentRound.isPresent()).isTrue();
         assertThat(currentRound.get().isCurrent());
     }
