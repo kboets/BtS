@@ -47,7 +47,7 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
             round.setCurrentDate(LocalDate.now());
         } else {
             logger.info("current round {} is no longer current, update with latest", round.getRound());
-            Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(league, currentRoundUpdated.getRound())).orElseThrow(() -> new NotFoundException(String.format("Could not find round in database with name", currentRoundUpdated.getRound())));
+            Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(league, verifiedRound.getRound())).orElseThrow(() -> new NotFoundException(String.format("Could not find round in database with name %s and league %s", currentRoundUpdated.getRound(), league.getName())));
             roundToBeUpdated.setCurrentDate(LocalDate.now());
             roundToBeUpdated.setCurrent(true);
             roundRepository.save(roundToBeUpdated);

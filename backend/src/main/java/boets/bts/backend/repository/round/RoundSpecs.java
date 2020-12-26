@@ -42,9 +42,9 @@ public class RoundSpecs {
         };
     }
 
-    public static Specification<Round> getRoundsByLeagueId(Long leagueId) {
+    public static Specification<Round> getRoundsByLeagueId(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
 
             return predicate;
         };

@@ -10,7 +10,6 @@ import java.util.Date;
 public class ResultDto {
 
     private String result_id;
-    private LeagueDto league;
     private LocalDate eventDate;
     private String round;
     private TeamDto homeTeam;
@@ -25,14 +24,6 @@ public class ResultDto {
 
     public void setResult_id(String result_id) {
         this.result_id = result_id;
-    }
-
-    public LeagueDto getLeague() {
-        return league;
-    }
-
-    public void setLeague(LeagueDto league) {
-        this.league = league;
     }
 
     public LocalDate getEventDate() {

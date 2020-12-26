@@ -35,15 +35,27 @@
     <div class="ui-g ui-fluid">
         <div class="ui-g-12 ui-lg-6">
             <div class="card card-w-title">
-                <h1>Huidige ronde : {{currentRoundString}}</h1>
-                <p-dataView [value]="results">
-                    <ng-template let-result pTemplate="listItem">
-                        <div>
-                            {{result.homeTeam}} - {{result.awayTeam}} : {{result.goalsHomeTeam}} {{result.goalsAwayTeam}}
-                        </div>
-                    </ng-template>
-                </p-dataView>
-
+                <p-panel header="Overzicht matchen" >
+                    <p-table [value]="results4Round">
+                        <ng-template pTemplate="caption">
+                            geselecteerde ronde :
+                            <div class="table-dropdown">
+                                <p-dropdown [options]="clientRounds" [(ngModel)]="selectedRound" >
+                                    <ng-template let-option pTemplate="item">
+                                        <span class="customer-badge">{{option.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-result>
+                            <tr>
+                                <td>{{result.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                <td>{{result.homeTeam.name}} - {{result.awayTeam.name}}</td>
+                                <td>{{result.goalsHomeTeam}} - {{result.goalsAwayTeam}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-panel>
             </div>
         </div>
     </div>

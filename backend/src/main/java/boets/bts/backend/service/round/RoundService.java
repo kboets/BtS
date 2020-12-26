@@ -66,4 +66,9 @@ public class RoundService {
 
     }
 
+    public List<Round> getAllRoundsForLeague(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+    }
+
 }

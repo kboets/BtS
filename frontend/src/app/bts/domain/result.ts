@@ -4,7 +4,6 @@ import {Teams} from "./teams";
 export interface Result {
 
     result_id: string;
-    league: League;
     eventDate: Date;
     round: string;
     homeTeam: Teams;

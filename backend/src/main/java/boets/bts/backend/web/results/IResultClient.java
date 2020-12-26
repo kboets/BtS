@@ -39,9 +39,9 @@ public interface IResultClient {
             ResultDto dto = new ResultDto();
             dto.setMatchStatus(matchStatus);
             dto.setMatchStatus(resultJson.get("status").getAsString());
-            LeagueDto leagueDto = new LeagueDto();
-            leagueDto.setLeague_id(resultJson.get("league_id").getAsString());
-            dto.setLeague(leagueDto);
+//            LeagueDto leagueDto = new LeagueDto();
+//            leagueDto.setLeague_id(resultJson.get("league_id").getAsString());
+//            dto.setLeague(leagueDto);
             String eventDate = resultJson.get("event_date").getAsString();
             String eventDateRemoved = StringUtils.substringBefore(eventDate, "T");
             dto.setEventDate(LocalDate.parse(eventDateRemoved, dateFormatter));

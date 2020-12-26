@@ -28,12 +28,15 @@ public class RoundRepositoryTest {
     private LeagueRepository leagueRepository;
     private long leagueId;
     private League league;
+    private League otherLeague;
+
 
 
 
     @Before
     public void init() {
-        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(656L));
+        otherLeague = leagueRepository.findById(656L).orElse(null);
+        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(otherLeague));
         Round first = rounds.get(0);
         first.setCurrent(true);
         first.setCurrentDate(LocalDate.now());
@@ -44,7 +47,7 @@ public class RoundRepositoryTest {
 
     @After
     public void after() {
-        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(656L));
+        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(otherLeague));
         Round first = rounds.get(0);
         first.setCurrent(false);
         roundRepository.save(first);
@@ -60,7 +63,7 @@ public class RoundRepositoryTest {
 
     @Test
     public void testRoundsByLeagueId() {
-        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(656L));
+        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(otherLeague));
         assertThat(rounds.size()).isEqualTo(30);
     }
 

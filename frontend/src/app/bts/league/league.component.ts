@@ -35,7 +35,7 @@ export class LeagueComponent implements OnInit {
         this.availableLeagues = [];
 
         this.leagueService.leagueRefreshNeeded$
-            .subscribe(() => {
+                .subscribe(() => {
                 this.getLeaguesCurrentSeason();
             })
         this.getLeaguesCurrentSeason();
@@ -48,39 +48,20 @@ export class LeagueComponent implements OnInit {
             );
     }
 
-    // leagues$ = this.leagueService.leagues$
-    //     .pipe(
-    //         catchError(err => {
-    //             this.error = err;
-    //             return EMPTY;
-    //         })
-    //     );
-
-    // selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
-    //     .pipe(
-    //         catchError(err => {
-    //             this.error = err;
-    //             return EMPTY;
-    //         })
-    //     );
 
     handleToSelectedLeagues() {
         const leagueId = this.leagueForm.get('toSelectedLeagues').value;
-        //console.log('to selectable league ' +leagueId);
         this.selectedLeagues = [];
         this.selectedLeagues = _.values(leagueId);
     }
 
     handleToAvailableLeagues() {
         const leagueId = this.leagueForm.get('toAvailableLeagues').value;
-        //console.log('to availalable league ' +leagueId);
         this.availableLeagues = [];
         this.availableLeagues = _.values(leagueId);
-        //console.log(this.availableLeagues);
     }
 
     updateToSelectedLeagues() {
-        //console.log('update to selected leagues..'+this.selectedLeagues);
         this.leagueService.updateToSelectedLeague(this.selectedLeagues)
             .subscribe(
             (result ) => {
@@ -91,7 +72,6 @@ export class LeagueComponent implements OnInit {
     }
 
     updateToAvailableLeagues() {
-        //console.log('update to available leagues..'+this.availableLeagues);
         this.leagueService.updateToAvailableLeague(this.availableLeagues)
             .subscribe(
             (result: League[]) => {
