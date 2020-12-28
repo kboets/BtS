@@ -58,16 +58,12 @@ public class CurrentRoundMissingResultHandler extends AbstractResultHandler {
         }
         List<ResultDto> resultDtos = resultOptionalDtos.get();
         List<ResultDto> missingResultDtos = resultMapper.toResultDtos(nonFinishedCurrentRound);
-        for(ResultDto missingResult: missingResultDtos) {
-            for(ResultDto resultDto: resultDtos) {
-                if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())
-                 && missingResult.getAwayTeam().getTeamId().equals(resultDto.getAwayTeam().getTeamId())) {
-                    toBeHandled.add(resultMapper.toResult(resultDto));
-                    continue;
-                }
-            }
+        toBeHandled.addAll(resultMapper.toResults(super.verifyAndUpdate(missingResultDtos, resultDtos)));
+        if(!toBeHandled.isEmpty()) {
+            return resultRepository.saveAll(toBeHandled);
+        } else {
+            return toBeHandled;
         }
-        return expandAndSaveResult(toBeHandled);
     }
 
 

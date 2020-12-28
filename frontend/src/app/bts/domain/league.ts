@@ -1,5 +1,5 @@
 /** League entity */
-import {Rounds} from "./rounds";
+import {Round} from "./round";
 import {Teams} from "./teams";
 
 
@@ -15,6 +15,6 @@ export interface League {
     country?:string
     isCurrent:boolean;
     selected:boolean;
-    roundDtos: Rounds[];
+    roundDtos: Round[];
     teamDtos: Teams[];
 }

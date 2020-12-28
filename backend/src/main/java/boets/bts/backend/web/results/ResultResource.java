@@ -4,11 +4,14 @@ import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.web.exception.GeneralException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,9 +34,12 @@ public class ResultResource {
         try {
             if(!resultMap.containsKey(leagueId)) {
                 List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(leagueId);
-                resultMap.put(leagueId, resultDtos);
+                return resultDtos;
+                //resultMap.put(leagueId, resultDtos);
             }
-            return resultMap.get(leagueId);
+            //return resultMap.get(leagueId);
+            return Collections.emptyList();
+
         } catch (Exception e) {
             logger.error("Something went wrong while getting results {} ", e);
             throw new GeneralException(e.getMessage());

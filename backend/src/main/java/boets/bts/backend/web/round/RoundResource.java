@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,7 @@ public class RoundResource {
     @GetMapping("/all/{league_id}")
     public List<RoundDto> getRoundsForLeague(@PathVariable("league_id") Long league_id) {
         List<Round> rounds = roundService.getAllRoundsForLeague(league_id);
+        rounds.stream().sorted(Comparator.comparing(round -> round.getRound()));
         return roundMapper.toRoundDtos(rounds);
     }
 }

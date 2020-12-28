@@ -1,15 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {LeagueService} from "../league/league.service";
-import {catchError, tap} from "rxjs/operators";
-import {EMPTY, Subject} from "rxjs";
+import {catchError, map, tap} from "rxjs/operators";
+import {combineLatest, EMPTY, forkJoin, merge, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
-import {Rounds} from "../domain/rounds";
+import {Round} from "../domain/round";
 import {ResultService} from "./result.service";
 import {Result} from "../domain/result";
-import * as _ from 'underscore';
 import {RoundService} from "../round/round.service";
-import {ClientRound} from "../domain/clientRound";
-import {League} from "../domain/league";
 
 @Component({
     selector: 'bts-results',
@@ -18,88 +15,98 @@ import {League} from "../domain/league";
 })
 export class ResultsComponent implements OnInit {
 
-    error: GeneralError;
-    currentRound : Rounds;
-    results : Result[];
-    results4Round : Result[];
-    clientRounds : ClientRound[];
-    selectedRound: ClientRound;
-    firstSelectedRound: ClientRound;
+    private errorMessageSubject = new Subject<GeneralError>();
+    errorMessage$ = this.errorMessageSubject.asObservable();
+
+    private selectedRoundSubject = new Subject<Round>()
+    selectedRoundAction = this.selectedRoundSubject.asObservable();
+
+    private result4RoundSubject = new Subject<Round>();
+    results4RoundAction = this.result4RoundSubject.asObservable();
+    selectedRound$: Observable<Round>;
+    currentRound$ : Observable<Round>;
+    results$ : Observable<Result[]>;
+    allRounds$ : Observable<Round[]>;
+    result4Round$ : Observable<Result[]>;
+
+
+    selectedRound: Round;
+    currentRound: Round;
 
 
     constructor(private resultService: ResultService, private leagueService: LeagueService, private roundService: RoundService) {
-        this.clientRounds = [];
     }
 
     selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
         .pipe(
             catchError(err => {
-                this.error = err;
+                this.errorMessageSubject.next(err);
                 return EMPTY;
             })
         );
-
-    errorMessage$ = this.resultService.errorMessage$
-        .pipe(
-            catchError(err => {
-                this.error = err;
-                return EMPTY;
-            })
-        );
-
 
     ngOnInit(): void {
-        this.roundService.selectedRoundNeedUpdate$.subscribe((result) =>
-            this.setSelectedRound(result)
-        );
+
     }
 
     toggleResult(league_id: string) {
-        this.resultService.getAllResultForLeague(+league_id)
-            .subscribe((data: Result[]) => {
-                this.results = data;
-            });
+        //get all results for this league
+        this.results$ = this.resultService.getAllResultForLeague(+league_id)
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            );
+        //get the current round for this league
+        this.currentRound$ = this.roundService.getCurrentRoundForLeague(+league_id)
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+           );
 
-        this.roundService.getCurrentRoundForLeague(+league_id)
-            .subscribe(
-                (result: Rounds) =>  {
-                    this.currentRound = result;
-                    this.setResultsForRound(this.currentRound.round);
-                    this.roundService.selectedRoundNeedUpdate$.next(result);
-                });
+        //get all rounds for this league
+        this.allRounds$ =  this.roundService.getAllRoundsForLeague(+league_id)
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            );
 
-        this.roundService.getAllRoundsForLeague(+league_id)
-            .subscribe((result: Rounds[]) => this.setClientRounds(result));
+
+        this.selectedRound$ = merge(
+            this.currentRound$,
+            this.selectedRoundAction
+        );
+
+        this.currentRound$
+            .subscribe((result) =>
+                this.currentRound = result
+            );
+
+        //
+        this.result4Round$ = combineLatest([
+            this.results$, this.selectedRound$
+        ]).pipe(
+            tap(() => console.log('mapped results')),
+            map(([results, currentRound]) =>
+                results.filter(result => result.round === currentRound.round)
+            ),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        );
     }
 
-    setResultsForRound(round : string)  {
-        this.results4Round = _.where(this.results, {round: round});
-    }
 
-    setClientRounds(rounds : Rounds[]) {
-        let index = 1;
-        for(let i = 0; i<rounds.length;i++) {
-            this.clientRounds.push(this.createClientRound(index, rounds[i]));
-            index++
-        }
-    }
 
-    setSelectedRound(round: Rounds) {
-        //console.log('current round '+this.currentRound.round);
-        let g = _.chain(this.clientRounds).filter(function (x) { return x.value === round.round}).first().value();
-        console.log('selected round '+ g.label);
-        //this.selectedRound = ;
+    onRoundSelected(round: Round) {
+        this.selectedRoundSubject.next(round);
     }
 
 
-    createClientRound(index: number, round: Rounds) {
-        let roundString = "Ronde ";
-        roundString+=index
-        return {
-            "index": index,
-            "value": round.round,
-            "label": roundString
-        };
-
-    }
 }

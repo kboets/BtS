@@ -2,21 +2,17 @@ import {Injectable} from "@angular/core";
 import {Observable, Subject, throwError} from "rxjs";
 import {League} from "../domain/league";
 import {catchError, shareReplay, tap} from "rxjs/operators";
-import {Rounds} from "../domain/rounds";
+import {Round} from "../domain/round";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Result} from "../domain/result";
 import * as _ from 'underscore';
-import {ClientRound} from "../domain/clientRound";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ResultService {
 
-
-    private errorMessageSubject = new Subject<GeneralError>();
-    errorMessage$ = this.errorMessageSubject.asObservable();
 
     constructor(private http: HttpClient) {  }
 
@@ -36,7 +32,7 @@ export class ResultService {
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;
         dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de round";
-        this.errorMessageSubject.next(dataError);
+        //this.errorMessageSubject.next(dataError);
         return throwError(dataError);
     }
 }

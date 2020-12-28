@@ -37,7 +37,7 @@ public class EmptyResultHandler extends AbstractResultHandler {
     public List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception {
         List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, WebUtils.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<Result> resultList = resultMapper.toResults(resultDtos);
-        return expandAndSaveResult(resultList);
+        return expandAndSaveResult(resultList, leagueId);
     }
 
 

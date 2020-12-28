@@ -11,4 +11,5 @@ export interface Result {
     goalsHomeTeam:number;
     goalsAwayTeam:number;
     matchStatus:number;
+
 }

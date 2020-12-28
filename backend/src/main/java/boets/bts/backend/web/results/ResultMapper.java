@@ -4,10 +4,8 @@ import boets.bts.backend.domain.Result;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.round.RoundMapper;
 import boets.bts.backend.web.team.TeamMapper;
-import org.mapstruct.InheritInverseConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -27,5 +25,6 @@ public interface ResultMapper {
 
     @InheritInverseConfiguration
     List<Result> toResults(List<ResultDto> resultDtoList);
+
 
 }
