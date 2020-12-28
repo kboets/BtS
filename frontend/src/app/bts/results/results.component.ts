@@ -7,6 +7,7 @@ import {Round} from "../domain/round";
 import {ResultService} from "./result.service";
 import {Result} from "../domain/result";
 import {RoundService} from "../round/round.service";
+import * as _ from 'underscore';
 
 @Component({
     selector: 'bts-results',
@@ -21,17 +22,15 @@ export class ResultsComponent implements OnInit {
     private selectedRoundSubject = new Subject<Round>()
     selectedRoundAction = this.selectedRoundSubject.asObservable();
 
-    private result4RoundSubject = new Subject<Round>();
-    results4RoundAction = this.result4RoundSubject.asObservable();
     selectedRound$: Observable<Round>;
     currentRound$ : Observable<Round>;
+    nextRound$ : Observable<Round>;
     results$ : Observable<Result[]>;
     allRounds$ : Observable<Round[]>;
     result4Round$ : Observable<Result[]>;
-
+    result4NextRound$ : Observable<Result[]>;
 
     selectedRound: Round;
-    currentRound: Round;
 
 
     constructor(private resultService: ResultService, private leagueService: LeagueService, private roundService: RoundService) {
@@ -58,6 +57,7 @@ export class ResultsComponent implements OnInit {
                     return EMPTY;
                 })
             );
+
         //get the current round for this league
         this.currentRound$ = this.roundService.getCurrentRoundForLeague(+league_id)
             .pipe(
@@ -66,6 +66,7 @@ export class ResultsComponent implements OnInit {
                     return EMPTY;
                 })
            );
+
 
         //get all rounds for this league
         this.allRounds$ =  this.roundService.getAllRoundsForLeague(+league_id)
@@ -76,22 +77,40 @@ export class ResultsComponent implements OnInit {
                 })
             );
 
+        this.nextRound$ = combineLatest(
+            [this.allRounds$, this.currentRound$]
+        ).pipe(
+            map(([rounds, currentRound]) => {
+                return _.chain(rounds).filter(function (round) { return round.playRound === currentRound.playRound+1}).first().value();
+            }),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        );
 
+        //merge the current and the selected of the dropdown to selected round
         this.selectedRound$ = merge(
             this.currentRound$,
             this.selectedRoundAction
         );
 
-        this.currentRound$
-            .subscribe((result) =>
-                this.currentRound = result
-            );
-
-        //
+        //results for each selected round
         this.result4Round$ = combineLatest([
             this.results$, this.selectedRound$
         ]).pipe(
-            tap(() => console.log('mapped results')),
+            map(([results, currentRound]) =>
+                results.filter(result => result.round === currentRound.round)
+            ),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        );
+
+        this.result4NextRound$ = combineLatest([
+            this.results$, this.nextRound$
+        ]).pipe(
             map(([results, currentRound]) =>
                 results.filter(result => result.round === currentRound.round)
             ),
@@ -102,11 +121,10 @@ export class ResultsComponent implements OnInit {
         );
     }
 
-
-
     onRoundSelected(round: Round) {
         this.selectedRoundSubject.next(round);
     }
+
 
 
 }

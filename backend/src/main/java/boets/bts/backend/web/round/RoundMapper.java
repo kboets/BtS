@@ -26,15 +26,12 @@ public interface RoundMapper {
     List<Round> toRounds(List<RoundDto> roundDtos);
 
     @Named("toPlayRound")
-    static String toPlayRound(String round) {
+    static int toPlayRound(String round) {
         int roundVal = 0;
         try {
             roundVal = new Integer(StringUtils.substringAfterLast(round, "_"));
         } catch(NumberFormatException e) {    }
-        StringBuilder builder = new StringBuilder();
-        builder.append("Speeldag ");
-        builder.append(" ");
-        builder.append(roundVal);
-        return builder.toString();
+
+        return roundVal;
     }
 }

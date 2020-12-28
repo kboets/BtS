@@ -12,6 +12,7 @@ public class RoundDto {
     private boolean current;
     private LocalDate currentDate;
     private LeagueDto leagueDto;
+    private int playRound;
 
     public String getRoundId() {
         return roundId;
@@ -59,5 +60,13 @@ public class RoundDto {
 
     public void setCurrentDate(LocalDate currentDate) {
         this.currentDate = currentDate;
+    }
+
+    public int getPlayRound() {
+        return playRound;
+    }
+
+    public void setPlayRound(int playRound) {
+        this.playRound = playRound;
     }
 }

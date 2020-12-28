@@ -38,7 +38,8 @@ public class RoundResource {
     @GetMapping("/all/{league_id}")
     public List<RoundDto> getRoundsForLeague(@PathVariable("league_id") Long league_id) {
         List<Round> rounds = roundService.getAllRoundsForLeague(league_id);
-        rounds.stream().sorted(Comparator.comparing(round -> round.getRound()));
-        return roundMapper.toRoundDtos(rounds);
+        List<RoundDto> roundDtos = roundMapper.toRoundDtos(rounds);
+        roundDtos.sort(Comparator.comparing(roundDto -> roundDto.getPlayRound()));
+        return roundDtos;
     }
 }
