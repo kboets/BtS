@@ -1,4 +1,4 @@
-package boets.bts.backend.web.league;
+package boets.bts.backend.web.team;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,20 +8,22 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("mock")
 @RunWith(SpringRunner.class)
-public class LeagueMockClientTest {
+public class TeamMockClientTest {
 
     @Autowired
-    private LeagueMockClient mockClient;
+    private TeamMockClient teamMockClient;
 
     @Test
-    public void testRetrieveAllLeagues_givenCorrectFile_shouldReturnDto() {
-        List<LeagueDto> leagues = mockClient.allLeaguesFromCountryForSeason("BE", 2020);
-        assertThat(leagues.size()).isEqualTo(23);
+    public void retrieveTeamsOfLeague_givenJupilerLeague2020_shouldReturn18Teams() {
+        Optional<List<TeamDto>> teamOptionalDtos = teamMockClient.retrieveTeamsOfLeague(2660L);
+        assertThat(teamOptionalDtos.isPresent()).isTrue();
+        assertThat(teamOptionalDtos.get().size()).isEqualTo(18);
     }
-
 }

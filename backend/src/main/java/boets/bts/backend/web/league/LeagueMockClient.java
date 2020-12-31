@@ -11,11 +11,11 @@ import java.util.List;
 @Service
 public class LeagueMockClient implements ILeagueClient{
 
-    private static String allLeaguesFile = "allBelgianLeagues.json";
+    private static String allLeaguesFile = "leagues_allBelgium_2020.json";
     @Override
     public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make fake call
-        String dataJson = WebUtils.readJsonFileFromApi(allLeaguesFile).orElseGet(String::new);
+        String dataJson = WebUtils.readJsonFileFromApi(allLeaguesFile, year).orElseGet(String::new);
         //2. parse data
         JsonArray leagues = parseAllLeaguesRawJson(dataJson);
         //3. map data to dto
@@ -24,7 +24,7 @@ public class LeagueMockClient implements ILeagueClient{
 
     @Override
     public List<LeagueDto> allLeaguesForSeason(int year) {
-        return allLeaguesFromCountryForSeason("BE", 2019);
+        return allLeaguesFromCountryForSeason("BE", 2020);
     }
 
 

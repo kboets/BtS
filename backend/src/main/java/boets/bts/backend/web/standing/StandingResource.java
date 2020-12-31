@@ -1,5 +1,6 @@
 package boets.bts.backend.web.standing;
 
+import boets.bts.backend.service.StandingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +17,15 @@ public class StandingResource {
 
     private Logger logger = LoggerFactory.getLogger(StandingResource.class);
 
-    private StandingClient standingClient;
+    private StandingService standingService;
 
-    public StandingResource(StandingClient standingClient) {
-        this.standingClient = standingClient;
+    public StandingResource(StandingService standingService) {
+        this.standingService = standingService;
     }
 
     @GetMapping("/league/{league_id}")
     public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") Long league_id) {
-        //TODO foresee a service who checks if the latest stand is in db, otherwise retrieve via client
-        logger.info("Arrived in the getAllStandingForLeague {}", league_id);
-        List<StandingDto> standingDtos = standingClient.getLatestStandForLeague(league_id.toString()).orElse(Collections.emptyList());
+        List<StandingDto> standingDtos = standingService.getStandingsForLeague(league_id);
         logger.info("Standings found {}", standingDtos.size());
         return standingDtos;
     }

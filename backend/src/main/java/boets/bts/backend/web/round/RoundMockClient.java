@@ -1,6 +1,8 @@
 package boets.bts.backend.web.round;
 
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.league.LeagueDto;
+import com.google.gson.JsonArray;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.Optional;
 @Profile("mock")
 public class RoundMockClient implements IRoundClient {
 
+    private static String allRoundsForLeagueFile = "allRounds_jupilerLeague_2020.json";
 
     @Override
     public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(long leagueId, int season) {
@@ -25,6 +28,13 @@ public class RoundMockClient implements IRoundClient {
 
     @Override
     public Optional<List<RoundDto>> getAllRoundsForLeagueAndSeason(int season, long leagueId) {
-        return Optional.empty();
+        //1. make fake call
+        String dataJson = WebUtils.readJsonFileFromApi(allRoundsForLeagueFile, 2020).orElseGet(String::new);
+        //2. parse data
+        JsonArray rounds = parseAllRoundsForLeaguesRawJson(dataJson);
+        //3. map data to dto
+        return Optional.ofNullable(mapJsonToRoundDto(rounds, season));
+
+
     }
 }

@@ -1,0 +1,628 @@
+{
+  "api": {
+    "results": 23,
+    "leagues": [
+      {
+        "league_id": 2660,
+        "name": "Jupiler Pro League",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-08-08",
+        "season_end": "2021-04-16",
+        "logo": "https://media.api-sports.io/football/leagues/144.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": true,
+            "lineups": true,
+            "statistics": true,
+            "players_statistics": false
+          },
+          "players": true,
+          "topScorers": true,
+          "predictions": true,
+          "odds": true
+        }
+      },
+      {
+        "league_id": 2684,
+        "name": "Reserve Pro League",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-08-17",
+        "season_end": "2021-04-26",
+        "logo": "https://media.api-sports.io/football/leagues/518.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 0,
+        "is_current": 1,
+        "coverage": {
+          "standings": false,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2697,
+        "name": "Super League Women",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-08-28",
+        "season_end": "2021-03-27",
+        "logo": "https://media.api-sports.io/football/leagues/146.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 0,
+        "is_current": 1,
+        "coverage": {
+          "standings": false,
+          "fixtures": {
+            "events": true,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": true
+        }
+      },
+      {
+        "league_id": 2722,
+        "name": "Second Amateur Division - VFV A",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-20",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/149.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2727,
+        "name": "2e Klasse",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-08-21",
+        "season_end": "2021-04-23",
+        "logo": "https://media.api-sports.io/football/leagues/145.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": true,
+            "lineups": true,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": true,
+          "topScorers": true,
+          "predictions": true,
+          "odds": true
+        }
+      },
+      {
+        "league_id": 2739,
+        "name": "Cup",
+        "type": "Cup",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-08-23",
+        "season_end": "2021-01-10",
+        "logo": "https://media.api-sports.io/football/leagues/147.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 0,
+        "is_current": 1,
+        "coverage": {
+          "standings": false,
+          "fixtures": {
+            "events": true,
+            "lineups": true,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": true,
+          "topScorers": true,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2747,
+        "name": "Third Amateur Division - VFV A",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-19",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/151.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2748,
+        "name": "Provincial - Oost-Vlaanderen",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-12",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/160.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2780,
+        "name": "First Amateur Division",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-26",
+        "season_end": "2021-02-07",
+        "logo": "https://media.api-sports.io/football/leagues/487.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": true,
+            "lineups": true,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2925,
+        "name": "Third Amateur Division - VFV B",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-19",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/152.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2926,
+        "name": "Third Amateur Division - ACFF A",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-19",
+        "season_end": "2021-05-02",
+        "logo": "https://media.api-sports.io/football/leagues/689.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2927,
+        "name": "Third Amateur Division - ACFF B",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-19",
+        "season_end": "2021-05-02",
+        "logo": "https://media.api-sports.io/football/leagues/690.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2928,
+        "name": "Second Amateur Division - ACFF",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-19",
+        "season_end": "2021-05-23",
+        "logo": "https://media.api-sports.io/football/leagues/148.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2929,
+        "name": "Second Amateur Division - VFV B",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-20",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/150.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2930,
+        "name": "Provincial - Antwerpen",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-09",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/153.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2931,
+        "name": "Provincial - Brabant VFV",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-12",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/154.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2932,
+        "name": "Provincial - Hainaut",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-12",
+        "season_end": "2021-05-02",
+        "logo": "https://media.api-sports.io/football/leagues/155.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2933,
+        "name": "Provincial - Liege",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-13",
+        "season_end": "2021-06-30",
+        "logo": "https://media.api-sports.io/football/leagues/156.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2934,
+        "name": "Provincial - Limburg",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-09",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/157.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2935,
+        "name": "Provincial - Luxembourg",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-11",
+        "season_end": "2021-04-18",
+        "logo": "https://media.api-sports.io/football/leagues/158.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2936,
+        "name": "Provincial - Namur",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-12",
+        "season_end": "2021-05-02",
+        "logo": "https://media.api-sports.io/football/leagues/159.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2937,
+        "name": "Provincial - West-Vlaanderen",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-12",
+        "season_end": "2021-04-25",
+        "logo": "https://media.api-sports.io/football/leagues/161.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      },
+      {
+        "league_id": 2938,
+        "name": "Provincial - Brabant ACFF",
+        "type": "League",
+        "country": "Belgium",
+        "country_code": "BE",
+        "season": 2020,
+        "season_start": "2020-09-13",
+        "season_end": "2021-05-09",
+        "logo": "https://media.api-sports.io/football/leagues/691.png",
+        "flag": "https://media.api-sports.io/flags/be.svg",
+        "standings": 1,
+        "is_current": 1,
+        "coverage": {
+          "standings": true,
+          "fixtures": {
+            "events": false,
+            "lineups": false,
+            "statistics": false,
+            "players_statistics": false
+          },
+          "players": false,
+          "topScorers": false,
+          "predictions": true,
+          "odds": false
+        }
+      }
+    ]
+  }
+}

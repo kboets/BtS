@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_Standing" author="kboets">
+        <createTable tableName="STANDING">
+            <column autoIncrement="true" name="standing_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="league_id" type="bigint"/>
+            <column name="team_id" type="bigint"/>
+            <column name="rank" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="points" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_updated" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="round" type="varchar(100)"/>
+            <column name="all_match_played" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="all_win" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="all_lose" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="all_draw" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="all_goals_for" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="all_goals_against" type="int">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="home_match_played" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_win" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_lose" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_draw" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_goals_for" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_goals_against" type="int">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="away_match_played" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="away_win" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="away_lose" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="away_draw" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="away_goals_for" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="away_goals_against" type="int">
+                <constraints nullable="false" />
+            </column>
+
+
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="fk_league_standing"
+                referencedTableName="LEAGUE"
+                baseColumnNames="league_id"
+                baseTableName="STANDING" referencedColumnNames="league_id" />
+        <addForeignKeyConstraint
+                constraintName="fk_team_standing"
+                referencedTableName="TEAM"
+                baseColumnNames="team_id"
+                baseTableName="STANDING" referencedColumnNames="id" />
+    </changeSet>
+
+
+</databaseChangeLog>

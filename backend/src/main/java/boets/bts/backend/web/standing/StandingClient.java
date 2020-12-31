@@ -1,6 +1,7 @@
 package boets.bts.backend.web.standing;
 
 import boets.bts.backend.web.WebUtils;
+import boets.bts.backend.web.team.TeamDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,10 +58,11 @@ public class StandingClient {
             for(JsonElement standingJsonElement :standingJsonElement1.getAsJsonArray()) {
                 JsonObject standingJson = standingJsonElement.getAsJsonObject();
                 StandingDto standingDto = new StandingDto();
-                standingDto.setLeague_id(leagueId);
                 standingDto.setPoints(standingJson.get("points").getAsInt());
                 standingDto.setRank(standingJson.get("rank").getAsInt());
-                standingDto.setTeam_id(standingJson.get("team_id").getAsString());
+                TeamDto teamDto = new TeamDto();
+                teamDto.setTeamId(standingJson.get("team_id").getAsString());
+                standingDto.setTeam(teamDto);
                 standingDto.setLastUpdate(dateFormat.parse(standingJson.get("lastUpdate").getAsString()));
                 JsonObject allSubstanding = standingJson.getAsJsonObject("all");
                 JsonObject awaySubstanding = standingJson.getAsJsonObject("away");

@@ -1,11 +1,12 @@
 package boets.bts.backend.web.standing;
 
+import boets.bts.backend.web.team.TeamDto;
+
 import java.util.Date;
 
 public class StandingDto {
 
-    private String league_id;
-    private String team_id;
+    private TeamDto team;
     private Integer rank;
     private Integer points;
     private Date lastUpdate;
@@ -13,20 +14,12 @@ public class StandingDto {
     private SubStandingDto awaySubStanding;
     private SubStandingDto homeSubStanding;
 
-    public String getLeague_id() {
-        return league_id;
+    public TeamDto getTeam() {
+        return team;
     }
 
-    public void setLeague_id(String league_id) {
-        this.league_id = league_id;
-    }
-
-    public String getTeam_id() {
-        return team_id;
-    }
-
-    public void setTeam_id(String team_id) {
-        this.team_id = team_id;
+    public void setTeam(TeamDto team) {
+        this.team = team;
     }
 
     public Integer getRank() {

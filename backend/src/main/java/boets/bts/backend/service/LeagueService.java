@@ -1,6 +1,7 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
+import boets.bts.backend.domain.Team;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
