@@ -56,6 +56,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
 
     toggleMenu(event: Event) {
+        console.log('toggleMenu');
         this.menuClick = true;
         if (this.isDesktop()) {
             this.menuInactiveDesktop = !this.menuInactiveDesktop;

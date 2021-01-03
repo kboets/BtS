@@ -49,7 +49,7 @@ public class RoundService {
             List<Round> rounds = roundMapper.toRounds(optionalRoundDtos.get());
             rounds.forEach(round -> round.setLeague(league));
             league.getRounds().addAll(rounds);
-            //roundRepository.saveAll(rounds);
+            roundRepository.saveAll(rounds);
         }
     }
 

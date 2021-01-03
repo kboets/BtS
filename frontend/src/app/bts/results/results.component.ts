@@ -8,6 +8,8 @@ import {ResultService} from "./result.service";
 import {Result} from "../domain/result";
 import {RoundService} from "../round/round.service";
 import * as _ from 'underscore';
+import {StandingService} from "../standing/standing.service";
+import {Standing} from "../domain/standing";
 
 @Component({
     selector: 'bts-results',
@@ -15,6 +17,7 @@ import * as _ from 'underscore';
     styleUrls:['./results.css']
 })
 export class ResultsComponent implements OnInit {
+
 
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
@@ -29,11 +32,26 @@ export class ResultsComponent implements OnInit {
     allRounds$ : Observable<Round[]>;
     result4Round$ : Observable<Result[]>;
     result4NextRound$ : Observable<Result[]>;
+    standing$: Observable<Standing[]>;
 
     selectedRound: Round;
+    columns: any[];
 
 
-    constructor(private resultService: ResultService, private leagueService: LeagueService, private roundService: RoundService) {
+    constructor(private resultService: ResultService, private leagueService: LeagueService,
+                private roundService: RoundService, private standingService: StandingService) {
+    }
+
+    ngOnInit(): void {
+        this.columns = [
+            { field: 'standing.rank', header: 'Plaats' },
+            { field: 'name', header: 'Club' },
+            { field: 'team.standing.points', header: 'Punten' },
+            { field: 'team.standing.allSubStanding.matchPlayed', header: 'Wedstrijden' },
+            { field: 'team.standing.allSubStanding.win', header: 'Winst' },
+            { field: 'team.standing.allSubStanding.draw', header: 'Gelijk' },
+            { field: 'team.standing.allSubStanding.lose', header: 'Verlies' },
+        ];
     }
 
     selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
@@ -43,10 +61,6 @@ export class ResultsComponent implements OnInit {
                 return EMPTY;
             })
         );
-
-    ngOnInit(): void {
-
-    }
 
     toggleResult(league_id: string) {
         //get all results for this league
@@ -77,6 +91,7 @@ export class ResultsComponent implements OnInit {
                 })
             );
 
+        //get the next round
         this.nextRound$ = combineLatest(
             [this.allRounds$, this.currentRound$]
         ).pipe(
@@ -108,6 +123,7 @@ export class ResultsComponent implements OnInit {
             })
         );
 
+        //results for the next round
         this.result4NextRound$ = combineLatest([
             this.results$, this.nextRound$
         ]).pipe(
@@ -119,6 +135,15 @@ export class ResultsComponent implements OnInit {
                 return EMPTY;
             })
         );
+
+        //standing for the league
+        this.standing$ = this.standingService.getStandingForLeague(+league_id)
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            );
     }
 
     onRoundSelected(round: Round) {

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class DELeagueBettingDefiner implements LeagueBettingDefiner {
 
     @Override
-    public List<League> retieveAllowedBettingLeague(List<League> allLeagues) {
+    public List<League> retrieveAllowedBettingLeague(List<League> allLeagues) {
         return allLeagues.stream()
                 .filter(league -> league.getName().contains("Bundesliga 1") && !league.getName().contains("Women"))
                 .collect(Collectors.toList());

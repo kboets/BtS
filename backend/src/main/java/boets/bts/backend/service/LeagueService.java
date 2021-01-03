@@ -1,7 +1,7 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.domain.Team;
+import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
@@ -71,7 +71,7 @@ public class LeagueService  {
     public List<LeagueDto> getCurrentLeagues() {
         boolean isChanged = false;
         List<LeagueDto> leaguesCurrentSeason = this.getAndVerifyPersistedLeaguesCurrentSeason();
-        Set<League> toBeUpdated = new HashSet<>();
+        Map<Long, League> leagueMap = new HashMap<>();
 
         if(leaguesCurrentSeason.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
             isChanged = true;
@@ -79,7 +79,7 @@ public class LeagueService  {
             for(League league: leaguesToBeUpdates) {
                 if(league.getTeams().isEmpty()) {
                     teamService.updateLeagueWithTeams(league);
-                    toBeUpdated.add(league);
+                    leagueMap.put(league.getId(),league);
                 }
             }
         }
@@ -87,16 +87,15 @@ public class LeagueService  {
         if(leaguesCurrentSeason.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
             isChanged = true;
             List<League> leaguesToBeUpdates = leagueMapper.toLeagues(leaguesCurrentSeason);
-            for(League league: leaguesToBeUpdates) {
-                if(league.getRounds().isEmpty()) {
-                    roundService.updateLeagueWithRounds(league);
-                    toBeUpdated.add(league);
+            for(League leagueOfList: leaguesToBeUpdates) {
+                if(leagueOfList.getRounds().isEmpty()) {
+                    roundService.updateLeagueWithRounds(leagueMap.getOrDefault(leagueOfList.getId(), leagueOfList));
                 }
             }
         }
         if(isChanged) {
-            List<League> updatedLeagues = leagueRepository.saveAll(toBeUpdated);
-            List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(updatedLeagues);
+            //List<League> updatedLeagues = leagueRepository.saveAll(leagueMap.values());
+            List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(new ArrayList<>(leagueMap.values()));
             return leagueDtoList;
         }
         return leaguesCurrentSeason;
@@ -124,7 +123,7 @@ public class LeagueService  {
         List<League> selectedLeagues = new ArrayList<>();
         for(String countryCode: leaguesForCountry.keySet()) {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
-            selectedLeagues.addAll(leagueBettingDefiner.retieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
+            selectedLeagues.addAll(leagueBettingDefiner.retrieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
         //4. persist to database
         leagueRepository.saveAll(selectedLeagues);

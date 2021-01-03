@@ -46,7 +46,7 @@ public class InitService {
     public void initMetaData() {
         this.initAllCountries();
         List<League> leagues = this.initAllAvailableLeagues();
-        //this.initCurrentRounds(leagues);
+        this.initCurrentRounds(leagues);
     }
 
 

@@ -53,8 +53,7 @@ export class StandingComponent implements OnInit {
         map(([league, standings, ]) =>
             league.teamDtos.map(
                 teamDto =>({
-                ...teamDto,
-                standing: _.findWhere(standings, {team_id: teamDto.teamId})
+                ...teamDto
             }))
         ),
         shareReplay(1),

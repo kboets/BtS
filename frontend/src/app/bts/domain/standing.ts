@@ -1,8 +1,8 @@
 import {SubStanding} from "./subStanding";
+import {Teams} from "./teams";
 
 export interface Standing {
-    league_id:string;
-    team_id:string;
+    team: Teams;
     rank: number;
     points:number;
     lastUpdate:Date;
