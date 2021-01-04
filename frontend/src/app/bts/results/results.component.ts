@@ -36,6 +36,7 @@ export class ResultsComponent implements OnInit {
 
     selectedRound: Round;
     columns: any[];
+    showLeagues: boolean
 
 
     constructor(private resultService: ResultService, private leagueService: LeagueService,
@@ -52,6 +53,7 @@ export class ResultsComponent implements OnInit {
             { field: 'team.standing.allSubStanding.draw', header: 'Gelijk' },
             { field: 'team.standing.allSubStanding.lose', header: 'Verlies' },
         ];
+        this.showLeagues = true;
     }
 
     selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
@@ -63,6 +65,7 @@ export class ResultsComponent implements OnInit {
         );
 
     toggleResult(league_id: string) {
+        this.showLeagues = false;
         //get all results for this league
         this.results$ = this.resultService.getAllResultForLeague(+league_id)
             .pipe(
@@ -150,6 +153,9 @@ export class ResultsComponent implements OnInit {
         this.selectedRoundSubject.next(round);
     }
 
+    togglePanel() {
+        this.showLeagues = !this.showLeagues;
+    }
 
 
 }

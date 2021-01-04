@@ -5,12 +5,14 @@ import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +71,15 @@ public class RoundService {
     public List<Round> getAllRoundsForLeague(Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+    }
+
+    /**
+     * Cron job each half hour
+     */
+    @Scheduled(cron = "* */30 * * * *")
+    public void scheduleRound() {
+        List<League> leagues = leagueRepository.findAll();
+        leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason()));
     }
 
 }

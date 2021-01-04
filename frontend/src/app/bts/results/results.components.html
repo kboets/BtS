@@ -5,8 +5,7 @@
     </div>
 </ng-container>
 
-<p-panel header="Results">
-
+<p-panel header="Results" *ngIf="showLeagues">
     <div class="ui-g">
         <div class="ui-g-12">
             <div class="page-header">
@@ -41,6 +40,14 @@
                     <ng-container *ngIf="result4Round$ | async as resultRound">
                         <div class="ui-g">
                             <div class="ui-g-12">
+                                <a id="resultLeague" (click)="togglePanel()">
+                                    <ng-container *ngIf="showLeagues">
+                                        <span class="fa fa-angle-double-up"></span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!showLeagues">
+                                        <span class="fa fa-angle-double-down"></span>
+                                    </ng-container>
+                                </a>
                                 <div class="table-dropdown">
                                     <ng-container *ngIf="allRounds$ | async as allRounds">
                                         <p-dropdown [options]="allRounds" dataKey="round" [(ngModel)]="selectedRound"
