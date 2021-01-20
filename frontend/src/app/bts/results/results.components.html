@@ -143,7 +143,7 @@
                         <p-table [value]="resultsAll4Teams" [autoLayout]="true">
                             <ng-template pTemplate="body" let-resultsAll4Teams>
                                 <tr>
-                                    <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                     <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
                                     <td>{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</td>
                                     <td>{{resultsAll4Teams.goalsHomeTeam}} - {{resultsAll4Teams.goalsAwayTeam}}</td>
                                 </tr>
