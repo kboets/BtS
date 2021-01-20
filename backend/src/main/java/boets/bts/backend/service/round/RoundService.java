@@ -76,7 +76,7 @@ public class RoundService {
     /**
      * Cron job each half hour
      */
-    @Scheduled(cron = "* */30 * * * *")
+    @Scheduled(cron = "* 1/30 * * * *")
     public void scheduleRound() {
         List<League> leagues = leagueRepository.findAll();
         leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason()));

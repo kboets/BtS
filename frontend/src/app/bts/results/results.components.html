@@ -1,9 +1,9 @@
-<ng-container *ngIf="errorMessage$ | async as errorMessage">
-    <div class="alert alert-danger">
-        <strong>{{errorMessage.userFriendlyMessage}}</strong><br/> Bijkomende info :<br/>
-        {{errorMessage.errorMessage}}
-    </div>
-</ng-container>
+<!--<ng-container *ngIf="errorMessage$ | async as errorMessage">-->
+<!--    <div class="alert alert-danger">-->
+<!--        <strong>{{errorMessage.userFriendlyMessage}}</strong><br/> Bijkomende info :<br/>-->
+<!--        {{errorMessage.errorMessage}}-->
+<!--    </div>-->
+<!--</ng-container>-->
 
 <p-panel header="Results" *ngIf="showLeagues">
     <div class="ui-g">
@@ -15,7 +15,7 @@
         <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
             <ng-container *ngFor="let league of leagues">
                 <ng-container *ngIf="league.selected === true">
-                    <p-card header="{{league.name}}" class="ui-g-3" (dblclick)="toggleResult(league.league_id)">
+                    <p-card header="{{league.name}}" class="ui-g-3" (dblclick)="toggleLeagueResult(league.league_id)">
                         <p-header>
                             {{league.country}}
                         </p-header>
@@ -65,15 +65,16 @@
                             <ng-template pTemplate="body" let-result>
                                 <tr>
                                     <td>{{result.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td>{{result.homeTeam.name}} - {{result.awayTeam.name}}</td>
+                                    <td><a (click)="onClickTeam(result.homeTeam.teamId)">{{result.homeTeam.name}}</a> - {{result.awayTeam.name}}</td>
                                     <td>{{result.goalsHomeTeam}} - {{result.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
                     </ng-container>
-                        <div class="ui-g">
-                            <div class="ui-g-12"></div>
-                        </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12"></div>
+                    </div>
+                    <!-- next matches -->
                     <ng-container *ngIf="result4NextRound$ | async as resultNextRound">
                         <p-table [value]="resultNextRound" [autoLayout]="true">
                             <ng-template pTemplate="caption">
@@ -89,15 +90,14 @@
                             </ng-template>
                         </p-table>
                     </ng-container>
-
                 </p-panel>
             </div>
         </div>
         <!-- right side -->
         <div class="ui-g-12 ui-lg-6">
             <div class="card card-w-title">
-                <ng-container *ngIf="standing$ | async as standings">
-                    <p-panel header="Klassement" >
+                    <p-panel header="Klassement" *ngIf="showStanding" >
+                        <ng-container *ngIf="standing$ | async as standings">
                         <p-table [value]="standings" [autoLayout]="true" [columns]="columns">
                             <ng-template pTemplate="header">
                                 <tr>
@@ -118,8 +118,40 @@
                                 </tr>
                             </ng-template>
                         </p-table>
+                        </ng-container>
                     </p-panel>
-                </ng-container>
+
+                <!--  -->
+                <p-panel header="Uitslagen" *ngIf="!showStanding" >
+                    <ng-container *ngIf="resultsLatest4Teams$ | async as resultsLatest4Teams">
+                         <p-table [value]="resultsLatest4Teams" [autoLayout]="true">
+                            <ng-template pTemplate="body" let-resultsLatest4Teams>
+                                <tr>
+                                    <td>{{resultsLatest4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                    <td>{{resultsLatest4Teams.homeTeam.name}} - {{resultsLatest4Teams.awayTeam.name}}</td>
+                                    <td>{{resultsLatest4Teams.goalsHomeTeam}} - {{resultsLatest4Teams.goalsAwayTeam}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </ng-container>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12"></div>
+                    </div>
+
+                    <ng-container *ngIf="resultsAll4Teams$ | async as resultsAll4Teams">
+                        <p-table [value]="resultsAll4Teams" [autoLayout]="true">
+                            <ng-template pTemplate="body" let-resultsAll4Teams>
+                                <tr>
+                                    <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                    <td>{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</td>
+                                    <td>{{resultsAll4Teams.goalsHomeTeam}} - {{resultsAll4Teams.goalsAwayTeam}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </ng-container>
+                </p-panel>
+
             </div>
         </div>
 
