@@ -10,6 +10,7 @@ import {RoundService} from "../round/round.service";
 import * as _ from 'underscore';
 import {StandingService} from "../standing/standing.service";
 import {Standing} from "../domain/standing";
+import {Teams} from "../domain/teams";
 
 @Component({
     selector: 'bts-results',
@@ -51,6 +52,7 @@ export class ResultsComponent implements OnInit {
     columns: any[];
     showLeagues: boolean
     showStanding: boolean;
+    selectedTeam: Teams;
 
 
     constructor(private resultService: ResultService, private leagueService: LeagueService,
@@ -61,8 +63,8 @@ export class ResultsComponent implements OnInit {
         this.columns = [
             { field: 'standing.rank', header: 'Plaats' },
             { field: 'name', header: 'Club' },
-            { field: 'team.standing.points', header: 'Punten' },
             { field: 'team.standing.allSubStanding.matchPlayed', header: 'Wedstrijden' },
+            { field: 'team.standing.points', header: 'Punten' },
             { field: 'team.standing.allSubStanding.win', header: 'Winst' },
             { field: 'team.standing.allSubStanding.draw', header: 'Gelijk' },
             { field: 'team.standing.allSubStanding.lose', header: 'Verlies' },
@@ -123,6 +125,7 @@ export class ResultsComponent implements OnInit {
         this.results$ = this.resultService.getAllResultForLeague(+league_id)
             .pipe(
                 catchError(err => {
+                    console.log('entered in the catch Error');
                     this.errorMessageSubject.next(err);
                     return EMPTY;
                 })
@@ -187,9 +190,10 @@ export class ResultsComponent implements OnInit {
     }
 
     onClickTeam(teamId: string) {
-        console.log('Arrived in the onClickTeam '+teamId);
+        //console.log('Arrived in the onClickTeam '+teamId);
         this.showStanding = false;
         this.selectedResult4TeamSubject.next(teamId);
+
 
         // latest 5 results for a specific team
         this.resultsLatest4Teams$ = combineLatest(
@@ -211,7 +215,7 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        // all results 4 a specific team
+        // all results for a specific team
         this.resultsAll4Teams$ = combineLatest(
             [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
         ).pipe(
@@ -221,12 +225,27 @@ export class ResultsComponent implements OnInit {
                     return result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId;
                 })
             }),
-            tap(data => console.log('all results 4 team ', JSON.stringify(data))),
+            //tap(data => console.log('all results 4 team ', JSON.stringify(data))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })
         );
+
+        //get team
+        combineLatest(
+            [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
+        ).pipe(
+            map(([results, teamId]) => {
+                return _.chain(results).filter(function (result) { return result.homeTeam.teamId === teamId}).first().value();
+            }),
+            //tap(data => console.log('all results 4 team ', JSON.stringify(data))),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        ).subscribe(data => this.selectedTeam = data.homeTeam);
+
     }
 
     private static sortByStandingRank(a, b) {

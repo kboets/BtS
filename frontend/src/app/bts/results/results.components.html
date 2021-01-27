@@ -1,9 +1,11 @@
-<!--<ng-container *ngIf="errorMessage$ | async as errorMessage">-->
-<!--    <div class="alert alert-danger">-->
-<!--        <strong>{{errorMessage.userFriendlyMessage}}</strong><br/> Bijkomende info :<br/>-->
-<!--        {{errorMessage.errorMessage}}-->
-<!--    </div>-->
-<!--</ng-container>-->
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
+        </div>
+    </div>
+<!--    <br/> Bijkomende info :<br/> {{errorMessage.userFriendlyMessage}}-->
+</ng-container>
 
 <p-panel header="Results" *ngIf="showLeagues">
     <div class="ui-g">
@@ -33,7 +35,7 @@
 <!-- show results -->
 <ng-container *ngIf="selectedRound$ | async as currentRound">
     <div class="ui-g ui-fluid">
-       <!-- left side -->
+        <!-- left side -->
         <div class="ui-g-12 ui-lg-6">
             <div class="card card-w-title">
                 <p-panel header="Overzicht resultaten" >
@@ -65,7 +67,7 @@
                             <ng-template pTemplate="body" let-result>
                                 <tr>
                                     <td>{{result.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td><a (click)="onClickTeam(result.homeTeam.teamId)">{{result.homeTeam.name}}</a> - {{result.awayTeam.name}}</td>
+                                    <td><a (click)="onClickTeam(result.homeTeam.teamId)">{{result.homeTeam.name}}</a> - <a (click)="onClickTeam(result.awayTeam.teamId)">{{result.awayTeam.name}}</a></td>
                                     <td>{{result.goalsHomeTeam}} - {{result.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>
@@ -85,7 +87,7 @@
                             <ng-template pTemplate="body" let-result>
                                 <tr>
                                     <td>{{result.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td>{{result.homeTeam.name}} - {{result.awayTeam.name}}</td>
+                                    <td><a (click)="onClickTeam(result.homeTeam.teamId)">{{result.homeTeam.name}}</a> - <a (click)="onClickTeam(result.awayTeam.teamId)">{{result.awayTeam.name}}</a></td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -96,8 +98,8 @@
         <!-- right side -->
         <div class="ui-g-12 ui-lg-6">
             <div class="card card-w-title">
-                    <p-panel header="Klassement" *ngIf="showStanding" >
-                        <ng-container *ngIf="standing$ | async as standings">
+                <p-panel header="Klassement" *ngIf="showStanding" >
+                    <ng-container *ngIf="standing$ | async as standings">
                         <p-table [value]="standings" [autoLayout]="true" [columns]="columns">
                             <ng-template pTemplate="header">
                                 <tr>
@@ -109,22 +111,22 @@
                             <ng-template pTemplate="body" let-standing>
                                 <tr>
                                     <td>{{standing.rank}}</td>
-                                    <td>{{standing.team.name}}</td>
-                                    <td>{{standing.points}}</td>
+                                    <td><a (click)="onClickTeam(standing.team.teamId)">{{standing.team.name}}</a></td>
                                     <td>{{standing.allSubStanding.matchPlayed}}</td>
+                                    <td>{{standing.points}}</td>
                                     <td>{{standing.allSubStanding.win}}</td>
                                     <td>{{standing.allSubStanding.draw}}</td>
                                     <td>{{standing.allSubStanding.lose}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
-                        </ng-container>
-                    </p-panel>
+                    </ng-container>
+                </p-panel>
 
-                <!--  -->
-                <p-panel header="Uitslagen" *ngIf="!showStanding" >
+                <!-- team  -->
+                <p-panel header="Uitslagen team: {{selectedTeam.name}}"  *ngIf="!showStanding" >
                     <ng-container *ngIf="resultsLatest4Teams$ | async as resultsLatest4Teams">
-                         <p-table [value]="resultsLatest4Teams" [autoLayout]="true">
+                        <p-table [value]="resultsLatest4Teams" [autoLayout]="true">
                             <ng-template pTemplate="body" let-resultsLatest4Teams>
                                 <tr>
                                     <td>{{resultsLatest4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
@@ -134,16 +136,17 @@
                             </ng-template>
                         </p-table>
                     </ng-container>
+                </p-panel>
 
-                    <div class="ui-g">
-                        <div class="ui-g-12"></div>
-                    </div>
-
+                <div class="ui-g">
+                    <div class="ui-g-12"></div>
+                </div>
+                <p-panel header="All uitslagen {{selectedTeam.name}}" *ngIf="!showStanding" >
                     <ng-container *ngIf="resultsAll4Teams$ | async as resultsAll4Teams">
                         <p-table [value]="resultsAll4Teams" [autoLayout]="true">
                             <ng-template pTemplate="body" let-resultsAll4Teams>
                                 <tr>
-                                     <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                    <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
                                     <td>{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</td>
                                     <td>{{resultsAll4Teams.goalsHomeTeam}} - {{resultsAll4Teams.goalsAwayTeam}}</td>
                                 </tr>

@@ -27,12 +27,11 @@ export class ResultService {
 
 
     private handleHttpError(error: HttpErrorResponse) {
-        console.log("entering the handleHttpError of result service "+error.message);
+        console.log("entering the handle HttpError of result service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;
-        dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de round";
-        //this.errorMessageSubject.next(dataError);
+        dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de result";
         return throwError(dataError);
     }
 }

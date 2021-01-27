@@ -35,9 +35,7 @@ public class ResultResource {
             if(!resultMap.containsKey(leagueId)) {
                 List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(leagueId);
                 return resultDtos;
-                //resultMap.put(leagueId, resultDtos);
             }
-            //return resultMap.get(leagueId);
             return Collections.emptyList();
 
         } catch (Exception e) {
