@@ -9,7 +9,6 @@
 	</parent>
 
 	<artifactId>bts-backend</artifactId>
-	<version>${parent.version}</version>
 	<packaging>war</packaging>
 	<name>backend</name>
 	<description>Demo project for Spring Boot</description>
@@ -126,7 +125,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>btsService</finalName>
+		<finalName>bts</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
