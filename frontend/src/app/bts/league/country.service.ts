@@ -13,7 +13,7 @@ export class CountryService {
     constructor(private http: HttpClient) { }
 
     //all selectable countries
-    countries$ = this.http.get<Country[]> (`/bts/api/country/get`)
+    countries$ = this.http.get<Country[]> (`/btsapi/api/country/get`)
         .pipe(
             //tap(data => console.log('selectable countries ', JSON.stringify(data))),
             catchError(this.handleHttpError)

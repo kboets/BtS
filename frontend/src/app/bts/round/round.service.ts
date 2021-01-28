@@ -16,7 +16,7 @@ export class RoundService {
 
 
     getAllRoundsForLeague(leagueId: number) : Observable<Round[]> {
-        return this.http.get<Round[]>(`/bts/api/round/all/${leagueId}`)
+        return this.http.get<Round[]>(`/btsapi/api/round/all/${leagueId}`)
             .pipe(
                 //tap(data => console.log('getCurrent round for league  '+id, JSON.stringify(data))),
                 shareReplay(2),
@@ -25,7 +25,7 @@ export class RoundService {
     }
 
     getCurrentRoundForLeague(id: number): Observable<Round> {
-        return this.http.get<Round>(`/bts/api/round/current/${id}`)
+        return this.http.get<Round>(`/btsapi/api/round/current/${id}`)
             .pipe(
                 // tap(() => {
                 //     this._selectedRoundNeedUpdate$.next()

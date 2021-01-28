@@ -22,7 +22,7 @@ export class LeagueService {
     }
 
 
-    leagues$ = this.http.get<League[]>(`/bts/api/league/leaguesCurrentSeason`)
+    leagues$ = this.http.get<League[]>(`/btsapi/api/league/leaguesCurrentSeason`)
         .pipe(
             //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
             catchError(this.handleHttpError)
@@ -47,7 +47,7 @@ export class LeagueService {
         );
 
     getLeaguesCurrentSeason(): Observable<League[]> {
-        return this.http.get<League[]>(`/bts/api/league/leaguesCurrentSeason`)
+        return this.http.get<League[]>(`/btsapi/api/league/leaguesCurrentSeason`)
             .pipe(
                 //tap(data => console.log('getAllSelectedLeagues ->leagues ', JSON.stringify(data))),
                 catchError(this.handleHttpError)
@@ -55,7 +55,7 @@ export class LeagueService {
     }
 
     updateToSelectedLeague(ids: string[]): Observable<League[]> {
-        return this.http.put<League[]>(`/bts/api/league/toSelected`, ids, {
+        return this.http.put<League[]>(`/btsapi/api/league/toSelected`, ids, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })
@@ -67,7 +67,7 @@ export class LeagueService {
     }
 
     updateToAvailableLeague(ids: string[]): Observable<League[]> {
-        return this.http.put<League[]>(`/bts/api/league/toAvailable`, ids, {
+        return this.http.put<League[]>(`/btsapi/api/league/toAvailable`, ids, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })
@@ -79,7 +79,7 @@ export class LeagueService {
     }
 
     getLeagueById(id: number) {
-        return this.http.get<League>(`/bts/api/league/get/${id}`)
+        return this.http.get<League>(`/btsapi/api/league/get/${id}`)
     }
 
     selectedLeaguesUpdated(result: League[]) {

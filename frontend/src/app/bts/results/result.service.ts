@@ -17,7 +17,7 @@ export class ResultService {
     constructor(private http: HttpClient) {  }
 
     getAllResultForLeague(id: number): Observable<Result[]> {
-        return this.http.get<Result[]>(`/bts/api/result/all/${id}`)
+        return this.http.get<Result[]>(`/btsapi/api/result/all/${id}`)
             .pipe(
                 //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
                 shareReplay(2),

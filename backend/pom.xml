@@ -125,7 +125,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>bts</finalName>
+		<finalName>btsapi</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

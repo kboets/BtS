@@ -80,11 +80,11 @@ export class LeagueComponent implements OnInit {
         )
     }
 
-    private selectButtonDisabled(): boolean {
+    selectButtonDisabled(): boolean {
         return this.selectedLeagues.length === 0;
     }
 
-    private removeButtonDisabled(): boolean {
+    removeButtonDisabled(): boolean {
         return this.availableLeagues.length === 0;
     }
 

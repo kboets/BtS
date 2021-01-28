@@ -14,7 +14,7 @@ export class StandingService {
     constructor(private http: HttpClient) {}
 
     getStandingForLeague(leagueId: number) : Observable<Standing[]> {
-        return this.http.get<Standing[]>(`/bts/api/standing/league/${leagueId}`)
+        return this.http.get<Standing[]>(`/btsapi/api/standing/league/${leagueId}`)
             .pipe(
                 //tap(data => console.log('get all standing for league  '+leagueId, JSON.stringify(data))),
                 shareReplay(1),
