@@ -22,7 +22,7 @@ export class TeamsService {
     standings$ = this.leagueSelectedAction$
         .pipe(
             switchMap(leagueId =>
-                this.http.get<Standing[]>(`/bts/api/standing/league/${leagueId}`))
+                this.http.get<Standing[]>(`/btsapi/api/standing/league/${leagueId}`))
         )
         .pipe(
             //tap(data => console.log('standing ', JSON.stringify(data))),
@@ -46,11 +46,10 @@ export class TeamsService {
     }
 
     private handleHttpError(error: HttpErrorResponse) {
-        //console.log("entering the handleHttpError of league service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;
-        dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de leagues";
+        dataError.userFriendlyMessage = "Er liep iets fout bij het ophalen van de teams";
         return throwError(dataError);
     }
 

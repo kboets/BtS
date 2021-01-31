@@ -248,7 +248,7 @@ export class ResultsComponent implements OnInit {
 
     }
 
-    private static sortByStandingRank(a, b) {
+    public static sortByStandingRank(a, b) {
         if(a.rank > b.rank) {
             return 1;
         } else {

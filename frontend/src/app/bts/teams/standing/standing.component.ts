@@ -4,6 +4,7 @@ import {catchError, map, shareReplay, tap} from "rxjs/operators";
 import {combineLatest, EMPTY, Subject} from "rxjs";
 import {LeagueService} from "../../league/league.service";
 import * as _ from 'underscore';
+import {ResultsComponent} from "../../results/results.component";
 
 
 @Component({
@@ -27,6 +28,7 @@ export class StandingComponent implements OnInit {
     standings$ = this.teamsService.standings$
         .pipe(
             //tap(data => console.log('standings ', JSON.stringify(data))),
+            map(items => items.sort(ResultsComponent.sortByStandingRank)),
             shareReplay(1),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -37,7 +39,7 @@ export class StandingComponent implements OnInit {
     //league
     leagueWithId$ = this.teamsService.leagueWithId$
         .pipe(
-            //tap(data => console.log('league ', JSON.stringify(data))),
+            tap(data => console.log('league ', JSON.stringify(data))),
             shareReplay(1),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -45,44 +47,15 @@ export class StandingComponent implements OnInit {
             })
         );
 
-    //selected league with the standing of each team
-    selectedLeagueWithTeamStanding$ = combineLatest([
-        this.leagueWithId$,
-        this.standings$]
-    ).pipe(
-        map(([league, standings, ]) =>
-            league.teamDtos.map(
-                teamDto =>({
-                ...teamDto
-            }))
-        ),
-        shareReplay(1),
-        //tap(data => console.log(JSON.stringify(data)))
-    );
-
-    //selected league with sorted standing of each team
-    selectedLeagueWithTeamStandingSorted$ = this.selectedLeagueWithTeamStanding$
-        .pipe(
-            map(items => items.sort(this.sortByStandingRank),
-        ));
-
-    private sortByStandingRank(a,b) {
-        if(a.standing.rank > b.standing.rank) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
-
     ngOnInit(): void {
         this.cols = [
-            { field: 'standing.rank', header: 'Plaats' },
-            { field: 'name', header: 'Club' },
-            { field: 'team.standing.points', header: 'Punten' },
-            { field: 'team.standing.allSubStanding.matchPlayed', header: 'Wedstrijden' },
-            { field: 'team.standing.allSubStanding.win', header: 'Winst' },
-            { field: 'team.standing.allSubStanding.draw', header: 'Gelijk' },
-            { field: 'team.standing.allSubStanding.lose', header: 'Verlies' },
+            { field: 'rank', header: 'Plaats' },
+            { field: 'team.name', header: 'Club' },
+            { field: 'allSubStanding.matchPlayed', header: 'Wedstrijden' },
+            { field: 'allSubStanding.win', header: 'Winst' },
+            { field: 'allSubStanding.draw', header: 'Gelijk' },
+            { field: 'allSubStanding.lose', header: 'Verlies' },
+            { field: 'points', header: 'Punten' }
         ];
     }
 }
