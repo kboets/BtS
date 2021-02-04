@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {Observable, Subject, throwError} from "rxjs";
+import {BehaviorSubject, Observable, Subject, throwError} from "rxjs";
 import {Round} from "../domain/round";
-import {catchError, shareReplay, tap} from "rxjs/operators";
+import {catchError, shareReplay, switchMap, tap} from "rxjs/operators";
 import {GeneralError} from "../domain/generalError";
 
 @Injectable({
@@ -10,16 +10,27 @@ import {GeneralError} from "../domain/generalError";
 })
 export class RoundService {
 
-
-
     constructor(private http: HttpClient) {  }
+
+    private leagueSelectedSubject = new BehaviorSubject<number>(0);
+    leagueSelectedAction$ = this.leagueSelectedSubject.asObservable();
+
+    //retrieve current round
+    currentRound$ = this.leagueSelectedAction$
+        .pipe(
+            switchMap(leagueId => this.getCurrentRoundForLeague(leagueId))
+        )
+        .pipe(
+            //tap(data => console.log('standing ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
 
 
     getAllRoundsForLeague(leagueId: number) : Observable<Round[]> {
         return this.http.get<Round[]>(`/btsapi/api/round/all/${leagueId}`)
             .pipe(
                 //tap(data => console.log('getCurrent round for league  '+id, JSON.stringify(data))),
-                shareReplay(2),
+                shareReplay(1),
                 catchError(this.handleHttpError)
             );
     }
@@ -27,12 +38,13 @@ export class RoundService {
     getCurrentRoundForLeague(id: number): Observable<Round> {
         return this.http.get<Round>(`/btsapi/api/round/current/${id}`)
             .pipe(
-                // tap(() => {
-                //     this._selectedRoundNeedUpdate$.next()
-                // }),
                 shareReplay(1),
                 catchError(this.handleHttpError)
             );
+    }
+
+    selectedLeagueChanged(selectedLeagueId : number) {
+        this.leagueSelectedSubject.next(selectedLeagueId);
     }
 
     private handleHttpError(error: HttpErrorResponse) {

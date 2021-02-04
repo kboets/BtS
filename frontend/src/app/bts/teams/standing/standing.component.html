@@ -9,14 +9,13 @@
 <p-panel header="Stand" *ngIf="showStanding">
     <div class="ui-g">
         <div class="ui-g-12">
-            <a (click)="toggleStanding()">
-                <ng-container *ngIf="showStanding">
-                    <span class="fa fa-angle-double-up"></span>
-                </ng-container>
-            </a>
+            <ng-container *ngIf="currentRound$ | async as currentRound">
+                Huidige ronde : {{currentRound.playRound}} <br/>
+                Datum : {{currentRound.currentDate | date: 'dd/MM/yyyy'}}
+            </ng-container>
         </div>
         <ng-container *ngIf="standings$ | async as standings">
-            <p-table [value]="standings" class="ui-g-12" [columns]="cols">
+            <p-table [value]="standings" class="ui-g-12" [columns]="cols" [autoLayout]="true">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th *ngFor="let col of columns">

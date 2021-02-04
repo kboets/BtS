@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TeamsService} from "../teams.service";
 import {catchError, map, shareReplay, tap} from "rxjs/operators";
-import {combineLatest, EMPTY, Subject} from "rxjs";
-import {LeagueService} from "../../league/league.service";
-import * as _ from 'underscore';
 import {ResultsComponent} from "../../results/results.component";
+import {RoundService} from "../../round/round.service";
+import {Round} from "../../domain/round";
+import {EMPTY, Subject} from "rxjs";
 
 
 @Component({
@@ -14,9 +14,10 @@ import {ResultsComponent} from "../../results/results.component";
 export class StandingComponent implements OnInit {
 
     @Input()
-    showStanding : boolean;
+    showStanding: boolean;
     @Input()
     leagueId: number;
+    currentRound: Round;
 
     cols: any[];
 
@@ -24,11 +25,12 @@ export class StandingComponent implements OnInit {
     errorMessage$ = this.errorMessageSubject.asObservable();
 
     toggleStanding() {
-        this.showStanding = !this.showStanding;
+        //this.showStanding = !this.showStanding;
         this.teamsService.selectedLeagueChanged(this.leagueId);
     }
 
-    constructor(private teamsService: TeamsService, private leagueService: LeagueService) { }
+    constructor(private teamsService: TeamsService, private roundService: RoundService) {
+    }
 
     //standings
     standings$ = this.teamsService.standings$
@@ -41,6 +43,15 @@ export class StandingComponent implements OnInit {
                 return EMPTY;
             })
         );
+
+    currentRound$ = this.roundService.currentRound$
+        .pipe(
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        );
+
 
 
     ngOnInit(): void {

@@ -4,9 +4,9 @@ import {EMPTY, Subject} from 'rxjs';
 import {LeagueService} from '../league/league.service';
 import {TeamsService} from './teams.service';
 import {GeneralError} from '../domain/generalError';
+import {RoundService} from "../round/round.service";
 
 @Component({
-    // tslint:disable-next-line:component-selector
     selector: 'bts-league',
     templateUrl: './teams.component.html'
 })
@@ -16,7 +16,7 @@ export class TeamsComponent {
     showStanding = false;
     _leagueId: number;
 
-    constructor(private leagueService: LeagueService, private teamsService: TeamsService) {
+    constructor(private leagueService: LeagueService, private teamsService: TeamsService, private roundService: RoundService) {
     }
 
     get leagueId(): number {
@@ -40,5 +40,6 @@ export class TeamsComponent {
         this.showStanding = !this.showStanding;
         this._leagueId = +league_id;
         this.teamsService.selectedLeagueChanged(+league_id);
+        this.roundService.selectedLeagueChanged(+league_id);
     }
 }
