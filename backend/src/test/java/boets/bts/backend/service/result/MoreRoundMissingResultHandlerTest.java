@@ -74,6 +74,6 @@ public class MoreRoundMissingResultHandlerTest {
         long jupilerLeague2020 = 2660L;
         List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, "Regular_Season_-_2"));
         List<Result> result = resultHandler.getResult(jupilerLeague2020, allMissingResults, "Regular_Season_-_2");
-        assertThat(result.size()).isEqualTo(5);
+        assertThat(result.size()).isEqualTo(3);
     }
 }

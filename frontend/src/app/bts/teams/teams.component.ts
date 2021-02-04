@@ -14,8 +14,17 @@ export class TeamsComponent {
 
     error: GeneralError;
     showStanding = false;
+    _leagueId: number;
 
     constructor(private leagueService: LeagueService, private teamsService: TeamsService) {
+    }
+
+    get leagueId(): number {
+        return this._leagueId;
+    }
+
+    set leagueId(value: number) {
+        this._leagueId = value;
     }
 
     selectedLeaguesWithCountries$ = this.leagueService.selectedLeaguesWithCountries$
@@ -29,6 +38,7 @@ export class TeamsComponent {
 
     toggleStanding(league_id: string) {
         this.showStanding = !this.showStanding;
+        this._leagueId = +league_id;
         this.teamsService.selectedLeagueChanged(+league_id);
     }
 }

@@ -41,7 +41,7 @@ export class TeamsService {
 
 
     selectedLeagueChanged(selectedLeagueId : number) {
-        //console.log("team service : selectedLeagueChanged " +selectedLeagueId);
+        console.log("team service : selectedLeagueChanged " +selectedLeagueId);
         this.leagueSelectedSubject.next(selectedLeagueId);
     }
 

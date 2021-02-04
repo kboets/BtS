@@ -1,4 +1,4 @@
-<p-panel header="Teams">
+<p-panel header="Teams" *ngIf="!showStanding">
     <div class="ui-g">
         <div class="ui-g-12">
             <div class="page-header">
@@ -8,7 +8,7 @@
         <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
             <ng-container *ngFor="let league of leagues">
                 <ng-container *ngIf="league.selected === true">
-                    <p-card header="{{league.name}}" class="ui-g-3" (dblclick)="toggleStanding(league.league_id)">
+                    <p-card header="{{league.name}}" class="ui-g-3" (click)="toggleStanding(league.league_id)">
                         <p-header>
                             {{league.country}}
                         </p-header>
@@ -21,6 +21,7 @@
                 </ng-container>
             </ng-container>
         </ng-container>
-        <bts-standing [showStanding]="showStanding"></bts-standing>
     </div>
 </p-panel>
+
+<bts-standing [showStanding]="showStanding" [leagueId]="_leagueId"></bts-standing>

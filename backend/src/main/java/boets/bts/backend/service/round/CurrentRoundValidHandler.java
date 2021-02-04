@@ -36,7 +36,7 @@ public class CurrentRoundValidHandler extends AbstractCurrentRoundHandler {
 
     @Override
     public Round save(Round round, League league, int season)  {
-        logger.info("current round {} with current date {} is still valid", round.getRound(), round.getCurrentDate());
+        //logger.info("current round {} with current date {} is still valid", round.getRound(), round.getCurrentDate());
         return round;
     }
 

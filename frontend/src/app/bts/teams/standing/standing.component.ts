@@ -15,12 +15,18 @@ export class StandingComponent implements OnInit {
 
     @Input()
     showStanding : boolean;
+    @Input()
+    leagueId: number;
 
     cols: any[];
 
     private errorMessageSubject = new Subject<string>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
+    toggleStanding() {
+        this.showStanding = !this.showStanding;
+        this.teamsService.selectedLeagueChanged(this.leagueId);
+    }
 
     constructor(private teamsService: TeamsService, private leagueService: LeagueService) { }
 
@@ -36,16 +42,6 @@ export class StandingComponent implements OnInit {
             })
         );
 
-    //league
-    leagueWithId$ = this.teamsService.leagueWithId$
-        .pipe(
-            tap(data => console.log('league ', JSON.stringify(data))),
-            shareReplay(1),
-            catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            })
-        );
 
     ngOnInit(): void {
         this.cols = [

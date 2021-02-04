@@ -29,7 +29,7 @@ public class RoundSpecs {
 
     public static Specification<Round> getCurrentRoundForSeason(League league, int season) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("current"), true);
+            Predicate predicate = criteriaBuilder.equal(root.get("current"), 1);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("season"), season));

@@ -1,34 +1,43 @@
 <ng-container *ngIf="errorMessage$ | async as errorMessage">
     <div class="ui-g">
         <div class="ui-g-12">
+            <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
             <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
         </div>
     </div>
-    <!--    <br/> Bijkomende info :<br/> {{errorMessage.userFriendlyMessage}}-->
 </ng-container>
-<div class="ui-g-12" *ngIf="showStanding">
-    <ng-container *ngIf="standings$ | async as standings">
-        <p-table [value]="standings" class="ui-g-12" [columns]="cols">
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-standing>
-                <tr>
-                    <td>{{standing.rank}}</td>
-                    <td>{{standing.team.name}}</td>
-                    <td>{{standing.allSubStanding.matchPlayed}}</td>
-                    <td>{{standing.allSubStanding.win}}</td>
-                    <td>{{standing.allSubStanding.draw}}</td>
-                    <td>{{standing.allSubStanding.lose}}</td>
-                    <td>{{standing.points}}</td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </ng-container>
+<p-panel header="Stand" *ngIf="showStanding">
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <a (click)="toggleStanding()">
+                <ng-container *ngIf="showStanding">
+                    <span class="fa fa-angle-double-up"></span>
+                </ng-container>
+            </a>
+        </div>
+        <ng-container *ngIf="standings$ | async as standings">
+            <p-table [value]="standings" class="ui-g-12" [columns]="cols">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-standing>
+                    <tr>
+                        <td>{{standing.rank}}</td>
+                        <td>{{standing.team.name}}</td>
+                        <td>{{standing.allSubStanding.matchPlayed}}</td>
+                        <td>{{standing.allSubStanding.win}}</td>
+                        <td>{{standing.allSubStanding.draw}}</td>
+                        <td>{{standing.allSubStanding.lose}}</td>
+                        <td>{{standing.points}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </ng-container>
+    </div>
+</p-panel>
 
-</div>
 
