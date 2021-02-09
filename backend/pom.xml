@@ -14,7 +14,7 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+<!--		<java.version>1.8</java.version>-->
 		<map.construct.version>1.4.1.Final</map.construct.version>
 		<liquibase-maven-plugin.version>3.8.6</liquibase-maven-plugin.version>
 		<liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
@@ -134,10 +134,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
