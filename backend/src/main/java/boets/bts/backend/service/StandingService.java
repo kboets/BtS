@@ -14,7 +14,6 @@ import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.standing.StandingClient;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
