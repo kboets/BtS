@@ -13,11 +13,14 @@ pipeline {
                 ''' 
             }
       } 
-     stage ('Build') {
-            steps {
-                echo 'This is a minimal pipeline.'
-            }
-        }
+     
+     stage('compile') {
+       steps {
+            echo 'compiling the application...'
+            sh 'mvn clean compile'
+          }
+     }
+    
   }
 
 }
