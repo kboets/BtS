@@ -9,7 +9,8 @@ pipeline {
      stage('compile') {
        steps {
             echo 'compiling the application...'
-            sh 'mvn clean compile'
+            echo mvn --version | grep -i java
+            //sh 'mvn clean compile'
           }
      }
 
