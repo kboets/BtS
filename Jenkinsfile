@@ -8,7 +8,7 @@ pipeline {
   stages {
         stage('Clean') {
             steps {
-                sh "echo JAVA_HOME=$JAVA_HOME"
+                sh "echo mvn -v"
                 sh "mvn clean"               
             }
         }
