@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration monitorInterval="60">
     <Properties>
-        <Property name="log-path">applogs</Property>
+        <Property name="log-path">bts_logs</Property>
     </Properties>
     <Appenders>
         <Console name="Console-Appender" target="SYSTEM_OUT">
@@ -11,29 +11,27 @@
                 </pattern>>
             </PatternLayout>
         </Console>
-        <!--<File name="App-File-Appender" fileName="${log-path}/app_log.log" >-->
-        <!--<PatternLayout>-->
-        <!--<pattern>-->
-        <!--[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n-->
-        <!--</pattern>-->
-        <!--</PatternLayout>-->
-        <!--</File>-->
-        <!--<File name="SpringBoot-File-Appender" fileName="${log-path}/springboot_log.log" >-->
-        <!--<PatternLayout>-->
-        <!--<pattern>-->
-        <!--[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n-->
-        <!--</pattern>-->
-        <!--</PatternLayout>-->
-        <!--</File>-->
+        <File name="App-File-Appender" fileName="${log-path}/bts.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="SpringBoot-File-Appender" fileName="${log-path}/springboot.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework.web" level="info" additivity="false">
+        <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="SpringBoot-File-Appender"/>
-            <AppenderRef ref="Console-Appender"/>
         </Logger>
         <Logger name="boets.bts" level="info" additivity="false">
             <AppenderRef ref="App-File-Appender"/>
-            <AppenderRef ref="Console-Appender"/>
         </Logger>
         <Root>
             <AppenderRef ref="Console-Appender"/>
