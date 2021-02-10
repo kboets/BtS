@@ -1,36 +1,36 @@
 {
     "data":
-    [
-        {
-            "data":{
+    [  
+        {  
+            "data":{  
                 "name":"Applications",
                 "size":"200mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"Angular",
                         "size":"25mb",
                         "type":"Folder"
                     },
-                    "children":[
-                        {
-                            "data":{
+                    "children":[  
+                        {  
+                            "data":{  
                                 "name":"angular.app",
                                 "size":"10mb",
                                 "type":"Application"
                             }
                         },
-                        {
-                            "data":{
+                        {  
+                            "data":{  
                                 "name":"cli.app",
                                 "size":"10mb",
                                 "type":"Application"
                             }
                         },
-                        {
-                            "data":{
+                        {  
+                            "data":{  
                                 "name":"mobile.app",
                                 "size":"5mb",
                                 "type":"Application"
@@ -38,15 +38,15 @@
                         }
                     ]
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"editor.app",
                         "size":"25mb",
                         "type":"Application"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"settings.app",
                         "size":"50mb",
                         "type":"Application"
@@ -54,22 +54,22 @@
                 }
             ]
         },
-        {
-            "data":{
+        {  
+            "data":{  
                 "name":"Cloud",
                 "size":"20mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"backup-1.zip",
                         "size":"10mb",
                         "type":"Zip"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"backup-2.zip",
                         "size":"10mb",
                         "type":"Zip"
@@ -77,22 +77,22 @@
                 }
             ]
         },
-        {
-            "data": {
+        {  
+            "data": {  
                 "name":"Desktop",
                 "size":"150kb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"note-meeting.txt",
                         "size":"50kb",
                         "type":"Text"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"note-todo.txt",
                         "size":"100kb",
                         "type":"Text"
@@ -100,29 +100,29 @@
                 }
             ]
         },
-        {
-            "data":{
+        {  
+            "data":{  
                 "name":"Documents",
                 "size":"75kb",
                 "type":"Folder"
             },
             "children":[
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"Work",
                         "size":"55kb",
                         "type":"Folder"
                     },
-                    "children":[
-                        {
-                            "data":{
+                    "children":[  
+                        {  
+                            "data":{  
                                 "name":"Expenses.doc",
                                 "size":"30kb",
                                 "type":"Document"
                             }
                         },
-                        {
-                            "data":{
+                        {  
+                            "data":{  
                                 "name":"Resume.doc",
                                 "size":"25kb",
                                 "type":"Resume"
@@ -130,15 +130,15 @@
                         }
                     ]
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"Home",
                         "size":"20kb",
                         "type":"Folder"
                     },
-                    "children":[
-                        {
-                            "data":{
+                    "children":[  
+                        {  
+                            "data":{  
                                 "name":"Invoices",
                                 "size":"20kb",
                                 "type":"Text"
@@ -148,29 +148,29 @@
                 }
             ]
         },
-        {
-            "data": {
+        {  
+            "data": {  
                 "name":"Downloads",
                 "size":"25mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data": {
+            "children":[  
+                {  
+                    "data": {  
                         "name":"Spanish",
                         "size":"10mb",
                         "type":"Folder"
                     },
-                    "children":[
-                        {
-                            "data":{
+                    "children":[  
+                        {  
+                            "data":{  
                                 "name":"tutorial-a1.txt",
                                 "size":"5mb",
                                 "type":"Text"
                             }
                         },
-                        {
-                            "data":{
+                        {  
+                            "data":{  
                                 "name":"tutorial-a2.txt",
                                 "size":"5mb",
                                 "type":"Text"
@@ -178,22 +178,22 @@
                         }
                     ]
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"Travel",
                         "size":"15mb",
                         "type":"Text"
                     },
-                    "children":[
-                        {
-                            "data":{
+                    "children":[  
+                        {  
+                            "data":{  
                                 "name":"Hotel.pdf",
                                 "size":"10mb",
                                 "type":"PDF"
                             }
                         },
-                        {
-                            "data":{
+                        {  
+                            "data":{  
                                 "name":"Flight.pdf",
                                 "size":"5mb",
                                 "type":"PDF"
@@ -203,29 +203,29 @@
                 }
             ]
         },
-        {
-            "data": {
+        {  
+            "data": {  
                 "name":"Main",
                 "size":"50mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"bin",
                         "size":"50kb",
                         "type":"Link"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"etc",
                         "size":"100kb",
                         "type":"Link"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"var",
                         "size":"100kb",
                         "type":"Link"
@@ -233,22 +233,22 @@
                 }
             ]
         },
-        {
-            "data":{
+        {  
+            "data":{  
                 "name":"Other",
                 "size":"5mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"todo.txt",
                         "size":"3mb",
                         "type":"Text"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"logo.png",
                         "size":"2mb",
                         "type":"Picture"
@@ -256,29 +256,29 @@
                 }
             ]
         },
-        {
-            "data":{
+        {  
+            "data":{  
                 "name":"Pictures",
                 "size":"150kb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"barcelona.jpg",
                         "size":"90kb",
                         "type":"Picture"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"primeng.png",
                         "size":"30kb",
                         "type":"Picture"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"prime.jpg",
                         "size":"30kb",
                         "type":"Picture"
@@ -286,22 +286,22 @@
                 }
             ]
         },
-        {
-            "data":{
+        {  
+            "data":{  
                 "name":"Videos",
                 "size":"1500mb",
                 "type":"Folder"
             },
-            "children":[
-                {
-                    "data":{
+            "children":[  
+                {  
+                    "data":{  
                         "name":"primefaces.mkv",
                         "size":"1000mb",
                         "type":"Video"
                     }
                 },
-                {
-                    "data":{
+                {  
+                    "data":{  
                         "name":"intro.avi",
                         "size":"500mb",
                         "type":"Video"

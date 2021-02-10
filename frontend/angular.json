@@ -8,7 +8,11 @@
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -25,22 +29,17 @@
               "src/upload.php"
             ],
             "styles": [
-              "node_modules/font-awesome/css/font-awesome.min.css",
-              "node_modules/primeng/resources/themes/nova-light/theme.css",
-              "src/assets/layout/css/layout.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/@fullcalendar/core/main.min.css",
-              "node_modules/@fullcalendar/daygrid/main.min.css",
-              "node_modules/@fullcalendar/timegrid/main.min.css",
-              "node_modules/quill/dist/quill.snow.css",
-              "src/assets/demo/css/codehighlight.css",
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js",
               "node_modules/prismjs/prism.js",
-              "node_modules/quill/dist/quill.js"
+              "node_modules/prismjs/components/prism-typescript.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "@fullcalendar/daygrid",
+              "@fullcalendar/timegrid",
+              "@fullcalendar/interaction",
+              "chart.js"
             ]
           },
           "configurations": {
@@ -65,6 +64,11 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
@@ -94,22 +98,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "scripts": [
-              "node_modules/chart.js/dist/Chart.js",
-              "node_modules/quill/dist/quill.js"
-            ],
             "styles": [
-              "node_modules/font-awesome/css/font-awesome.min.css",
-              "node_modules/primeng/resources/themes/nova-light/theme.css",
-              "src/assets/layout/css/layout.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@fullcalendar/core/main.min.css",
-              "node_modules/@fullcalendar/daygrid/main.min.css",
-              "node_modules/@fullcalendar/timegrid/main.min.css",
-              "node_modules/quill/dist/quill.snow.css",
-              "src/styles.css"
+              "src/styles.scss"
             ],
+            "scripts": [],
             "assets": [
               "src/assets",
               "src/favicon.ico",

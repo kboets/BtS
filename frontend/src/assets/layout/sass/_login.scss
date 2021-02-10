@@ -1,8 +1,8 @@
 /* Login */
 .login-body {
-    height: 100%;
-    font-family: "latoregular", "Trebuchet MS", Arial, Helvetica, sans-serif; 
-    font-size: 16px; 
+    height: 100vh;
+    font-family: "latoregular", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 16px;
     margin: 0;
     padding: 100px 0 0 0;
     background-image: linear-gradient(to top, #6b77a1, #737ea5 3%, #9599b3 15%, #b1b0bf 28%, #c7c1c8 41%, #d6cdcf 57%, #dfd5d3 74%, #e2d7d4);
@@ -31,33 +31,33 @@
         padding: 2em;
         text-align: center;
         color: #4f575b;
-        
+
         .title {
             font-size: 20px;
             display: block;
             margin-bottom: 10px;
         }
-        
+
         .remember-me {
             display: inline-block;
             vertical-align: middle;
             margin-right: 10px;
         }
-        
-        .ui-chkbox {
+
+        .p-checkbox {
             vertical-align: middle;
             font-size: $fontSize;
         }
-        
+
         a {
             color: #1f89ce;
             text-decoration: none;
             vertical-align: middle;
             font-size: 16px;
         }
-                
+
         input {
-            &.ui-inputtext {
+            &.p-inputtext {
                 font-size: 1em;
                 color: #4f575b;
                 margin: 0;
@@ -67,55 +67,55 @@
                 font-weight: normal;
                 border: 1px solid #d6d6d6;
                 border-radius: 3px;
-                
+
                 &:hover {
                     border-color: #c0c0c0;
                 }
-                
+
                 &:focus {
                     outline: 0 none;
                     box-shadow: 0 0 5px #1f89ce;
                 }
             }
         }
-        
-        .ui-g-12, .ui-g-6 {
+
+        .p-col-12, .p-col-6 {
             padding: .8em;
         }
-        
-        .ui-button {
+
+        .p-button {
             border-radius: 3px;
             border: 1px solid #2399e5;
             color: #FFFFFF;
             background: #2399e5;
             font-size: 16px;
-            
+
             &:hover {
                 background: #1f89ce;
             }
-            
+
             &:focus {
                 outline: 0 none;
                 background: #186ba0;
             }
         }
-    }    
-    
+    }
+
     .login-footer {
         color: #ffffff;
         font-size: $fontSize;
         margin-top: 50px;
     }
-} 
+}
 
 @media (max-width: 40em) {
     .login-body {
         padding-top: 50px;
     }
-    
+
     #login-wrapper {
         width: 320px;
-        
+
         #login-container {
             height: 350px;
         }

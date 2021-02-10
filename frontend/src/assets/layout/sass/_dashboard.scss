@@ -1,25 +1,23 @@
 /* Dashboard */
 .dashboard {
-    margin-top: 16px;
-    
     .card {
         margin-top: 0px;
     }
-    
+
     .summary {
         height: 75px;
         position: relative;
-        
+
         .title {
             font-size: 20px;
         }
-        
+
         .detail {
             color: #a4a4a4;
             display: block;
             margin-top: 10px;
         }
-        
+
         .count {
             color: #ffffff;
             position: absolute;
@@ -28,53 +26,54 @@
             font-size: 24px;
             padding: 5px;
             @include border-radius(4px);
-            
+
             &.visitors {
                 background-color: #20d077;
             }
-            
+
             &.purchases {
                 background-color: #f9c851;
             }
-            
+
             &.revenue {
                 background-color: #007be5;
             }
         }
     }
-    
+
     .task-list {
         list-style-type: none;
         margin: 0;
         padding: 0;
-        
+
         li {
             padding: 8px 4px;
             border-bottom: 1px solid $dividerColor;
         }
-        
-        .ui-chkbox {
+
+        .p-checkbox {
             vertical-align: middle;
             margin-right: 5px;
         }
-        
+
         .task-name {
             vertical-align: middle;
         }
-        
-        .ui-button {
+
+        .p-button {
             width: 50px;
             float: right;
-            
-            .ui-button-text {
+            padding: 2px 0;
+
+            .p-button-text {
                 padding: .1em;
             }
         }
     }
-    
+
     .highlight-box {
         height: 100px;
-        
+
         .initials {
             float: left;
             width: 50%;
@@ -84,69 +83,59 @@
             padding-top: 20px;
             text-align: center;
         }
-        
+
         .card {
             color: #a4a4a4;
             float: left;
             width: 50%;
-            box-sizing: border-box; 
-            height: 100%; 
-            
+            box-sizing: border-box;
+            height: 100%;
+
             .count {
                 font-size: 36px;
                 display: block;
                 margin-top: 15px;
             }
+
+            .highlight-box-icon {
+                margin-right: .25em;
+            }
         }
     }
-    
+
     .activity-list {
         list-style-type: none;
         padding: 0;
         margin: 0;
-        
+
         li {
             border-bottom: 1px solid $dividerColor;
-            padding: 15px 0 9px 9px;
-            
+            padding: 16px 8px;
+
             .count {
-                font-size: 24px;
+                font-size: 20px;
                 color: #ffffff;
                 background-color: #007be5;
-                font-weight: bold;
-                width: 60px;
-                padding: 5px;
-                @include border-radius(2px);
-            }
-            
-            &:first-child {
-                border-top: 1px solid #d9d9d9;
-            }
-            
-            &:last-child {
-                border: 0;
+                font-weight: 700;
+                padding: .25em .5em;
+                display: inline-block;
+                border-radius: 4px;
             }
 
-            .ui-g-6:first-child {
-                font-size: 18px;
-                padding-left: 0;
-            }
-            
-            .ui-g-6:last-child {
-                text-align: right;
-                color: #a4a4a4;
+            .p-progressbar {
+                height: .5em;
             }
         }
     }
-    
+
     .contacts {
         list-style-type: none;
         padding: 0;
         margin: 0;
-        
+
         li {
             border-bottom: 1px solid $dividerColor;
-            
+
             a {
                 padding: 9px;
                 width: 100%;
@@ -156,14 +145,14 @@
                 display: block;
                 @include border-radius(2px);
                 @include transition(background-color .2s);
-                
+
                 .name {
                     position: absolute;
                     right: 10px;
                     top: 10px;
                     font-size: 18px;
                 }
-                
+
                 .email {
                     position: absolute;
                     right: 10px;
@@ -171,13 +160,13 @@
                     font-size: 14px;
                     color: #a4a4a4;
                 }
-                
+
                 &:hover {
                     cursor: pointer;
                     background-color: #eeeeee;
                 }
             }
-            
+
             &:last-child {
                 border: 0;
             }
