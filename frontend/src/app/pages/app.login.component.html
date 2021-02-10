@@ -1,0 +1,30 @@
+<div class="login-body">
+    <div id="login-wrapper">
+        <img src="assets/layout/images/login-logo.png" alt="omega-layout" />
+
+        <div id="login-container">
+            <span class="title">Omega</span>
+
+            <div class="p-grid p-fluid">
+                <div class="p-col-12">
+                    <input type="text" autocomplete="off" pInputText placeholder="Username" />
+                </div>
+                <div class="p-col-12">
+                    <input type="password" autocomplete="off" pInputText placeholder="Password" />
+                </div>
+                <div class="p-col-12 p-md-6">
+                    <span class="remember-me">Remember Me</span>
+                    <input type="checkbox">
+                </div>
+                <div class="p-col-12 p-md-6">
+                    <a href="#">Forgot Password</a>
+                </div>
+                <div class="p-col-12">
+                    <p-button type="button" label="Sign In" icon="pi pi-user" [routerLink]="['/']"></p-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-footer">PrimeNG Omega</div>
+    </div>
+</div>
