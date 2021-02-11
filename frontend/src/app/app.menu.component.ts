@@ -1,5 +1,6 @@
 import {Component, OnInit } from '@angular/core';
 
+
 @Component({
     selector: 'app-menu',
     template: `
@@ -16,7 +17,8 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         this.model = [
-            {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/']},
+            {label: 'Leagues', icon: 'pi pi-fw pi-th-large', routerLink: ['/leagues']},
+            {label: 'Dashboard', icon: 'pi c pi-home', routerLink: ['/']},
             {
                 label: 'UI Kit', icon: 'pi pi-fw pi-star', routerLink: ['/uikit'], badge: 2,
                 items: [

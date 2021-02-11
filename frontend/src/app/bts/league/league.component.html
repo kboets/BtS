@@ -1,0 +1,68 @@
+<p-panel header="Competities">
+    <form [formGroup]="leagueForm">
+        <h4 class="p-d-flex p-flex-column p-flex-md-row">Geselecteerde competities :
+            <button pButton type="button" label="Verwijder" class="p-ml-auto"
+                    [disabled]="removeButtonDisabled()" (click)="updateToAvailableLeagues() "></button>
+        </h4>
+        <hr>
+        <ng-container *ngIf="currentLeagues as selectedLeagues">
+            <div class="p-grid">
+                <ng-container *ngFor="let league of selectedLeagues; let i= index">
+                    <ng-container *ngIf="league.selected === true">
+                        <div class="p-col-3">
+                            <p-card header="{{league.name}}"  [style]="{'width': '25rem', 'margin-bottom': '2em'}" >
+                                <p-header class="p-d-flex">
+                                    <p-checkbox label="Verwijder" class="p-ml-auto p-mt-1 p-mr-2" name="selectedCheckBox"
+                                                value="{{league.league_id}}"
+                                                inputId="{{league.league_id}}"
+                                                [formControl]="leagueForm.controls['toAvailableLeagues']"
+                                                (onChange)="handleToAvailableLeagues()">
+                                    </p-checkbox>
+                                </p-header>
+                                <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
+                                <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
+                                <div class="card-text">seizoen : {{league.season}} - {{(league.season + 1)}} </div>
+                                <div class="card-text">&nbsp;</div>
+                                <img [src]="league.logo" alt="" class="img-responsive" style="height: 150px">
+                            </p-card>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <h4 class="p-d-flex p-flex-column p-flex-md-row">Beschikbare competities :
+            <button pButton type="button" label="Voeg toe" class="p-ml-auto"
+                    [disabled]="selectButtonDisabled()" (click)="updateToSelectedLeagues() "></button>
+        </h4>
+        <hr>
+        <ng-container *ngIf="currentLeagues as leagues">
+            <div class="p-grid">
+                <ng-container *ngFor="let league of leagues">
+                    <ng-container *ngIf="league.selected === false">
+                        <div class="p-col-3">
+                            <p-card header="{{league.name}}"  [style]="{'width': '25rem', 'margin-bottom': '2em'}">
+                                <p-header class="p-d-flex">
+                                    <p-checkbox label="Selecteer" class="p-ml-auto p-mt-1 p-mr-2" name="availableCheckBox"
+                                                value="{{league.league_id}}"
+                                                inputId="{{league.league_id}}"
+                                                [formControl]="leagueForm.controls['toSelectedLeagues']"
+                                                (onChange)="handleToSelectedLeagues()"></p-checkbox>
+                                </p-header>
+                                <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
+                                <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
+                                <div class="card-text">seizoen : {{league.season}} - {{(league.season + 1)}} </div>
+                                <img [src]="league.logo" alt="" class="img-responsive" style="height: 150px">
+                            </p-card>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+
+
+
+
+    </form>
+</p-panel>
+

@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
@@ -138,7 +138,9 @@ import {NodeService} from './demo/service/nodeservice';
 import {PhotoService} from './demo/service/photoservice';
 import {ProductService} from './demo/service/productservice';
 import {MenuService} from './app.menu.service';
+import {LeagueComponent} from "./bts/league/league.component";
 
+// @ts-ignore
 @NgModule({
     imports: [
         BrowserModule,
@@ -225,9 +227,11 @@ import {MenuService} from './app.menu.service';
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
-        AppCodeModule
+        AppCodeModule,
+        ReactiveFormsModule
     ],
     declarations: [
+        LeagueComponent,
         AppComponent,
         AppMainComponent,
         AppConfigComponent,

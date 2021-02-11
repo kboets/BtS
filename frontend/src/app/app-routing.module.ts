@@ -38,6 +38,7 @@ import {AppHelpComponent} from './pages/app.help.component';
 import {FloatLabelDemoComponent} from './demo/view/floatlabeldemo.component';
 import { InvalidStateDemoComponent } from './demo/view/invalidstatedemo.component';
 import { AppTimelineDemoComponent } from './pages/app.timelinedemo.component';
+import {LeagueComponent} from "./bts/league/league.component";
 
 @NgModule({
     imports: [
@@ -45,6 +46,7 @@ import { AppTimelineDemoComponent } from './pages/app.timelinedemo.component';
             {
                 path: '', component: AppMainComponent,
                 children: [
+                    {path: 'leagues', component: LeagueComponent},
                     {path: '', component: DashboardDemoComponent},
                     {path: 'uikit/formlayout', component: FormLayoutDemoComponent},
                     {path: 'uikit/input', component: InputDemoComponent},
