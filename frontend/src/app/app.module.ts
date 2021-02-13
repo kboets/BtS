@@ -139,6 +139,7 @@ import {PhotoService} from './demo/service/photoservice';
 import {ProductService} from './demo/service/productservice';
 import {MenuService} from './app.menu.service';
 import {LeagueComponent} from "./bts/league/league.component";
+import {ResultsComponent} from "./bts/results/results.component";
 
 // @ts-ignore
 @NgModule({
@@ -231,6 +232,7 @@ import {LeagueComponent} from "./bts/league/league.component";
         ReactiveFormsModule
     ],
     declarations: [
+        ResultsComponent,
         LeagueComponent,
         AppComponent,
         AppMainComponent,
