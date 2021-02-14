@@ -281,4 +281,33 @@ export class ResultsComponent implements OnInit {
         this.showStanding = true;
     }
 
+    determineColor(result: Result, homeTeam: Teams, awayTeam: Teams) : string {
+        if(result.homeTeam.name === this.selectedTeam.name) {
+            return this.getColor(result, false);
+        } else if(result.awayTeam.name == this.selectedTeam.name) {
+            return this.getColor(result, true);
+        }
+        return 'background-color:transparent'
+    }
+
+    private getColor(result: Result, isAwayTeam: boolean): string {
+        if (result.goalsHomeTeam == result.goalsAwayTeam) {
+            return 'background-color:#f9c851';
+        }
+        if (isAwayTeam) {
+            if (result.goalsAwayTeam > result.goalsHomeTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+        } else {
+            if (result.goalsHomeTeam > result.goalsAwayTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+
+        }
+    }
+
 }
