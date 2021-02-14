@@ -35,11 +35,8 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
      * @param clientRound
      * @return
      */
-    protected Round verifyRetrievedRound(Round clientRound, LocalDate now) {
-        DayOfWeek today = now.getDayOfWeek();
-        if (!(today.equals(DayOfWeek.FRIDAY)
-                || today.equals(DayOfWeek.SATURDAY)
-                || today.equals(DayOfWeek.SUNDAY)))  {
+    protected Round verifyRetrievedRound(Round clientRound) {
+        if (!isWeekend())  {
             String round = clientRound.getRound();
             String strippedRound = StringUtils.substringBeforeLast(round, "_");
             int roundVal = new Integer(StringUtils.substringAfterLast(round, "_"));
@@ -53,5 +50,13 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
             }
         }
         return clientRound;
+    }
+
+    public boolean isWeekend() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek today = now.getDayOfWeek();
+        return (today.equals(DayOfWeek.FRIDAY)
+                || today.equals(DayOfWeek.SATURDAY)
+                || today.equals(DayOfWeek.SUNDAY));
     }
 }

@@ -6,6 +6,7 @@ import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
+import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.service.round.RoundService;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -44,11 +45,15 @@ public class CurrentRoundMissingResultHandlerTest {
     private ResultRepository resultRepository;
     @Autowired
     private LeagueRepository leagueRepository;
+    @Autowired
+    private RoundRepository roundRepository;
+    private Round round;
     private long leagueId;
     private League league;
 
     @Before
     public void init()  {
+        round = roundRepository.findById(36L).orElseThrow(()-> new RuntimeException("No round found with id 36"));
         leagueId= 2660L;
         league = leagueRepository.findById(leagueId).orElse(null);
     }
@@ -57,7 +62,7 @@ public class CurrentRoundMissingResultHandlerTest {
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest2.xml")
     public void accepts_givenOnlyMissingCurrentRound_shouldReturnTrue() {
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, "Regular_Season_-_2"));
+        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, round));
         assertTrue(resultHandler.accepts(allResults, allMissingResults, "Regular_Season_-_2"));
     }
 
@@ -65,7 +70,7 @@ public class CurrentRoundMissingResultHandlerTest {
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest3.xml")
     public void accepts_givenMissingTwoRound_shouldReturnFalse() {
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, "Regular_Season_-_2"));
+        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, round));
         assertFalse(resultHandler.accepts(allResults, allMissingResults, "Regular_Season_-_2"));
     }
 
@@ -73,7 +78,7 @@ public class CurrentRoundMissingResultHandlerTest {
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest2.xml")
     public void getResult_givenOnlyMissingCurrentRound_shouldReturnTwoResult() throws Exception {
         long jupilerLeague2020 = 2660L;
-        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, "Regular_Season_-_2"));
+        List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, round));
         List<Result> result = resultHandler.getResult(jupilerLeague2020, allMissingResults, "Regular_Season_-_2");
         assertThat(result.size()).isEqualTo(2);
     }
