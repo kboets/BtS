@@ -126,7 +126,7 @@
                             <ng-template pTemplate="body" let-resultsLatest4Teams>
                                 <tr>
                                     <td>{{resultsLatest4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td><span [style]="determineColor(resultsLatest4Teams, resultsLatest4Teams.homeTeam, resultsLatest4Teams.awayTeam)">{{resultsLatest4Teams.homeTeam.name}} - {{resultsLatest4Teams.awayTeam.name}}</span></td>
+                                    <td><span [style]="determineColor(resultsLatest4Teams)">{{resultsLatest4Teams.homeTeam.name}} - {{resultsLatest4Teams.awayTeam.name}}</span></td>
                                     <td>{{resultsLatest4Teams.goalsHomeTeam}} - {{resultsLatest4Teams.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>
@@ -140,7 +140,7 @@
                             <ng-template pTemplate="body" let-resultsAll4Teams>
                                 <tr>
                                     <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td>{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</td>
+                                    <td><span [style]="determineColor(resultsAll4Teams)">{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</span></td>
                                     <td>{{resultsAll4Teams.goalsHomeTeam}} - {{resultsAll4Teams.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>

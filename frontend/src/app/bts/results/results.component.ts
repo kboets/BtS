@@ -281,7 +281,7 @@ export class ResultsComponent implements OnInit {
         this.showStanding = true;
     }
 
-    determineColor(result: Result, homeTeam: Teams, awayTeam: Teams) : string {
+    determineColor(result: Result) : string {
         if(result.homeTeam.name === this.selectedTeam.name) {
             return this.getColor(result, false);
         } else if(result.awayTeam.name == this.selectedTeam.name) {
