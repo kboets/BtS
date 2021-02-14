@@ -1,0 +1,36 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<h5>Calendar</h5>
+			<p-fullCalendar [events]="events" [options]="options"></p-fullCalendar>
+
+			<p-dialog [(visible)]="eventDialog" [style]="{width: '450px'}" header="Event Details" [modal]="true" [closable]="true">
+				<ng-template pTemplate="content">
+					<div class="p-fluid">
+						<div class="p-field">
+							<label for="title">Title</label>
+							<input id="title" type="text" pInputText *ngIf="clickedEvent" [(ngModel)]="changedEvent.title" [required]="true">
+						</div>
+						<div class="p-field">
+							<label for="start">From</label>
+							<p-calendar id="start" *ngIf="clickedEvent" [(ngModel)]="changedEvent.start" [showTime]="true" appendTo="body"></p-calendar>
+						</div>
+						<div class="p-field">
+							<label for="end">To</label>
+							<p-calendar id="end" *ngIf="clickedEvent" [(ngModel)]="changedEvent.end" [showTime]="true" appendTo="body"></p-calendar>
+						</div>
+						<div class="p-field-checkbox">
+							<p-checkbox id="allday" *ngIf="clickedEvent" [(ngModel)]="changedEvent.allday"></p-checkbox>
+							<label for="allday">All Day</label>
+						</div>
+					</div>
+				</ng-template>
+
+				<ng-template pTemplate="footer">
+					<button pButton label="Save" icon="pi pi-check" class="p-button-text" (click)="save()"></button>
+					<button pButton label="Reset" icon="pi pi-refresh" class="p-button-text" (click)="reset()"></button>
+				</ng-template>
+			</p-dialog>
+		</div>
+	</div>
+</div>

@@ -1,82 +1,241 @@
-<div class="ui-g">
-    <div class="ui-g-12">
-        <div class="card card-w-title">
-            <h1>AccordionPanel</h1>
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card toolbar-demo">
+            <h5>Toolbar</h5>
+            <p-toolbar>
+                <div class="p-toolbar-group-left">
+                    <button pButton type="button" label="New" icon="pi pi-plus"></button>
+                    <button pButton type="button" label="Update" class="p-button-secondary"
+                            icon="pi pi-refresh"></button>
+
+                    <i class="pi pi-bars p-toolbar-separator"></i>
+
+                    <button pButton type="button" class="p-button-success" icon="pi pi-check"></button>
+                    <button pButton type="button" class="p-button-help" icon="pi pi-print"></button>
+                    <button pButton type="button" class="p-button-danger" icon="pi pi-trash"></button>
+                </div>
+
+                <div class="p-toolbar-group-right">
+                    <p-splitButton label="Save" icon="pi pi-check" [model]="items"></p-splitButton>
+                </div>
+            </p-toolbar>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-md-6">
+        <div class="card">
+            <h5>AccordionPanel</h5>
             <p-accordion>
-                <p-accordionTab header="Godfather I" [selected]="true">
-                    The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                <p-accordionTab header="Header I" [selected]="true">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                    est laborum.
                 </p-accordionTab>
-                <p-accordionTab header="Godfather II">
-                    Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream. In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy, killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows.
+                <p-accordionTab header="Header II">
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                    totam rem aperiam, eaque
+                    ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                    enim ipsam voluptatem quia
+                    voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                    voluptatem sequi nesciunt.
+                    Consectetur, adipisci velit, sed quia non numquam eius modi.
                 </p-accordionTab>
-                <p-accordionTab header="Godfather III">
-                    After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
+                <p-accordionTab header="Header III">
+                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                    deleniti atque corrupti quos dolores
+                    et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
+                    officia deserunt mollitia animi, id est laborum et dolorum fuga.
+                    Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
+                    eligendi optio cumque nihil impedit
+                    quo minus.
                 </p-accordionTab>
             </p-accordion>
         </div>
-    </div>
 
-    <div class="ui-g-12">
-        <div class="card card-w-title">
-            <h1>Panel</h1>
-            <p-panel header="Godfather I" [toggleable]="true">
-                The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
-                His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
-                Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
-                kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
-            </p-panel>
-        </div>
-    </div>
-
-    <div class="ui-g-12">
-        <div class="card card-w-title">
-            <h1>TabView</h1>
-            <p-tabView>
-                <p-tabPanel header="Godfather I">
-                    The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+        <div class="card">
+            <h5>TabView</h5>
+            <p-tabView orientation="left">
+                <p-tabPanel header="Header I" leftIcon="pi pi-check">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                    est laborum.
                 </p-tabPanel>
-                <p-tabPanel header="Godfather II">
-                    Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream. In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy, killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows.
+                <p-tabPanel header="Header II" leftIcon="pi pi-user">
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                    totam rem aperiam, eaque
+                    ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                    enim ipsam voluptatem quia
+                    voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                    voluptatem sequi nesciunt.
+                    Consectetur, adipisci velit, sed quia non numquam eius modi.
                 </p-tabPanel>
-                <p-tabPanel header="Godfather III">
-                    After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
+                <p-tabPanel header="Header III" leftIcon="pi pi-mobile">
+                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                    deleniti atque corrupti quos dolores
+                    et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
+                    officia deserunt mollitia animi, id est laborum et dolorum fuga.
+                    Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
+                    eligendi optio cumque nihil impedit
+                    quo minus.
                 </p-tabPanel>
             </p-tabView>
         </div>
     </div>
 
-    <div class="ui-g-12">
-        <div class="card card-w-title">
-            <h1>Fieldset</h1>
+    <div class="p-col-12 p-md-6">
+        <div class="card">
+            <h5>Panel</h5>
+            <p-panel header="Header" [toggleable]="true">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.
+            </p-panel>
+        </div>
+
+        <div class="card">
+            <h5>Fieldset</h5>
             <p-fieldset legend="Toggleable" toggleable="true">
-                The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
-                His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
-                Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
-                kind and benevolent to those who give respect,
-                but given to ruthless violence whenever anything stands against the good of the family.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.
             </p-fieldset>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Card</h5>
+                <p-menu #menu [popup]="true" [model]="cardMenu"></p-menu>
+                <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-plain p-button-text"
+                        (click)="menu.toggle($event)"></button>
+            </div>
+
+            <p class="card-subtitle">Subtitle</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.</p>
         </div>
     </div>
 
-    <div class="ui-g-12">
-        <div class="card card-w-title">
-            <h1>Toolbar</h1>
-            <p-toolbar>
-                <div class="ui-toolbar-group-left">
-                    <button pButton type="button" label="New" icon="fa fa-plus"></button>
-                    <button pButton type="button" label="Update" icon="fa fa-refresh"></button>
-
-                    <i class="ui-toolbar-separator fa fa-bars"></i>
-
-                    <button pButton type="button" icon="fa fa-check"></button>
-                    <button pButton type="button" icon="fa fa-trash"></button>
-                    <button pButton type="button" icon="fa fa-print"></button>
+    <div class="p-col-12">
+        <div class="card">
+            <h5>Divider</h5>
+            <div class="p-grid">
+                <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
+                    <div class="p-fluid">
+                        <div class="p-field">
+                            <label for="username">Username</label>
+                            <input pInputText id="username" type="text"/>
+                        </div>
+                        <div class="p-field">
+                            <label for="password">Password</label>
+                            <input pInputText id="password" type="password"/>
+                        </div>
+                        <p-button label="Login"></p-button>
+                    </div>
                 </div>
-
-                <div class="ui-toolbar-group-right">
-                    <p-splitButton label="Save" icon="fa fa-check" [model]="items"></p-splitButton>
+                <div class="p-col-1">
+                    <p-divider layout="vertical">
+                        <b>OR</b>
+                    </p-divider>
                 </div>
-           </p-toolbar>
+                <div class="p-col-5 p-ai-center p-jc-center">
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                        totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                        architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                        aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                        voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.</p>
+
+                    <p-divider layout="horizontal" align="center">
+                        <span class="p-tag">Badge</span>
+                    </p-divider>
+
+                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati
+                        cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est
+                        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+                        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.</p>
+
+                    <p-divider align="right">
+                        <p-button label="Button" icon="pi pi-search" styleClass="p-button-outlined"></p-button>
+                    </p-divider>
+
+                    <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et
+                        voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur
+                        a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis
+                        doloribus asperiores repellat.
+                        Donec vel volutpat ipsum. Integer nunc magna, posuere ut tincidunt eget, egestas vitae sapien.
+                        Morbi dapibus luctus odio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-col-12">
+        <div class="card">
+            <h5>Splitter</h5>
+            <p-splitter [style]="{'height': '300px'}" [panelSizes]="[40,60]" [minSizes]="[10,0]" styleClass="p-mb-5">
+                <ng-template>
+                    <div class="p-col p-mt-3" style="overflow: auto">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                        in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+                        id est laborum.
+                    </div>
+                </ng-template>
+                <ng-template>
+                    <div style="overflow: auto">
+                        <p-splitter layout="vertical" [panelSizes]="[15,85]">
+                            <ng-template>
+                                <div style="flex-grow: 1;" class="p-col p-mt-3" style="overflow: auto">
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                    doloremque
+                                    laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
+                                    voluptas
+                                    sit
+                                    aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                                    voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
+                                    modi.
+                                </div>
+                            </ng-template>
+                            <ng-template>
+                                <div style="flex-grow: 1;" class="p-col p-mt-3" style="overflow: auto">
+                                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                                    praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias
+                                    excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
+                                    officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem
+                                    rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
+                                    eligendi optio cumque nihil impedit quo minus.
+                                </div>
+                            </ng-template>
+                        </p-splitter>
+                    </div>
+                </ng-template>
+            </p-splitter>
         </div>
     </div>
 </div>

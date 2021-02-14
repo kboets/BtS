@@ -1,63 +1,57 @@
 <ng-container *ngIf="errorMessage$ | async as errorMessage">
-    <div class="ui-g">
-        <div class="ui-g-12">
-            <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
-        </div>
-    </div>
-<!--    <br/> Bijkomende info :<br/> {{errorMessage.userFriendlyMessage}}-->
+    <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
+    <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>
 
+<!-- overview leagues -->
 <p-panel header="Results" *ngIf="showLeagues">
-    <div class="ui-g">
-        <div class="ui-g-12">
-            <div class="page-header">
-                <h1>Kies uit volgende competitie(s)</h1>
-            </div>
-        </div>
-        <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
+    <h4 class="p-d-flex p-flex-column p-flex-md-row">Kies uit volgende competitie(s) :
+    </h4>
+    <hr>
+    <ng-container *ngIf="selectedLeaguesWithCountries$ | async as leagues">
+        <div class="p-grid">
             <ng-container *ngFor="let league of leagues">
                 <ng-container *ngIf="league.selected === true">
-                    <p-card header="{{league.name}}" class="ui-g-3" (dblclick)="toggleLeagueResult(league.league_id)">
-                        <p-header>
-                            {{league.country}}
-                        </p-header>
-                        <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
-                        <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
-                        <div class="card-text">seizoen : {{league.season}} - {{(league.season +1)}} </div>
-                        <div class="card-text">nbsp;</div>
-                        <img [src]="league.logo" alt="" class="img-responsive" style="height: 150px">
-                    </p-card>
+                    <div class="p-col-3">
+                        <p-card header="{{league.name}}" [style]="{'width': '25rem', 'margin-bottom': '2em'}" (dblclick)="toggleLeagueResult(league.league_id)">
+                            <p-header class="p-d-flex">
+                                <span class="p-mt-2 p-ml-3">{{league.country}}</span>
+                            </p-header>
+                            <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
+                            <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
+                            <div class="card-text">seizoen : {{league.season}} - {{(league.season +1)}} </div>
+                            <div class="card-text">nbsp;</div>
+                            <img [src]="league.logo" alt="" class="img-responsive" style="height: 150px">
+                        </p-card>
+                    </div>
                 </ng-container>
             </ng-container>
-        </ng-container>
-    </div>
+        </div>
+    </ng-container>
 </p-panel>
+
 <!-- show results -->
 <ng-container *ngIf="selectedRound$ | async as currentRound">
-    <div class="ui-g ui-fluid">
-        <!-- left side -->
-        <div class="ui-g-12 ui-lg-6">
-            <div class="card card-w-title">
-                <p-panel header="Overzicht resultaten" >
+    <div class="p-grid" *ngIf="!showLeagues">
+        <div class="p-col-6">
+            <div class="box">
+                <p-panel header="Overzicht resultaten. Huidige ronde: {{initialCurrentRound.playRound}}" >
                     <ng-container *ngIf="result4Round$ | async as resultRound">
-                        <div class="ui-g">
-                            <div class="ui-g-12">
-                                <a id="resultLeague" (click)="togglePanel()">
-                                    <ng-container *ngIf="showLeagues">
-                                        <span class="fa fa-angle-double-up"></span>
-                                    </ng-container>
-                                    <ng-container *ngIf="!showLeagues">
-                                        <span class="fa fa-angle-double-down"></span>
-                                    </ng-container>
-                                </a>
-                                <div class="table-dropdown">
-                                    <ng-container *ngIf="allRounds$ | async as allRounds">
-                                        <p-dropdown [options]="allRounds" dataKey="round" [(ngModel)]="selectedRound"
-                                                    optionLabel="playRound" (onChange)="onRoundSelected(selectedRound)" placeholder="Speelronde {{currentRound.playRound}}"></p-dropdown>
-                                    </ng-container>
-                                </div>
-                            </div>
+                        <div class="p-d-flex">
+                            <a (click)="togglePanel()">
+                                <ng-container *ngIf="showLeagues">
+                                    <span class="fa fa-angle-double-up"></span>
+                                </ng-container>
+                                <ng-container *ngIf="!showLeagues">
+                                    <span class="fa fa-angle-double-down"></span>
+                                </ng-container>
+                            </a>
+                            <ng-container *ngIf="allRounds$ | async as allRounds">
+                                <p-dropdown [options]="allRounds" dataKey="round" [(ngModel)]="selectedRound" class="p-ml-auto p-mt-1"
+                                            optionLabel="playRound" (onChange)="onRoundSelected(selectedRound)" placeholder="Speelronde {{initialCurrentRound.playRound}}"></p-dropdown>
+                            </ng-container>
                         </div>
+                        <p-divider></p-divider>
                         <p-table [value]="resultRound" [autoLayout]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: left">
@@ -73,9 +67,7 @@
                             </ng-template>
                         </p-table>
                     </ng-container>
-                    <div class="ui-g">
-                        <div class="ui-g-12"></div>
-                    </div>
+                    <hr>
                     <!-- next matches -->
                     <ng-container *ngIf="result4NextRound$ | async as resultNextRound">
                         <p-table [value]="resultNextRound" [autoLayout]="true">
@@ -95,9 +87,8 @@
                 </p-panel>
             </div>
         </div>
-        <!-- right side -->
-        <div class="ui-g-12 ui-lg-6">
-            <div class="card card-w-title">
+        <div class="p-col-6">
+            <div class="box">
                 <p-panel header="Klassement" *ngIf="showStanding" >
                     <ng-container *ngIf="standing$ | async as standings">
                         <p-table [value]="standings" [autoLayout]="true" [columns]="columns">
@@ -122,25 +113,27 @@
                         </p-table>
                     </ng-container>
                 </p-panel>
-
-                <!-- team  -->
                 <p-panel header="Uitslagen team: {{selectedTeam.name}}"  *ngIf="!showStanding" >
+                    <div class="p-d-flex">
+                        <a (click)="toggleStanding()">
+                            <ng-container>
+                                <span class="fa fa-angle-double-left"></span>
+                            </ng-container>
+                        </a>
+                    </div>
                     <ng-container *ngIf="resultsLatest4Teams$ | async as resultsLatest4Teams">
                         <p-table [value]="resultsLatest4Teams" [autoLayout]="true">
                             <ng-template pTemplate="body" let-resultsLatest4Teams>
                                 <tr>
                                     <td>{{resultsLatest4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td>{{resultsLatest4Teams.homeTeam.name}} - {{resultsLatest4Teams.awayTeam.name}}</td>
+                                    <td><span [style]="determineColor(resultsLatest4Teams, resultsLatest4Teams.homeTeam, resultsLatest4Teams.awayTeam)">{{resultsLatest4Teams.homeTeam.name}} - {{resultsLatest4Teams.awayTeam.name}}</span></td>
                                     <td>{{resultsLatest4Teams.goalsHomeTeam}} - {{resultsLatest4Teams.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
                     </ng-container>
                 </p-panel>
-
-                <div class="ui-g">
-                    <div class="ui-g-12"></div>
-                </div>
+                <p-divider></p-divider>
                 <p-panel header="All uitslagen {{selectedTeam.name}}" *ngIf="!showStanding" >
                     <ng-container *ngIf="resultsAll4Teams$ | async as resultsAll4Teams">
                         <p-table [value]="resultsAll4Teams" [autoLayout]="true">
@@ -154,13 +147,10 @@
                         </p-table>
                     </ng-container>
                 </p-panel>
-
             </div>
         </div>
-
     </div>
 </ng-container>
-
 
 
 

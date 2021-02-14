@@ -1,0 +1,243 @@
+.widget-summary {
+    height: 75px;
+    position: relative;
+
+    .title {
+        font-size: 20px;
+    }
+
+    .detail {
+        color: #a4a4a4;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .count {
+        color: #ffffff;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        padding: 5px;
+        @include border-radius(4px);
+
+        &.visitors {
+            background-color: #20d077;
+        }
+
+        &.purchases {
+            background-color: #f9c851;
+        }
+
+        &.revenue {
+            background-color: #007be5;
+        }
+    }
+}
+
+.widget-highlight-box {
+    height: 100px;
+
+    .initials {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+        height: 100%;
+        font-size: 54px;
+        padding-top: 20px;
+        text-align: center;
+    }
+
+    .card {
+        color: #a4a4a4;
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+        height: 100%;
+
+        .count {
+            font-size: 36px;
+            display: block;
+            margin-top: 15px;
+        }
+
+        .highlight-box-icon {
+            margin-right: .25em;
+        }
+    }
+}
+
+.widget-activity-list {
+    .activity-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            border-bottom: 1px solid $dividerColor;
+            padding: 16px 8px;
+
+            .count {
+                font-size: 20px;
+                color: #ffffff;
+                background-color: #007be5;
+                font-weight: 700;
+                padding: .25em .5em;
+                display: inline-block;
+                border-radius: 4px;
+            }
+
+            .activity-progress {
+                border-radius: 4px;
+                height: .5rem;
+                background: $dividerColor;
+
+                > div {
+                    border-radius: 4px;
+                    height: 100%;
+                }
+            }
+            .activity-progress {
+                &.activity-progress-1 > div {
+                    background: #007be5;
+                    width: 75%;
+                }
+
+                &.activity-progress-2 > div {
+                    background: #f9c851;
+                    width: 60%;
+                }
+
+                &.activity-progress-3 > div {
+                    background: #20d077;
+                    width: 80%;
+                }
+
+                &.activity-progress-4 > div {
+                    background: #f9c851;
+                    width: 40%;
+                }
+
+                &.activity-progress-5 > div {
+                    background: #007be5;
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+.widget-contacts {
+    .contacts {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            border-bottom: 1px solid $dividerColor;
+
+            a {
+                padding: 9px;
+                width: 100%;
+                box-sizing: border-box;
+                text-decoration: none;
+                position: relative;
+                display: block;
+                @include border-radius(2px);
+                @include transition(background-color .2s);
+
+                .name {
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    font-size: 18px;
+                }
+
+                .email {
+                    position: absolute;
+                    right: 10px;
+                    top: 30px;
+                    font-size: 14px;
+                    color: #a4a4a4;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #eeeeee;
+                }
+            }
+
+            &:last-child {
+                border: 0;
+            }
+        }
+    }
+}
+
+.widget-pricing-box {
+    @include border-radius(3px);
+    padding: 10px 0;
+    text-align: center;
+    background-color: #e1e6e9;
+    @include transition(background-color .3s);
+
+    .pricing-name {
+        font-size: 24px;
+    }
+
+    .pricing-fee {
+        @include border-radius(50px);
+        background-color: #589cf0;
+        color: #ffffff;
+        width: 100px;
+        height: 100px;
+        margin: 30px auto;
+        font-size: 22px;
+        line-height: 100px;
+    }
+
+    &:hover {
+        background-color: #006de5;
+        color: #ffffff;
+
+        p {
+            color: #ffffff;
+        }
+
+        .pricing-fee {
+            background-color: #eaeeef;
+            color: #589cf0;
+        }
+    }
+}
+
+.widget-image-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+        @include flex();
+        @include flex-justify-between();
+        @include flex-align-center();
+        border-top: 1px solid $dividerColor;
+        padding: 1rem;
+
+        &:first-child {
+            border-top: 0 none;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        img {
+            width: 64px;
+            vertical-align: middle;
+            margin-right: .5rem;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+        }
+
+        .listitem-value {
+            font-weight: 600;
+        }
+    }
+}

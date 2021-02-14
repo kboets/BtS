@@ -14,8 +14,8 @@ import {Teams} from "../domain/teams";
 
 @Component({
     selector: 'bts-results',
-    templateUrl: './results.components.html',
-    styleUrls:['./results.css']
+    templateUrl: './results.components.html'
+    //styleUrls:['./results.css']
 })
 export class ResultsComponent implements OnInit {
 
@@ -49,8 +49,10 @@ export class ResultsComponent implements OnInit {
     resultsAll4Teams$: Observable<Result[]>;
 
     selectedRound: Round;
+    initialCurrentRound: Round;
     columns: any[];
-    showLeagues: boolean
+    showLeagues: boolean;
+
     showStanding: boolean;
     selectedTeam: Teams;
 
@@ -93,6 +95,16 @@ export class ResultsComponent implements OnInit {
                 })
            );
 
+        this.roundService.getCurrentRoundForLeague(+league_id)
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            )
+            .subscribe((data) => this.initialCurrentRound = data);
+
+
         //get all rounds for this league
         this.allRounds$ =  this.roundService.getAllRoundsForLeague(+league_id)
             .pipe(
@@ -107,7 +119,8 @@ export class ResultsComponent implements OnInit {
             [this.allRounds$, this.currentRound$]
         ).pipe(
             map(([rounds, currentRound]) => {
-                return _.chain(rounds).filter(function (round) { return round.playRound === currentRound.playRound+1}).first().value();
+                return _.chain(rounds).filter(function (round) {
+                    return round.playRound === currentRound.playRound+1}).first().value();
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -148,8 +161,8 @@ export class ResultsComponent implements OnInit {
         this.result4NextRound$ = combineLatest([
             this.results$, this.nextRound$
         ]).pipe(
-            map(([results, currentRound]) =>
-                results.filter(result => result.round === currentRound.round)
+            map(([results, nextRound]) =>
+                results.filter(result => result.round === nextRound.round)
             ),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -159,11 +172,12 @@ export class ResultsComponent implements OnInit {
 
         //get all results until next round
         this.resultAllUntilNextRound$ = combineLatest(
-            [this.results$, this.selectedRound$]
+            [this.results$, this.currentRound$]
         ).pipe(
             //tap(()=> console.log('arrived in the results all until next round')),
             map(([results, currentRound]) => {
-                return _.filter(results, function (result) {
+                const sortedResults = results.sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
+                return _.filter(sortedResults, function (result) {
                     return result.round <= currentRound.round;
                 })
             }),
@@ -201,11 +215,9 @@ export class ResultsComponent implements OnInit {
         ).pipe(
             //tap(()=> console.log('arrived in the results latest for team')),
             map(([results, teamId]) => {
-                return _.chain(results.reverse())
-                    .filter(function (result) {
-                        return result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId;
-                    })
-                    .first(5).value();
+                return _.chain(results).filter(function (result) {
+                    return result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId;
+                }).first(5).value();
             }),
             //tap(data => console.log('latest 5 results for team team ', JSON.stringify(data))),
             catchError(err => {
@@ -265,5 +277,37 @@ export class ResultsComponent implements OnInit {
         this.showStanding = true;
     }
 
+    toggleStanding() {
+        this.showStanding = true;
+    }
+
+    determineColor(result: Result, homeTeam: Teams, awayTeam: Teams) : string {
+        if(result.homeTeam.name === this.selectedTeam.name) {
+            return this.getColor(result, false);
+        } else if(result.awayTeam.name == this.selectedTeam.name) {
+            return this.getColor(result, true);
+        }
+        return 'background-color:transparent'
+    }
+
+    private getColor(result: Result, isAwayTeam: boolean): string {
+        if (result.goalsHomeTeam == result.goalsAwayTeam) {
+            return 'background-color:#f9c851';
+        }
+        if (isAwayTeam) {
+            if (result.goalsAwayTeam > result.goalsHomeTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+        } else {
+            if (result.goalsHomeTeam > result.goalsAwayTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+
+        }
+    }
 
 }

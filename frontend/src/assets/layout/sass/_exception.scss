@@ -1,8 +1,8 @@
 /* Exception */
 .exception-body {
-    height: 100%;
-    font-family: "latoregular", "Trebuchet MS", Arial, Helvetica, sans-serif; 
-    font-size: 16px; 
+    height: 100vh;
+    font-family: "latoregular", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 16px;
     margin: 0;
     background-image: linear-gradient(to top, #6b77a1, #737ea5 3%, #9599b3 15%, #b1b0bf 28%, #c7c1c8 41%, #d6cdcf 57%, #dfd5d3 74%, #e2d7d4);
     background-image: -ms-linear-gradient(bottom, #6B77A1 0%, #737EA5 3%, #9599B3 15%, #B1B0BF 28%, #C7C1C8 41%, #D6CDCF 57%, #DFD5D3 74%, #E2D7D4 100%);
@@ -27,40 +27,40 @@
     padding-top: 100px;
     color: #ffffff;
     box-sizing: border-box;
-    
+
     &.error {
         background-color: #e82424;
-        
-        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+
+        a:hover, a.p-link:hover, a.p-commandlink:hover {
             background-color: #ffffff;
             color: #e82424;
         }
     }
-    
+
     &.notfound {
         background-color: #66719c;
-        
-        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+
+        a:hover, a.p-link:hover, a.p-commandlink:hover {
             background-color: #ffffff;
             color: #66719c;
         }
     }
-    
+
     &.access {
         background-color: #e88524;
-        
-        a:hover, a.ui-link:hover, a.ui-commandlink:hover {
+
+        a:hover, a.p-link:hover, a.p-commandlink:hover {
             background-color: #ffffff;
             color: #e88524;
         }
     }
-    
+
     .message-title {
         font-size: 24px;
-        font-weight: bold;    
+        font-weight: bold;
     }
-    
-    a, a.ui-link, a.ui-commandlink {
+
+    a, a.p-link, a.p-commandlink {
         display: inline-block;;
         text-decoration: none;
         border: 1px solid #ffffff;
@@ -69,8 +69,12 @@
         padding: 10px;
         font-size: 16px;
         @include transition(color .15s);
+
+        span {
+            margin-left: .5em;
+        }
     }
-    
+
     .footer {
         color: #ffffff;
         font-size: $fontSize;
@@ -78,7 +82,7 @@
     }
 }
 
-@media (max-width: 40em) {    
+@media (max-width: 40em) {
     .exception-wrapper {
         width: 100%;
     }

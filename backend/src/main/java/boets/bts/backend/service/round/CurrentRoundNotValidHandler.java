@@ -41,7 +41,7 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
     public Round save(Round round, League league, int season)  {
         logger.info("current round {} with current date {} is outdated", round.getRound(), round.getCurrentDate());
         Round currentRoundUpdated = this.getCurrentClientRound(round.getLeague().getId(), round.getSeason());
-        Round verifiedRound = verifyRetrievedRound(currentRoundUpdated, LocalDate.now());
+        Round verifiedRound = verifyRetrievedRound(currentRoundUpdated);
         if(round.getRound().equals(verifiedRound.getRound())) {
             //logger.info("current round {} is still current, update date", round.getRound());
             round.setCurrentDate(LocalDate.now());

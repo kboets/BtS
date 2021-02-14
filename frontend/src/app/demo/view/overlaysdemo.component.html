@@ -1,77 +1,117 @@
-<div class="ui-g ui-fluid">
-    <div class="ui-g-12 ui-lg-6">
-        <!-- Left Side -->
+<div class="p-grid">
+    <div class="p-col-12 p-lg-6">
         <div class="card">
-            <h1>Overlay Panel</h1>
-            <div class="ui-g">
-                <div class="ui-g-6">
-                    <button type="button" pButton label="Image" (click)="op1.toggle($event)"></button>
+            <h5>Dialog</h5>
+            <p-dialog header="Dialog" [(visible)]="display" modal="modal" showEffect="fade" [style]="{width: '400px'}">
+                <div style="line-height: 1.5">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                    in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+                <p-footer>
+                    <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Yes" class="p-button-text"></button>
+                    <button type="button" pButton icon="pi pi-times" (click)="display=false" label="No" class="p-button-text"></button>
+                </p-footer>
+            </p-dialog>
+
+            <button type="text" (click)="display=true" pButton icon="pi pi-external-link" label="Show" style="width: auto"></button>
+        </div>
+
+        <div class="card p-fluid">
+            <h5>Overlay Panel</h5>
+            <div class="p-grid">
+                <div class="p-col-6">
+                    <button type="button" pButton label="Image" (click)="op1.toggle($event)" class="p-button-success"></button>
                     <p-overlayPanel #op1>
                         <img src="assets/demo/images/nature/nature1.jpg" alt="Nature 1" />
                     </p-overlayPanel>
                 </div>
-                <div class="ui-g-6">
-                    <button type="button" pButton label="DataTable" (click)="op2.toggle($event)"></button>
-                    <p-overlayPanel #op2 [showCloseIcon]="true" [dismissable]="false">
-                        <p-table [columns]="cols" [value]="cars" dataKey="vin" [style]="{'width':'500px'}">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                      {{col.header}}
-                                      <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData">
-                                    <td *ngFor="let col of columns">
-                                      {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
+                <div class="p-col-6">
+                    <button type="button" pButton label="DataTable" (click)="op2.toggle($event)" class="p-button-success"></button>
+                    <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '450px'}">
+                        <ng-template pTemplate>
+                            <p-table [value]="products" selectionMode="single" [(selection)]="selectedProduct" [paginator]="true" [rows]="5" (onRowSelect)="op2.hide()">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th pSortableColumn="name">Name<p-sortIcon field="name"></p-sortIcon></th>
+                                        <th>Image</th>
+                                        <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-product>
+                                    <tr [pSelectableRow]="rowData">
+                                        <td>{{product.name}}</td>
+                                        <td><img src="assets/demo/images/product/{{product.image}}" [alt]="product.image" class="product-image" /></td>
+                                        <td>{{product.price}}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </ng-template>
                     </p-overlayPanel>
                 </div>
             </div>
         </div>
-
-        <div class="card">
-            <h1>Dialog</h1>
-            <p-dialog header="Godfather I" [(visible)]="display" modal="modal" showEffect="fade" [style]="{width: '400px'}" appendTo="body">
-                <p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
-                   His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
-                   Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
-                   kind and benevolent to those who give respect,
-                   but given to ruthless violence whenever anything stands against the good of the family.</p>
-                <p-footer>
-                    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-                        <button type="button" pButton icon="fa fa-close" (click)="display=false" label="No"></button>
-                        <button type="button" pButton icon="fa fa-check" (click)="display=false" label="Yes"></button>
-                    </div>
-                </p-footer>
-            </p-dialog>
-
-            <button type="text" (click)="display=true" pButton icon="fa fa-external-link-square" label="Show"></button>
-        </div>
-
-        <div class="card">
-            <h1>Confirm Dialog</h1>
-            <p-confirmDialog header="Confirmation" icon="fa ui-icon-warning" [style]="{width: '425px'}" appendTo="body"></p-confirmDialog>
-
-            <button type="text" (click)="confirm()" pButton icon="fa fa-check" label="Confirm"></button>
-        </div>
     </div>
 
-    <div class="ui-g-12 ui-lg-6">
-        <!-- Right Side -->
+    <div class="p-col-12 p-lg-6">
+
         <div class="card">
-            <h1>LightBox</h1>
-            <p-lightbox [images]="images"></p-lightbox>
+            <h5>Confirmation</h5>
+            <p-confirmDialog header="Confirmation" key="confirm1" icon="pi pi-exclamation-triangle" message="Are you sure you want to proceed?"
+                             [style]="{width: '425px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+            <button type="text" (click)="confirm1()" pButton icon="pi pi-trash" label="Delete" class="p-button-danger" style="width: auto"></button>
         </div>
 
         <div class="card">
-            <h1>Tooltip</h1>
-            <input type="text" pInputText pTooltip="Enter your username" placeholder="Username" tooltipPosition="bottom">
+            <h5>Sidebar</h5>
+            <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000">
+                <h3 style="font-weight:normal">Left Sidebar</h3>
+            </p-sidebar>
+
+            <p-sidebar [(visible)]="visibleSidebar2" position="right" [baseZIndex]="10000">
+                <h3 style="font-weight:normal">Right Sidebar</h3>
+            </p-sidebar>
+
+            <p-sidebar [(visible)]="visibleSidebar3" position="top" [baseZIndex]="10000">
+                <h3 style="font-weight:normal">Top Sidebar</h3>
+            </p-sidebar>
+
+            <p-sidebar [(visible)]="visibleSidebar4" position="bottom" [baseZIndex]="10000">
+                <h3 style="font-weight:normal">Bottom Sidebar</h3>
+            </p-sidebar>
+
+            <p-sidebar [(visible)]="visibleSidebar5" [fullScreen]="true" [baseZIndex]="10000">
+                <h3 style="font-weight:normal">Full Screen Sidebar</h3>
+            </p-sidebar>
+
+            <button pButton type="button" (click)="visibleSidebar1 = true" icon="pi pi-arrow-right" class="p-button-warning"></button>
+            <button pButton type="button" (click)="visibleSidebar2 = true" icon="pi pi-arrow-left" class="p-button-warning"></button>
+            <button pButton type="button" (click)="visibleSidebar3 = true" icon="pi pi-arrow-down" class="p-button-warning"></button>
+            <button pButton type="button" (click)="visibleSidebar4 = true" icon="pi pi-arrow-up" class="p-button-warning"></button>
+            <button pButton type="button" (click)="visibleSidebar5 = true" icon="pi pi-th-large" class="p-button-warning"></button>
+        </div>
+    </div>
+    <div class="p-col-12 p-lg-6">
+        <div class="card">
+            <h5>Tooltip</h5>
+            <div class="p-formgroup-inline">
+                <div class="p-field">
+                    <label for="firstname5" class="p-sr-only">Username</label>
+                    <input id="firstname5" type="text" pInputText placeholder="Username" pTooltip="Enter your username">
+                </div>
+                <button pButton pRipple type="button" label="Submit" pTooltip="Click to proceed"></button>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-12 p-lg-6">
+        <div class="card">
+            <h5>ConfirmPopup</h5>
+
+            <p-toast></p-toast>
+            <button (click)="confirm2($event)" pButton icon="pi pi-check" label="Confirm"></button>
+            <p-confirmPopup key="confirm2"></p-confirmPopup>
         </div>
     </div>
 </div>

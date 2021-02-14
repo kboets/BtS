@@ -1,0 +1,14 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<h4>Shadow</h4>
+			<p>Elevation is an add-on utility of <a href="https://github.com/primefaces/primeflex">PrimeFlex</a> and used to specify the separation between surfaces and elements along the z-axis.</p>
+
+			<div class="p-grid">
+				<div *ngFor="let box of boxes; index as i" [class]="'box p-shadow-' + (i + 1)">
+					p-shadow-{{i + 1}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

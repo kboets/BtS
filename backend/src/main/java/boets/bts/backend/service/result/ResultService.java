@@ -47,7 +47,7 @@ public class ResultService {
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         List<ResultDto> allHandledResults = resultMapper.toResultDtos(allResults);
-        List<Result> allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound.getRound()));
+        List<Result> allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound));
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults, allNonFinishedResults, currentRound.getRound());
         if(resultOptionalHandler.isPresent()) {
             logger.info("Not all results are found for the current league {} ", leagueId);

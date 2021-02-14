@@ -1,0 +1,99 @@
+.layout-config {
+    width: 16rem;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 1rem;
+    overflow: auto;
+    background: #ffffff;
+    z-index: 999;
+    border-left: 0 none;
+    transform: translateX(100%);
+    transition: transform .4s cubic-bezier(.05,.74,.2,.99);
+
+    &.layout-config-active {
+        transform: translateX(0);
+        box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+
+        .layout-config-content {
+            .layout-config-button {
+                i {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+    }
+
+    p {
+        line-height: 1.5rem;
+        color: #6c757d;
+    }
+
+    .layout-themes {
+        @include flex();
+        @include flex-wrap(wrap);
+
+        > div {
+            padding: .25rem;
+        }
+
+
+        a {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 4px;
+            display: block;
+            position: relative;
+            @include flex-align-center();
+            @include flex-justify-center();
+            transition: transform .2s;
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+
+            i {
+                font-size: 1rem;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -.5rem;
+                margin-top: -.5rem;
+            }
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+.layout-config-button {
+    display: block;
+    position: fixed;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    background: #2c78c7;
+    color: #ffffff;
+    text-align: center;
+    top: 50%;
+    right: 0;
+    margin-top: -1.5rem;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    transition: background-color .2s;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: -.25rem 0 1rem rgba(0,0,0,.15);
+
+    i {
+        font-size: 2rem;
+        line-height: inherit;
+        transform: rotate(0deg);
+        transition: transform 1s;
+    }
+
+    &:hover {
+        background: lighten(#2c78c7, 5%);
+    }
+}

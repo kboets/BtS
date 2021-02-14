@@ -1,5 +1,5 @@
 import {Component, OnInit } from '@angular/core';
-import {MenuItem} from 'primeng/primeng';
+
 
 @Component({
     selector: 'app-menu',
@@ -13,86 +13,112 @@ import {MenuItem} from 'primeng/primeng';
 })
 export class AppMenuComponent implements OnInit {
 
-    model: MenuItem[];
+    model: any[];
 
     ngOnInit() {
         this.model = [
-            {label: 'Leagues', icon: 'fa fa-fw fa-futbol-o', routerLink: ['/leagues']},
-            {label: 'Teams', icon: 'fa fa-user-plus', routerLink: ['/teams']},
-            {label: 'Result', icon: 'fa fa-address-card', routerLink: ['/result']},
-            {label: 'Dashboard', icon: 'fa fa-fw fa-home', routerLink: ['/']},
+            {label: 'Leagues', icon: 'pi pi-fw pi-th-large', routerLink: ['/leagues']},
+            {label: 'Result', icon: 'pi pi-fw pi-chart-line', routerLink: ['/result']},
+            {label: 'Dashboard', icon: 'pi c pi-home', routerLink: ['/']},
             {
-                label: 'Components', icon: 'fa fa-fw fa-home', badge: '2', routerLink: ['/components'],
+                label: 'UI Kit', icon: 'pi pi-fw pi-star', routerLink: ['/uikit'], badge: 2,
                 items: [
-                    {label: 'Sample Page', icon: 'fa fa-fw fa-columns', routerLink: ['/components/sample']},
-                    {label: 'Forms', icon: 'fa fa-fw fa-code', routerLink: ['/components/forms']},
-                    {label: 'Data', icon: 'fa fa-fw fa-table', routerLink: ['/components/data']},
-                    {label: 'Panels', icon: 'fa fa-fw fa-list-alt', routerLink: ['/components/panels']},
-                    {label: 'Overlays', icon: 'fa fa-fw fa-square', routerLink: ['/components/overlays']},
-                    {label: 'Menus', icon: 'fa fa-fw fa-minus-square-o', routerLink: ['/components/menus']},
-                    {label: 'Messages', icon: 'fa fa-fw fa-circle-o-notch', routerLink: ['/components/messages']},
-                    {label: 'Charts', icon: 'fa fa-fw fa-area-chart', routerLink: ['/components/charts']},
-                    {label: 'File', icon: 'fa fa-fw fa-columns', routerLink: ['/components/file']},
-                    {label: 'Misc', icon: 'fa fa-fw fa-arrow-circle-o-up', routerLink: ['/components/misc']}
-                ]
-            },
-            {label: 'Landing', icon: 'fa fa-fw fa-certificate', url: 'assets/pages/landing.html', target: '_blank'},
-            {
-                label: 'Template Pages', icon: 'fa fa-fw fa-life-saver', badge: '8', badgeStyleClass: 'green-badge', routerLink: ['/pages'],
-                items: [
-                    {label: 'Empty Page', icon: 'fa fa-fw fa-square-o', routerLink: ['/pages/empty']},
-                    {label: 'Login Page', icon: 'fa fa-fw fa-sign-in', url: 'assets/pages/login.html', target: '_blank'},
-                    {label: 'Error Page', icon: 'fa fa-fw fa-exclamation-circle', url: 'assets/pages/error.html', target: '_blank'},
-                    {label: '404 Page', icon: 'fa fa-fw fa-times', url: 'assets/pages/404.html', target: '_blank'},
-                    {label: 'Access Denied', icon: 'fa fa-fw fa-exclamation-triangle', url: 'assets/pages/access.html', target: '_blank'}
+                    {label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout']},
+                    {label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input']},
+                    {label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel']},
+                    {label: 'Invalid State', icon: 'pi pi-exclamation-circle', routerLink: ['/uikit/invalidstate']},
+                    {label: 'Button', icon: 'pi pi-fw pi-mobile', routerLink: ['/uikit/button'], class: 'rotated-icon'},
+                    {label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table']},
+                    {label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list']},
+                    {label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree']},
+                    {label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel']},
+                    {label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay']},
+                    {label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media']},
+                    {label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu']},
+                    {label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message']},
+                    {label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file']},
+                    {label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts']},
+                    {label: 'Misc', icon: 'pi pi-fw pi-circle-off', routerLink: ['/uikit/misc']}
                 ]
             },
             {
-                label: 'Menu Hierarchy', icon: 'fa fa-fw fa-gg',
+                label: 'Utilities', icon: 'pi pi-fw pi-compass', routerLink: ['utilities'],
+                items: [
+                    {label: 'Display', icon: 'pi pi-fw pi-desktop', routerLink: ['utilities/display']},
+                    {label: 'Elevation', icon: 'pi pi-fw pi-external-link', routerLink: ['utilities/elevation']},
+                    {label: 'FlexBox', icon: 'pi pi-fw pi-directions', routerLink: ['utilities/flexbox']},
+                    {label: 'Icons', icon: 'pi pi-fw pi-search', routerLink: ['utilities/icons']},
+                    {label: 'Text', icon: 'pi pi-fw pi-pencil', routerLink: ['utilities/text']},
+                    {label: 'Widgets', icon: 'pi pi-fw pi-star-o', routerLink: ['utilities/widgets']},
+                    {label: 'Grid System', icon: 'pi pi-fw pi-th-large', routerLink: ['utilities/grid']},
+                    {label: 'Spacing', icon: 'pi pi-fw pi-arrow-right', routerLink: ['utilities/spacing']},
+                    {label: 'Typography', icon: 'pi pi-fw pi-align-center', routerLink: ['utilities/typography']}
+                ]
+            },
+            {
+                label: 'Pages', icon: 'pi pi-fw pi-briefcase', routerLink: ['/pages'], badge: 8,
+                items: [
+                    {label: 'Crud', icon: 'pi pi-fw pi-pencil', routerLink: ['/pages/crud']},
+                    {label: 'Calendar', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/pages/calendar']},
+                    {label: 'Timeline', icon: 'pi pi-fw pi-calendar', routerLink: ['/pages/timeline']},
+                    {label: 'Landing', icon: 'pi pi-fw pi-globe', url: 'assets/pages/landing.html', target: '_blank'},
+                    {label: 'Login', icon: 'pi pi-fw pi-sign-in', routerLink: ['/login']},
+                    {label: 'Invoice', icon: 'pi pi-fw pi-dollar', routerLink: ['/pages/invoice']},
+                    {label: 'Help', icon: 'pi pi-fw pi-question-circle', routerLink: ['/pages/help']},
+                    {label: 'Error', icon: 'pi pi-fw pi-times-circle', routerLink: ['/error']},
+                    {label: 'Not Found', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/notfound']},
+                    {label: 'Access Denied', icon: 'pi pi-fw pi-lock', routerLink: ['/access']},
+                    {label: 'Empty', icon: 'pi pi-fw pi-circle-off', routerLink: ['/pages/empty']}
+                ]
+            },
+            {
+                label: 'Hierarchy', icon: 'pi pi-fw pi-align-left',
                 items: [
                     {
-                        label: 'Submenu 1', icon: 'fa fa-fw fa-sign-in',
+                        label: 'Submenu 1', icon: 'pi pi-fw pi-align-left',
                         items: [
                             {
-                                label: 'Submenu 1.1', icon: 'fa fa-fw fa-sign-in',
+                                label: 'Submenu 1.1', icon: 'pi pi-fw pi-align-left',
                                 items: [
-                                    {label: 'Submenu 1.1.1', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 1.1.2', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 1.1.3', icon: 'fa fa-fw fa-sign-in'},
+                                    {label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-align-left'},
+                                    {label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-align-left'},
+                                    {label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-align-left'},
                                 ]
                             },
                             {
-                                label: 'Submenu 1.2', icon: 'fa fa-fw fa-sign-in',
+                                label: 'Submenu 1.2', icon: 'pi pi-fw pi-align-left',
                                 items: [
-                                    {label: 'Submenu 1.2.1', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 1.2.2', icon: 'fa fa-fw fa-sign-in'}
+                                    {label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-align-left'}
                                 ]
                             },
                         ]
                     },
                     {
-                        label: 'Submenu 2', icon: 'fa fa-fw fa-sign-in',
+                        label: 'Submenu 2', icon: 'pi pi-fw pi-align-left',
                         items: [
                             {
-                                label: 'Submenu 2.1', icon: 'fa fa-fw fa-sign-in',
+                                label: 'Submenu 2.1', icon: 'pi pi-fw pi-align-left',
                                 items: [
-                                    {label: 'Submenu 2.1.1', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 2.1.2', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 2.1.3', icon: 'fa fa-fw fa-sign-in'},
+                                    {label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-align-left'},
+                                    {label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-align-left'},
                                 ]
                             },
                             {
-                                label: 'Submenu 2.2', icon: 'fa fa-fw fa-sign-in',
+                                label: 'Submenu 2.2', icon: 'pi pi-fw pi-align-left',
                                 items: [
-                                    {label: 'Submenu 2.2.1', icon: 'fa fa-fw fa-sign-in'},
-                                    {label: 'Submenu 2.2.2', icon: 'fa fa-fw fa-sign-in'}
+                                    {label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-align-left'},
                                 ]
                             },
                         ]
                     }
                 ]
             },
-            {label: 'Documentation', icon: 'fa fa-fw fa-book', routerLink: ['/documentation']}
+            {
+                label: 'Buy Now', icon: 'pi pi-fw pi-shopping-cart', url: ['https://www.primefaces.org/store']
+            },
+            {
+                label: 'Documentation', icon: 'pi pi-fw pi-info-circle', routerLink: ['/documentation']
+            }
         ];
     }
 }

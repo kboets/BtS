@@ -5,7 +5,7 @@ INSERT INTO `league` (`league_id`, `name`, `start_season`, `end_season`, `curren
 VALUES (2660, 'Jupiler Pro League', '2020-08-08', '2021-04-16', '1', 2020, 'BE', 'https://media.api-sports.io/football/leagues/144.png', 'https://media.api-sports.io/flags/be.svg', '0');
 
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (35, 'Regular_Season_-_1', 2020, 2660, '0', NULL);
-INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (36, 'Regular_Season_-_2', 2020, 2660, '0', NULL);
+INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (36, 'Regular_Season_-_2', 2020, 2660, '0', '2020-08-18');
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (37, 'Regular_Season_-_3', 2020, 2660, '1', '2020-11-04');
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (38, 'Regular_Season_-_4', 2020, 2660, '0', NULL);
 INSERT INTO `round` (`round_id`, `round`, `season`, `league_id`, `current`, `actual_date`) VALUES (39, 'Regular_Season_-_5', 2020, 2660, '0', NULL);

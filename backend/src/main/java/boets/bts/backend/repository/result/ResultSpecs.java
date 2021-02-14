@@ -2,9 +2,11 @@ package boets.bts.backend.repository.result;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
+import boets.bts.backend.domain.Round;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
+import java.time.LocalDate;
 
 public class ResultSpecs {
 
@@ -26,12 +28,12 @@ public class ResultSpecs {
         };
     }
 
-    public static Specification<Result> getAllNonFinishedResultUntilRound(League league, String round) {
+    public static Specification<Result> getAllNonFinishedResultUntilRound(League league, Round round) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
             predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.lessThanOrEqualTo(
-                            root.get("round"), round));
+                    predicate, criteriaBuilder.lessThan(
+                            root.get("eventDate"), round.getCurrentDate()));
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.notEqual(
                             root.get("matchStatus"), "Match Finished"));
