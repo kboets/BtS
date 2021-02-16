@@ -4,21 +4,24 @@ import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
+import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.TeamService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.league.LeagueDto;
+import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
+import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -31,15 +34,18 @@ public class ResultService {
     private ResultMapper resultMapper;
     private RoundService roundService;
     private LeagueRepository leagueRepository;
+    private LeagueMapper leagueMapper;
     private TeamService teamService;
 
-    public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService, LeagueRepository leagueRepository, TeamService teamService) {
+    public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
+                         LeagueRepository leagueRepository, TeamService teamService, LeagueMapper leagueMapper) {
         this.resultRepository = resultRepository;
         this.resultHandlerSelector = resultHandlerSelector;
         this.resultMapper = resultMapper;
         this.roundService = roundService;
         this.leagueRepository = leagueRepository;
         this.teamService = teamService;
+        this.leagueMapper = leagueMapper;
     }
 
     public List<ResultDto> retrieveAllResultsForLeague(Long leagueId) throws Exception {
@@ -56,7 +62,17 @@ public class ResultService {
             allHandledResults.addAll(resultMapper.toResultDtos(results));
         }
         return allHandledResults;
+    }
 
+    public Map<LeagueDto, List<ResultDto>> retrieveAllResults(boolean isSelected) throws Exception {
+        Map<LeagueDto, List<ResultDto>> leagueResultMap = new HashMap<>();
+        List<LeagueDto> allSelected = leagueMapper.toLeagueDtoList(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true)));
+        for (LeagueDto selected : allSelected) {
+            List<ResultDto> resultDtos = retrieveAllResultsForLeague(Long.parseLong(selected.getLeague_id()));
+            resultDtos.sort(Comparator.comparing(ResultDto::getEventDate).reversed());
+            leagueResultMap.put(selected, resultDtos);
+        }
+        return leagueResultMap;
     }
 
 

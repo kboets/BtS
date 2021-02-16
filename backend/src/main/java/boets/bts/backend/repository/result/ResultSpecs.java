@@ -41,7 +41,6 @@ public class ResultSpecs {
             return predicate;
         };
 
-
     }
 
 }

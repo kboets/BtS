@@ -40,6 +40,7 @@ import { InvalidStateDemoComponent } from './demo/view/invalidstatedemo.componen
 import { AppTimelineDemoComponent } from './pages/app.timelinedemo.component';
 import {LeagueComponent} from "./bts/league/league.component";
 import {ResultsComponent} from "./bts/results/results.component";
+import {ForecastComponent} from "./bts/forecast/forecast.component";
 
 @NgModule({
     imports: [
@@ -49,6 +50,7 @@ import {ResultsComponent} from "./bts/results/results.component";
                 children: [
                     {path: 'leagues', component: LeagueComponent},
                     {path: 'result', component: ResultsComponent},
+                    {path: 'forecast', component: ForecastComponent},
                     {path: '', component: DashboardDemoComponent},
                     {path: 'uikit/formlayout', component: FormLayoutDemoComponent},
                     {path: 'uikit/input', component: InputDemoComponent},

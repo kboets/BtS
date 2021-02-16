@@ -57,6 +57,7 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
         DayOfWeek today = now.getDayOfWeek();
         return (today.equals(DayOfWeek.FRIDAY)
                 || today.equals(DayOfWeek.SATURDAY)
-                || today.equals(DayOfWeek.SUNDAY));
+                || today.equals(DayOfWeek.SUNDAY)
+                || today.equals(DayOfWeek.MONDAY));
     }
 }

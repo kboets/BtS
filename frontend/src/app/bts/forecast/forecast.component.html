@@ -1,0 +1,27 @@
+<p-panel header="Selectie criteria">
+    <form [formGroup]="forecastForm">
+        <h5>Alle competities</h5>
+        <div class="p-field p-grid">
+<!--            <label for="allLeagueId" class="p-col-fixed" style="width:100px">nee - ja</label>-->
+            <div class="p-col">
+                <p-inputSwitch id="allLeagueId" formControlName="allLeagues"></p-inputSwitch>
+            </div>
+        </div>
+        <h5>Resultaat</h5>
+        <div class="p-formgroup-inline">
+            <div class="p-field-checkbox">
+                <p-radioButton name="resultGames" id="notLost" formControlName="resultGames" value="notLost"></p-radioButton>
+                <label for="notLost">Niet verloren</label>
+            </div>
+            <div class="p-field-checkbox">
+                <p-radioButton name="resultGames" id="won" formControlName="resultGames"  value="won"></p-radioButton>
+                <label for="won">Gewonnen</label>
+            </div>
+        </div>
+        <h5>Aantal wedstrijden</h5>
+        <div class="p-field-checkbox">
+           <p-dropdown [options]="totalGames" formControlName="selectedGames"></p-dropdown>
+        </div>
+    </form>
+
+</p-panel>

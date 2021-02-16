@@ -12,14 +12,11 @@ import {CountryService} from "./country.service";
 @Component({
     selector: 'bts-league',
     templateUrl: './league.component.html'
-    //styleUrls: ['./league.component.css'],
 })
 export class LeagueComponent implements OnInit {
 
     error: GeneralError;
     leagueForm : FormGroup;
-
-
 
     selectedLeagues: string[];
     currentLeagues: League[];

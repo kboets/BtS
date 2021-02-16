@@ -140,6 +140,7 @@ import {ProductService} from './demo/service/productservice';
 import {MenuService} from './app.menu.service';
 import {LeagueComponent} from "./bts/league/league.component";
 import {ResultsComponent} from "./bts/results/results.component";
+import {ForecastComponent} from "./bts/forecast/forecast.component";
 
 // @ts-ignore
 @NgModule({
@@ -232,6 +233,7 @@ import {ResultsComponent} from "./bts/results/results.component";
         ReactiveFormsModule
     ],
     declarations: [
+        ForecastComponent,
         ResultsComponent,
         LeagueComponent,
         AppComponent,

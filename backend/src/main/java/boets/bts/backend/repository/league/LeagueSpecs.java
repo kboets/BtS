@@ -25,4 +25,15 @@ public class LeagueSpecs {
             return predicate;
         };
     }
+
+    public static Specification<League> getLeagueBySeasonAndSelected(int season, boolean isSelected) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("season"), season);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("selected"), isSelected));
+            return predicate;
+        };
+    }
+
 }
