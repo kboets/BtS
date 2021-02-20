@@ -40,7 +40,19 @@ public class ResultSpecs {
 
             return predicate;
         };
-
     }
+
+    public static Specification<Result> getAllFinishedResult(League league) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("matchStatus"), "Match Finished"));
+
+            return predicate;
+        };
+    }
+
+
 
 }

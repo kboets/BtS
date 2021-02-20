@@ -32,6 +32,7 @@ public class LeagueSpecs {
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("selected"), isSelected));
+
             return predicate;
         };
     }

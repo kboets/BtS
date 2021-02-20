@@ -1,12 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Observable, Subject, throwError} from "rxjs";
 import {League} from "../domain/league";
-import {catchError, shareReplay, tap} from "rxjs/operators";
+import {catchError, map, shareReplay, tap} from "rxjs/operators";
 import {Round} from "../domain/round";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Result} from "../domain/result";
 import * as _ from 'underscore';
+import {LeagueResults} from "../forecast/leagueResults";
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,31 @@ export class ResultService {
             );
     }
 
+    getAllResultForLeagues(selected: boolean): Observable<LeagueResults[]>  {
+        if(selected) {
+            return this.http.get<LeagueResults[]>(`/btsapi/api/result/allSelected`)
+                .pipe(
+                    //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
+                    shareReplay(2),
+                    catchError(this.handleHttpError)
+                );
+        } else {
+            return this.http.get<LeagueResults[]>(`/btsapi/api/result/allNonSelected`)
+                .pipe(
+                    //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
+                    shareReplay(2),
+                    catchError(this.handleHttpError)
+                );
+        }
+    }
+
+    sortByResults(a, b) {
+        if(a.rank > b.rank) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 
     private handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handle HttpError of result service "+error.message);

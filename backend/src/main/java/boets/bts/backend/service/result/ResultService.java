@@ -11,17 +11,22 @@ import boets.bts.backend.service.TeamService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.forecast.LeagueResultsDto;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
-import liquibase.pro.packaged.L;
+import javassist.runtime.Desc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -64,17 +69,31 @@ public class ResultService {
         return allHandledResults;
     }
 
-    public Map<LeagueDto, List<ResultDto>> retrieveAllResults(boolean isSelected) throws Exception {
-        Map<LeagueDto, List<ResultDto>> leagueResultMap = new HashMap<>();
-        List<LeagueDto> allSelected = leagueMapper.toLeagueDtoList(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true)));
-        for (LeagueDto selected : allSelected) {
-            List<ResultDto> resultDtos = retrieveAllResultsForLeague(Long.parseLong(selected.getLeague_id()));
-            resultDtos.sort(Comparator.comparing(ResultDto::getEventDate).reversed());
-            leagueResultMap.put(selected, resultDtos);
+    public List<LeagueResultsDto> retrieveAllFinishedResults(boolean isSelected)  {
+        List<LeagueResultsDto> leaguesResults = new ArrayList<>();
+        List<League> allLeagues = new ArrayList<>();
+        if(isSelected) {
+            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true)));
+        } else {
+            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), false)));
         }
-        return leagueResultMap;
+        for (League selectedLeague : allLeagues) {
+            List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
+            LeagueResultsDto leagueResultsDto = new LeagueResultsDto();
+            leagueResultsDto.setResults(resultMapper.toResultDtos(resultForLeague));
+            leagueResultsDto.setLeague(leagueMapper.toLeagueDto(selectedLeague));
+            leaguesResults.add(leagueResultsDto);
+        }
+        return leaguesResults;
     }
 
+    @Scheduled(cron = "0/15 * * * * ?")
+    public void scheduleResults() throws Exception {
+        List<Long> leagueIds = leagueRepository.findAll().stream().map(league -> league.getId()).collect(Collectors.toList());
+        for (Long leagueId : leagueIds) {
+            this.retrieveAllResultsForLeague(leagueId);
+        }
+    }
 
 
 }
