@@ -14,6 +14,18 @@ import {LeagueResults} from "../forecast/leagueResults";
 })
 export class ResultService {
 
+    private _forecastSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
+    forecastRefreshNeededAction$ = this._forecastSelectedLeaguesRefreshNeeded.asObservable();
+
+    private _forecastNonSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
+    forecastRefreshNonSelectedNeededAction$ = this._forecastNonSelectedLeaguesRefreshNeeded.asObservable();
+
+    get forecastSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
+        return this._forecastSelectedLeaguesRefreshNeeded;
+    }
+    get forecastNonSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
+        return this._forecastNonSelectedLeaguesRefreshNeeded;
+    }
 
     constructor(private http: HttpClient) {  }
 
@@ -30,7 +42,7 @@ export class ResultService {
         if(selected) {
             return this.http.get<LeagueResults[]>(`/btsapi/api/result/allSelected`)
                 .pipe(
-                    //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
+                    //tap(data => console.log('get allSelected ', JSON.stringify(data[0].results))),
                     shareReplay(2),
                     catchError(this.handleHttpError)
                 );

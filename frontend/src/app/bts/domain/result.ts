@@ -10,6 +10,6 @@ export interface Result {
     awayTeam:Teams;
     goalsHomeTeam:number;
     goalsAwayTeam:number;
-    matchStatus:number;
+    matchStatus:string;
 
 }
