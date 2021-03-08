@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {SelectItem} from "primeng/api";
+import {SelectItem, TreeNode} from "primeng/api";
 import {ResultService} from "../results/result.service";
 import {GeneralError} from "../domain/generalError";
 import {Result} from "../domain/result";
@@ -20,7 +20,10 @@ export class ForecastComponent implements OnInit {
     forecastForm: FormGroup;
     totalGames: SelectItem[];
     selectionCriteria: Map<string, any>;
-
+    criteriaResultsSelectedLeagues: CriteriaResults[];
+    criteriaResultsNonSelectedLeagues: CriteriaResults[];
+    leaguesSelectedTree: TreeNode[];
+    leaguesNonSelectedTree: TreeNode[];
 
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
@@ -28,7 +31,7 @@ export class ForecastComponent implements OnInit {
     resultsSelectedLeagues: LeagueResults[];
     resultsNonSelectedLeagues: LeagueResults[];
 
-    criteriaResults: CriteriaResults;
+
 
     constructor(private fb: FormBuilder, private resultService: ResultService) {
         this.totalGames = [];
@@ -56,15 +59,49 @@ export class ForecastComponent implements OnInit {
 
         this.resultService.forecastRefreshNeededAction$
             .subscribe((data: Map<string, any>) => {
-                return this.mapLeagueResults(this.resultsSelectedLeagues, data);
+                this.criteriaResultsSelectedLeagues = this.mapLeagueResults(this.resultsSelectedLeagues, data);
+                this.leaguesSelectedTree = this.createNodeTree(this.criteriaResultsSelectedLeagues);
             });
 
         this.resultService.forecastRefreshNonSelectedNeededAction$
             .subscribe((data: Map<string, any>) => {
-                return this.mapLeagueResults(this.resultsNonSelectedLeagues, data);
+                this.criteriaResultsNonSelectedLeagues = this.mapLeagueResults(this.resultsNonSelectedLeagues, data);
+                this.leaguesNonSelectedTree = this.createNodeTree(this.criteriaResultsNonSelectedLeagues);
             });
 
+    }
 
+    expandAllSelected(){
+        this.leaguesSelectedTree.forEach( node => {
+            this.expandRecursive(node, true);
+        } );
+    }
+
+    expandAllNonSelected(){
+        this.leaguesNonSelectedTree.forEach( node => {
+            this.expandRecursive(node, true);
+        } );
+    }
+
+    collapseAllSelected(){
+        this.leaguesSelectedTree.forEach( node => {
+            this.expandRecursive(node, false);
+        } );
+    }
+
+    collapseAllNonSelected(){
+        this.leaguesNonSelectedTree.forEach( node => {
+            this.expandRecursive(node, false);
+        } );
+    }
+
+    private expandRecursive(node:TreeNode, isExpand:boolean){
+        node.expanded = isExpand;
+        if (node.children){
+            node.children.forEach( childNode => {
+                this.expandRecursive(childNode, isExpand);
+            } );
+        }
     }
 
     private getResultsForSelectedLeague() {
@@ -98,8 +135,10 @@ export class ForecastComponent implements OnInit {
             this.selectionCriteria.set(key, value[key]);
         }
         if(this.selectionCriteria.get('allLeagues')) {
+            this.leaguesSelectedTree = [];
             this.resultService.forecastNonSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
         } else {
+            this.leaguesNonSelectedTree = [];
             this.resultService.forecastSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
         }
     }
@@ -165,7 +204,6 @@ export class ForecastComponent implements OnInit {
         //console.log('entered mapLeagueResults', originalLeagueResults, criteriaMap);
         const leagueResults: LeagueResults[] = JSON.parse(JSON.stringify(originalLeagueResults));
         const selectedGames = criteriaMap.get('selectedGames');
-
         //1. reduce the number of results based on the selection criteria
         const filteredLeagueResults = this.filterResultsOfLeagueResults(leagueResults, selectedGames);
         const resultGame = criteriaMap.get('resultGames');
@@ -180,7 +218,7 @@ export class ForecastComponent implements OnInit {
 
         //3. filter to match correct number of requested
         if (selectedGames === 1) {
-            //console.log('criteriaResults ', criteriaResults);
+            console.log('criteriaResults of 1 ', criteriaResults);
             return criteriaResults;
         } else {
             return this.filterCriteriaResults(criteriaResults, +selectedGames);
@@ -257,5 +295,62 @@ export class ForecastComponent implements OnInit {
         return results4TeamArray;
     }
 
+    private createNodeTree(criteriaResultsToBeMapped: CriteriaResults[]): any {
+        let parentNodes: any = [];
+        criteriaResultsToBeMapped.forEach(criteriaResults => {
+            parentNodes.push(this.createParentNodes(criteriaResults));
+        });
+        console.log('tree node ', parentNodes);
+        return parentNodes;
+    }
+
+    private createParentNodes(criteriaResults: CriteriaResults): any {
+        let parentNode:any =  {
+            "label": criteriaResults.league.name,
+            //"data": criteriaResults.league,
+            "expandedIcon": "pi pi-folder-open",
+            "collapsedIcon": "pi pi-folder",
+            "children": this.createTeamNodes(criteriaResults.results4Team)
+        }
+        return parentNode;
+    }
+
+
+    private createTeamNodes(results4Team: Results4Team[]) : any {
+        let childNodeTree: any = [];
+        results4Team.forEach(results4Team => {
+            let teamNode: any = {
+                "label": results4Team.team.name,
+                //"data": results4Team.team,
+                "expandedIcon": "pi pi-folder-open",
+                "collapsedIcon": "pi pi-folder",
+                "children": this.createResultNodes(results4Team.results)
+            }
+            childNodeTree.push(teamNode);
+        });
+        return childNodeTree;
+    }
+
+    private createResultNodes(results: Result[]) : any {
+        let childNodeTree: any = [];
+        results.forEach(result => {
+            let resultNode: any = {
+                "label": this.createResultNodeLabel(result),
+                //"data": result,
+                "expandedIcon": "pi pi-folder-open",
+                "collapsedIcon": "pi pi-folder"
+            }
+            childNodeTree.push(resultNode);
+
+        });
+        return childNodeTree;
+    }
+
+    private createResultNodeLabel(result: Result): string {
+        const labelTeam: string = result.homeTeam.name+' - '+result.awayTeam.name+' : '+result.goalsHomeTeam+' - '+result.goalsAwayTeam
+        const labelRound: string = ' '+result.round+' ';
+        const label: string = labelTeam+labelRound;
+        return label;
+    }
 
 }
