@@ -182,7 +182,6 @@ export class ForecastComponent implements OnInit {
     }
 
     public filterCriteriaResults(criteriaResults: CriteriaResults[], selectedGames: number): CriteriaResults[] {
-        //console.log('before filterCriteriaResults -> criteriaResults ', criteriaResults);
         let results4Team: Results4Team[];
         let filteredCriteriaResults: CriteriaResults[] = [];
         criteriaResults.forEach(criteriaResult => {
@@ -196,12 +195,10 @@ export class ForecastComponent implements OnInit {
                 filteredCriteriaResults.push(filteredCriteriaResult);
             }
         });
-        console.log('after filtering  ', filteredCriteriaResults);
         return filteredCriteriaResults;
     }
 
     public mapLeagueResults(originalLeagueResults: LeagueResults[], criteriaMap: Map<string, any>): CriteriaResults[] {
-        //console.log('entered mapLeagueResults', originalLeagueResults, criteriaMap);
         const leagueResults: LeagueResults[] = JSON.parse(JSON.stringify(originalLeagueResults));
         const selectedGames = criteriaMap.get('selectedGames');
         //1. reduce the number of results based on the selection criteria
@@ -214,11 +211,8 @@ export class ForecastComponent implements OnInit {
         } else if (resultGame === 'notLost') {
             criteriaResults = this.retrieveAllNotLosingTeamsWithResults(filteredLeagueResults);
         }
-        //console.log('criteriaResults before filtering', criteriaResults);
-
         //3. filter to match correct number of requested
         if (selectedGames === 1) {
-            console.log('criteriaResults of 1 ', criteriaResults);
             return criteriaResults;
         } else {
             return this.filterCriteriaResults(criteriaResults, +selectedGames);
@@ -251,7 +245,7 @@ export class ForecastComponent implements OnInit {
                     results4Team.team = result.homeTeam;
                     results4Team.results = [];
                     results4Team.results.push(result);
-                    teamMap.set(result.awayTeam.teamId, results4Team)
+                    teamMap.set(result.homeTeam.teamId, results4Team)
                     results4TeamArray.push(results4Team);
                 }
             }
@@ -286,7 +280,7 @@ export class ForecastComponent implements OnInit {
                     results4Team.team = result.homeTeam;
                     results4Team.results = [];
                     results4Team.results.push(result);
-                    teamMap.set(result.awayTeam.teamId, results4Team)
+                    teamMap.set(result.homeTeam.teamId, results4Team)
                     results4TeamArray.push(results4Team);
                 }
             }
@@ -300,7 +294,6 @@ export class ForecastComponent implements OnInit {
         criteriaResultsToBeMapped.forEach(criteriaResults => {
             parentNodes.push(this.createParentNodes(criteriaResults));
         });
-        console.log('tree node ', parentNodes);
         return parentNodes;
     }
 
