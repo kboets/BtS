@@ -32,6 +32,7 @@ export class ResultsComponent implements OnInit {
     selectedResult4TeamAction = this.selectedResult4TeamSubject.asObservable();
 
     selectedRound$: Observable<Round>;
+    selectedNextRound$: Observable<Round>;
     currentRound$ : Observable<Round>;
     nextRound$ : Observable<Round>;
     allRounds$ : Observable<Round[]>;
@@ -50,6 +51,8 @@ export class ResultsComponent implements OnInit {
 
     selectedRound: Round;
     initialCurrentRound: Round;
+    allRounds: Round[];
+    allRoundsAsString: string[];
     columns: any[];
     showLeagues: boolean;
 
@@ -60,6 +63,7 @@ export class ResultsComponent implements OnInit {
     constructor(private resultService: ResultService, private leagueService: LeagueService,
                 private roundService: RoundService, private standingService: StandingService) {
     }
+
 
     ngOnInit(): void {
         this.columns = [
@@ -114,6 +118,7 @@ export class ResultsComponent implements OnInit {
                 })
             );
 
+
         //get the next round
         this.nextRound$ = combineLatest(
             [this.allRounds$, this.currentRound$]
@@ -134,6 +139,7 @@ export class ResultsComponent implements OnInit {
             this.selectedRoundAction
         );
 
+
         //get all results for this league
         this.results$ = this.resultService.getAllResultForLeague(+league_id)
             .pipe(
@@ -144,18 +150,20 @@ export class ResultsComponent implements OnInit {
                 })
             );
 
+
         //results for each selected round
         this.result4Round$ = combineLatest([
             this.results$, this.selectedRound$
         ]).pipe(
-            map(([results, currentRound]) =>
-                results.filter(result => result.round === currentRound.round)
+            map(([results, selectedRound]) =>
+                results.filter(result => result.round === selectedRound.round)
             ),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })
         );
+
 
         //results for the next round
         this.result4NextRound$ = combineLatest([
@@ -199,7 +207,12 @@ export class ResultsComponent implements OnInit {
                 })
             ));
 
-
+        this.allRounds$.subscribe((data) =>{
+            this.allRounds = data;
+            this.allRoundsAsString = _.map(this.allRounds, function (round) {
+                return round.round;
+            })
+        })
 
     }
 
@@ -268,8 +281,16 @@ export class ResultsComponent implements OnInit {
         }
     }
 
-    onRoundSelected(round: Round) {
-        this.selectedRoundSubject.next(round);
+    paginate(event) {
+        this.selectedRoundSubject.next(this.allRounds[event.page]);
+    }
+
+    getCurrentRoundIndex(): number {
+        return this.allRoundsAsString.indexOf(this.initialCurrentRound.round);
+    }
+
+    getNextRoundIndex(): number {
+        return this.allRoundsAsString.indexOf(this.initialCurrentRound.round)+1;
     }
 
     togglePanel() {

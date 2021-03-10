@@ -12,11 +12,9 @@ import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.forecast.LeagueResultsDto;
-import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
-import javassist.runtime.Desc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -24,7 +22,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,7 +50,7 @@ public class ResultService {
         this.leagueMapper = leagueMapper;
     }
 
-    public List<ResultDto> retrieveAllResultsForLeague(Long leagueId) throws Exception {
+    public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, WebUtils.getCurrentSeason());
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
@@ -69,14 +66,29 @@ public class ResultService {
         return allHandledResults;
     }
 
+    public List<ResultDto> retrieveFinishedResultForLeague(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
+        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(league), Sort.by("id").descending());
+        return resultMapper.toResultDtos(resultForLeague);
+    }
+
+    public List<ResultDto> retrieveAllResultForLeague(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
+        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
+        return resultMapper.toResultDtos(resultForLeague);
+    }
+
+
     public List<LeagueResultsDto> retrieveAllFinishedResults(boolean isSelected)  {
         List<LeagueResultsDto> leaguesResults = new ArrayList<>();
         List<League> allLeagues = new ArrayList<>();
+        //get all leagues
         if(isSelected) {
             allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true)));
         } else {
             allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), false)));
         }
+        //get all finished results for each league
         for (League selectedLeague : allLeagues) {
             List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
             LeagueResultsDto leagueResultsDto = new LeagueResultsDto();
@@ -87,11 +99,12 @@ public class ResultService {
         return leaguesResults;
     }
 
-    @Scheduled(cron = "0/15 * * * * ?")
+    // each half hour
+    @Scheduled(cron = "0 0/30 * * * ?")
     public void scheduleResults() throws Exception {
-        List<Long> leagueIds = leagueRepository.findAll().stream().map(league -> league.getId()).collect(Collectors.toList());
+        List<Long> leagueIds = leagueRepository.findAll().stream().map(League::getId).collect(Collectors.toList());
         for (Long leagueId : leagueIds) {
-            this.retrieveAllResultsForLeague(leagueId);
+            this.verifyMissingResults(leagueId);
         }
     }
 

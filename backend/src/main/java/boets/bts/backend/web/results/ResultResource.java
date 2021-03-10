@@ -31,7 +31,7 @@ public class ResultResource {
     public List<ResultDto> retrieveResultForLeague(@PathVariable("id") Long leagueId) {
         logger.info("get result for league  with id {} ", leagueId);
         try {
-            List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(leagueId);
+            List<ResultDto> resultDtos = resultService.retrieveAllResultForLeague(leagueId);
             return resultDtos;
         } catch (Exception e) {
             logger.error("Something went wrong while getting results {} ", e);

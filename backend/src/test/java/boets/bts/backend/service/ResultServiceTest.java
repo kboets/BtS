@@ -1,9 +1,7 @@
 package boets.bts.backend.service;
 
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.results.ResultDto;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -41,7 +39,7 @@ public class ResultServiceTest {
     @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest.xml")
     public void retrieveAllResultsForLeague_givingEmptyResultForRound_shouldReturnResult() throws Exception{
-        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        List<ResultDto> resultDtos = resultService.verifyMissingResults(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
         assertThat(resultDtos.size()).isEqualTo(8);
     }
@@ -49,7 +47,7 @@ public class ResultServiceTest {
     @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest2.xml")
     public void retrieveAllResultsForLeague_givingNonCompleteResultForRound_shouldReturnResult() throws Exception{
-        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        List<ResultDto> resultDtos = resultService.verifyMissingResults(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
         assertThat(resultDtos.size()).isEqualTo(19);
     }
@@ -57,7 +55,7 @@ public class ResultServiceTest {
     @Test
     @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest3.xml")
     public void retrieveAllResultsForLeague_givingResultForMoreRoundMissing_shouldReturnResult() throws Exception{
-        List<ResultDto> resultDtos = resultService.retrieveAllResultsForLeague(2660L);
+        List<ResultDto> resultDtos = resultService.verifyMissingResults(2660L);
         assertThat(resultDtos.isEmpty()).isFalse();
         assertThat(resultDtos.size()).isEqualTo(20);
     }
