@@ -1,10 +1,12 @@
 package boets.bts.backend.service.round;
 
+import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
@@ -30,13 +32,16 @@ public class RoundService {
     private RoundRepository roundRepository;
     private LeagueRepository leagueRepository;
     private CurrentRoundHandlerSelector currentRoundHandlerSelector;
+    private AdminService adminService;
 
-    public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, LeagueRepository leagueRepository, CurrentRoundHandlerSelector currentRoundHandlerSelector) {
+    public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, LeagueRepository leagueRepository, CurrentRoundHandlerSelector currentRoundHandlerSelector,
+                        AdminService adminService) {
         this.roundMapper = roundMapper;
         this.roundClient = roundClient;
         this.roundRepository = roundRepository;
         this.leagueRepository = leagueRepository;
         this.currentRoundHandlerSelector = currentRoundHandlerSelector;
+        this.adminService = adminService;
     }
 
     /**
@@ -74,12 +79,15 @@ public class RoundService {
     }
 
     /**
-     * Cron job each half hour
+     * Cron job each 15 minutes
      */
-    @Scheduled(cron = "* 1/30 * * * *")
+    @Scheduled(cron = "* 0/15 * * * ?")
     public void scheduleRound() {
-        List<League> leagues = leagueRepository.findAll();
-        leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason()));
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
+            List<League> leagues = leagueRepository.findAll();
+            leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+            adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
+        }
     }
 
 }

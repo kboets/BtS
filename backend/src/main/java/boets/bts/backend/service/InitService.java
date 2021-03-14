@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class InitService {
+public class InitService implements AdminChangeListener {
 
     private Logger logger = LoggerFactory.getLogger(InitService.class);
 
@@ -32,14 +32,19 @@ public class InitService {
     private LeagueService leagueService;
     private RoundService roundService;
     private LeagueMapper leagueMapper;
+    private AdminService adminService;
 
-    public InitService(CountryClient countryClient, CountryRepository countryRepository, CountryMapper countryMapper, LeagueService leagueService, RoundService roundService, LeagueMapper leagueMapper) {
+    public InitService(CountryClient countryClient, CountryRepository countryRepository, CountryMapper countryMapper, LeagueService leagueService, RoundService roundService,
+                       LeagueMapper leagueMapper, AdminService adminService) {
         this.countryClient = countryClient;
         this.countryRepository = countryRepository;
         this.countryMapper = countryMapper;
         this.leagueService = leagueService;
         this.roundService = roundService;
         this.leagueMapper = leagueMapper;
+        this.adminService = adminService;
+        this.adminService.addAdminChangeListener(this);
+
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -75,4 +80,9 @@ public class InitService {
         }
     }
 
+    @Override
+    public void onAdminChanged() {
+        logger.info("Season changed -> call the init method");
+        this.initMetaData();
+    }
 }

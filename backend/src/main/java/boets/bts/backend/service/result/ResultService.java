@@ -1,5 +1,6 @@
 package boets.bts.backend.service.result;
 
+import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
@@ -7,6 +8,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.TeamService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
@@ -15,6 +17,7 @@ import boets.bts.backend.web.forecast.LeagueResultsDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
+import liquibase.pro.packaged.E;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -38,9 +41,10 @@ public class ResultService {
     private LeagueRepository leagueRepository;
     private LeagueMapper leagueMapper;
     private TeamService teamService;
+    private AdminService adminService;
 
     public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
-                         LeagueRepository leagueRepository, TeamService teamService, LeagueMapper leagueMapper) {
+                         LeagueRepository leagueRepository, TeamService teamService, LeagueMapper leagueMapper, AdminService adminService) {
         this.resultRepository = resultRepository;
         this.resultHandlerSelector = resultHandlerSelector;
         this.resultMapper = resultMapper;
@@ -48,6 +52,7 @@ public class ResultService {
         this.leagueRepository = leagueRepository;
         this.teamService = teamService;
         this.leagueMapper = leagueMapper;
+        this.adminService = adminService;
     }
 
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
@@ -72,9 +77,13 @@ public class ResultService {
         return resultMapper.toResultDtos(resultForLeague);
     }
 
-    public List<ResultDto> retrieveAllResultForLeague(Long leagueId) {
+    public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
         List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
+        if(resultForLeague.isEmpty() || !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            verifyMissingResults(leagueId);
+            adminService.executeAdmin(AdminKeys.CRON_RESULTS, null);
+        }
         return resultMapper.toResultDtos(resultForLeague);
     }
 
@@ -100,11 +109,14 @@ public class ResultService {
     }
 
     // each half hour
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "* 0/30 * * * ?")
     public void scheduleResults() throws Exception {
-        List<Long> leagueIds = leagueRepository.findAll().stream().map(League::getId).collect(Collectors.toList());
-        for (Long leagueId : leagueIds) {
-            this.verifyMissingResults(leagueId);
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            List<Long> leagueIds = leagueRepository.findAll().stream().map(League::getId).collect(Collectors.toList());
+            for (Long leagueId : leagueIds) {
+                this.verifyMissingResults(leagueId);
+            }
+            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
     }
 

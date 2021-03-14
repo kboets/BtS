@@ -47,13 +47,13 @@ public class LeagueResource {
 
     @PutMapping("/toSelected")
     public List<LeagueDto> updateToSelectedLeagues(@RequestBody List<String> leagueIds) {
-        List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
+        List<Long> ids = leagueIds.stream().map(Long::parseLong).collect(Collectors.toList());
         return leagueService.updateLeagueAvailableOrSelectable(ids, true);
     }
 
     @PutMapping("/toAvailable")
     public List<LeagueDto> updateToAvailableLeagues(@RequestBody List<String> leagueIds) {
-        List<Long> ids = leagueIds.stream().map(idString -> Long.parseLong(idString)).collect(Collectors.toList());
+        List<Long> ids = leagueIds.stream().map(Long::parseLong).collect(Collectors.toList());
         return leagueService.updateLeagueAvailableOrSelectable(ids, false);
     }
 

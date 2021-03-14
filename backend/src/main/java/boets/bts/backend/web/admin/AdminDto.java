@@ -1,28 +1,14 @@
-package boets.bts.backend.domain;
+package boets.bts.backend.web.admin;
 
-import javax.persistence.*;
+import boets.bts.backend.domain.AdminKeys;
+
 import java.util.Date;
 
-@Entity
-@Table(name = "ADMIN")
-public class Admin {
+public class AdminDto {
 
-    @Id
-    @Column(name = "admin_key", nullable = false)
-    @Enumerated(EnumType.STRING)
     private AdminKeys adminKey;
-    @Column
     private String value;
-    @Column(nullable = false)
     private Date date;
-
-
-    public Admin(AdminKeys adminKey) {
-        this.adminKey = adminKey;
-    }
-
-    public Admin() {
-    }
 
     public AdminKeys getAdminKey() {
         return adminKey;
