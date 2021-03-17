@@ -14,7 +14,7 @@
             <column name="value" type="varchar(150)">
                 <constraints nullable="true" />
             </column>
-            <column name="date" type="date">
+            <column name="date" type="datetime">
                 <constraints nullable="false" />
             </column>
         </createTable>

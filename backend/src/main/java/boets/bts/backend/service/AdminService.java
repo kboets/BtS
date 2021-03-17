@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +40,7 @@ public class AdminService {
         Optional<Admin> optionalAdmin = adminRepository.findById(adminKeys);
         if(optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
-            LocalDate adminDate = admin.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            return (adminDate.isEqual(LocalDate.now(ZoneId.systemDefault())));
+            return (admin.getDate().isEqual(LocalDateTime.now(ZoneId.systemDefault())));
         }
         return false;
     }
@@ -48,7 +48,7 @@ public class AdminService {
     public boolean executeAdmin(AdminKeys adminKeys, String value) {
         if(!isTodayExecuted(adminKeys)) {
             Admin adminToBeUpdated = getAdmin(adminKeys);
-            adminToBeUpdated.setDate(new Date());
+            adminToBeUpdated.setDate(LocalDateTime.now());
             adminToBeUpdated.setValue(value);
             adminRepository.save(adminToBeUpdated);
         }
@@ -60,7 +60,7 @@ public class AdminService {
         if(admin.getValue() == null) {
             int season = WebUtils.getCurrentSeason();
             admin.setValue(Integer.toString(season));
-            admin.setDate(new Date());
+            admin.setDate(LocalDateTime.now());
             adminRepository.save(admin);
         }
         return Integer.parseInt(admin.getValue());
@@ -74,7 +74,7 @@ public class AdminService {
     public void setCurrentSeason(int value) {
         Admin admin = getAdmin(AdminKeys.SEASON);
         admin.setValue(Integer.toString(value));
-        admin.setDate(new Date());
+        admin.setDate(LocalDateTime.now());
         adminRepository.save(admin);
         for (AdminChangeListener adminChangeListener: changeListeners) {
             adminChangeListener.onAdminChanged();

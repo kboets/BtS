@@ -1,6 +1,8 @@
 package boets.bts.backend.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -14,7 +16,7 @@ public class Admin {
     @Column
     private String value;
     @Column(nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
 
     public Admin(AdminKeys adminKey) {
@@ -40,11 +42,11 @@ public class Admin {
         this.value = value;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }
