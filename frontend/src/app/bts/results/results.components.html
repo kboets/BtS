@@ -71,10 +71,6 @@
                     <hr>
                     <!-- next matches -->
                     <ng-container *ngIf="result4NextRound$ | async as resultNextRound">
-<!--                        <div class="p-d-flex">-->
-<!--                            <p-paginator class="p-ml-auto p-mt-1" [first]="getNextRoundIndex()" [rows]="1" [totalRecords]="allRounds.length" (onPageChange)="paginate($event)"-->
-<!--                                     [showJumpToPageDropdown]="true" [showPageLinks]="false"> </p-paginator>-->
-<!--                        </div>-->
                         <p-table [value]="resultNextRound" [autoLayout]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: left"  *ngIf="nextRound$ | async as nextRound">

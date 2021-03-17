@@ -93,7 +93,6 @@ export class LeagueService {
     }
 
     private handleHttpError(error: HttpErrorResponse) {
-        //console.log("entering the handleHttpError of league service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;

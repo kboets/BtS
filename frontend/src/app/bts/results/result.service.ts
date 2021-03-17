@@ -3,7 +3,7 @@ import {Observable, Subject, throwError} from "rxjs";
 import {League} from "../domain/league";
 import {catchError, map, shareReplay, tap} from "rxjs/operators";
 import {Round} from "../domain/round";
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Result} from "../domain/result";
 import * as _ from 'underscore';
