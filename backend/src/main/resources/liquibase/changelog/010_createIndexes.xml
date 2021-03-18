@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_index" author="kboets">
+        <createIndex indexName="ix_country" tableName="COUNTRY">
+            <column name="country_code"/>
+        </createIndex>
+        <createIndex indexName="ix_league" tableName="LEAGUE">
+            <column name="league_id"/>
+            <column name="season"/>
+        </createIndex>
+        <createIndex indexName="ix_team" tableName="TEAM">
+            <column name="team_id"/>
+        </createIndex>
+        <createIndex indexName="ix_round" tableName="ROUND">
+            <column name="round"/>
+            <column name="round_id"/>
+        </createIndex>
+        <createIndex indexName="ix_result" tableName="RESULT">
+            <column name="result_id"/>
+            <column name="round"/>
+            <column name="event_date"/>
+        </createIndex>
+        <createIndex indexName="ix_standing" tableName="STANDING">
+            <column name="standing_id"/>
+            <column name="league_id"/>
+            <column name="team_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
