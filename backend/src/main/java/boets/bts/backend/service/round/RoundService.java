@@ -84,6 +84,7 @@ public class RoundService {
     @Scheduled(cron = "* 0/15 * * * ?")
     public void scheduleRound() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
+            logger.info("Scheduler triggered to update rounds ..");
             List<League> leagues = leagueRepository.findAll();
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");

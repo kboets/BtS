@@ -118,6 +118,7 @@ public class ResultService {
     @Scheduled(cron = "* 0/30 * * * ?")
     public void scheduleResults() throws Exception {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            logger.info("Scheduler triggered to update results ..");
             List<Long> leagueIds = leagueRepository.findAll().stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
                 this.verifyMissingResults(leagueId);
