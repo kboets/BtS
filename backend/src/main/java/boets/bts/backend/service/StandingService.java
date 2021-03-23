@@ -34,14 +34,17 @@ public class StandingService {
     private LeagueRepository leagueRepository;
     private TeamRepository teamRepository;
     private RoundService roundService;
+    private AdminService adminService;
 
-    public StandingService(StandingRepository standingRepository, StandingMapper standingMapper, StandingClient standingClient, LeagueRepository leagueRepository, TeamRepository teamRepository, RoundService roundService) {
+    public StandingService(StandingRepository standingRepository, StandingMapper standingMapper, StandingClient standingClient, LeagueRepository leagueRepository,
+                           TeamRepository teamRepository, RoundService roundService, AdminService adminService) {
         this.standingRepository = standingRepository;
         this.standingMapper = standingMapper;
         this.standingClient = standingClient;
         this.leagueRepository = leagueRepository;
         this.teamRepository = teamRepository;
         this.roundService = roundService;
+        this.adminService = adminService;
     }
 
     public List<StandingDto> getStandingsForLeague(Long leagueId) {
@@ -58,7 +61,7 @@ public class StandingService {
                     .collect(Collectors.toList());
             return standingMapper.toStandingDtos(standingRepository.saveAll(expandedStandings));
         }
-        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, WebUtils.getCurrentSeason());
+        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         if(!currentRound.getRound().equals(standings.get(0).getRound())) {
             List<StandingDto> standingDtos = standingClient.getLatestStandForLeague(leagueId.toString()).orElseGet(()-> Collections.emptyList());
             List<Standing> clientStandings = standingMapper.toStandings(standingDtos);

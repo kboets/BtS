@@ -8,6 +8,7 @@ import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultDto;
@@ -29,8 +30,9 @@ public class CurrentRoundMissingResultHandler extends AbstractResultHandler {
 
     private Logger logger = LoggerFactory.getLogger(CurrentRoundMissingResultHandler.class);
 
-    public CurrentRoundMissingResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
-        super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository);
+    public CurrentRoundMissingResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository,
+                                            RoundService roundService, RoundRepository roundRepository, AdminService adminService) {
+        super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository, adminService);
     }
 
 

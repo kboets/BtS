@@ -4,6 +4,7 @@ import boets.bts.backend.domain.Admin;
 import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.repository.admin.AdminRepository;
 import boets.bts.backend.web.WebUtils;
+import boets.bts.backend.web.admin.AdminDto;
 import liquibase.pro.packaged.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,23 +73,25 @@ public class AdminService {
         return currentSeason != WebUtils.getCurrentSeason();
     }
 
-    public void setCurrentSeason(int value) {
-        Admin admin = getAdmin(AdminKeys.SEASON);
-        admin.setValue(Integer.toString(value));
-        admin.setDate(LocalDateTime.now());
-        adminRepository.save(admin);
-        for (AdminChangeListener adminChangeListener: changeListeners) {
-            adminChangeListener.onAdminChanged();
-        }
-    }
-
     public List<Admin> getAllAdminInfo() {
         return adminRepository.findAll();
+    }
+
+    public Admin updateAdmin(Admin admin) {
+        admin.setDate(LocalDateTime.now());
+        if(admin.getAdminKey().equals(AdminKeys.SEASON)) {
+            for (AdminChangeListener adminChangeListener: changeListeners) {
+                adminChangeListener.onAdminChanged();
+            }
+        }
+        return adminRepository.save(admin);
     }
 
     private Admin getAdmin(AdminKeys adminKeys) {
         Optional<Admin> optionalAdmin = adminRepository.findById(adminKeys);
         return optionalAdmin.orElseGet(() -> new Admin(adminKeys));
     }
+
+
 
 }

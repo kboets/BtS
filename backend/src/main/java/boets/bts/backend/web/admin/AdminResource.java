@@ -1,5 +1,6 @@
 package boets.bts.backend.web.admin;
 
+import boets.bts.backend.domain.Admin;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.result.ResultService;
 import org.slf4j.Logger;
@@ -33,4 +34,11 @@ public class AdminResource {
     public boolean removeAllResultForLeague(@RequestBody String leagueId) {
         return resultService.removeAllResultsForLeague(Long.parseLong(leagueId));
     }
+
+    @PutMapping("/update")
+    public AdminDto updateAdmin(@RequestBody AdminDto adminDto) {
+        Admin toBeUpdated = adminMapper.toAdmin(adminDto);
+        return adminMapper.toAdminDto(adminService.updateAdmin(toBeUpdated));
+    }
+
 }

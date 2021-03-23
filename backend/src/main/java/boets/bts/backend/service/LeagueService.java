@@ -36,16 +36,18 @@ public class LeagueService  {
     private final TeamService teamService;
     private final LeagueBettingDefinerFactory leagueBettingDefinerFactory;
     private final RoundService roundService;
+    private final AdminService adminService;
 
 
     public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService
-            , LeagueBettingDefinerFactory leagueBettingDefinerFactory, RoundService roundService) {
+            , LeagueBettingDefinerFactory leagueBettingDefinerFactory, RoundService roundService, AdminService adminService) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
         this.teamService = teamService;
         this.leagueBettingDefinerFactory = leagueBettingDefinerFactory;
         this.roundService = roundService;
+        this.adminService = adminService;
     }
 
     public Optional<LeagueDto> getLeagueDtoById(Long id) throws Exception {
@@ -102,7 +104,7 @@ public class LeagueService  {
     }
 
     private List<LeagueDto> getAndVerifyPersistedLeaguesCurrentSeason() {
-        int currentSeason = WebUtils.getCurrentSeason();
+        int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty()) {
             return leagueMapper.toLeagueDtoList(this.retrieveAndFilterAndPersistLeagues(currentSeason));

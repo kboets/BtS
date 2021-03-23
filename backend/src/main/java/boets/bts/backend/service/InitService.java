@@ -68,7 +68,11 @@ public class InitService implements AdminChangeListener {
     }
 
     public void initCurrentRounds(List<League> leagues) {
-        leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason()));
+        if(! adminService.isHistoricData()) {
+            leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+        } else {
+            leagues.forEach(league ->  roundService.setCurrentRoundForHistoricData(league.getId()));
+        }
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {

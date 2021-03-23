@@ -42,6 +42,17 @@ public class ResultSpecs {
         };
     }
 
+    public static Specification<Result> allFinishedResultsCurrentRoundIncluded(League league, Round round) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("round"), round.getRound()));
+
+            return predicate;
+        };
+    }
+
     public static Specification<Result> getAllFinishedResult(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);

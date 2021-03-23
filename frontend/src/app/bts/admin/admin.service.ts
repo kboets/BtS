@@ -33,4 +33,14 @@ export class AdminService {
             })
         });
     }
+
+    updateAdmin(admin: Admin): Observable<Admin> {
+        console.log('update admin ', admin);
+        return this.http.put<Admin>(`/btsapi/api/admin/update`, admin, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        });
+    }
+
 }

@@ -56,7 +56,7 @@ public class ResultService {
     }
 
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
-        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, WebUtils.getCurrentSeason());
+        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         List<ResultDto> allHandledResults = resultMapper.toResultDtos(allResults);
@@ -71,16 +71,10 @@ public class ResultService {
         return allHandledResults;
     }
 
-    public List<ResultDto> retrieveFinishedResultForLeague(Long leagueId) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
-        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(league), Sort.by("id").descending());
-        return resultMapper.toResultDtos(resultForLeague);
-    }
-
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
         List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
-        if(resultForLeague.isEmpty() || !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+        if(resultForLeague.isEmpty() || !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
             verifyMissingResults(leagueId);
             adminService.executeAdmin(AdminKeys.CRON_RESULTS, null);
         }
@@ -93,13 +87,19 @@ public class ResultService {
         List<League> allLeagues = new ArrayList<>();
         //get all leagues
         if(isSelected) {
-            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true)));
+            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(adminService.getCurrentSeason(), true)));
         } else {
-            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), false)));
+            allLeagues.addAll(leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(adminService.getCurrentSeason(), false)));
         }
         //get all finished results for each league
         for (League selectedLeague : allLeagues) {
-            List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
+            List<Result> resultForLeague;
+            if(! adminService.isHistoricData()) {
+                resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
+            } else {
+                Round currentRound = roundService.getCurrentRoundForLeague(selectedLeague.getId(), adminService.getCurrentSeason());
+                resultForLeague =  resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(selectedLeague, currentRound));
+            }
             LeagueResultsDto leagueResultsDto = new LeagueResultsDto();
             leagueResultsDto.setResults(resultMapper.toResultDtos(resultForLeague));
             leagueResultsDto.setLeague(leagueMapper.toLeagueDto(selectedLeague));

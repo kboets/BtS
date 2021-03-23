@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,7 @@ public class RoundService {
             rounds.forEach(round -> round.setLeague(league));
             league.getRounds().addAll(rounds);
             roundRepository.saveAll(rounds);
+            //roundRepository.flush();
         }
     }
 
@@ -69,7 +71,7 @@ public class RoundService {
             throw new NotFoundException("Could not retrieve a current round handler");
         }
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerOptional.get();
-        return currentRoundHandler.save(currentPersistedRound.isPresent()?currentPersistedRound.get():null, league, season);
+        return currentRoundHandler.save(currentPersistedRound.orElse(null), league, season);
 
     }
 
@@ -78,15 +80,32 @@ public class RoundService {
         return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
     }
 
+    public void setCurrentRoundForHistoricData(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        List<Round> rounds = league.getRounds();
+        if(rounds.isEmpty()) {
+            this.updateLeagueWithRounds(league);
+        }
+        //take random round
+        int random = rounds.size() - 10;
+        Round round = rounds.get(random);
+        round.setCurrentDate(LocalDate.now());
+        round.setCurrent(true);
+        roundRepository.save(round);
+    }
+
     /**
      * Cron job each 15 minutes
      */
     @Scheduled(cron = "* 0/15 * * * ?")
     public void scheduleRound() {
+        logger.info("Scheduler triggered to update rounds ..");
+        List<League> leagues = leagueRepository.findAll();
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
-            logger.info("Scheduler triggered to update rounds ..");
-            List<League> leagues = leagueRepository.findAll();
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+            adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
+        } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
+            leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId()));
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
         }
     }

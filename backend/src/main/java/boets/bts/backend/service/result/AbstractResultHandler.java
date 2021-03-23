@@ -6,6 +6,7 @@ import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
 import boets.bts.backend.repository.team.TeamSpecs;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.results.IResultClient;
@@ -26,8 +27,10 @@ public abstract class AbstractResultHandler implements ResultHandler {
     protected LeagueRepository leagueRepository;
     protected RoundService roundService;
     protected RoundRepository roundRepository;
+    protected AdminService adminService;
 
-    public AbstractResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
+    public AbstractResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository,
+                                 RoundService roundService, RoundRepository roundRepository, AdminService adminService) {
         this.resultRepository = resultRepository;
         this.resultClient = resultClient;
         this.resultMapper = resultMapper;
@@ -35,6 +38,7 @@ public abstract class AbstractResultHandler implements ResultHandler {
         this.leagueRepository = leagueRepository;
         this.roundService = roundService;
         this.roundRepository = roundRepository;
+        this.adminService = adminService;
     }
 
     protected List<Result> expandAndSaveResult(List<Result> resultList, Long leagueId) {

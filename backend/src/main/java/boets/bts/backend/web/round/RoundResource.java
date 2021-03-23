@@ -1,6 +1,7 @@
 package boets.bts.backend.web.round;
 
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
@@ -23,15 +24,17 @@ public class RoundResource {
 
     private RoundService roundService;
     private RoundMapper roundMapper;
+    private AdminService adminService;
 
-    public RoundResource(RoundService roundService, RoundMapper roundMapper) {
+    public RoundResource(RoundService roundService, RoundMapper roundMapper, AdminService adminService) {
         this.roundService = roundService;
         this.roundMapper = roundMapper;
+        this.adminService = adminService;
     }
 
     @GetMapping("/current/{league_id}")
     public RoundDto getCurrentRoundForLeague(@PathVariable("league_id") Long league_id) {
-        Round currentRound = roundService.getCurrentRoundForLeague(league_id, WebUtils.getCurrentSeason());
+        Round currentRound = roundService.getCurrentRoundForLeague(league_id, adminService.getCurrentSeason());
         return roundMapper.toRoundDto(currentRound);
     }
 

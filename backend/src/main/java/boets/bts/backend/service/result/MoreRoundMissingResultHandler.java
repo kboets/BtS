@@ -6,6 +6,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
+import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.results.IResultClient;
@@ -26,8 +27,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class MoreRoundMissingResultHandler extends AbstractResultHandler {
 
-    public MoreRoundMissingResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository) {
-        super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository);
+    public MoreRoundMissingResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper,
+                                         TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository, AdminService adminService) {
+        super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository, adminService);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class MoreRoundMissingResultHandler extends AbstractResultHandler {
 
     @Override
     public List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception {
-        List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, WebUtils.getCurrentSeason()).orElseGet(Collections::emptyList);
+        List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<ResultDto> allNonFinishedResultDtos = resultMapper.toResultDtos(allNonFinishedResult);
         List<Result> toBeHandled = resultMapper.toResults(super.verifyAndUpdate(allNonFinishedResultDtos, resultDtos));
         if(!toBeHandled.isEmpty()) {
