@@ -85,16 +85,6 @@ public class LeagueService  {
                 }
             }
         }
-        //check rounds
-        if(leaguesCurrentSeason.stream().anyMatch(leagueDto -> leagueDto.getRoundDtos().isEmpty())) {
-            isChanged = true;
-            List<League> leaguesToBeUpdates = leagueMapper.toLeagues(leaguesCurrentSeason);
-            for(League leagueOfList: leaguesToBeUpdates) {
-                if(leagueOfList.getRounds().isEmpty()) {
-                    roundService.updateLeagueWithRounds(leagueMap.getOrDefault(leagueOfList.getId(), leagueOfList));
-                }
-            }
-        }
         if(isChanged) {
             //List<League> updatedLeagues = leagueRepository.saveAll(leagueMap.values());
             List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(new ArrayList<>(leagueMap.values()));

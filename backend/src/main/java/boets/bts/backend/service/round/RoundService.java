@@ -64,6 +64,9 @@ public class RoundService {
 
     public Round getCurrentRoundForLeague(Long leagueId, int season)  {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        if(league.getRounds().isEmpty()) {
+            this.updateLeagueWithRounds(league);
+        }
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
         if(!currentRoundHandlerOptional.isPresent()) {
