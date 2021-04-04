@@ -56,7 +56,7 @@ public class StandingService {
             List<Standing> expandedStandings = standings.stream()
                     .peek(standing -> standing.setLeague(leagueRepository.findById(leagueId)
                             .orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s", standing.getLeague().getId())))))
-                    .peek(standing -> standing.setTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(standing.getTeam().getTeamId()))
+                    .peek(standing -> standing.setTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(standing.getTeam().getTeamId(), league))
                             .orElseThrow(() -> new NotFoundException(String.format("Could not find team with id %s", standing.getTeam().getTeamId())))))
                     .collect(Collectors.toList());
             return standingMapper.toStandingDtos(standingRepository.saveAll(expandedStandings));

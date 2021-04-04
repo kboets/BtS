@@ -79,12 +79,13 @@ public class AdminService {
 
     public Admin updateAdmin(Admin admin) {
         admin.setDate(LocalDateTime.now());
+        admin = adminRepository.save(admin);
         if(admin.getAdminKey().equals(AdminKeys.SEASON)) {
             for (AdminChangeListener adminChangeListener: changeListeners) {
                 adminChangeListener.onAdminChanged();
             }
         }
-        return adminRepository.save(admin);
+        return admin;
     }
 
     private Admin getAdmin(AdminKeys adminKeys) {

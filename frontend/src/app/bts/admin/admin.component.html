@@ -8,6 +8,9 @@
 <ng-container *ngIf="seasonUpdated$ | async as seizoenUpdate">
     <p-message severity="info" text="Het seizoen werd aangepast: huidig seizoen : {{seizoenUpdate.value}}."></p-message>
 </ng-container>
+<ng-container *ngIf="selectedRoundUpdated$ | async as roundUpdated">
+    <p-message severity="info" text="De huidige speelronde voor {{selectedLeagueRound.name}} werd aangepast naar speelronde {{roundUpdated.playRound}}"></p-message>
+</ng-container>
 
 <h5>Admin pagina</h5>
 <p-accordion [multiple]="true">
@@ -32,6 +35,7 @@
         </ng-container>
     </p-accordionTab>
     <p-accordionTab header="Verwijder of wijzig gegevens">
+        <!-- verwijder resulaten -->
         <div class="p-grid">
             <div class="p-col-2">
                 <div class="box">Verwijder resultaten</div>
@@ -51,21 +55,59 @@
         <div class="p-grid">
             <div class="p-col-2"></div>
         </div>
+        <!-- wijzig seizoen -->
         <div class="p-grid">
             <div class="p-col-2">
                 <div class="box">Wijzig seizoen</div>
             </div>
             <div class="p-col-2">
+                <div class="box">
+                    huidig seizoen : {{selectedSeason}}
+                </div>
+            </div>
+            <div class="p-col-2">
                 <ng-container *ngIf="allSeasons">
                     <div class="box">
-                        <p-dropdown [options]="allSeasons" [(ngModel)]="selectedSeason" optionLabel="value"  placeholder="Kies een seizoen"></p-dropdown>
+                        <p-dropdown [options]="allSeasons" [(ngModel)]="selectedSeasonAdmin" optionLabel="value" placeholder="Kies een seizoen"></p-dropdown>
                     </div>
                 </ng-container>
             </div>
-            <div class="p-col-2" *ngIf="selectedSeason">
+            <div class="p-col-2" *ngIf="selectedSeasonAdmin">
                 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
                 <div class="box"><button pButton type="button" label="Verander seizoen" (click)="updateSeason()" style="margin-right: .5rem"></button></div>
             </div>
         </div>
+        <div class="p-grid">
+            <div class="p-col-2"></div>
+        </div>
+        <!-- wijzig huidige speeldag -->
+        <div class="p-grid">
+            <div class="p-col-2">
+                <div class="box">Wijzig huidige speeldag</div>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="allLeagues$ | async as leagues">
+                    <div class="box">
+                        <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeagueRound" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="p-col-2" *ngIf="selectedLeagueRound">
+                <div class="box">
+                    huidige ronde : {{getCurrentRound().playRound}}
+                </div>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="selectedLeagueRound as league">
+                    <div class="box">
+                        <p-dropdown [options]="league.roundDtos" dataKey="round" [(ngModel)]="selectedRound" optionLabel="round"  placeholder="Kies een speelronde"></p-dropdown>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="p-col-2" *ngIf="selectedRound">
+                <div class="box"><button pButton type="button" label="Verander ronde" (click)="updateRound()" style="margin-right: .5rem"></button></div>
+            </div>
+        </div>
     </p-accordionTab>
+
 </p-accordion>

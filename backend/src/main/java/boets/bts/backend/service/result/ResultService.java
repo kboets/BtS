@@ -59,16 +59,16 @@ public class ResultService {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        List<ResultDto> allHandledResults = resultMapper.toResultDtos(allResults);
+        List<ResultDto> allResultDtos = resultMapper.toResultDtos(allResults);
         List<Result> allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound));
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults, allNonFinishedResults, currentRound.getRound());
         if(resultOptionalHandler.isPresent()) {
-            logger.info("Not all results are found for the current league {} ", leagueId);
+            logger.info("Not all results are found for the current league {} and current round {}", league.getName(), currentRound.getRound());
             ResultHandler resultHandler = resultOptionalHandler.get();
             List<Result> results = resultHandler.getResult(leagueId, allNonFinishedResults, currentRound.getRound());
-            allHandledResults.addAll(resultMapper.toResultDtos(results));
+            allResultDtos.addAll(resultMapper.toResultDtos(results));
         }
-        return allHandledResults;
+        return allResultDtos;
     }
 
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
@@ -108,14 +108,15 @@ public class ResultService {
         return leaguesResults;
     }
 
-    public boolean removeAllResultsForLeague (Long leagueId) {
+    public boolean removeAllResultsForLeague (Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s ",leagueId)));
         resultRepository.deleteByLeague(league);
+        verifyMissingResults(leagueId);
         return true;
     }
 
-    // each half hour
-    @Scheduled(cron = "* 0/30 * * * ?")
+    // each 15 minutes
+    @Scheduled(cron = "* 0/15 * * * ?")
     public void scheduleResults() throws Exception {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
             logger.info("Scheduler triggered to update results ..");

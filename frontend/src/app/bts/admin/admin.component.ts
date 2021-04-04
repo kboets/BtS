@@ -8,6 +8,9 @@ import {LeagueService} from "../league/league.service";
 import {League} from "../domain/league";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {AdminKeys} from "../domain/adminKeys";
+import * as _ from 'underscore';
+import {Round} from "../domain/round";
+import {RoundService} from "../round/round.service";
 
 @Component({
     selector: 'bts-admin',
@@ -17,21 +20,25 @@ import {AdminKeys} from "../domain/adminKeys";
 export class AdminComponent implements OnInit {
 
     selectedLeague: League;
-    selectedSeason: Admin;
+    selectedLeagueRound: League;
+    selectedSeasonAdmin: Admin;
+    selectedRound: Round;
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
     adminDataList$: Observable<Admin[]>;
     allLeagues$: Observable<League[]>;
     allSeasons: Admin[] = [];
     currentSeason: number;
+    selectedSeason: number;
 
     resultDeleted$: Observable<boolean>;
     seasonUpdated$: Observable<Admin>;
-
+    selectedRoundUpdated$: Observable<Round>;
 
     columns: any[];
 
-    constructor(private adminService: AdminService, private leagueService: LeagueService, private confirmationService: ConfirmationService) {}
+    constructor(private adminService: AdminService, private leagueService: LeagueService,
+                private confirmationService: ConfirmationService, private roundService: RoundService) {}
 
 
     ngOnInit(): void {
@@ -41,20 +48,24 @@ export class AdminComponent implements OnInit {
             { field: 'date', header: 'Datum', data: true , format: `dd/MM/yyyy HH:mm` }
         ];
 
+
+        //retrieve the current season as number.
+        this.adminService.currentSeason$.subscribe((data) => {
+            this.currentSeason = data;
+        });
+
+        // retrieve selected admin season from DB
         this.adminService.adminDatas$
             .pipe(
                 map(admins => admins.filter(admin => admin.adminKey === AdminKeys.SEASON))
             )
             .subscribe((data) => {
-                this.allSeasons = data;
-                let admin = {
-                    "adminKey": AdminKeys.SEASON,
-                    "value": "2019",
-                    "date": new Date()
-                }
-                this.allSeasons.push(admin);
+                this.selectedSeason = +data[0].value;
+                this.setCurrentAndPreviousSeason(data[0]);
+                this.adminService.historicDataNeedsUpdate$.next(this.selectedSeason);
             });
 
+        //all admin data
         this.adminDataList$ = this.adminService.adminDatas$
             .pipe(
                 catchError(err => {
@@ -62,6 +73,7 @@ export class AdminComponent implements OnInit {
                     return EMPTY;
                 })
             );
+
         this.allLeagues$ = this.leagueService.leagues$
             .pipe(
                 catchError(err => {
@@ -69,6 +81,27 @@ export class AdminComponent implements OnInit {
                     return EMPTY;
                 })
             );
+    }
+
+    private setCurrentAndPreviousSeason(adminDBSeason: Admin) {
+        this.allSeasons = [];
+        if (+adminDBSeason.value  === this.currentSeason) {
+            const previousSeason = this.currentSeason - 1;
+            let adminPreviousSeason = {
+                "adminKey": AdminKeys.SEASON,
+                "value": previousSeason.toString(),
+                "date": new Date()
+            }
+            this.allSeasons.push(adminPreviousSeason);
+        } else {
+            let adminNextSeason = {
+                "adminKey": AdminKeys.SEASON,
+                "value": this.currentSeason.toString(),
+                "date": new Date()
+            }
+            this.allSeasons.push(adminNextSeason);
+        }
+        this.allSeasons.push(adminDBSeason);
     }
 
     deleteResults() {
@@ -84,16 +117,27 @@ export class AdminComponent implements OnInit {
     }
 
     updateSeason() {
-        console.log('selected season ', this.selectedSeason.value);
         this.confirmationService.confirm({
             message: 'U staat op het punt om het seizoen te veranderen, bent u zeker ?',
             header: 'Bevestiging',
             icon: 'pi pi-info-circle',
             accept: () => {
-                this.seasonUpdated$ = this.adminService.updateAdmin(this.selectedSeason);
+                this.seasonUpdated$ = this.adminService.updateAdmin(this.selectedSeasonAdmin);
+                this.adminService.historicDataNeedsUpdate$.next(+this.selectedSeasonAdmin.value);
             }
 
         });
+    }
+
+    updateRound() {
+        this.selectedRoundUpdated$ = this.roundService.updateCurrentRound(+this.selectedRound.roundId, +this.selectedLeagueRound.league_id);
+    }
+
+    getCurrentRound(): Round {
+        let rounds = this.selectedLeagueRound.roundDtos;
+        let currentRound= _.findWhere(rounds , {"current": true});
+        return currentRound;
+
     }
 
 }

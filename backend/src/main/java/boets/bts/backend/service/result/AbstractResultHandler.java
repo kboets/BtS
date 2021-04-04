@@ -1,5 +1,6 @@
 package boets.bts.backend.service.result;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
@@ -42,13 +43,14 @@ public abstract class AbstractResultHandler implements ResultHandler {
     }
 
     protected List<Result> expandAndSaveResult(List<Result> resultList, Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find League with id %s",leagueId)));
         List<Result> resultWithObjects = resultList.stream()
-                .peek(result -> result.setAwayTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(result.getAwayTeam().getTeamId()))
+                .peek(result -> result.setAwayTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(result.getAwayTeam().getTeamId(), league))
                         .orElseThrow(() -> new NotFoundException(String.format("Could not find team with id %s", result.getAwayTeam().getTeamId())))))
-                .peek(result -> result.setHomeTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(result.getHomeTeam().getTeamId()))
+                .peek(result -> result.setHomeTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(result.getHomeTeam().getTeamId(), league))
                         .orElseThrow(() -> new NotFoundException(String.format("Could not find team with id %s", result.getHomeTeam().getTeamId())))))
                 .peek(result -> result.setLeague(leagueRepository.findById(leagueId)
-                        .orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s", result.getLeague().getId())))))
+                        .orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s", leagueId)))))
                 .collect(Collectors.toList());
 
         return resultRepository.saveAll(resultWithObjects);

@@ -3,9 +3,7 @@ package boets.bts.backend.web.round;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
-import boets.bts.backend.web.exception.NotFoundException;
-import boets.bts.backend.web.standing.StandingResource;
+import boets.bts.backend.web.league.LeagueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +23,13 @@ public class RoundResource {
     private RoundService roundService;
     private RoundMapper roundMapper;
     private AdminService adminService;
+    private LeagueMapper leagueMapper;
 
-    public RoundResource(RoundService roundService, RoundMapper roundMapper, AdminService adminService) {
+    public RoundResource(RoundService roundService, RoundMapper roundMapper, AdminService adminService, LeagueMapper leagueMapper) {
         this.roundService = roundService;
         this.roundMapper = roundMapper;
         this.adminService = adminService;
+        this.leagueMapper = leagueMapper;
     }
 
     @GetMapping("/current/{league_id}")
@@ -42,7 +42,13 @@ public class RoundResource {
     public List<RoundDto> getRoundsForLeague(@PathVariable("league_id") Long league_id) {
         List<Round> rounds = roundService.getAllRoundsForLeague(league_id);
         List<RoundDto> roundDtos = roundMapper.toRoundDtos(rounds);
-        roundDtos.sort(Comparator.comparing(roundDto -> roundDto.getPlayRound()));
+        roundDtos.sort(Comparator.comparing(RoundDto::getPlayRound));
         return roundDtos;
     }
+
+    @GetMapping("/update/{league_id}/{round_id}")
+    public RoundDto updateCurrentRounds(@PathVariable("league_id") Long league_id, @PathVariable("round_id") Long roundId) {
+        return roundMapper.toRoundDto(roundService.updateCurrentRound(roundId, league_id));
+    }
+
 }

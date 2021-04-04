@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {BehaviorSubject, Observable, Subject, throwError} from "rxjs";
 import {Round} from "../domain/round";
 import {catchError, shareReplay, switchMap, tap} from "rxjs/operators";
@@ -45,6 +45,15 @@ export class RoundService {
 
     selectedLeagueChanged(selectedLeagueId : number) {
         this.leagueSelectedSubject.next(selectedLeagueId);
+    }
+
+    updateCurrentRound(roundId: number, leagueId: number): Observable<Round> {
+        console.log('in the update round', leagueId, roundId);
+        return this.http.get<Round>(`/btsapi/api/round/update/${leagueId}/${roundId}`)
+            .pipe(
+                shareReplay(1),
+                catchError(this.handleHttpError)
+            );
     }
 
     private handleHttpError(error: HttpErrorResponse) {

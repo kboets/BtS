@@ -8,9 +8,12 @@
         <a id="options-menu-button" href="#" (click)="toggleTopMenu($event)">
             <span class="pi pi-ellipsis-h"></span>
         </a>
+        <ng-container *ngIf="isHistoricData$ | async as isHistoricData">
+            <p-message severity="warm" text="Opgelet, data zijn in verleden"></p-message>
+        </ng-container>
         <div id="topbar-icons" class="animated" [ngClass]="{'topbar-icons-visible flipInX':topMenuActive,'flipOutX':topMenuLeaving}">
             <span class="topbar-search" (click)="onSearchClick()">
-                <input type="text" placeholder="Search" />
+                <input type="text" placeholder="Search kurt" />
                 <span class="topbar-search-icon pi pi-search"></span>
             </span>
             <a href="#">

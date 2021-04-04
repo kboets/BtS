@@ -58,7 +58,6 @@ public class RoundService {
             rounds.forEach(round -> round.setLeague(league));
             league.getRounds().addAll(rounds);
             roundRepository.saveAll(rounds);
-            //roundRepository.flush();
         }
     }
 
@@ -83,18 +82,40 @@ public class RoundService {
         return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
     }
 
-    public void setCurrentRoundForHistoricData(Long leagueId) {
+    public void setCurrentRoundForHistoricData(Long leagueId, int season) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         List<Round> rounds = league.getRounds();
         if(rounds.isEmpty()) {
             this.updateLeagueWithRounds(league);
+            rounds = league.getRounds();
         }
-        //take random round
-        int random = rounds.size() - 10;
-        Round round = rounds.get(random);
-        round.setCurrentDate(LocalDate.now());
-        round.setCurrent(true);
+        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
+        Round round;
+        if(!currentPersistedRound.isPresent()) {
+            //take random round
+            int random = rounds.size() - 10;
+            round = rounds.get(random);
+            round.setCurrentDate(LocalDate.now());
+            round.setCurrent(true);
+        } else {
+            round = currentPersistedRound.get();
+            round.setCurrentDate(LocalDate.now());
+        }
         roundRepository.save(round);
+    }
+
+    public Round updateCurrentRound(Long roundId, Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        Round newCurrentRound = roundRepository.findById(roundId).orElseThrow(() -> new NotFoundException(String.format("Could not found round with id %s", roundId)));
+        Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, league.getSeason()));
+        if(currentPersistedRound.isPresent()) {
+            Round previousCurrent = currentPersistedRound.get();
+            previousCurrent.setCurrent(false);
+            roundRepository.save(previousCurrent);
+        }
+        newCurrentRound.setCurrent(true);
+        newCurrentRound.setCurrentDate(LocalDate.now());
+        return roundRepository.save(newCurrentRound);
     }
 
     /**
@@ -108,7 +129,7 @@ public class RoundService {
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
-            leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId()));
+            leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
         }
     }

@@ -71,7 +71,7 @@ public class InitService implements AdminChangeListener {
         if(! adminService.isHistoricData()) {
             leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
         } else {
-            leagues.forEach(league ->  roundService.setCurrentRoundForHistoricData(league.getId()));
+            leagues.forEach(league ->  roundService.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
         }
     }
 

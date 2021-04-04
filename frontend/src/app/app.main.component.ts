@@ -2,6 +2,9 @@ import {Component, AfterViewInit, OnDestroy, ViewChild, Renderer2, OnInit} from 
 import {trigger, state, style, transition, animate} from '@angular/animations';
 import { PrimeNGConfig } from 'primeng/api';
 import { AppComponent } from './app.component';
+import {AdminService} from "./bts/admin/admin.service";
+import {catchError} from "rxjs/operators";
+import {EMPTY} from "rxjs";
 
 @Component({
     selector: 'app-main',
@@ -41,11 +44,18 @@ export class AppMainComponent implements AfterViewInit, OnDestroy, OnInit {
 
     configClick: boolean;
 
-    constructor(public renderer: Renderer2, private primengConfig: PrimeNGConfig, public app: AppComponent) {}
+    constructor(public renderer: Renderer2, private primengConfig: PrimeNGConfig, public app: AppComponent, private adminService: AdminService) {}
 
     ngOnInit() {
         this.primengConfig.ripple = true;
     }
+
+    isHistoricData$ = this.adminService.isHistoricData$.pipe(
+        catchError(err => {
+            return EMPTY;
+        })
+    )
+
 
     ngAfterViewInit() {
         // hides the overlay menu and top menu if outside is clicked

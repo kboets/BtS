@@ -6,6 +6,9 @@ import {ProductService} from '../service/productservice';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import {AdminService} from "../../bts/admin/admin.service";
+import {map} from "rxjs/operators";
+import {AdminKeys} from "../../bts/domain/adminKeys";
 
 @Component({
     templateUrl: './dashboard.component.html'
@@ -26,7 +29,9 @@ export class DashboardDemoComponent implements OnInit {
 
     fullcalendarOptions: any;
 
-    constructor(private productService: ProductService, private eventService: EventService) {
+    currentSeason: number;
+
+    constructor(private productService: ProductService, private eventService: EventService, private adminService: AdminService) {
     }
 
     ngOnInit() {
@@ -77,5 +82,19 @@ export class DashboardDemoComponent implements OnInit {
                 right: ''
             }
         };
+
+        //retrieve the current season as number.
+        this.adminService.currentSeason$.subscribe((data) => {
+            this.currentSeason = data;
+        });
+
+        // retrieve selected admin season from DB
+        this.adminService.adminDatas$
+            .pipe(
+                map(admins => admins.filter(admin => admin.adminKey === AdminKeys.SEASON))
+            )
+            .subscribe((data) => {
+                this.adminService.historicDataNeedsUpdate$.next(+data[0].value);
+            });
     }
 }

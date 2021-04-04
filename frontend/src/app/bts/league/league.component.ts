@@ -8,6 +8,7 @@ import * as _ from 'underscore';
 import {element} from "protractor";
 import {League} from "../domain/league";
 import {CountryService} from "./country.service";
+import {AdminService} from "../admin/admin.service";
 
 @Component({
     selector: 'bts-league',
@@ -22,7 +23,8 @@ export class LeagueComponent implements OnInit {
     currentLeagues: League[];
     availableLeagues: string[];
 
-    constructor(private leagueService : LeagueService, private countryService : CountryService, private fb: FormBuilder) {
+    constructor(private leagueService : LeagueService, private countryService : CountryService,
+                private fb: FormBuilder) {
     }
 
     ngOnInit(): void {

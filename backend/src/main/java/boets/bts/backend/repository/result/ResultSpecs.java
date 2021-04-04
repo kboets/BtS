@@ -46,7 +46,7 @@ public class ResultSpecs {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
             predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.equal(
+                    predicate, criteriaBuilder.lessThanOrEqualTo(
                             root.get("round"), round.getRound()));
 
             return predicate;
