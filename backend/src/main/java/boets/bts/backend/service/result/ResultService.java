@@ -115,16 +115,17 @@ public class ResultService {
         return true;
     }
 
-    // each 15 minutes
-    @Scheduled(cron = "* 0/15 * * * ?")
+    // each 30 minutes
+    @Scheduled(cron = "15 0/30 * * * ?")
     public void scheduleResults() throws Exception {
+        logger.info("Scheduler triggered to update results ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            logger.info("Scheduler triggered to update results ..");
+            logger.info("Running cron job to update results ..");
+            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
             List<Long> leagueIds = leagueRepository.findAll().stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
                 this.verifyMissingResults(leagueId);
             }
-            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
     }
 
