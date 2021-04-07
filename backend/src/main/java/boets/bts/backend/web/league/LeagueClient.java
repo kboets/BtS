@@ -1,5 +1,7 @@
 package boets.bts.backend.web.league;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
 import okhttp3.OkHttpClient;
@@ -16,15 +18,19 @@ import java.util.List;
 
 @Service
 @Profile("!mock")
-public class LeagueClient implements ILeagueClient {
+public class LeagueClient extends ParentClient implements ILeagueClient {
 
     private Logger logger = LoggerFactory.getLogger(LeagueClient.class);
+
+    public LeagueClient(AdminService adminService) {
+        super(adminService);
+    }
 
     @Override
     public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make call
         String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         return this.handleAndMapResponse(request);
     }
 
@@ -32,7 +38,7 @@ public class LeagueClient implements ILeagueClient {
     public List<LeagueDto> allLeaguesForSeason(int year) {
         //1. make call
         String url = WebUtils.buildUrl("leagues", "season", Integer.toString(year));
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         return this.handleAndMapResponse(request);
     }
 

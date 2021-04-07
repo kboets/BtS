@@ -74,9 +74,9 @@ public class ResultService {
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
         List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
-        if(resultForLeague.isEmpty() || !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
+        if(!adminService.isHistoricData()) {
             verifyMissingResults(leagueId);
-            adminService.executeAdmin(AdminKeys.CRON_RESULTS, null);
+            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
         return resultMapper.toResultDtos(resultForLeague);
     }

@@ -1,5 +1,7 @@
 package boets.bts.backend.web.team;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,16 +21,20 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TeamClient implements  ITeamClient{
+public class TeamClient extends ParentClient implements ITeamClient{
 
     private Logger logger = LoggerFactory.getLogger(TeamClient.class);
+
+    public TeamClient(AdminService adminService) {
+        super(adminService);
+    }
 
     @Override
     public Optional<List<TeamDto>> retrieveTeamsOfLeague(Long leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("teams", "league", leagueId.toString());
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         Response response = null;
         try {
             response = client.newCall(request).execute();

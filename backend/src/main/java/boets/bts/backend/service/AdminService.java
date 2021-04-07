@@ -88,7 +88,7 @@ public class AdminService {
         return admin;
     }
 
-    private Admin getAdmin(AdminKeys adminKeys) {
+    public Admin getAdmin(AdminKeys adminKeys) {
         Optional<Admin> optionalAdmin = adminRepository.findById(adminKeys);
         return optionalAdmin.orElseGet(() -> new Admin(adminKeys));
     }

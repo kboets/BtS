@@ -1,5 +1,7 @@
 package boets.bts.backend.web.results;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
 import okhttp3.OkHttpClient;
@@ -17,10 +19,13 @@ import java.util.Optional;
 
 @Profile("!mock")
 @Service
-public class ResultClient implements IResultClient {
+public class ResultClient extends ParentClient implements IResultClient {
 
     private Logger logger = LoggerFactory.getLogger(ResultClient.class);
 
+    public ResultClient(AdminService adminService) {
+        super(adminService);
+    }
 
     public Optional<List<ResultDto>> retrieveAllResultForLeague(Long leagueId, int season) {
         //1. make call
@@ -36,7 +41,7 @@ public class ResultClient implements IResultClient {
     }
 
     private Optional<List<ResultDto>> makeCallAndMap(String url) {
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         OkHttpClient client = new OkHttpClient();
         Response response = null;
         try {

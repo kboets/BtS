@@ -67,14 +67,6 @@ public class WebUtils {
         return builder.toString();
     }
 
-    public static synchronized Request createRequest(String url) {
-        return new Request.Builder()
-                .get()
-                .url(url)
-                .addHeader("x-rapidapi-host", "api-football-v1.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "6e79ed93c5msh894b4d2d1159c98p1d54d0jsn39da77eb31a6")
-                .build();
-    }
 
     public static synchronized int getCurrentSeason() {
         LocalDate now = LocalDate.now();

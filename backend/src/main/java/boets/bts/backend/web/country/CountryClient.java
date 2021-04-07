@@ -1,5 +1,7 @@
 package boets.bts.backend.web.country;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,15 +20,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CountryClient {
+public class CountryClient extends ParentClient {
 
     private Logger logger = LoggerFactory.getLogger(CountryClient.class);
+
+    public CountryClient(AdminService adminService) {
+        super(adminService);
+    }
 
     public Optional<List<CountryDto>> getAllCountries() {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("countries");
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         try {
             Response response = client.newCall(request).execute();
             if(response.isSuccessful()) {

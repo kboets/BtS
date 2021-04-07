@@ -1,5 +1,7 @@
 package boets.bts.backend.web.round;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,15 +23,19 @@ import java.util.Optional;
 
 @Service
 @Profile("!mock")
-public class RoundClient implements IRoundClient{
+public class RoundClient extends ParentClient implements IRoundClient{
 
     private Logger logger = LoggerFactory.getLogger(RoundClient.class);
+
+    public RoundClient(AdminService adminService) {
+        super(adminService);
+    }
 
     public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(long leagueId, int season) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId), "current");
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         Response response = null;
         try {
             response = client.newCall(request).execute();
@@ -59,7 +65,7 @@ public class RoundClient implements IRoundClient{
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId));
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         Response response = null;
         try {
             response = client.newCall(request).execute();

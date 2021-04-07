@@ -1,5 +1,7 @@
 package boets.bts.backend.web.standing;
 
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.team.TeamDto;
 import com.google.gson.JsonArray;
@@ -21,17 +23,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StandingClient {
+public class StandingClient extends ParentClient {
 
     private Logger logger = LoggerFactory.getLogger(StandingClient.class);
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    public StandingClient(AdminService adminService) {
+        super(adminService);
+    }
+
     public Optional<List<StandingDto>> getLatestStandForLeague(String leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
         String url = WebUtils.buildUrl("leagueTable", leagueId);
-        Request request = WebUtils.createRequest(url);
+        Request request = createRequest(url);
         Response response = null;
         try {
             response = client.newCall(request).execute();
