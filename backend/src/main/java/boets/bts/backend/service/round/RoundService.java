@@ -4,6 +4,7 @@ import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
+import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.service.AdminService;
@@ -124,12 +125,13 @@ public class RoundService {
     @Scheduled(cron = "30 0/15 * * * ?")
     public void scheduleRound() {
         logger.info("Scheduler triggered to update rounds ..");
-        List<League> leagues = leagueRepository.findAll();
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
+            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for non historic data");
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
+            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for historic data");
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
             leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
