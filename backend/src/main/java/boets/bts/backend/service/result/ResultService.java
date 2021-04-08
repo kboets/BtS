@@ -17,7 +17,6 @@ import boets.bts.backend.web.forecast.LeagueResultsDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
-import liquibase.pro.packaged.E;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -25,6 +24,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,13 @@ public class ResultService {
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         List<ResultDto> allResultDtos = resultMapper.toResultDtos(allResults);
-        List<Result> allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound));
+        List<Result> allNonFinishedResults;
+        if(isWeekend()) {
+            allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound));
+        } else {
+            allNonFinishedResults = resultRepository.findAll(ResultSpecs.allNonFinishedResultsCurrentRoundIncluded(league, currentRound));
+        }
+
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults, allNonFinishedResults, currentRound.getRound());
         if(resultOptionalHandler.isPresent()) {
             logger.info("Not all results are found for the current league {} and current round {}", league.getName(), currentRound.getRound());
@@ -127,6 +134,14 @@ public class ResultService {
                 this.verifyMissingResults(leagueId);
             }
         }
+    }
+
+    private boolean isWeekend() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek today = now.getDayOfWeek();
+        return (today.equals(DayOfWeek.FRIDAY)
+                || today.equals(DayOfWeek.SATURDAY)
+                || today.equals(DayOfWeek.SUNDAY));
     }
 
 

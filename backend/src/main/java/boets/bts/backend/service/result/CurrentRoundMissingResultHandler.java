@@ -62,10 +62,9 @@ public class CurrentRoundMissingResultHandler extends AbstractResultHandler {
         List<ResultDto> missingResultDtos = resultMapper.toResultDtos(nonFinishedCurrentRound);
         toBeHandled.addAll(resultMapper.toResults(super.verifyAndUpdate(missingResultDtos, resultDtos)));
         if(!toBeHandled.isEmpty()) {
-            return resultRepository.saveAll(toBeHandled);
-        } else {
-            return toBeHandled;
+            resultRepository.saveAll(toBeHandled);
         }
+        return toBeHandled;
     }
 
 

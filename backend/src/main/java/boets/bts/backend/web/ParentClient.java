@@ -11,8 +11,8 @@ public class ParentClient {
     protected final AdminService adminService;
 
     private ConcurrentHashMap<String, String> rapidApiPrincipals;
-    private String hostKey = "x-rapidapi-host";
-    private String hostPassword = "x-rapidapi-key";
+    private final String hostKey = "x-rapidapi-host";
+    private final String hostPassword = "x-rapidapi-key";
 
     public ParentClient(AdminService adminService) {
         this.adminService = adminService;

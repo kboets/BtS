@@ -46,7 +46,8 @@ public class MoreRoundMissingResultHandler extends AbstractResultHandler {
         List<ResultDto> allNonFinishedResultDtos = resultMapper.toResultDtos(allNonFinishedResult);
         List<Result> toBeHandled = resultMapper.toResults(super.verifyAndUpdate(allNonFinishedResultDtos, resultDtos));
         if(!toBeHandled.isEmpty()) {
-            return resultRepository.saveAll(toBeHandled);
+            resultRepository.saveAll(toBeHandled);
+            return toBeHandled;
         } else {
             return toBeHandled;
         }

@@ -32,8 +32,22 @@ public class ResultSpecs {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
             predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.lessThan(
-                            root.get("eventDate"), round.getCurrentDate()));
+                    predicate, criteriaBuilder.equal(
+                            root.get("round"), round.getRound()));
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.notEqual(
+                            root.get("matchStatus"), "Match Finished"));
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Result> allNonFinishedResultsCurrentRoundIncluded(League league, Round round) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.lessThanOrEqualTo(
+                            root.get("round"), round.getRound()));
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.notEqual(
                             root.get("matchStatus"), "Match Finished"));
@@ -48,6 +62,9 @@ public class ResultSpecs {
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.lessThanOrEqualTo(
                             root.get("round"), round.getRound()));
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("matchStatus"), "Match Finished"));
 
             return predicate;
         };
