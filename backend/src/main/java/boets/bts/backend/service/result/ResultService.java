@@ -62,10 +62,10 @@ public class ResultService {
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         List<ResultDto> allResultDtos = resultMapper.toResultDtos(allResults);
         List<Result> allNonFinishedResults;
-        if(isWeekend()) {
-            allNonFinishedResults = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, currentRound));
-        } else {
+        if(!isWeekend()) {
             allNonFinishedResults = resultRepository.findAll(ResultSpecs.allNonFinishedResultsCurrentRoundIncluded(league, currentRound));
+        } else {
+            allNonFinishedResults = new ArrayList<>();
         }
 
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults, allNonFinishedResults, currentRound.getRound());
