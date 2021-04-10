@@ -13,15 +13,21 @@ import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public class NonEmptyResultHandler extends AbstractResultHandler {
+
+    private Logger logger = LoggerFactory.getLogger(NonEmptyResultHandler.class);
 
     public NonEmptyResultHandler(ResultRepository resultRepository, IResultClient resultClient, ResultMapper resultMapper, TeamRepository teamRepository, LeagueRepository leagueRepository, RoundService roundService, RoundRepository roundRepository, AdminService adminService) {
         super(resultRepository, resultClient, resultMapper, teamRepository, leagueRepository, roundService, roundRepository, adminService);
@@ -36,17 +42,19 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
     public List<Result> getResult(League league) throws Exception {
         List<ResultDto> clientResultDtos = resultClient.retrieveAllResultForLeague(league.getId(), adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        List<ResultDto> clientAllNonFinishedResultDtos = clientResultDtos.stream().filter(resultDto -> !resultDto.getMatchStatus().equals("Match Finished") && resultDto.getEventDate().isBefore(LocalDate.now())).collect(Collectors.toList());
+        //List<ResultDto> clientAllNonFinishedResultDtos = clientResultDtos.stream().filter(resultDto -> !resultDto.getMatchStatus().equals("Match Finished") && resultDto.getEventDate().isBefore(LocalDate.now())).collect(Collectors.toList());
         List<Result> allNonFinished = allResults.stream().filter(result -> result.getEventDate().isBefore(LocalDate.now()) && !result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
+        logger.info("Total number of non finished results {} for league {} ", allNonFinished.size(), league.getName());
         boolean isUpdated = false;
         for(Result missingResult : allNonFinished) {
-            for(ResultDto resultDto: clientAllNonFinishedResultDtos) {
+            for(ResultDto resultDto: clientResultDtos) {
                 if(missingResult.getHomeTeam().getTeamId().toString().equals(resultDto.getHomeTeam().getTeamId())
                         && missingResult.getAwayTeam().getTeamId().toString().equals(resultDto.getAwayTeam().getTeamId())) {
                     missingResult.setMatchStatus(resultDto.getMatchStatus());
                     missingResult.setGoalsHomeTeam(resultDto.getGoalsHomeTeam());
-                    missingResult.setGoalsAwayTeam(resultDto.getGoalsHomeTeam());
+                    missingResult.setGoalsAwayTeam(resultDto.getGoalsAwayTeam());
                     isUpdated = true;
+                    logger.info("Following result is updated {} ", missingResult.getId());
                 }
             }
         }

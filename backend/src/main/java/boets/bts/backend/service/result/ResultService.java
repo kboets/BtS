@@ -58,6 +58,7 @@ public class ResultService {
 
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
+        logger.info("start verifying missing results for league {} of season {} ", league.getName(), adminService.getCurrentSeason());
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults);
         if(resultOptionalHandler.isPresent()) {
@@ -73,7 +74,6 @@ public class ResultService {
         //update first with new results
         if(!adminService.isHistoricData()) {
             verifyMissingResults(leagueId);
-            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
         List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());

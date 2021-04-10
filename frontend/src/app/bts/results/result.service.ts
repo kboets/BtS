@@ -33,7 +33,6 @@ export class ResultService {
         return this.http.get<Result[]>(`/btsapi/api/result/all/${id}`)
             .pipe(
                 //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
-                shareReplay(2),
                 catchError(this.handleHttpError)
             );
     }
@@ -43,14 +42,12 @@ export class ResultService {
             return this.http.get<LeagueResults[]>(`/btsapi/api/result/allSelected`)
                 .pipe(
                     //tap(data => console.log('get allSelected ', JSON.stringify(data[0].results))),
-                    shareReplay(2),
                     catchError(this.handleHttpError)
                 );
         } else {
             return this.http.get<LeagueResults[]>(`/btsapi/api/result/allNonSelected`)
                 .pipe(
                     //tap(data => console.log('get all result for league  '+id, JSON.stringify(data))),
-                    shareReplay(2),
                     catchError(this.handleHttpError)
                 );
         }
