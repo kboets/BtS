@@ -58,9 +58,9 @@ public class CurrentRoundMissingResultHandler extends AbstractResultHandler {
             logger.warn("Could not download results for current round {} and league {} ", currentRound, leagueId);
             return toBeHandled;
         }
-        List<ResultDto> resultDtos = resultOptionalDtos.get();
-        List<ResultDto> missingResultDtos = resultMapper.toResultDtos(nonFinishedCurrentRound);
-        toBeHandled.addAll(resultMapper.toResults(super.verifyAndUpdate(missingResultDtos, resultDtos)));
+        List<ResultDto> allResultDtos = resultOptionalDtos.get();
+        List<ResultDto> nonFinishedCurrentRoundResultDtos = resultMapper.toResultDtos(nonFinishedCurrentRound);
+        toBeHandled.addAll(resultMapper.toResults(super.verifyAndUpdate(nonFinishedCurrentRoundResultDtos, allResultDtos)));
         if(!toBeHandled.isEmpty()) {
             resultRepository.saveAll(toBeHandled);
         }

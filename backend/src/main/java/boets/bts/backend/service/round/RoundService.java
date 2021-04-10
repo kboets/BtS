@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +67,12 @@ public class RoundService {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         if(league.getRounds().isEmpty()) {
             this.updateLeagueWithRounds(league);
+        } else {
+            List<Round> allRoundsForLeague = league.getRounds();
+            if(allRoundsForLeague.get(0).getRoundNumber() == null) {
+                this.updateRoundWithRoundNumber(allRoundsForLeague);
+            }
+
         }
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
@@ -89,6 +96,11 @@ public class RoundService {
         if(rounds.isEmpty()) {
             this.updateLeagueWithRounds(league);
             rounds = league.getRounds();
+        } else {
+            List<Round> allRoundsForLeague = league.getRounds();
+            if(allRoundsForLeague.get(0).getRoundNumber() == null) {
+                this.updateRoundWithRoundNumber(allRoundsForLeague);
+            }
         }
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Round round;
@@ -137,5 +149,17 @@ public class RoundService {
             leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
         }
     }
+
+    private void updateRoundWithRoundNumber(List<Round> rounds) {
+        rounds.sort(Comparator.comparing(Round::getId));
+        int index = 1;
+        for(Round round:rounds) {
+            round.setRoundNumber(index);
+            index++;
+        }
+        roundRepository.saveAll(rounds);
+    }
+
+
 
 }

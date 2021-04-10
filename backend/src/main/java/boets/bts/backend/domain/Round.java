@@ -29,6 +29,9 @@ public class Round implements Serializable {
     @Column(name = "actual_date")
     private LocalDate currentDate;
 
+    @Column(name = "round_number")
+    private Integer roundNumber;
+
 
 
     public Long getId() {
@@ -79,6 +82,13 @@ public class Round implements Serializable {
         this.currentDate = currentDate;
     }
 
+    public Integer getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(Integer roundNumber) {
+        this.roundNumber = roundNumber;
+    }
 
     public static final class RoundBuilder {
         private Long id;
