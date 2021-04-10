@@ -53,7 +53,7 @@
                         </div>
                         <p-divider></p-divider>
 
-                        <p-table [value]="resultRound" [autoLayout]="true">
+                        <p-table [value]="getResultsDescending(resultRound)" [autoLayout]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: left">
                                     Geselecteerde speelronde : {{currentRound.playRound}}

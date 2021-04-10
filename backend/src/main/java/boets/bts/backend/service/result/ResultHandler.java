@@ -1,5 +1,6 @@
 package boets.bts.backend.service.result;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.team.TeamSpecs;
@@ -13,9 +14,9 @@ import java.util.stream.Collectors;
  */
 public interface ResultHandler {
 
-    boolean accepts(List<Result> allResults, List<Result> allNonFinishedResult, String currentRound);
+    boolean accepts(List<Result> allResults);
 
-    List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception;
+    List<Result> getResult(League league) throws Exception;
 
 
 }

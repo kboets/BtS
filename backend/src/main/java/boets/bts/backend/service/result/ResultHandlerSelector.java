@@ -18,9 +18,9 @@ public class ResultHandlerSelector {
         this.resultHandlers = resultHandlers;
     }
 
-    public Optional<ResultHandler> select(List<Result> allResults, List<Result> allNonFinishedResult, String currentRound) {
+    public Optional<ResultHandler> select(List<Result> allResults) {
         for(ResultHandler resultHandler : resultHandlers) {
-            if(resultHandler.accepts(allResults, allNonFinishedResult, currentRound)) {
+            if(resultHandler.accepts(allResults)) {
                 return Optional.of(resultHandler);
             }
         }

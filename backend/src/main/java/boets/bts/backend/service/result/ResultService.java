@@ -57,34 +57,26 @@ public class ResultService {
     }
 
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
-        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        List<ResultDto> allResultDtos = resultMapper.toResultDtos(allResults);
-        List<Result> allNonFinishedResults;
-        if(!isWeekend()) {
-            allNonFinishedResults = resultRepository.findAll(ResultSpecs.allNonFinishedResultsCurrentRoundIncluded(league, currentRound));
-        } else {
-            allNonFinishedResults = new ArrayList<>();
-        }
-
-        Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults, allNonFinishedResults, currentRound.getRound());
+        Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults);
         if(resultOptionalHandler.isPresent()) {
-            logger.info("Not all results are found for the current league {} and current round {}", league.getName(), currentRound.getRound());
             ResultHandler resultHandler = resultOptionalHandler.get();
-            List<Result> results = resultHandler.getResult(leagueId, allNonFinishedResults, currentRound.getRound());
-            allResultDtos.addAll(resultMapper.toResultDtos(results));
+            resultHandler.getResult(league);
         }
-        return allResultDtos;
+        allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+
+        return resultMapper.toResultDtos(allResults);
     }
 
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
-        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
+        //update first with new results
         if(!adminService.isHistoricData()) {
             verifyMissingResults(leagueId);
             adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
+        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
         return resultMapper.toResultDtos(resultForLeague);
     }
 

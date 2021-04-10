@@ -56,21 +56,5 @@ public abstract class AbstractResultHandler implements ResultHandler {
         return resultRepository.saveAll(resultWithObjects);
     }
 
-    protected List<ResultDto> verifyAndUpdate(List<ResultDto> allNonFinishedResultDtos, List<ResultDto> allResultDtos) {
-        List<ResultDto> toBeHandled = new ArrayList<>();
-        for(ResultDto missingResult: allNonFinishedResultDtos) {
-            for(ResultDto resultDto: allResultDtos) {
-                if(missingResult.getHomeTeam().getTeamId().equals(resultDto.getHomeTeam().getTeamId())
-                        && missingResult.getAwayTeam().getTeamId().equals(resultDto.getAwayTeam().getTeamId())) {
-                    missingResult.setMatchStatus(resultDto.getMatchStatus());
-                    missingResult.setGoalsHomeTeam(resultDto.getGoalsHomeTeam());
-                    missingResult.setGoalsAwayTeam(resultDto.getGoalsHomeTeam());
-                    //missingResult.setEventDate(resultDto.getEventDate());
-                    toBeHandled.add(missingResult);
-                }
-            }
-        }
 
-        return toBeHandled;
-    }
 }

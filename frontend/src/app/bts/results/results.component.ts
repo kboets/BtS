@@ -293,6 +293,10 @@ export class ResultsComponent implements OnInit {
         return this.allRoundsAsString.indexOf(this.initialCurrentRound.round)+1;
     }
 
+    getResultsDescending(results: Result[]) {
+        return results.reverse();
+    }
+
     togglePanel() {
         this.showLeagues = !this.showLeagues;
         this.showStanding = true;

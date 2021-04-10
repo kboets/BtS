@@ -1,5 +1,6 @@
 package boets.bts.backend.service.result;
 
+import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
@@ -30,15 +31,15 @@ public class EmptyResultHandler extends AbstractResultHandler {
     }
 
     @Override
-    public boolean accepts(List<Result> allResults, List<Result> allNonFinishedResult, String currentRound) {
+    public boolean accepts(List<Result> allResults) {
         return allResults.isEmpty();
     }
 
     @Override
-    public List<Result> getResult(Long leagueId, List<Result> allNonFinishedResult, String currentRound) throws Exception {
-        List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(leagueId, adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
+    public List<Result> getResult(League league) throws Exception {
+        List<ResultDto> resultDtos = resultClient.retrieveAllResultForLeague(league.getId(), adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<Result> resultList = resultMapper.toResults(resultDtos);
-        return expandAndSaveResult(resultList, leagueId);
+        return expandAndSaveResult(resultList, league.getId());
     }
 
 
