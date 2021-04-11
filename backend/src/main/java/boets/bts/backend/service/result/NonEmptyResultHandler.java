@@ -40,27 +40,29 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
 
     @Override
     public List<Result> getResult(League league) throws Exception {
-        List<ResultDto> clientResultDtos = resultClient.retrieveAllResultForLeague(league.getId(), adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
         List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
-        //List<ResultDto> clientAllNonFinishedResultDtos = clientResultDtos.stream().filter(resultDto -> !resultDto.getMatchStatus().equals("Match Finished") && resultDto.getEventDate().isBefore(LocalDate.now())).collect(Collectors.toList());
         List<Result> allNonFinished = allResults.stream().filter(result -> result.getEventDate().isBefore(LocalDate.now()) && !result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
         logger.info("Total number of non finished results {} for league {} ", allNonFinished.size(), league.getName());
-        boolean isUpdated = false;
-        for(Result missingResult : allNonFinished) {
-            for(ResultDto resultDto: clientResultDtos) {
-                if(missingResult.getHomeTeam().getTeamId().toString().equals(resultDto.getHomeTeam().getTeamId())
-                        && missingResult.getAwayTeam().getTeamId().toString().equals(resultDto.getAwayTeam().getTeamId())) {
-                    missingResult.setMatchStatus(resultDto.getMatchStatus());
-                    missingResult.setGoalsHomeTeam(resultDto.getGoalsHomeTeam());
-                    missingResult.setGoalsAwayTeam(resultDto.getGoalsAwayTeam());
-                    isUpdated = true;
-                    logger.info("Following result is updated {} ", missingResult.getId());
+        if(!allNonFinished.isEmpty()) {
+            List<ResultDto> clientResultDtos = resultClient.retrieveAllResultForLeague(league.getId(), adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
+            boolean isUpdated = false;
+            for(Result missingResult : allNonFinished) {
+                for(ResultDto resultDto: clientResultDtos) {
+                    if(missingResult.getHomeTeam().getTeamId().toString().equals(resultDto.getHomeTeam().getTeamId())
+                            && missingResult.getAwayTeam().getTeamId().toString().equals(resultDto.getAwayTeam().getTeamId())) {
+                        missingResult.setMatchStatus(resultDto.getMatchStatus());
+                        missingResult.setGoalsHomeTeam(resultDto.getGoalsHomeTeam());
+                        missingResult.setGoalsAwayTeam(resultDto.getGoalsAwayTeam());
+                        isUpdated = true;
+                        logger.info("Following result is updated {} ", missingResult.getId());
+                    }
                 }
             }
+            if(isUpdated) {
+                resultRepository.saveAll(allNonFinished);
+            }
         }
-        if(isUpdated) {
-            resultRepository.saveAll(allNonFinished);
-        }
+
         return resultRepository.findAll(ResultSpecs.getResultByLeague(league));
     }
 }

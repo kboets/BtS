@@ -72,7 +72,7 @@ public class ResultService {
 
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         //update first with new results
-        if(!adminService.isHistoricData()) {
+        if(!adminService.isHistoricData() && !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
             verifyMissingResults(leagueId);
         }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
@@ -110,21 +110,20 @@ public class ResultService {
     public boolean removeAllResultsForLeague (Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s ",leagueId)));
         resultRepository.deleteByLeague(league);
-        verifyMissingResults(leagueId);
         return true;
     }
 
     // each 30 minutes
-    @Scheduled(cron = "15 0/30 * * * ?")
+    @Scheduled(cron = "15 5-59/30 * * * ?")
     public void scheduleResults() throws Exception {
         logger.info("Scheduler triggered to update results ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
             logger.info("Running cron job to update results ..");
-            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
                 this.verifyMissingResults(leagueId);
             }
+            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
     }
 
