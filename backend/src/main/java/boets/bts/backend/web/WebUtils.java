@@ -7,6 +7,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
@@ -74,7 +75,14 @@ public class WebUtils {
             return now.getYear() - 1;
         }
         return  now.getYear();
-        //return 2019;
+    }
+
+    public static synchronized boolean isWeekend() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek today = now.getDayOfWeek();
+        return (today.equals(DayOfWeek.FRIDAY)
+                || today.equals(DayOfWeek.SATURDAY)
+                || today.equals(DayOfWeek.SUNDAY));
     }
 
 }

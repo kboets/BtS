@@ -38,7 +38,6 @@ public class Result implements Serializable {
     private String round;
 
     @Column(name = "status")
-    //@Enumerated(EnumType.STRING)
     private String matchStatus;
 
     public Long getId() {

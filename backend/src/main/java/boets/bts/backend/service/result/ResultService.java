@@ -127,13 +127,7 @@ public class ResultService {
         }
     }
 
-    private boolean isWeekend() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek today = now.getDayOfWeek();
-        return (today.equals(DayOfWeek.FRIDAY)
-                || today.equals(DayOfWeek.SATURDAY)
-                || today.equals(DayOfWeek.SUNDAY));
-    }
+
 
 
 }

@@ -2,6 +2,7 @@ package boets.bts.backend.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TEAM")
@@ -98,6 +99,18 @@ public class Team implements Serializable {
         this.city = city;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return stadiumCapacity == team.stadiumCapacity && Objects.equals(teamId, team.teamId) && Objects.equals(name, team.name) && logo.equals(team.logo) && Objects.equals(league, team.league) && stadiumName.equals(team.stadiumName) && city.equals(team.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamId, name, logo, league, stadiumName, stadiumCapacity, city);
+    }
 
     public static final class TeamBuilder {
         private Long id;

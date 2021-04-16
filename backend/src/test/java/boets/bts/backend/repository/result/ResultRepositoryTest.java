@@ -5,7 +5,6 @@ import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.round.RoundRepository;
-import boets.bts.backend.service.round.RoundService;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.junit.Before;
@@ -20,7 +19,9 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,10 +60,16 @@ public class ResultRepositoryTest {
     }
 
     @Test
-    @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest3.xml")
-    public void getAllNonFinishedResultUntilRound_givingJupiler2020()  {
-        List<Result> result = resultRepository.findAll(ResultSpecs.getAllNonFinishedResultUntilRound(league, round));
+    @DatabaseSetup(value = "/boets/bts/backend/service/result/ResultServiceIntegrationTest4.xml")
+    public void getResultByLeagueAndRounds_givingJupiler2020_shouldReturnResult()  {
+        List<Round> rounds = new ArrayList<>();
+        rounds.add(roundRepository.findById(35L).orElseThrow(()-> new RuntimeException("No round found with id 35")));
+        rounds.add(roundRepository.findById(36L).orElseThrow(()-> new RuntimeException("No round found with id 36")));
+        List<String> roundStrings = rounds.stream().map(Round::getRound).collect(Collectors.toList());
+
+        List<Result> result = resultRepository.findAll(ResultSpecs.getFinishedResultForRounds(league, roundStrings));
         assertThat(result.isEmpty()).isFalse();
-        assertThat(result.size()).isEqualTo(3);
     }
+
+
 }

@@ -5,8 +5,9 @@ import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
-import java.time.LocalDate;
+import java.util.List;
 
 public class ResultSpecs {
 
@@ -24,34 +25,6 @@ public class ResultSpecs {
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("league"), league));
-            return predicate;
-        };
-    }
-
-    public static Specification<Result> getAllNonFinishedResultUntilRound(League league, Round round) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
-            predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.equal(
-                            root.get("round"), round.getRound()));
-            predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.notEqual(
-                            root.get("matchStatus"), "Match Finished"));
-
-            return predicate;
-        };
-    }
-
-    public static Specification<Result> allNonFinishedResultsCurrentRoundIncluded(League league, Round round) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
-            predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.lessThanOrEqualTo(
-                            root.get("round"), round.getRound()));
-            predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.notEqual(
-                            root.get("matchStatus"), "Match Finished"));
-
             return predicate;
         };
     }
@@ -80,6 +53,25 @@ public class ResultSpecs {
             return predicate;
         };
     }
+
+
+    public static Specification<Result> getFinishedResultForRounds(League league, List<String> rounds) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("matchStatus"), "Match Finished"));
+            CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("round"));
+            for(String round: rounds) {
+                inClause.value(round);
+            }
+            predicate = criteriaBuilder.and(
+                    predicate, inClause);
+
+            return predicate;
+        };
+    }
+
 
 
 
