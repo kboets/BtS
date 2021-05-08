@@ -33,7 +33,7 @@
         "prismjs": "1.23.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
-        "underscore": "^1.12.0",
+        "underscore": "^1.12.1",
         "web-animations-js": "^2.3.2",
         "zone.js": "~0.10.2"
     },
