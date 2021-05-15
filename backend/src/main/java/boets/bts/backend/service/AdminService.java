@@ -4,8 +4,6 @@ import boets.bts.backend.domain.Admin;
 import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.repository.admin.AdminRepository;
 import boets.bts.backend.web.WebUtils;
-import boets.bts.backend.web.admin.AdminDto;
-import liquibase.pro.packaged.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,9 +11,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Month;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +56,7 @@ public class AdminService {
 
     public int getCurrentSeason() {
         Admin admin = getAdmin(AdminKeys.SEASON);
-        if(admin.getValue() == null) {
+        if(admin.getValue() == null || LocalDate.now().getMonthValue() == Month.JULY.getValue()) {
             int season = WebUtils.getCurrentSeason();
             admin.setValue(Integer.toString(season));
             admin.setDate(LocalDateTime.now());

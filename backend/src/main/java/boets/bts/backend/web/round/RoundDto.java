@@ -13,6 +13,7 @@ public class RoundDto {
     private LocalDate currentDate;
     private LeagueDto leagueDto;
     private int playRound;
+    private Integer roundNumber;
 
     public String getRoundId() {
         return roundId;
@@ -68,5 +69,13 @@ public class RoundDto {
 
     public void setPlayRound(int playRound) {
         this.playRound = playRound;
+    }
+
+    public Integer getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(Integer roundNumber) {
+        this.roundNumber = roundNumber;
     }
 }

@@ -3,9 +3,6 @@ package boets.bts.backend.web.team;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.standing.StandingDto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TeamDto {
 
     private String id;
@@ -90,7 +87,9 @@ public class TeamDto {
         this.standing = standing;
     }
 
+
     public static final class TeamDtoBuilder {
+        private String id;
         private String teamId;
         private String name;
         private String logo;
@@ -98,12 +97,18 @@ public class TeamDto {
         private String stadiumName;
         private int stadiumCapacity;
         private String city;
+        private StandingDto standing;
 
         private TeamDtoBuilder() {
         }
 
         public static TeamDtoBuilder aTeamDto() {
             return new TeamDtoBuilder();
+        }
+
+        public TeamDtoBuilder withId(String id) {
+            this.id = id;
+            return this;
         }
 
         public TeamDtoBuilder withTeamId(String teamId) {
@@ -141,8 +146,14 @@ public class TeamDto {
             return this;
         }
 
+        public TeamDtoBuilder withStanding(StandingDto standing) {
+            this.standing = standing;
+            return this;
+        }
+
         public TeamDto build() {
             TeamDto teamDto = new TeamDto();
+            teamDto.setId(id);
             teamDto.setTeamId(teamId);
             teamDto.setName(name);
             teamDto.setLogo(logo);
@@ -150,6 +161,7 @@ public class TeamDto {
             teamDto.setStadiumName(stadiumName);
             teamDto.setStadiumCapacity(stadiumCapacity);
             teamDto.setCity(city);
+            teamDto.setStanding(standing);
             return teamDto;
         }
     }

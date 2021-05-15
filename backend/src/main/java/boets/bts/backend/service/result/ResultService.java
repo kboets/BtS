@@ -72,11 +72,11 @@ public class ResultService {
 
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         //update first with new results
-        if(!adminService.isHistoricData() && !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            verifyMissingResults(leagueId);
-        }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
         List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
+        if(!adminService.isHistoricData() && !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) || resultForLeague.isEmpty()) {
+            verifyMissingResults(leagueId);
+        }
         return resultMapper.toResultDtos(resultForLeague);
     }
 

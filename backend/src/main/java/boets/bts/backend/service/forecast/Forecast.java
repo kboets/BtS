@@ -1,29 +1,25 @@
 package boets.bts.backend.service.forecast;
 
-import boets.bts.backend.domain.League;
-import boets.bts.backend.domain.Result;
-import boets.bts.backend.domain.Team;
+import boets.bts.backend.web.league.LeagueDto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Forecast {
 
     private ForecastType forecastType;
-    private League league;
+    private LeagueDto league;
     private List<ForecastDetail> forecastDetails;
 
     public Forecast(ForecastType forecastType) {
         this.forecastType = forecastType;
     }
 
-    public League getLeague() {
+    public LeagueDto getLeague() {
         return league;
     }
 
-    public void setLeague(League league) {
+    public void setLeague(LeagueDto league) {
         this.league = league;
     }
 

@@ -170,4 +170,104 @@ public class League implements Serializable {
     public int hashCode() {
         return Objects.hash(name, current, startSeason, endSeason, season, countryCode, logo, flag, selected);
     }
+
+
+    public static final class LeagueBuilder {
+        private Long id;
+        private String name;
+        private boolean current;
+        private LocalDate startSeason;
+        private LocalDate endSeason;
+        private int season;
+        private String countryCode;
+        private String logo;
+        private String  flag;
+        private boolean selected;
+        private List<Team> teams;
+        private List<Round> rounds;
+
+        private LeagueBuilder() {
+        }
+
+        public static LeagueBuilder aLeague() {
+            return new LeagueBuilder();
+        }
+
+        public LeagueBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public LeagueBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public LeagueBuilder withCurrent(boolean current) {
+            this.current = current;
+            return this;
+        }
+
+        public LeagueBuilder withStartSeason(LocalDate startSeason) {
+            this.startSeason = startSeason;
+            return this;
+        }
+
+        public LeagueBuilder withEndSeason(LocalDate endSeason) {
+            this.endSeason = endSeason;
+            return this;
+        }
+
+        public LeagueBuilder withSeason(int season) {
+            this.season = season;
+            return this;
+        }
+
+        public LeagueBuilder withCountryCode(String countryCode) {
+            this.countryCode = countryCode;
+            return this;
+        }
+
+        public LeagueBuilder withLogo(String logo) {
+            this.logo = logo;
+            return this;
+        }
+
+        public LeagueBuilder withFlag(String flag) {
+            this.flag = flag;
+            return this;
+        }
+
+        public LeagueBuilder withSelected(boolean selected) {
+            this.selected = selected;
+            return this;
+        }
+
+        public LeagueBuilder withTeams(List<Team> teams) {
+            this.teams = teams;
+            return this;
+        }
+
+        public LeagueBuilder withRounds(List<Round> rounds) {
+            this.rounds = rounds;
+            return this;
+        }
+
+        public League build() {
+            League league = new League();
+            league.setId(id);
+            league.setName(name);
+            league.setCurrent(current);
+            league.setStartSeason(startSeason);
+            league.setEndSeason(endSeason);
+            league.setSeason(season);
+            league.setCountryCode(countryCode);
+            league.setLogo(logo);
+            league.setFlag(flag);
+            league.setSelected(selected);
+            league.setTeams(teams);
+            league.setRounds(rounds);
+            return league;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package boets.bts.backend.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "RESULT")
@@ -112,6 +113,18 @@ public class Result implements Serializable {
         this.matchStatus = matchStatus;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result result = (Result) o;
+        return goalsHomeTeam == result.goalsHomeTeam && goalsAwayTeam == result.goalsAwayTeam && Objects.equals(id, result.id) && Objects.equals(eventDate, result.eventDate) && Objects.equals(league, result.league) && Objects.equals(homeTeam, result.homeTeam) && Objects.equals(awayTeam, result.awayTeam) && Objects.equals(round, result.round) && Objects.equals(matchStatus, result.matchStatus);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, eventDate, goalsHomeTeam, goalsAwayTeam, league, homeTeam, awayTeam, round, matchStatus);
+    }
 
     public static final class ResultBuilder {
         private Long id;

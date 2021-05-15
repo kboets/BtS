@@ -112,8 +112,10 @@ public class Team implements Serializable {
         return Objects.hash(teamId, name, logo, league, stadiumName, stadiumCapacity, city);
     }
 
+
     public static final class TeamBuilder {
         private Long id;
+        private Long teamId;
         private String name;
         private String logo;
         private League league;
@@ -130,6 +132,11 @@ public class Team implements Serializable {
 
         public TeamBuilder withId(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public TeamBuilder withTeamId(Long teamId) {
+            this.teamId = teamId;
             return this;
         }
 
@@ -166,6 +173,7 @@ public class Team implements Serializable {
         public Team build() {
             Team team = new Team();
             team.setId(id);
+            team.setTeamId(teamId);
             team.setName(name);
             team.setLogo(logo);
             team.setLeague(league);

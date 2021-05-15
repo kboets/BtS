@@ -1,48 +1,48 @@
 package boets.bts.backend.service.forecast;
 
-import boets.bts.backend.domain.Result;
-import boets.bts.backend.domain.Team;
+import boets.bts.backend.web.results.ResultDto;
+import boets.bts.backend.web.team.TeamDto;
 
 import java.util.List;
 
 public class ForecastDetail {
 
-        private Team team;
-        private PerformanceQualifier performanceQualifier;
-        private List<Result> results;
-        private Result nextResult;
-        private Team nextOpponent;
+        private TeamDto team;
+        private TeamPerformanceQualifier teamPerformanceQualifier;
+        private List<ResultDto> results;
+        private ResultDto nextResult;
+        private TeamDto nextOpponent;
         private int score;
 
-        public Team getTeam() {
+        public TeamDto getTeam() {
                 return team;
         }
 
-        public void setTeam(Team team) {
+        public void setTeam(TeamDto team) {
                 this.team = team;
         }
 
-        public PerformanceQualifier getPerformanceQualifier() {
-                return performanceQualifier;
+        public TeamPerformanceQualifier getPerformanceQualifier() {
+                return teamPerformanceQualifier;
         }
 
-        public void setPerformanceQualifier(PerformanceQualifier performanceQualifier) {
-                this.performanceQualifier = performanceQualifier;
+        public void setPerformanceQualifier(TeamPerformanceQualifier teamPerformanceQualifier) {
+                this.teamPerformanceQualifier = teamPerformanceQualifier;
         }
 
-        public List<Result> getResults() {
+        public List<ResultDto> getResults() {
                 return results;
         }
 
-        public void setResults(List<Result> results) {
+        public void setResults(List<ResultDto> results) {
                 this.results = results;
         }
 
-        public Result getNextResult() {
+        public ResultDto getNextResult() {
                 return nextResult;
         }
 
-        public void setNextResult(Result nextResult) {
+        public void setNextResult(ResultDto nextResult) {
                 this.nextResult = nextResult;
         }
 
@@ -54,11 +54,11 @@ public class ForecastDetail {
                 this.score = score;
         }
 
-        public Team getNextOpponent() {
+        public TeamDto getNextOpponent() {
                 return nextOpponent;
         }
 
-        public void setNextOpponent(Team nextOpponent) {
+        public void setNextOpponent(TeamDto nextOpponent) {
                 this.nextOpponent = nextOpponent;
         }
 }

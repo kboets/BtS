@@ -1,11 +1,8 @@
 package boets.bts.backend.web.results;
 
-import boets.bts.backend.web.league.LeagueDto;
-import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.team.TeamDto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class ResultDto {
 
@@ -80,5 +77,77 @@ public class ResultDto {
 
     public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
+    }
+
+
+    public static final class ResultDtoBuilder {
+        private String result_id;
+        private LocalDate eventDate;
+        private String round;
+        private TeamDto homeTeam;
+        private TeamDto awayTeam;
+        private int goalsHomeTeam;
+        private int goalsAwayTeam;
+        private String matchStatus;
+
+        private ResultDtoBuilder() {
+        }
+
+        public static ResultDtoBuilder aResultDto() {
+            return new ResultDtoBuilder();
+        }
+
+        public ResultDtoBuilder withResult_id(String result_id) {
+            this.result_id = result_id;
+            return this;
+        }
+
+        public ResultDtoBuilder withEventDate(LocalDate eventDate) {
+            this.eventDate = eventDate;
+            return this;
+        }
+
+        public ResultDtoBuilder withRound(String round) {
+            this.round = round;
+            return this;
+        }
+
+        public ResultDtoBuilder withHomeTeam(TeamDto homeTeam) {
+            this.homeTeam = homeTeam;
+            return this;
+        }
+
+        public ResultDtoBuilder withAwayTeam(TeamDto awayTeam) {
+            this.awayTeam = awayTeam;
+            return this;
+        }
+
+        public ResultDtoBuilder withGoalsHomeTeam(int goalsHomeTeam) {
+            this.goalsHomeTeam = goalsHomeTeam;
+            return this;
+        }
+
+        public ResultDtoBuilder withGoalsAwayTeam(int goalsAwayTeam) {
+            this.goalsAwayTeam = goalsAwayTeam;
+            return this;
+        }
+
+        public ResultDtoBuilder withMatchStatus(String matchStatus) {
+            this.matchStatus = matchStatus;
+            return this;
+        }
+
+        public ResultDto build() {
+            ResultDto resultDto = new ResultDto();
+            resultDto.setResult_id(result_id);
+            resultDto.setEventDate(eventDate);
+            resultDto.setRound(round);
+            resultDto.setHomeTeam(homeTeam);
+            resultDto.setAwayTeam(awayTeam);
+            resultDto.setGoalsHomeTeam(goalsHomeTeam);
+            resultDto.setGoalsAwayTeam(goalsAwayTeam);
+            resultDto.setMatchStatus(matchStatus);
+            return resultDto;
+        }
     }
 }

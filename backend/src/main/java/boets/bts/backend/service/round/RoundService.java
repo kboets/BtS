@@ -8,7 +8,6 @@ import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
@@ -64,6 +63,9 @@ public class RoundService {
     }
 
     public Round getCurrentRoundForLeague(Long leagueId, int season)  {
+        if(leagueId == null) {
+            logger.warn("The league id is null");
+        }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         if(league.getRounds().isEmpty()) {
             this.updateLeagueWithRounds(league);
