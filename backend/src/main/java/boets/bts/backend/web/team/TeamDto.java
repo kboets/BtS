@@ -3,6 +3,8 @@ package boets.bts.backend.web.team;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.standing.StandingDto;
 
+import java.util.Objects;
+
 public class TeamDto {
 
     private String id;
@@ -87,6 +89,18 @@ public class TeamDto {
         this.standing = standing;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeamDto teamDto = (TeamDto) o;
+        return stadiumCapacity == teamDto.stadiumCapacity && Objects.equals(id, teamDto.id) && Objects.equals(teamId, teamDto.teamId) && name.equals(teamDto.name) && Objects.equals(leagueDto, teamDto.leagueDto) && Objects.equals(stadiumName, teamDto.stadiumName) && Objects.equals(city, teamDto.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, teamId, name, leagueDto, stadiumName, stadiumCapacity, city);
+    }
 
     public static final class TeamDtoBuilder {
         private String id;

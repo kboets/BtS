@@ -10,6 +10,8 @@ import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class ForecastServiceIntegrationTest {
 
+    private Logger logger = LoggerFactory.getLogger(ForecastServiceIntegrationTest.class);
     @Autowired
     private ForecastService forecastService;
     @Autowired
@@ -40,7 +44,19 @@ public class ForecastServiceIntegrationTest {
 
     @Test
     public void calculateForecasts() {
-        forecastService.calculateForecasts();
+        //make sure current season is 2019
+        List<Forecast> forecasts = forecastService.calculateForecasts();
+        this.assertForecastLeague("766", forecasts);
+
+    }
+
+    private void assertForecastLeague(String leagueId, List<Forecast> forecasts) {
+        Optional<Forecast> optionalLeagueForecast = forecasts.stream().filter(forecast -> forecast.getLeague().getLeague_id().equals(leagueId)).findFirst();
+        assertThat(optionalLeagueForecast.isPresent()).isTrue();
+        Forecast forecast = optionalLeagueForecast.get();
+        List<ForecastDetail> forecastDetails = forecast.getForecastDetails();
+        forecastDetails.stream().sorted(Comparator.comparingInt(ForecastDetail::getScore).reversed())
+                .forEach(forecastDetail ->logger.info("Team {} has score {} ", forecastDetail.getTeam().getName(), forecastDetail.getScore()));
     }
 
     @Test
@@ -79,5 +95,7 @@ public class ForecastServiceIntegrationTest {
             }
         }
     }
+
+
 
 }

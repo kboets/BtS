@@ -87,6 +87,13 @@ public class RoundService {
 
     }
 
+    public Round getLastRound(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        List<Round> rounds4League = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+        rounds4League.sort(Comparator.comparing(Round::getRoundNumber));
+        return rounds4League.get(rounds4League.size()-1);
+    }
+
     public List<Round> getAllRoundsForLeague(Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
