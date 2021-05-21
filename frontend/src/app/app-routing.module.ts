@@ -40,7 +40,7 @@ import { InvalidStateDemoComponent } from './demo/view/invalidstatedemo.componen
 import { AppTimelineDemoComponent } from './pages/app.timelinedemo.component';
 import {LeagueComponent} from "./bts/league/league.component";
 import {ResultsComponent} from "./bts/results/results.component";
-import {ForecastComponent} from "./bts/forecast/forecast.component";
+import {ProspectComponent} from "./bts/prospect/prospect.component";
 import {AdminComponent} from "./bts/admin/admin.component";
 
 @NgModule({
@@ -51,7 +51,7 @@ import {AdminComponent} from "./bts/admin/admin.component";
                 children: [
                     {path: 'leagues', component: LeagueComponent},
                     {path: 'result', component: ResultsComponent},
-                    {path: 'forecast', component: ForecastComponent},
+                    {path: 'prospect', component: ProspectComponent},
                     {path: 'admin', component: AdminComponent},
                     {path: '', component: DashboardDemoComponent},
                     {path: 'uikit/formlayout', component: FormLayoutDemoComponent},

@@ -4,7 +4,7 @@ import {Round} from "../domain/round";
 import {Result} from "../domain/result";
 import * as _ from 'underscore';
 
-export class ForecastObjectGenerator {
+export class ProspectObjectGenerator {
 
     private static _league: League;
     private static _teams: Teams[];

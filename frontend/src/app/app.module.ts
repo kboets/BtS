@@ -140,7 +140,7 @@ import {ProductService} from './demo/service/productservice';
 import {MenuService} from './app.menu.service';
 import {LeagueComponent} from "./bts/league/league.component";
 import {ResultsComponent} from "./bts/results/results.component";
-import {ForecastComponent} from "./bts/forecast/forecast.component";
+import {ProspectComponent} from "./bts/prospect/prospect.component";
 import {AdminComponent} from "./bts/admin/admin.component"
 
 // @ts-ignore
@@ -235,7 +235,7 @@ import {AdminComponent} from "./bts/admin/admin.component"
     ],
     declarations: [
         AdminComponent,
-        ForecastComponent,
+        ProspectComponent,
         ResultsComponent,
         LeagueComponent,
         AppComponent,

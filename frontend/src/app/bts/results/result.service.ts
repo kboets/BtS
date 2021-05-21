@@ -7,24 +7,24 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/c
 import {GeneralError} from "../domain/generalError";
 import {Result} from "../domain/result";
 import * as _ from 'underscore';
-import {LeagueResults} from "../forecast/leagueResults";
+import {LeagueResults} from "../prospect/leagueResults";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ResultService {
 
-    private _forecastSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
-    forecastRefreshNeededAction$ = this._forecastSelectedLeaguesRefreshNeeded.asObservable();
+    private _prospectSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
+    prospectRefreshNeededAction$ = this._prospectSelectedLeaguesRefreshNeeded.asObservable();
 
-    private _forecastNonSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
-    forecastRefreshNonSelectedNeededAction$ = this._forecastNonSelectedLeaguesRefreshNeeded.asObservable();
+    private _prospectNonSelectedLeaguesRefreshNeeded = new Subject<Map<string, any>>();
+    prospectRefreshNonSelectedNeededAction$ = this._prospectNonSelectedLeaguesRefreshNeeded.asObservable();
 
-    get forecastSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
-        return this._forecastSelectedLeaguesRefreshNeeded;
+    get prospectSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
+        return this._prospectSelectedLeaguesRefreshNeeded;
     }
-    get forecastNonSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
-        return this._forecastNonSelectedLeaguesRefreshNeeded;
+    get prospectNonSelectedLeaguesRefreshNeeded(): Subject<Map<string, any>> {
+        return this._prospectNonSelectedLeaguesRefreshNeeded;
     }
 
     constructor(private http: HttpClient) {  }

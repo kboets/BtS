@@ -1,10 +1,10 @@
-import {ForecastComponent} from "./forecast.component";
+import {ProspectComponent} from "./prospect.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {League} from "../domain/league";
 import {Result} from "../domain/result";
 import {Round} from "../domain/round";
 import {Teams} from "../domain/teams";
-import {ForecastObjectGenerator} from "./forecastObjectGenerator";
+import {ProspectObjectGenerator} from "./prospectObjectGenerator";
 import {FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 
 import {HttpClientTestingModule} from "@angular/common/http/testing";
@@ -20,17 +20,17 @@ import {DropdownModule} from "primeng/dropdown";
 import {CriteriaResults} from "./criteriaResults";
 
 
-describe('Forecast component', () => {
-    let component: ForecastComponent, mockResultService;
-    let fixture: ComponentFixture<ForecastComponent>;
+describe('Prospect component', () => {
+    let component: ProspectComponent, mockResultService;
+    let fixture: ComponentFixture<ProspectComponent>;
     let league: League, results: Result[], rounds: Round[], teams: Teams[], leagueResults: LeagueResults[];
 
     beforeEach(()=> {
-        teams = ForecastObjectGenerator.teams;
-        rounds = ForecastObjectGenerator.rounds;
-        league = ForecastObjectGenerator.league;
+        teams = ProspectObjectGenerator.teams;
+        rounds = ProspectObjectGenerator.rounds;
+        league = ProspectObjectGenerator.league;
         league.teamDtos = teams;
-        results = ForecastObjectGenerator.results;
+        results = ProspectObjectGenerator.results;
         leagueResults = [{
             league:  league,
             results: results
@@ -39,13 +39,13 @@ describe('Forecast component', () => {
 
     TestBed.configureTestingModule({
         imports: [ReactiveFormsModule, InputSwitchModule, RadioButtonModule, DropdownModule, HttpClientTestingModule],
-        declarations: [ForecastComponent]
+        declarations: [ProspectComponent]
     }).compileComponents();
 
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ForecastComponent);
+        fixture = TestBed.createComponent(ProspectComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

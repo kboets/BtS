@@ -12,12 +12,12 @@ import {Results4Team} from "./results4Team";
 import {CriteriaResults} from "./criteriaResults";
 
 @Component({
-    selector: 'bts-forecast',
-    templateUrl: './forecast.component.html'
+    selector: 'bts-prospect',
+    templateUrl: './prospect.component.html'
 })
-export class ForecastComponent implements OnInit {
+export class ProspectComponent implements OnInit {
 
-    forecastForm: FormGroup;
+    prospectForm: FormGroup;
     totalGames: SelectItem[];
     selectionCriteria: Map<string, any>;
     criteriaResultsSelectedLeagues: CriteriaResults[];
@@ -43,27 +43,27 @@ export class ForecastComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.forecastForm = this.fb.group({
+        this.prospectForm = this.fb.group({
             allLeagues: {value: false, disabled: false},
             resultGames: ['notLost', []],
             selectedGames: [1]
         });
-        this.getChanges(this.forecastForm.value);
+        this.getChanges(this.prospectForm.value);
 
-        this.forecastForm.valueChanges.subscribe(
+        this.prospectForm.valueChanges.subscribe(
             value => this.getChanges(value)
         );
 
         this.getResultsForSelectedLeague();
         this.getResultsForNonSelectedLeague();
 
-        this.resultService.forecastRefreshNeededAction$
+        this.resultService.prospectRefreshNeededAction$
             .subscribe((data: Map<string, any>) => {
                 this.criteriaResultsSelectedLeagues = this.mapLeagueResults(this.resultsSelectedLeagues, data);
                 this.leaguesSelectedTree = this.createNodeTree(this.criteriaResultsSelectedLeagues);
             });
 
-        this.resultService.forecastRefreshNonSelectedNeededAction$
+        this.resultService.prospectRefreshNonSelectedNeededAction$
             .subscribe((data: Map<string, any>) => {
                 this.criteriaResultsNonSelectedLeagues = this.mapLeagueResults(this.resultsNonSelectedLeagues, data);
                 this.leaguesNonSelectedTree = this.createNodeTree(this.criteriaResultsNonSelectedLeagues);
@@ -136,10 +136,10 @@ export class ForecastComponent implements OnInit {
         }
         if(this.selectionCriteria.get('allLeagues')) {
             this.leaguesSelectedTree = [];
-            this.resultService.forecastNonSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
+            this.resultService.prospectNonSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
         } else {
             this.leaguesNonSelectedTree = [];
-            this.resultService.forecastSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
+            this.resultService.prospectSelectedLeaguesRefreshNeeded.next(this.selectionCriteria);
         }
     }
 
@@ -158,7 +158,7 @@ export class ForecastComponent implements OnInit {
         const criteriaResult = _.map(leagueResults, function (leagueResult: LeagueResults) {
             let criteriaResult: CriteriaResults = new CriteriaResults();
             criteriaResult.league = leagueResult.league;
-            criteriaResult.results4Team = ForecastComponent.getWinningTeams(leagueResult.results);
+            criteriaResult.results4Team = ProspectComponent.getWinningTeams(leagueResult.results);
             criteriaResults.push(criteriaResult);
         });
         if (criteriaResult instanceof CriteriaResults) {
@@ -172,7 +172,7 @@ export class ForecastComponent implements OnInit {
         const criteriaResult = _.map(leagueResults, function (leagueResult: LeagueResults) {
             let criteriaResult: CriteriaResults = new CriteriaResults();
             criteriaResult.league = leagueResult.league;
-            criteriaResult.results4Team = ForecastComponent.getNotLosingTeams(leagueResult.results);
+            criteriaResult.results4Team = ProspectComponent.getNotLosingTeams(leagueResult.results);
             criteriaResults.push(criteriaResult);
         });
         if (criteriaResult instanceof CriteriaResults) {
