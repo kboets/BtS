@@ -142,6 +142,7 @@ import {LeagueComponent} from "./bts/league/league.component";
 import {ResultsComponent} from "./bts/results/results.component";
 import {ProspectComponent} from "./bts/prospect/prospect.component";
 import {AdminComponent} from "./bts/admin/admin.component"
+import {ForecastComponent} from "./bts/forecast/forecast.component";
 
 // @ts-ignore
 @NgModule({
@@ -238,6 +239,7 @@ import {AdminComponent} from "./bts/admin/admin.component"
         ProspectComponent,
         ResultsComponent,
         LeagueComponent,
+        ForecastComponent,
         AppComponent,
         AppMainComponent,
         AppConfigComponent,
