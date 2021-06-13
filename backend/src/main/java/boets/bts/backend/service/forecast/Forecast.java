@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Forecast {
 
-    private ForecastType forecastType;
+    private String forecastType;
     private LeagueDto league;
     private List<ForecastDetail> forecastDetails;
 
-    public Forecast(ForecastType forecastType) {
+    public Forecast(String forecastType) {
         this.forecastType = forecastType;
     }
 
@@ -30,11 +30,11 @@ public class Forecast {
         return forecastDetails;
     }
 
-    public ForecastType getForecastType() {
+    public String getForecastType() {
         return forecastType;
     }
 
-    public void setForecastType(ForecastType forecastType) {
+    public void setForecastType(String forecastType) {
         this.forecastType = forecastType;
     }
 }

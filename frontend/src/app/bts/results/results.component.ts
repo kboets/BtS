@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {LeagueService} from "../league/league.service";
 import {catchError, map, tap} from "rxjs/operators";
-import {BehaviorSubject, combineLatest, EMPTY, forkJoin, merge, Observable, Subject} from "rxjs";
+import {BehaviorSubject, combineLatest, EMPTY, merge, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Round} from "../domain/round";
 import {ResultService} from "./result.service";

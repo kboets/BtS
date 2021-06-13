@@ -19,12 +19,12 @@ import {RoundService} from "../round/round.service";
 })
 export class AdminComponent implements OnInit {
 
+    private errorMessageSubject = new Subject<GeneralError>();
+    errorMessage$ = this.errorMessageSubject.asObservable();
     selectedLeague: League;
     selectedLeagueRound: League;
     selectedSeasonAdmin: Admin;
     selectedRound: Round;
-    private errorMessageSubject = new Subject<GeneralError>();
-    errorMessage$ = this.errorMessageSubject.asObservable();
     adminDataList$: Observable<Admin[]>;
     allLeagues$: Observable<League[]>;
     allSeasons: Admin[] = [];

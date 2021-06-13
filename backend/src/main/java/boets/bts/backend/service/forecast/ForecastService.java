@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class ForecastService {
 
+    public static final String WIN = "WIN";
+    public static final String DRAW = "DRAW";
     private Logger logger = LoggerFactory.getLogger(ForecastService.class);
 
     private final RoundService roundService;
@@ -154,7 +156,7 @@ public class ForecastService {
     }
 
     protected Forecast initForecastWithTeams(LeagueDto league, List<ResultDto> results) {
-        Forecast forecast = new Forecast(ForecastType.WIN);
+        Forecast forecast = new Forecast(WIN);
         forecast.setLeague(league);
         List<TeamDto> teams = league.getTeamDtos();
         for(TeamDto team: teams) {
