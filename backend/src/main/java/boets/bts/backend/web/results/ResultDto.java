@@ -9,6 +9,7 @@ public class ResultDto {
     private String result_id;
     private LocalDate eventDate;
     private String round;
+    private int roundNumber;
     private TeamDto homeTeam;
     private TeamDto awayTeam;
     private int goalsHomeTeam;
@@ -79,11 +80,20 @@ public class ResultDto {
         this.matchStatus = matchStatus;
     }
 
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
 
     public static final class ResultDtoBuilder {
         private String result_id;
         private LocalDate eventDate;
         private String round;
+        private int roundNumber;
         private TeamDto homeTeam;
         private TeamDto awayTeam;
         private int goalsHomeTeam;
@@ -109,6 +119,11 @@ public class ResultDto {
 
         public ResultDtoBuilder withRound(String round) {
             this.round = round;
+            return this;
+        }
+
+        public ResultDtoBuilder withRoundNumber(int roundNumber) {
+            this.roundNumber = roundNumber;
             return this;
         }
 
@@ -142,6 +157,7 @@ public class ResultDto {
             resultDto.setResult_id(result_id);
             resultDto.setEventDate(eventDate);
             resultDto.setRound(round);
+            resultDto.setRoundNumber(roundNumber);
             resultDto.setHomeTeam(homeTeam);
             resultDto.setAwayTeam(awayTeam);
             resultDto.setGoalsHomeTeam(goalsHomeTeam);

@@ -17,5 +17,7 @@
     <include file="/liquibase/changelog/009_createAdmin.xml" />
     <include file="/liquibase/changelog/010_createIndexes.xml" />
     <include file="/liquibase/changelog/011_updateRound_addRoundNumber.xml" />
+    <include file="/liquibase/changelog/012_updateStandingResult_addRoundNumber.xml" />
+    <include file="/liquibase/changelog/013_updateStanding_addSeason.xml" />
 
 </databaseChangeLog>

@@ -10,6 +10,8 @@ public class StandingDto {
     private Integer rank;
     private Integer points;
     private Date lastUpdate;
+    private int season;
+    private int roundNumber;
     private SubStandingDto allSubStanding;
     private SubStandingDto awaySubStanding;
     private SubStandingDto homeSubStanding;
@@ -68,5 +70,21 @@ public class StandingDto {
 
     public void setHomeSubStanding(SubStandingDto homeSubStanding) {
         this.homeSubStanding = homeSubStanding;
+    }
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
     }
 }

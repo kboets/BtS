@@ -41,6 +41,9 @@ public class Result implements Serializable {
     @Column(name = "status")
     private String matchStatus;
 
+    @Column(name = "round_number")
+    private Integer roundNumber;
+
     public Long getId() {
         return id;
     }
@@ -113,18 +116,27 @@ public class Result implements Serializable {
         this.matchStatus = matchStatus;
     }
 
+    public Integer getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(Integer roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Result result = (Result) o;
-        return goalsHomeTeam == result.goalsHomeTeam && goalsAwayTeam == result.goalsAwayTeam && Objects.equals(id, result.id) && Objects.equals(eventDate, result.eventDate) && Objects.equals(league, result.league) && Objects.equals(homeTeam, result.homeTeam) && Objects.equals(awayTeam, result.awayTeam) && Objects.equals(round, result.round) && Objects.equals(matchStatus, result.matchStatus);
+        return goalsHomeTeam == result.goalsHomeTeam && goalsAwayTeam == result.goalsAwayTeam && Objects.equals(id, result.id) && Objects.equals(eventDate, result.eventDate) && Objects.equals(league, result.league) && Objects.equals(homeTeam, result.homeTeam) && Objects.equals(awayTeam, result.awayTeam) && Objects.equals(round, result.round) && Objects.equals(matchStatus, result.matchStatus) && Objects.equals(roundNumber, result.roundNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, eventDate, goalsHomeTeam, goalsAwayTeam, league, homeTeam, awayTeam, round, matchStatus);
+        return Objects.hash(id, eventDate, goalsHomeTeam, goalsAwayTeam, league, homeTeam, awayTeam, round, matchStatus, roundNumber);
     }
+
 
     public static final class ResultBuilder {
         private Long id;
@@ -135,8 +147,8 @@ public class Result implements Serializable {
         private Team homeTeam;
         private Team awayTeam;
         private String round;
-        //@Enumerated(EnumType.STRING)
         private String matchStatus;
+        private Integer roundNumber;
 
         private ResultBuilder() {
         }
@@ -190,6 +202,11 @@ public class Result implements Serializable {
             return this;
         }
 
+        public ResultBuilder withRoundNumber(Integer roundNumber) {
+            this.roundNumber = roundNumber;
+            return this;
+        }
+
         public Result build() {
             Result result = new Result();
             result.setId(id);
@@ -201,6 +218,7 @@ public class Result implements Serializable {
             result.setAwayTeam(awayTeam);
             result.setRound(round);
             result.setMatchStatus(matchStatus);
+            result.setRoundNumber(roundNumber);
             return result;
         }
     }

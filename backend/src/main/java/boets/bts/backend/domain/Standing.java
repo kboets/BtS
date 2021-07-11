@@ -33,6 +33,13 @@ public class Standing implements Serializable  {
     @Column
     private String round;
 
+    @Column(name = "round_number")
+    private Integer roundNumber;
+
+    @Column(nullable = false)
+    private int season;
+
+
     @Embedded
     @AttributeOverride(
             name = "matchPlayed",
@@ -194,5 +201,21 @@ public class Standing implements Serializable  {
 
     public void setRound(String round) {
         this.round = round;
+    }
+
+    public Integer getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(Integer roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
+    public int getSeason() {
+        return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
     }
 }

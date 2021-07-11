@@ -2,6 +2,7 @@ package boets.bts.backend.service.result;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
+import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
@@ -14,6 +15,7 @@ import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +53,17 @@ public abstract class AbstractResultHandler implements ResultHandler {
                         .orElseThrow(() -> new NotFoundException(String.format("Could not find team with id %s", result.getHomeTeam().getTeamId())))))
                 .peek(result -> result.setLeague(leagueRepository.findById(leagueId)
                         .orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s", leagueId)))))
+                .peek(result -> result.setRoundNumber(getRoundNumber(result.getRound())))
                 .collect(Collectors.toList());
 
         return resultRepository.saveAll(resultWithObjects);
     }
 
-
+    protected int getRoundNumber(String round) {
+        if(StringUtils.startsWith(round, "Regular")) {
+            String roundNumber = StringUtils.substringAfterLast(round, "_");
+            return Integer.parseInt(roundNumber);
+        }
+        return 0;
+    }
 }

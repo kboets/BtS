@@ -1,4 +1,5 @@
 INSERT INTO `country` (`country_code`, `country`, `flag`) VALUES ('BE', 'Belgium', 'https://media.api-sports.io/flags/be.svg');
+INSERT INTO  `admin` (`admin_key`, `VALUE`, `date`) VALUES ('SEASON', '2020', '2021-04-07 02:55:05');
 
 
 INSERT INTO `league` (`league_id`, `name`, `start_season`, `end_season`, `current`, `season`, `country_code`, `logo`, `flag`, `selected`)

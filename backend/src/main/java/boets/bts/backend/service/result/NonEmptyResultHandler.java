@@ -62,7 +62,16 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
                 resultRepository.saveAll(allNonFinished);
             }
         }
-
+        allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        if(allResults.stream().anyMatch(result -> result.getRoundNumber() == null)) {
+            List<Result> updatedResults = allResults.stream()
+                    .filter(result -> result.getRoundNumber() == null)
+                    .peek(result -> result.setRoundNumber(getRoundNumber(result.getRound())))
+                    .collect(Collectors.toList());
+            resultRepository.saveAll(updatedResults);
+        }
         return resultRepository.findAll(ResultSpecs.getResultByLeague(league));
     }
+
+
 }
