@@ -24,7 +24,7 @@ public class StandingResource {
 
     @GetMapping("/league/{league_id}")
     public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") Long league_id) {
-        List<StandingDto> standingDtos = standingService.getCurrentStandingsForLeague(league_id);
+        List<StandingDto> standingDtos = standingService.getCurrentStandingForLeague(league_id);
         logger.info("Standings found {}", standingDtos.size());
         return standingDtos;
     }

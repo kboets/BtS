@@ -11,10 +11,16 @@ import java.util.List;
 
 public class ResultSpecs {
 
-    public static Specification<Result> getResultByLeague(League league) {
+    public static Specification<Result> forLeague(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            return predicate;
+        };
+    }
 
+    public static Specification<Result> forRound(int roundNumber) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
             return predicate;
         };
     }
@@ -35,6 +41,20 @@ public class ResultSpecs {
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.lessThanOrEqualTo(
                             root.get("round"), round.getRound()));
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.equal(
+                            root.get("matchStatus"), "Match Finished"));
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Result> allFinishedResultsCurrentRoundIncluded(League league, int roundNumber) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            predicate = criteriaBuilder.and(
+                    predicate, criteriaBuilder.lessThanOrEqualTo(
+                            root.get("roundNumber"), roundNumber));
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("matchStatus"), "Match Finished"));

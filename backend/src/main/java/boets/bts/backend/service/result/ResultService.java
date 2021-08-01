@@ -11,7 +11,6 @@ import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.TeamService;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.forecast.LeagueResultsDto;
 import boets.bts.backend.web.league.LeagueMapper;
@@ -24,8 +23,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,13 +56,13 @@ public class ResultService {
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
         League league = leagueRepository.findById(leagueId).orElseThrow(()-> new NotFoundException(String.format("Could not find league with id %s", leagueId)));
         logger.info("start verifying missing results for league {} of season {} ", league.getName(), adminService.getCurrentSeason());
-        List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        List<Result> allResults = resultRepository.findAll(ResultSpecs.forLeague(league));
         Optional<ResultHandler> resultOptionalHandler = resultHandlerSelector.select(allResults);
         if(resultOptionalHandler.isPresent()) {
             ResultHandler resultHandler = resultOptionalHandler.get();
             resultHandler.getResult(league);
         }
-        allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        allResults = resultRepository.findAll(ResultSpecs.forLeague(league));
 
         return resultMapper.toResultDtos(allResults);
     }
@@ -73,7 +70,7 @@ public class ResultService {
     public List<ResultDto> retrieveAllResultForLeague(Long leagueId) throws Exception {
         //update first with new results
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found a league with id %s", leagueId)));
-        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.getResultByLeague(league), Sort.by("id").descending());
+        List<Result> resultForLeague = resultRepository.findAll(ResultSpecs.forLeague(league), Sort.by("id").descending());
         if(!adminService.isHistoricData() && !adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) || resultForLeague.isEmpty()) {
             verifyMissingResults(leagueId);
         }

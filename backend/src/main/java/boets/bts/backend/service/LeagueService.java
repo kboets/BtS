@@ -90,16 +90,17 @@ public class LeagueService  {
             List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(new ArrayList<>(leagueMap.values()));
             return leagueDtoList;
         }
+
         return leaguesCurrentSeason;
     }
 
     private List<LeagueDto> getAndVerifyPersistedLeaguesCurrentSeason() {
         int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
-        if(leagues.isEmpty()) {
+        if(leagues.isEmpty() || allowedCountries.size() != leagues.size()) {
             return leagueMapper.toLeagueDtoList(this.retrieveAndFilterAndPersistLeagues(currentSeason));
         }
-        verifyPersistedLeagueIsCurrent(leagues);
+        verifyPersistedLeagueIsCurrent();
         return leagueMapper.toLeagueDtoList(leagues);
     }
 
@@ -120,7 +121,7 @@ public class LeagueService  {
         //4. persist to database
         leagueRepository.saveAll(selectedLeagues);
         //5. make check if league is still current
-        verifyPersistedLeagueIsCurrent(selectedLeagues);
+        verifyPersistedLeagueIsCurrent();
         return selectedLeagues;
     }
 
@@ -136,7 +137,8 @@ public class LeagueService  {
     }
 
 
-    private void verifyPersistedLeagueIsCurrent(List<League> leagues) {
+    private void verifyPersistedLeagueIsCurrent() {
+        List<League> leagues = leagueRepository.findAll();
         LocalDate now = LocalDate.now();
         if(leagues.stream().anyMatch(league -> now.isAfter(league.getEndSeason()) && league.isCurrent())) {
             logger.info(String.format("Updating the current league to not current as the current date %s is after the end date %S", now, leagues.get(0).getEndSeason()));

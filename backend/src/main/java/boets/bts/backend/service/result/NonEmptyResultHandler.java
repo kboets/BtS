@@ -9,7 +9,6 @@ import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.results.IResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
@@ -40,7 +39,7 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
 
     @Override
     public List<Result> getResult(League league) throws Exception {
-        List<Result> allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        List<Result> allResults = resultRepository.findAll(ResultSpecs.forLeague(league));
         List<Result> allNonFinished = allResults.stream().filter(result -> result.getEventDate().isBefore(LocalDate.now()) && !result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
         logger.info("Total number of non finished results {} for league {} ", allNonFinished.size(), league.getName());
         if(!allNonFinished.isEmpty()) {
@@ -62,7 +61,7 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
                 resultRepository.saveAll(allNonFinished);
             }
         }
-        allResults = resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        allResults = resultRepository.findAll(ResultSpecs.forLeague(league));
         if(allResults.stream().anyMatch(result -> result.getRoundNumber() == null)) {
             List<Result> updatedResults = allResults.stream()
                     .filter(result -> result.getRoundNumber() == null)
@@ -70,7 +69,7 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
                     .collect(Collectors.toList());
             resultRepository.saveAll(updatedResults);
         }
-        return resultRepository.findAll(ResultSpecs.getResultByLeague(league));
+        return resultRepository.findAll(ResultSpecs.forLeague(league));
     }
 
 

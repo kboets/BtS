@@ -8,9 +8,23 @@ import javax.persistence.criteria.Predicate;
 
 public class StandingSpecs {
 
-    public static Specification<Standing> getStandingsByLeague(League league) {
+    public static Specification<Standing> forLeague(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            return predicate;
+        };
+    }
+
+    public static Specification<Standing> forRound(int roundNumber) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
+            return predicate;
+        };
+    }
+
+    public static Specification<Standing> forSeason(int season) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("season"), season);
             return predicate;
         };
     }
