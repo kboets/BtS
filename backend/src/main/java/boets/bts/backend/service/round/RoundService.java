@@ -27,14 +27,14 @@ import java.util.Optional;
 @Transactional
 public class RoundService {
 
-    private Logger logger = LoggerFactory.getLogger(RoundService.class);
+    private final static Logger logger = LoggerFactory.getLogger(RoundService.class);
 
-    private RoundMapper roundMapper;
-    private IRoundClient roundClient;
-    private RoundRepository roundRepository;
-    private LeagueRepository leagueRepository;
-    private CurrentRoundHandlerSelector currentRoundHandlerSelector;
-    private AdminService adminService;
+    private final RoundMapper roundMapper;
+    private final IRoundClient roundClient;
+    private final RoundRepository roundRepository;
+    private final LeagueRepository leagueRepository;
+    private final CurrentRoundHandlerSelector currentRoundHandlerSelector;
+    private final AdminService adminService;
 
     public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, LeagueRepository leagueRepository, CurrentRoundHandlerSelector currentRoundHandlerSelector,
                         AdminService adminService) {
@@ -65,17 +65,19 @@ public class RoundService {
     public Round getCurrentRoundForLeague(Long leagueId, int season)  {
         if(leagueId == null) {
             logger.warn("The league id is null");
+            return null;
         }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         if(league.getRounds().isEmpty()) {
             this.updateLeagueWithRounds(league);
         } else {
             List<Round> allRoundsForLeague = league.getRounds();
+            //verify if round number is already calculated
             if(allRoundsForLeague.get(0).getRoundNumber() == null) {
                 this.updateRoundWithRoundNumber(allRoundsForLeague);
             }
-
         }
+
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
         if(!currentRoundHandlerOptional.isPresent()) {
@@ -84,7 +86,6 @@ public class RoundService {
         }
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerOptional.get();
         return currentRoundHandler.save(currentPersistedRound.orElse(null), league, season);
-
     }
 
     public Round getNextRound(Long leagueId) {

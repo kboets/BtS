@@ -1,6 +1,7 @@
 package boets.bts.backend.web.standing;
 
 import boets.bts.backend.web.team.TeamDto;
+import liquibase.pro.packaged.I;
 
 import java.util.Date;
 
@@ -33,6 +34,9 @@ public class StandingDto {
     }
 
     public Integer getPoints() {
+        if(points == null) {
+            points = 0;
+        }
         return points;
     }
 
@@ -49,6 +53,9 @@ public class StandingDto {
     }
 
     public SubStandingDto getAllSubStanding() {
+        if(allSubStanding == null) {
+            allSubStanding = new SubStandingDto();
+        }
         return allSubStanding;
     }
 
@@ -57,6 +64,9 @@ public class StandingDto {
     }
 
     public SubStandingDto getAwaySubStanding() {
+        if(awaySubStanding == null) {
+            awaySubStanding = new SubStandingDto();
+        }
         return awaySubStanding;
     }
 
@@ -65,6 +75,9 @@ public class StandingDto {
     }
 
     public SubStandingDto getHomeSubStanding() {
+        if(homeSubStanding == null) {
+            homeSubStanding = new SubStandingDto();
+        }
         return homeSubStanding;
     }
 

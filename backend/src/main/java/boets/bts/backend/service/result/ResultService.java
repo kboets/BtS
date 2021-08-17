@@ -94,7 +94,7 @@ public class ResultService {
                 resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
             } else {
                 Round currentRound = roundService.getCurrentRoundForLeague(selectedLeague.getId(), adminService.getCurrentSeason());
-                resultForLeague =  resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(selectedLeague, currentRound));
+                resultForLeague =  resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(selectedLeague, currentRound.getRoundNumber()));
             }
             LeagueResultsDto leagueResultsDto = new LeagueResultsDto();
             leagueResultsDto.setResults(resultMapper.toResultDtos(resultForLeague));

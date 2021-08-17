@@ -172,6 +172,9 @@ public class Standing implements Serializable  {
     }
 
     public SubStanding getAllSubStanding() {
+        if(allSubStanding == null) {
+            allSubStanding = new SubStanding();
+        }
         return allSubStanding;
     }
 
@@ -180,6 +183,9 @@ public class Standing implements Serializable  {
     }
 
     public SubStanding getAwaySubStanding() {
+        if(awaySubStanding == null) {
+            awaySubStanding = new SubStanding();
+        }
         return awaySubStanding;
     }
 
@@ -188,6 +194,9 @@ public class Standing implements Serializable  {
     }
 
     public SubStanding getHomeSubStanding() {
+        if(homeSubStanding == null) {
+            homeSubStanding = new SubStanding();
+        }
         return homeSubStanding;
     }
 

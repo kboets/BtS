@@ -1,6 +1,7 @@
 package boets.bts.backend.service.round;
 
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
@@ -8,8 +9,6 @@ import boets.bts.backend.web.round.RoundMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
@@ -36,7 +35,7 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
      * @return
      */
     protected Round verifyRetrievedRound(Round clientRound) {
-        if (!isWeekend())  {
+        if (!WebUtils.isWeekend())  {
             String round = clientRound.getRound();
             String strippedRound = StringUtils.substringBeforeLast(round, "_");
             int roundVal = new Integer(StringUtils.substringAfterLast(round, "_"));
@@ -52,12 +51,5 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
         return clientRound;
     }
 
-    public boolean isWeekend() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek today = now.getDayOfWeek();
-        return (today.equals(DayOfWeek.FRIDAY)
-                || today.equals(DayOfWeek.SATURDAY)
-                || today.equals(DayOfWeek.SUNDAY)
-                || today.equals(DayOfWeek.MONDAY));
-    }
+
 }

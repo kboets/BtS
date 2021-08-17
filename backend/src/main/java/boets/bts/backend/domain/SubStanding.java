@@ -13,6 +13,9 @@ public class SubStanding {
     private Integer goalsAgainst;
 
     public Integer getMatchPlayed() {
+        if(matchPlayed == null) {
+            matchPlayed = 0;
+        }
         return matchPlayed;
     }
 
@@ -21,6 +24,9 @@ public class SubStanding {
     }
 
     public Integer getWin() {
+        if(win == null) {
+            win = 0;
+        }
         return win;
     }
 
@@ -29,6 +35,9 @@ public class SubStanding {
     }
 
     public Integer getLose() {
+        if(lose == null) {
+            lose = 0;
+        }
         return lose;
     }
 
@@ -37,6 +46,9 @@ public class SubStanding {
     }
 
     public Integer getDraw() {
+        if(draw == null) {
+            draw = 0;
+        }
         return draw;
     }
 
@@ -45,6 +57,9 @@ public class SubStanding {
     }
 
     public Integer getGoalsFor() {
+        if(goalsFor == null) {
+            goalsFor = 0;
+        }
         return goalsFor;
     }
 
@@ -53,6 +68,9 @@ public class SubStanding {
     }
 
     public Integer getGoalsAgainst() {
+        if(goalsAgainst == null) {
+            goalsAgainst = 0;
+        }
         return goalsAgainst;
     }
 

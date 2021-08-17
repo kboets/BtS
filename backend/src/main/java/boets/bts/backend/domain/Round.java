@@ -97,6 +97,7 @@ public class Round implements Serializable {
         private int season;
         private Boolean current;
         private LocalDate currentDate;
+        private Integer roundNumber;
 
         private RoundBuilder() {
         }
@@ -135,14 +136,19 @@ public class Round implements Serializable {
             return this;
         }
 
+        public RoundBuilder withRoundNumber(Integer roundNumber) {
+            this.roundNumber = roundNumber;
+            return this;
+        }
+
         public Round build() {
             Round round = new Round();
             round.setId(id);
             round.setLeague(league);
-            round.setRound(round.getRound());
             round.setSeason(season);
             round.setCurrent(current);
             round.setCurrentDate(currentDate);
+            round.setRoundNumber(roundNumber);
             return round;
         }
     }

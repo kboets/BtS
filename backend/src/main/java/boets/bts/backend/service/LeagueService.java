@@ -1,17 +1,15 @@
 package boets.bts.backend.service;
 
 import boets.bts.backend.domain.League;
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefinerFactory;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.league.ILeagueClient;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
-import boets.bts.backend.web.league.ILeagueClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,12 +48,9 @@ public class LeagueService  {
         this.adminService = adminService;
     }
 
-    public Optional<LeagueDto> getLeagueDtoById(Long id) throws Exception {
+    public Optional<LeagueDto> getLeagueDtoById(Long id) {
         Optional<League> leagueOptional = leagueRepository.findById(id);
-        if(leagueOptional.isPresent()) {
-            return Optional.of(leagueMapper.toLeagueDto(leagueOptional.get()));
-        }
-        return Optional.empty();
+        return leagueOptional.map(leagueMapper::toLeagueDto);
     }
 
     public League getLeagueById(Long id) {
@@ -72,7 +67,7 @@ public class LeagueService  {
 
     public List<LeagueDto> getCurrentLeagues() {
         boolean isChanged = false;
-        List<LeagueDto> leaguesCurrentSeason = this.getAndVerifyPersistedLeaguesCurrentSeason();
+        List<LeagueDto> leaguesCurrentSeason = this.getAndVerifyPersistedLeaguesRequestedSeason();
         Map<Long, League> leagueMap = new HashMap<>();
 
         if(leaguesCurrentSeason.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
@@ -94,18 +89,19 @@ public class LeagueService  {
         return leaguesCurrentSeason;
     }
 
-    private List<LeagueDto> getAndVerifyPersistedLeaguesCurrentSeason() {
+    private List<LeagueDto> getAndVerifyPersistedLeaguesRequestedSeason() {
         int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
-        if(leagues.isEmpty() || allowedCountries.size() != leagues.size()) {
-            return leagueMapper.toLeagueDtoList(this.retrieveAndFilterAndPersistLeagues(currentSeason));
+        if(leagues.isEmpty() || leagues.size() < allowedCountries.size()) {
+            List<League> leaguesRequestedSeason = this.retrieveAndFilterAndPersistLeagues(currentSeason);
+            return leagueMapper.toLeagueDtoList(leaguesRequestedSeason);
         }
         verifyPersistedLeagueIsCurrent();
         return leagueMapper.toLeagueDtoList(leagues);
     }
 
     private List<League> retrieveAndFilterAndPersistLeagues(int currentSeason) {
-        logger.info(String.format("No leagues found in database for season start year %s, start retrieving", currentSeason));
+        logger.info("No leagues found in database for season start year {}, start retrieving", currentSeason);
         //1 make call to webservice to retrieve all Leagues of current season
         List<League> leagues = retrieveLeaguesFromWebService(currentSeason);
         //2. filter the leagues for the allowed country's
@@ -118,7 +114,12 @@ public class LeagueService  {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
             selectedLeagues.addAll(leagueBettingDefiner.retrieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
-        //4. persist to database
+        //4. verify if has all rounds
+        selectedLeagues = selectedLeagues.stream()
+                .filter(league -> league.getRounds().isEmpty())
+                .peek(teamService::updateLeagueWithTeams)
+                .collect(Collectors.toList());
+        //5. persist to database
         leagueRepository.saveAll(selectedLeagues);
         //5. make check if league is still current
         verifyPersistedLeagueIsCurrent();

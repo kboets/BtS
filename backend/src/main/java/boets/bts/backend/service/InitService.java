@@ -79,9 +79,7 @@ public class InitService implements AdminChangeListener {
     }
 
     public void initStandings(List<League> leagues) {
-        if(! adminService.isHistoricData()) {
-            leagues.forEach(league -> standingService.getCurrentStandingForLeague(league.getId()));
-        }
+        leagues.forEach(league -> standingService.getCurrentStandingForLeague(league.getId()));
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {
