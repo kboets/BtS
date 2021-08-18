@@ -35,7 +35,7 @@ public class ActualRoundSeasonNotStartedStandingRetriever extends AbstractStandi
     @Override
     public boolean accept(League league, Round currentRound, int roundNumber) {
         LocalDate now = LocalDate.now();
-        return adminService.getCurrentSeason() == league.getSeason()
+        return !adminService.isHistoricData()
                 && currentRound.getRoundNumber() == roundNumber
                 && (league.getStartSeason().isAfter(now) || league.getStartSeason().isEqual(now));
 

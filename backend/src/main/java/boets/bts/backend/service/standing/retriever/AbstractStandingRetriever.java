@@ -69,7 +69,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     }
 
         protected List<Standing> retrieveOrCalculateMissingStandings(int roundNumber, League league) {
-        // verify if round is missing, if not do nothing
+        // verify if round is missing, if not, do nothing
         List<Standing> standingsForRound = standingRepository.findAll(StandingSpecs.forLeague(league).and(StandingSpecs.forRound(roundNumber)));
         if(!standingsForRound.isEmpty()) {
             return standingsForRound;
@@ -79,8 +79,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
         List<Standing> calculatedStandings = standingMapper.toStandings(calculatedStandingDtos);
         logStanding(calculatedStandings, roundNumber);
         //save to database
-        //return saveAndReturn(calculatedStandings, league, league.getSeason(), roundNumber);
-        return calculatedStandings;
+        return saveAndReturn(calculatedStandings, league, roundNumber);
     }
 
     private void logStanding(List<Standing> calculatedStanding, int roundNumber) {

@@ -36,7 +36,7 @@ public class ActualRoundValidSeasonStandingRetriever extends AbstractStandingRet
 
     @Override
     public boolean accept(League league, Round currentRound, int roundNumber) {
-        return adminService.getCurrentSeason() == league.getSeason()
+        return !adminService.isHistoricData()
                 && currentRound.getRoundNumber() == roundNumber
                 && LocalDate.now().isAfter(league.getStartSeason())
                 && !WebUtils.isWeekend();
