@@ -8,11 +8,12 @@ import java.util.List;
 public class ForecastDetail {
 
         private TeamDto team;
-        private TeamPerformanceQualifier teamPerformanceQualifier;
         private List<ResultDto> results;
         private ResultDto nextResult;
         private TeamDto nextOpponent;
+        private int resultScore;
         private int score;
+
 
         public TeamDto getTeam() {
                 return team;
@@ -20,14 +21,6 @@ public class ForecastDetail {
 
         public void setTeam(TeamDto team) {
                 this.team = team;
-        }
-
-        public TeamPerformanceQualifier getPerformanceQualifier() {
-                return teamPerformanceQualifier;
-        }
-
-        public void setPerformanceQualifier(TeamPerformanceQualifier teamPerformanceQualifier) {
-                this.teamPerformanceQualifier = teamPerformanceQualifier;
         }
 
         public List<ResultDto> getResults() {
@@ -60,5 +53,13 @@ public class ForecastDetail {
 
         public void setNextOpponent(TeamDto nextOpponent) {
                 this.nextOpponent = nextOpponent;
+        }
+
+        public int getResultScore() {
+                return resultScore;
+        }
+
+        public void setResultScore(int resultScore) {
+                this.resultScore = resultScore;
         }
 }

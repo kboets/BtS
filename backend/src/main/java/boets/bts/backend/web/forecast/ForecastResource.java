@@ -2,7 +2,6 @@ package boets.bts.backend.web.forecast;
 
 import boets.bts.backend.service.forecast.Forecast;
 import boets.bts.backend.service.forecast.ForecastService;
-import boets.bts.backend.web.league.LeagueResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +24,6 @@ public class ForecastResource {
     @GetMapping("win")
     public List<Forecast> getAllWinForecast() {
         logger.info("Retrieving all WIN forecast");
-        return forecastService.calculateForecasts();
+        return forecastService.calculateForecast();
     }
 }

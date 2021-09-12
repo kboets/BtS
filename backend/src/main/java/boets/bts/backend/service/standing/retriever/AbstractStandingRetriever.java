@@ -69,11 +69,12 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     }
 
         protected List<Standing> retrieveOrCalculateMissingStandings(int roundNumber, League league) {
-        // verify if round is missing, if not, do nothing
+        // verify if round is already in database
         List<Standing> standingsForRound = standingRepository.findAll(StandingSpecs.forLeague(league).and(StandingSpecs.forRound(roundNumber)));
         if(!standingsForRound.isEmpty()) {
             return standingsForRound;
         }
+        logger.info("Start recalculating the standing for league {} and round {} ", league.getName(), roundNumber);
         List<Result> results = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, roundNumber));
         List<StandingDto> calculatedStandingDtos = standingCalculator.calculateStandings(leagueMapper.toLeagueDto(league), resultMapper.toResultDtos(results), roundNumber);
         List<Standing> calculatedStandings = standingMapper.toStandings(calculatedStandingDtos);

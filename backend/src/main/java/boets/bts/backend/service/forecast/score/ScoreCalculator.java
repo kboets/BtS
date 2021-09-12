@@ -1,24 +1,48 @@
 package boets.bts.backend.service.forecast.score;
 
+import boets.bts.backend.domain.Standing;
+import boets.bts.backend.service.forecast.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetail;
 import boets.bts.backend.service.forecast.TeamPerformanceQualifier;
+import boets.bts.backend.web.results.ResultDto;
+import boets.bts.backend.web.standing.StandingDto;
+import boets.bts.backend.web.team.TeamDto;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ScoreCalculator {
 
-    void calculateScore(ForecastDetail forecastDetail, Map<String, TeamPerformanceQualifier> teamPerformanceQualifierMap);
+    void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails);
 
-    default void initTeamPerformanceMap(Map<TeamPerformanceQualifier, Integer> teamPerformanceScoreMap) {
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.TOPPER, 70);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.UITSTEKEND, 60);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.ZEER_GOED, 50);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.GOED, 40);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.BEHOORLIJK, 35);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.MATIG, 30);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.ONDERMAATS, 25);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.SLECHT, 20);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.ZEER_SLECHT, 10);
-        teamPerformanceScoreMap.put(TeamPerformanceQualifier.FLOPPER, 0);
+    default StandingDto getStandingOpponent(List<StandingDto> standings, TeamDto opponent) {
+        return  standings.stream().filter(standing -> standing.getTeam().getTeamId().equals(opponent.getTeamId()))
+                .findFirst().orElseThrow(() -> new RuntimeException(String.format("Could not find standing for team %s", opponent.getName())));
+    }
+
+    default TeamDto getOpponent(ResultDto resultDto, TeamDto teamDto) {
+        if(resultDto.getHomeTeam().getTeamId().equals(teamDto.getTeamId())) {
+            return resultDto.getAwayTeam();
+        } else {
+            return resultDto.getHomeTeam();
+        }
+    }
+
+    default boolean hasWon(ResultDto result, TeamDto team) {
+        if(result.getGoalsHomeTeam() > result.getGoalsAwayTeam()) {
+            return team.getTeamId().equals(result.getHomeTeam().getTeamId());
+        } else if(result.getGoalsAwayTeam() > result.getGoalsHomeTeam()) {
+            return team.getTeamId().equals(result.getAwayTeam().getTeamId());
+        }
+        return false;
+    }
+
+    default boolean hasLost(ResultDto result, TeamDto team) {
+        if(result.getGoalsHomeTeam() > result.getGoalsAwayTeam()) {
+            return team.getTeamId().equals(result.getAwayTeam().getTeamId());
+        } else if(result.getGoalsAwayTeam() > result.getGoalsHomeTeam()) {
+            return team.getTeamId().equals(result.getHomeTeam().getTeamId());
+        }
+        return false;
     }
 }

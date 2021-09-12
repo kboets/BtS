@@ -22,27 +22,27 @@ import java.util.stream.Collectors;
  * The result is based on :
  * result of the home game + (number of teams - rank of opponent)
  * eg
- * Club-Brugge - Antwerp : 3 - 1
- * -> 20 + (18 - 5) = 20 + 13 = 33
+ * Charleroi - Club-Brugge : 1 - 1
+ * -> 15 + (18 - 10) = 15 + 8 = 23
  */
 @Component
-@Order(1)
-public class HomeGameCalculator implements ScoreCalculator {
+@Order(2)
+public class AwayGameCalculator implements ScoreCalculator {
 
-    private final int homeWinScore;
-    private final int homeDrawScore;
-    private final int homeLoseScore;
+    private final int awayWinScore;
+    private final int awayDrawScore;
+    private final int awayLoseScore;
     private final StandingService standingService;
     private final StandingMapper standingMapper;
     private final LeagueMapper leagueMapper;
 
-    public HomeGameCalculator(StandingService standingService, StandingMapper standingMapper, LeagueMapper leagueMapper) {
+    public AwayGameCalculator(StandingService standingService, StandingMapper standingMapper, LeagueMapper leagueMapper) {
+        this.awayWinScore = 30;
+        this.awayDrawScore = 15;
+        this.awayLoseScore = 10;
         this.standingService = standingService;
         this.standingMapper = standingMapper;
         this.leagueMapper = leagueMapper;
-        this.homeWinScore = 20;
-        this.homeDrawScore = 10;
-        this.homeLoseScore = 5;
     }
 
     @Override
@@ -51,39 +51,40 @@ public class HomeGameCalculator implements ScoreCalculator {
         LeagueDto leagueDto = leagueMapper.toLeagueDto(forecastData.getLeague());
         int totalTeams = leagueDto.getTeamDtos().size();
         List<ResultDto> allResults = forecastDetail.getResults().stream().sorted(Comparator.comparing(ResultDto::getRoundNumber).reversed()).collect(Collectors.toList());
-        TeamDto homeTeam = forecastDetail.getTeam();
-        // get latest home games for this team
-        List<ResultDto> homeResultForTeam = latestHomeResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), homeTeam);
+        TeamDto awayTeam = forecastDetail.getTeam();
+        // get latest away games for this team
+        List<ResultDto> awayResultsForTeam = latestAwayResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), awayTeam);
         // calculate score
-        for(ResultDto resultDto: homeResultForTeam) {
+        for(ResultDto resultDto: awayResultsForTeam) {
             List<Standing> standings = standingService.getStandingsForLeagueByRound(forecastData.getLeague().getId(), forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
-            TeamDto nextOpponent = resultDto.getAwayTeam();
+            TeamDto nextOpponent = resultDto.getHomeTeam();
             // get standing opponent
             StandingDto opponentStanding = getStandingOpponent(standingMapper.toStandingDtos(standings), nextOpponent);
-            int score = getResultScore(resultDto, homeTeam);
-            if(hasLost(resultDto, homeTeam)) {
-                score = score - opponentStanding.getRank();
+            int score = getResultScore(resultDto, awayTeam);
+            if(hasLost(resultDto, awayTeam)) {
+                score = score - opponentStanding.getPoints();
             } else {
                 score = score + (totalTeams - opponentStanding.getRank());
             }
             forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
         }
+
     }
 
-    private int getResultScore(ResultDto resultDto, TeamDto homeTeam) {
+    private int getResultScore(ResultDto resultDto, TeamDto awayTeam) {
         // calculate initial points based on result
         int score;
-        if(hasWon(resultDto, homeTeam)) {
-            score = homeWinScore;
-        } else if(hasLost(resultDto, homeTeam)) {
-            score = homeLoseScore;
+        if(hasWon(resultDto, awayTeam)) {
+            score = awayWinScore;
+        } else if(hasLost(resultDto, awayTeam)) {
+            score = awayLoseScore;
         } else {
-            score = homeDrawScore;
+            score = awayDrawScore;
         }
         return score;
     }
 
-    private List<ResultDto> latestHomeResultForTeam(List<ResultDto> resultDtos, int currentRound, TeamDto teamDto) {
+    private List<ResultDto> latestAwayResultForTeam(List<ResultDto> resultDtos, int currentRound, TeamDto teamDto) {
         int allowedGames;
         if(currentRound < 10 ) {
             allowedGames = 3;
@@ -91,7 +92,7 @@ public class HomeGameCalculator implements ScoreCalculator {
             allowedGames = 5;
         }
         return resultDtos.stream()
-                .filter(resultDto -> resultDto.getHomeTeam().getTeamId().equals(teamDto.getTeamId()))
+                .filter(resultDto -> resultDto.getAwayTeam().getTeamId().equals(teamDto.getTeamId()))
                 .limit(allowedGames)
                 .collect(Collectors.toList());
     }

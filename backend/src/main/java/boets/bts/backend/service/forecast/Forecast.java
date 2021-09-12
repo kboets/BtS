@@ -15,6 +15,9 @@ public class Forecast {
         this.forecastType = forecastType;
     }
 
+    public Forecast() {
+    }
+
     public LeagueDto getLeague() {
         return league;
     }

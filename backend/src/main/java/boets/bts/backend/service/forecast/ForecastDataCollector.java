@@ -57,7 +57,8 @@ public class ForecastDataCollector {
             Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), currentSeason);
             forecastData.setCurrentRound(currentRound);
             // get all played games
-            forecastData.setFinishedResults(resultRepository.findAll(ResultSpecs.getAllFinishedResult(league)));
+            forecastData.setFinishedResults(resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, currentRound.getRoundNumber())));
+            forecastDataList.add(forecastData);
         }
         return forecastDataList;
     }
@@ -68,7 +69,7 @@ public class ForecastDataCollector {
     protected List<League> retrieveQualifiedLeagues(int currentSeason) {
         //1.get all leagues for this season
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
-        //2. filter allowed leagues, a league should have at least 6 played games, and round can not be last
+        //2. filter allowed leagues, a league should have at least 6 played games, current round can not be last
         List<League> allowedLeagues = new ArrayList<>();
         for(League league: leagues) {
             boolean isAllowed = true;
