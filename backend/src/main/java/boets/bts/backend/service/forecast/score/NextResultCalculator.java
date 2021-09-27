@@ -1,6 +1,6 @@
 package boets.bts.backend.service.forecast.score;
 
-import boets.bts.backend.service.forecast.ForecastData;
+import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetail;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
@@ -23,7 +23,7 @@ public class NextResultCalculator implements ScoreCalculator {
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
         ResultDto nextResult = forecastDetail.getNextResult();
         TeamDto teamDto = forecastDetail.getTeam();
-        if (nextResult.getHomeTeam().getTeamId().equals(teamDto.getTeamId())) {
+        if (nextResult != null && nextResult.getHomeTeam().getTeamId().equals(teamDto.getTeamId())) {
             // next game is home game, add bonus to result
             forecastDetail.setScore(forecastDetail.getScore() + homeGame);
         } else {

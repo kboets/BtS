@@ -37,7 +37,7 @@ export class ForecastComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.forecasts$ = this.forecastService.getWinForecasts()
+        this.forecasts$ = this.forecastService.getForecasts()
             .pipe(
                 catchError(err => {
                     this.errorMessageSubject.next(err);

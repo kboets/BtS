@@ -1,15 +1,12 @@
 package boets.bts.backend.service.forecast.score;
 
-import boets.bts.backend.domain.Standing;
-import boets.bts.backend.service.forecast.ForecastData;
+import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetail;
-import boets.bts.backend.service.forecast.TeamPerformanceQualifier;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.team.TeamDto;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ScoreCalculator {
 

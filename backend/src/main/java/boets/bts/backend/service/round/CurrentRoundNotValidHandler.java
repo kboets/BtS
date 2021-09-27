@@ -30,7 +30,7 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
 
     @Override
     public boolean accept(Optional<Round> roundOptional) {
-        if(!roundOptional.isPresent()) {
+        if(roundOptional.isEmpty()) {
             return false;
         }
         Round currentPersisted = roundOptional.get();

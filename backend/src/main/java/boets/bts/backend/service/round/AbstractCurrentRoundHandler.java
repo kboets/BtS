@@ -38,7 +38,7 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
         if (!WebUtils.isWeekend())  {
             String round = clientRound.getRound();
             String strippedRound = StringUtils.substringBeforeLast(round, "_");
-            int roundVal = new Integer(StringUtils.substringAfterLast(round, "_"));
+            int roundVal = Integer.parseInt(StringUtils.substringAfterLast(round, "_"));
             if(roundVal != 1) {
                 String previous = Integer.toString(roundVal-1);
                 StringBuilder builder = new StringBuilder();

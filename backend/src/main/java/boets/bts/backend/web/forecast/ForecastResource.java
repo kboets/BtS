@@ -21,9 +21,9 @@ public class ForecastResource {
         this.forecastService = forecastService;
     }
 
-    @GetMapping("win")
+    @GetMapping("all")
     public List<Forecast> getAllWinForecast() {
-        logger.info("Retrieving all WIN forecast");
+        logger.info("Retrieving all forecast");
         return forecastService.calculateForecast();
     }
 }

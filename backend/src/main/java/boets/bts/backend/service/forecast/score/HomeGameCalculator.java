@@ -1,7 +1,7 @@
 package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.domain.Standing;
-import boets.bts.backend.service.forecast.ForecastData;
+import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetail;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.league.LeagueDto;
@@ -12,6 +12,7 @@ import boets.bts.backend.web.standing.StandingMapper;
 import boets.bts.backend.web.team.TeamDto;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Order(1)
+@Transactional
 public class HomeGameCalculator implements ScoreCalculator {
 
     private final int homeWinScore;
@@ -48,7 +50,7 @@ public class HomeGameCalculator implements ScoreCalculator {
     @Override
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
         //retrieve number of teams
-        LeagueDto leagueDto = leagueMapper.toLeagueDto(forecastData.getLeague());
+        LeagueDto leagueDto = forecastData.getLeague();
         int totalTeams = leagueDto.getTeamDtos().size();
         List<ResultDto> allResults = forecastDetail.getResults().stream().sorted(Comparator.comparing(ResultDto::getRoundNumber).reversed()).collect(Collectors.toList());
         TeamDto homeTeam = forecastDetail.getTeam();
@@ -56,7 +58,8 @@ public class HomeGameCalculator implements ScoreCalculator {
         List<ResultDto> homeResultForTeam = latestHomeResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), homeTeam);
         // calculate score
         for(ResultDto resultDto: homeResultForTeam) {
-            List<Standing> standings = standingService.getStandingsForLeagueByRound(forecastData.getLeague().getId(), forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
+            Long leagueId = Long.parseLong(forecastData.getLeague().getLeague_id());
+            List<Standing> standings = standingService.getStandingsForLeagueByRound(leagueId, forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
             TeamDto nextOpponent = resultDto.getAwayTeam();
             // get standing opponent
             StandingDto opponentStanding = getStandingOpponent(standingMapper.toStandingDtos(standings), nextOpponent);

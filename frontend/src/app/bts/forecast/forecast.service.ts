@@ -12,8 +12,8 @@ export class ForecastService {
 
     constructor(private http: HttpClient) {  }
 
-    getWinForecasts(): Observable<Forecast[]> {
-        return this.http.get<Forecast[]>(`/btsapi/api/forecast/win`)
+    getForecasts(): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(
                 shareReplay(1),
                 catchError(this.handleHttpError)
