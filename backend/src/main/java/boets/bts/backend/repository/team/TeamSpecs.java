@@ -13,7 +13,7 @@ public class TeamSpecs {
             Predicate predicate = criteriaBuilder.equal(root.get("teamId"), teamId);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("league"), league));
+                            root.get("league"), league.getId()));
             return predicate;
         };
     }

@@ -91,7 +91,7 @@ public class ResultService {
         for (League selectedLeague : allLeagues) {
             List<Result> resultForLeague;
             if(! adminService.isHistoricData()) {
-                resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague), Sort.by("id").descending());
+                resultForLeague = resultRepository.findAll(ResultSpecs.getAllFinishedResult(selectedLeague.getId()), Sort.by("id").descending());
             } else {
                 Round currentRound = roundService.getCurrentRoundForLeague(selectedLeague.getId(), adminService.getCurrentSeason());
                 resultForLeague =  resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(selectedLeague, currentRound.getRoundNumber()));
@@ -110,8 +110,8 @@ public class ResultService {
         return true;
     }
 
-    // each 30 minutes
-    @Scheduled(cron = "15 5-59/30 * * * ?")
+    // each 15 minutes starting at 5 minutes after the hour
+    @Scheduled(cron = "* 5-59/15 * * * ?")
     public void scheduleResults() throws Exception {
         logger.info("Scheduler triggered to update results ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {

@@ -30,14 +30,14 @@ public class ResultSpecs {
             Predicate predicate = criteriaBuilder.equal(root.get("round"), round);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("league"), league));
+                            root.get("league"), league.getId()));
             return predicate;
         };
     }
 
     public static Specification<Result> allFinishedResultsCurrentRoundIncluded(League league, int roundNumber) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league.getId());
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.lessThanOrEqualTo(
                             root.get("roundNumber"), roundNumber));
@@ -49,9 +49,9 @@ public class ResultSpecs {
         };
     }
 
-    public static Specification<Result> getAllFinishedResult(League league) {
+    public static Specification<Result> getAllFinishedResult(Long leagueId) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("matchStatus"), "Match Finished"));

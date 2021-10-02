@@ -45,10 +45,10 @@ public class ForecastDataCollector {
     }
 
     public ForecastData collectForecastData(League league) {
-        League persitedLeague = leagueRepository.findById(league.getId()).orElseThrow(() -> new IllegalStateException(String.format("Could not retrieve League with id %s", league.getId())));
-        int currentSeason = persitedLeague.getSeason();
+        League persistedLeague = leagueRepository.findById(league.getId()).orElseThrow(() -> new IllegalStateException(String.format("Could not retrieve League with id %s", league.getId())));
+        int currentSeason = persistedLeague.getSeason();
         ForecastData forecastData = new ForecastData();
-        forecastData.setLeague(leagueMapper.toLeagueDto(persitedLeague));
+        forecastData.setLeague(leagueMapper.toLeagueDto(persistedLeague));
         // get next game
         Round nextRound = roundService.getNextRound(league.getId());
         List<Result> nextGames = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(league, nextRound.getRound()));

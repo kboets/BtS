@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import static boets.bts.backend.service.forecast.calculator.StreamOfFuturesCollector.toFuture;
 
 @Component
-@Transactional
 public class ForecastCalculatorManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ForecastCalculatorManager.class);
@@ -39,17 +38,15 @@ public class ForecastCalculatorManager {
     private final AdminService adminService;
     private final ResultRepository resultRepository;
     private final ForecastDataCollector forecastDataCollector;
-    private final ResultMapper resultMapper;
     private final ScoreCalculatorHandler scoreCalculatorHandler;
 
     public ForecastCalculatorManager(LeagueMapper leagueMapper, RoundService roundService, AdminService adminService, ResultRepository resultRepository,
-                                     ForecastDataCollector forecastDataCollector, ResultMapper resultMapper, ScoreCalculatorHandler scoreCalculatorHandler) {
+                                     ForecastDataCollector forecastDataCollector, ScoreCalculatorHandler scoreCalculatorHandler) {
         this.leagueMapper = leagueMapper;
         this.roundService = roundService;
         this.adminService = adminService;
         this.resultRepository = resultRepository;
         this.forecastDataCollector = forecastDataCollector;
-        this.resultMapper = resultMapper;
         this.scoreCalculatorHandler = scoreCalculatorHandler;
     }
 
@@ -102,7 +99,8 @@ public class ForecastCalculatorManager {
         return CompletableFuture
                 // Asynchronously check if league has at least 5 played games.
                 .supplyAsync(() -> {
-                    if(isLeagueReadyToForecast(league)) {
+                    boolean isLeagueReady = isLeagueReadyToForecast(league);
+                    if(isLeagueReady) {
                         return Optional.of(league);
                     }
                     return Optional.empty();
@@ -170,11 +168,12 @@ public class ForecastCalculatorManager {
         if(currentRound.getRoundNumber().equals(lastRound.getRoundNumber())){
             return false;
         }
-        //each team should have at least played 6 games
+        // at least 6 rounds
         LeagueDto leagueDto = leagueMapper.toLeagueDto(league);
         int teams = leagueDto.getTeamDtos().size();
-        List<Result> results = resultRepository.findAll(ResultSpecs.getAllFinishedResult(league));
-        return results.size() >= (teams * 6);
+        int expectedResult = teams/2 * 6;
+        List<Result> results = resultRepository.findAll(ResultSpecs.getAllFinishedResult(league.getId()));
+        return results.size() >= expectedResult;
     }
 
     protected ForecastData retrieveForecastData(League league) {

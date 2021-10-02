@@ -13,7 +13,7 @@ public class Round implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     private League league;
 

@@ -229,7 +229,7 @@ export class ResultsComponent implements OnInit {
             //tap(()=> console.log('arrived in the results latest for team')),
             map(([results, teamId]) => {
                 return _.chain(results).filter(function (result) {
-                    return result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId;
+                    return result.matchStatus === 'Match Finished' && (result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId);
                 }).first(5).value();
             }),
             //tap(data => console.log('latest 5 results for team team ', JSON.stringify(data))),
@@ -247,7 +247,7 @@ export class ResultsComponent implements OnInit {
             map(([results, teamId]) => {
                 return _.filter(results, function (result) {
                     //console.log(" result team id " +result.homeTeam.teamId);
-                    return result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId;
+                    return result.matchStatus === 'Match Finished' && (result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId);
                 })
             }),
             //tap(data => console.log('all results 4 team ', JSON.stringify(data))),

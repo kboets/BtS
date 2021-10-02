@@ -10,6 +10,8 @@ import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
 import boets.bts.backend.web.team.TeamDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class AwayGameCalculator implements ScoreCalculator {
 
+    private final static  Logger logger = LoggerFactory.getLogger(AwayGameCalculator.class);
     private final int awayWinScore;
     private final int awayDrawScore;
     private final int awayLoseScore;
@@ -63,13 +66,17 @@ public class AwayGameCalculator implements ScoreCalculator {
             TeamDto nextOpponent = resultDto.getHomeTeam();
             // get standing opponent
             StandingDto opponentStanding = getStandingOpponent(standingMapper.toStandingDtos(standings), nextOpponent);
-            int score = getResultScore(resultDto, awayTeam);
-            if(hasLost(resultDto, awayTeam)) {
-                score = score - opponentStanding.getPoints();
+            if(opponentStanding == null) {
+                logger.warn("Could not find standing for team {}", nextOpponent.getName());
             } else {
-                score = score + (totalTeams - opponentStanding.getRank());
+                int score = getResultScore(resultDto, awayTeam);
+                if(hasLost(resultDto, awayTeam)) {
+                    score = score - opponentStanding.getPoints();
+                } else {
+                    score = score + (totalTeams - opponentStanding.getRank());
+                }
+                forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
             }
-            forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
         }
 
     }

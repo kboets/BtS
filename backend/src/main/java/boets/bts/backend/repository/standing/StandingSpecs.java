@@ -10,7 +10,7 @@ public class StandingSpecs {
 
     public static Specification<Standing> forLeague(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league.getId());
             return predicate;
         };
     }
@@ -31,7 +31,7 @@ public class StandingSpecs {
 
     public static Specification<Standing> getStandingsByLeagueAndRound(League league, int roundNumber, int season) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
+            Predicate predicate = criteriaBuilder.equal(root.get("league"), league.getId());
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
                             root.get("roundNumber"), roundNumber));

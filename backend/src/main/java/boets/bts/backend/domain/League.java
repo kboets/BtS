@@ -3,9 +3,7 @@ package boets.bts.backend.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "LEAGUE")
@@ -42,11 +40,11 @@ public class League implements Serializable {
     @Column
     private boolean selected;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Team> teams;
+    @OneToMany(mappedBy = "league", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Team> teams;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.DETACH, orphanRemoval = true)
-    private List<Round> rounds;
+    @OneToMany(mappedBy = "league", cascade = CascadeType.DETACH, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Round> rounds;
 
     public Long getId() {
         return id;
@@ -120,25 +118,25 @@ public class League implements Serializable {
         this.season = season;
     }
 
-    public List<Team> getTeams() {
+    public Set<Team> getTeams() {
         if(this.teams == null) {
-            teams = new ArrayList<>();
+            teams = new HashSet<>();
         }
         return teams;
     }
 
-    public void setTeams(List<Team> teams) {
+    public void setTeams(Set<Team> teams) {
         this.teams = teams;
     }
 
-    public List<Round> getRounds() {
+    public Set<Round> getRounds() {
         if(this.rounds == null) {
-            rounds = new ArrayList<>();
+            rounds = new HashSet<>();
         }
         return rounds;
     }
 
-    public void setRounds(List<Round> rounds) {
+    public void setRounds(Set<Round> rounds) {
         this.rounds = rounds;
     }
 
@@ -183,8 +181,8 @@ public class League implements Serializable {
         private String logo;
         private String  flag;
         private boolean selected;
-        private List<Team> teams;
-        private List<Round> rounds;
+        private Set<Team> teams;
+        private Set<Round> rounds;
 
         private LeagueBuilder() {
         }
@@ -243,12 +241,12 @@ public class League implements Serializable {
             return this;
         }
 
-        public LeagueBuilder withTeams(List<Team> teams) {
+        public LeagueBuilder withTeams(Set<Team> teams) {
             this.teams = teams;
             return this;
         }
 
-        public LeagueBuilder withRounds(List<Round> rounds) {
+        public LeagueBuilder withRounds(Set<Round> rounds) {
             this.rounds = rounds;
             return this;
         }

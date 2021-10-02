@@ -3,6 +3,7 @@ package boets.bts.backend.service.standing.retriever;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Standing;
+import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.repository.standing.StandingRepository;
@@ -41,7 +42,9 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     protected final ResultMapper resultMapper;
     private final StandingCalculator standingCalculator;
 
-    public AbstractStandingRetriever(LeagueMapper leagueMapper, RoundMapper roundMapper, StandingClient standingClient, AdminService adminService, StandingMapper standingMapper, TeamRepository teamRepository, StandingRepository standingRepository, ResultRepository resultRepository, ResultMapper resultMapper) {
+    public AbstractStandingRetriever(LeagueMapper leagueMapper, RoundMapper roundMapper, StandingClient standingClient, AdminService adminService,
+                                     StandingMapper standingMapper, TeamRepository teamRepository, StandingRepository standingRepository,
+                                     ResultRepository resultRepository, ResultMapper resultMapper) {
         this.leagueMapper = leagueMapper;
         this.roundMapper = roundMapper;
         this.standingClient = standingClient;
@@ -78,7 +81,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
         List<Result> results = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, roundNumber));
         List<StandingDto> calculatedStandingDtos = standingCalculator.calculateStandings(leagueMapper.toLeagueDto(league), resultMapper.toResultDtos(results), roundNumber);
         List<Standing> calculatedStandings = standingMapper.toStandings(calculatedStandingDtos);
-        logStanding(calculatedStandings, roundNumber);
+        //logStanding(calculatedStandings, roundNumber);
         //save to database
         return saveAndReturn(calculatedStandings, league, roundNumber);
     }

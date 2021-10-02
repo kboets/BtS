@@ -55,7 +55,7 @@ public class ForecastServiceIntegrationTest {
     }
 
     @Test
-    public void calculateForecast_givenSeason2020JupilerLeagueCurrentRound10_shouldReturnForecast() {
+    public void calculateForecast_givenSeason2020JupilerLeagueCurrentRound10_shouldReturnForecast() throws Exception {
         //setup
         adminService.updateAdmin(adminSeason2020);
         assertThat(adminService.getCurrentSeason()).isEqualTo(2020);

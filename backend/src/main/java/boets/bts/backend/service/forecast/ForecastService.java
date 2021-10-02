@@ -1,80 +1,74 @@
 package boets.bts.backend.service.forecast;
 
-import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.calculator.ForecastDataCollector;
-import boets.bts.backend.service.forecast.score.ScoreCalculatorHandler;
-import boets.bts.backend.web.league.LeagueMapper;
-import boets.bts.backend.web.results.ResultMapper;
+import boets.bts.backend.domain.AdminKeys;
+import boets.bts.backend.domain.League;
+import boets.bts.backend.repository.league.LeagueRepository;
+import boets.bts.backend.repository.league.LeagueSpecs;
+import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.forecast.calculator.ForecastCalculatorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Transactional
 public class ForecastService {
     private static final Logger logger = LoggerFactory.getLogger(ForecastService.class);
 
-    private final ForecastDataCollector forecastDataCollector;
-    private final LeagueMapper leagueMapper;
-    private final ResultMapper resultMapper;
-    private final ScoreCalculatorHandler scoreCalculatorHandler;
+    private final ForecastCalculatorManager forecastCalculatorManager;
+    private final AdminService adminService;
+    private final LeagueRepository leagueRepository;
 
-    public ForecastService(ForecastDataCollector forecastDataCollector, LeagueMapper leagueMapper,
-                           ResultMapper resultMapper, ScoreCalculatorHandler scoreCalculatorHandler) {
-        this.forecastDataCollector = forecastDataCollector;
-        this.leagueMapper = leagueMapper;
-        this.resultMapper = resultMapper;
-        this.scoreCalculatorHandler = scoreCalculatorHandler;
+    private ConcurrentHashMap<LocalDate, List<Forecast>> forecastMap;
+
+    public ForecastService(ForecastCalculatorManager forecastCalculatorManager, AdminService adminService, LeagueRepository leagueRepository) {
+        this.forecastCalculatorManager = forecastCalculatorManager;
+        this.adminService = adminService;
+        this.leagueRepository = leagueRepository;
+        this.forecastMap = new ConcurrentHashMap<>();
     }
 
-    public List<Forecast> calculateForecast() {
+    public List<Forecast> calculateForecast() throws Exception {
+        LocalDate localDate = LocalDate.now();
         List<Forecast> forecasts = new ArrayList<>();
-        //get the forecast data
-//        List<ForecastData> forecastDataList = forecastDataCollector.collectForecastData();
-//
-//        //create forecast
-//        for(ForecastData forecastData: forecastDataList) {
-//            Forecast forecast = new Forecast();
-//            LeagueDto leagueDto = leagueMapper.toLeagueDto(forecastData.getLeague());
-//            forecast.setLeague(leagueDto);
-//            List<TeamDto> teams = leagueDto.getTeamDtos();
-//            //create forecast details
-//            for (TeamDto teamDto : teams) {
-//                ForecastDetail forecastDetail = createForecastDetail(forecastData, teamDto);
-//                forecast.getForecastDetails().add(forecastDetail);
-//            }
-//            forecasts.add(forecast);
-//        }
-//
-//        //calculate score
-//        for(Forecast forecast: forecasts) {
-//            List<ForecastDetail> forecastDetails = forecast.getForecastDetails();
-//            for(ForecastDetail forecastDetail : forecastDetails) {
-//                scoreCalculatorHandler.calculateScore(forecastDetail, getForeCastDataForLeague(forecast.getLeague().getLeague_id(), forecastDataList), forecastDetails);
-//            }
-//            //final score
-//            for(ForecastDetail forecastDetail : forecastDetails) {
-//                TeamDto opponent = forecastDetail.getNextOpponent();
-//                ForecastDetail otherTeamForecastDetail = forecastDetails.stream().filter(forecastDetail1 -> forecastDetail1.getTeam().getTeamId().equals(opponent.getTeamId()))
-//                        .findFirst().orElseThrow(() -> new IllegalStateException(String.format("Could not find a team with teamid %s in the list of forecastdetail", opponent.getTeamId())));
-//                int score = forecastDetail.getResultScore() - otherTeamForecastDetail.getResultScore();
-//                forecastDetail.setScore(forecastDetail.getScore() + score);
-//            }
-//            forecastDetails.sort(Comparator.comparing(ForecastDetail::getScore, Comparator.reverseOrder()));
-//        }
-
+        //before calculating, all rounds, results and standings must be updated.
+        if(adminService.isHistoricData()) {
+            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+            forecasts.addAll(forecastCalculatorManager.calculateForecasts(leagues));
+            forecastMap.put(localDate, forecasts);
+            return forecasts;
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            logger.warn("Could not yet calculate forecasts as result is not yet up to date");
+            forecastMap.clear();
+            return forecasts;
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
+            logger.warn("Could not yet calculate forecasts as round is not yet up to date");
+            forecastMap.clear();
+            return forecasts;
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS)) {
+            logger.warn("Could not yet calculate forecasts as standings is not yet up to date");
+            forecastMap.clear();
+            return forecasts;
+        }
+        List<Forecast> savedForecasts = forecastMap.get(localDate);
+        if(savedForecasts != null && !savedForecasts.isEmpty()) {
+            return forecastMap.get(localDate);
+        } else {
+            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+            forecasts.addAll(forecastCalculatorManager.calculateForecasts(leagues));
+            forecastMap.put(localDate, forecasts);
+        }
 
         return forecasts;
     }
-
-
-
-
-
-
-
 
 }

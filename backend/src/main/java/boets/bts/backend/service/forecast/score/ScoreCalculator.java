@@ -13,8 +13,9 @@ public interface ScoreCalculator {
     void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails);
 
     default StandingDto getStandingOpponent(List<StandingDto> standings, TeamDto opponent) {
-        return  standings.stream().filter(standing -> standing.getTeam().getTeamId().equals(opponent.getTeamId()))
-                .findFirst().orElseThrow(() -> new RuntimeException(String.format("Could not find standing for team %s", opponent.getName())));
+        return  standings.stream().filter(standing -> standing.getTeam().getId().equals(opponent.getId()))
+                .findFirst()
+                .orElse(null);
     }
 
     default TeamDto getOpponent(ResultDto resultDto, TeamDto teamDto) {

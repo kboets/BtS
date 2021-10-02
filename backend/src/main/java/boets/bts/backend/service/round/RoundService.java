@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -71,9 +69,9 @@ public class RoundService {
         if(league.getRounds().isEmpty()) {
             this.updateLeagueWithRounds(league);
         } else {
-            List<Round> allRoundsForLeague = league.getRounds();
+            Set<Round> allRoundsForLeague = league.getRounds();
             //verify if round number is already calculated
-            if(allRoundsForLeague.get(0).getRoundNumber() == null) {
+            if(allRoundsForLeague.iterator().next().getRoundNumber() == null) {
                 this.updateRoundWithRoundNumber(allRoundsForLeague);
             }
         }
@@ -108,13 +106,13 @@ public class RoundService {
 
     public void setCurrentRoundForHistoricData(Long leagueId, int season) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
-        List<Round> rounds = league.getRounds();
+        Set<Round> rounds = league.getRounds();
         if(rounds.isEmpty()) {
             this.updateLeagueWithRounds(league);
             rounds = league.getRounds();
         } else {
-            List<Round> allRoundsForLeague = league.getRounds();
-            if(allRoundsForLeague.get(0).getRoundNumber() == null) {
+            Set<Round> allRoundsForLeague = league.getRounds();
+            if(allRoundsForLeague.iterator().next().getRoundNumber() == null) {
                 this.updateRoundWithRoundNumber(allRoundsForLeague);
             }
         }
@@ -123,7 +121,8 @@ public class RoundService {
         if(!currentPersistedRound.isPresent()) {
             //take random round
             int random = rounds.size() - 10;
-            round = rounds.get(random);
+            List<Round> rounds1 = new ArrayList<>(rounds);
+            round = rounds1.get(random);
             round.setCurrentDate(LocalDate.now());
             round.setCurrent(true);
         } else {
@@ -150,14 +149,14 @@ public class RoundService {
     /**
      * Cron job each 15 minutes
      */
-    @Scheduled(cron = "30 0/15 * * * ?")
+    @Scheduled(cron = "* 1-59/15 * * * ?")
     public void scheduleRound() {
         logger.info("Scheduler triggered to update rounds ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for non historic data");
-            adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+            adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for historic data");
@@ -166,7 +165,8 @@ public class RoundService {
         }
     }
 
-    private void updateRoundWithRoundNumber(List<Round> rounds) {
+    private void updateRoundWithRoundNumber(Set<Round> roundSet) {
+        List<Round> rounds = new ArrayList<>(roundSet);
         rounds.sort(Comparator.comparing(Round::getId));
         int index = 1;
         for(Round round:rounds) {

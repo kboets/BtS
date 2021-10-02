@@ -44,15 +44,16 @@ public class ForecastCalculatorManagerTest {
     private ForecastCalculatorManager forecastCalculatorManager;
 
     private Admin adminSeason2020;
+    private Admin getAdminSeason2021;
     private List<League> leagues;
 
     @Before
     public void init() {
-        adminSeason2020 = new Admin(AdminKeys.SEASON);
-        adminSeason2020.setDate(LocalDateTime.now());
-        adminSeason2020.setValue("2020");
-        leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(2020));
-        adminService.updateAdmin(adminSeason2020);
+//        adminSeason2020 = new Admin(AdminKeys.SEASON);
+//        adminSeason2020.setDate(LocalDateTime.now());
+//        adminSeason2020.setValue("2020");
+        leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(2021));
+        //adminService.updateAdmin(adminSeason2020);
     }
 
     @Test
@@ -105,6 +106,14 @@ public class ForecastCalculatorManagerTest {
         List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(requestedLeagues);
         assertThat(forecasts.size()).isEqualTo(2);
 
+    }
+    @Test
+    public void test() throws Exception {
+        List<League> requestedLeagues = new ArrayList<>();
+        League league1 = leagues.stream().filter(league -> league.getId().equals(3506L)).findFirst().orElseThrow(() -> new IllegalStateException(String.format("Could not retrieve League 1 with id %s", 3506)));
+        requestedLeagues.add(league1);
+        List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(requestedLeagues);
+        assertThat(forecasts.size()).isEqualTo(1);
     }
 
     public void setUpLeaguesWithRound(List<League> leagues, int roundNumber) {

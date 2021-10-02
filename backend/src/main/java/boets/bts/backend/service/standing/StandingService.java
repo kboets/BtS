@@ -68,7 +68,7 @@ public class StandingService {
 
 
     // each 30 minutes
-    @Scheduled(cron = "30 5-59/30 * * * ?")
+    @Scheduled(cron = "* 7-59/15 * * * ?")
     public void scheduleStandings() {
         logger.info("Scheduler triggered to update standings ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()) {
