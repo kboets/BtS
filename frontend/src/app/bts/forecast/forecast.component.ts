@@ -22,10 +22,10 @@ export class ForecastComponent implements OnInit {
     private selectedForecastSubject = new BehaviorSubject<string>('ALL');
     selectedForecastAction$ = this.selectedForecastSubject.asObservable();
 
-    private forecasts$: Observable<Forecast[]>;
-    private forecastLeagues$: Observable<League[]>;
-    private forecastDetails: ForecastDetail[];
-    private isHistoricData: boolean;
+    public forecasts$: Observable<Forecast[]>;
+    public forecastLeagues$: Observable<League[]>;
+    public forecastDetails: ForecastDetail[];
+    public isHistoricData: boolean;
     currentSeason: number;
     displayScoreInfo: boolean;
     selectedForecastLeague: League;
