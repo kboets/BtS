@@ -1,0 +1,16 @@
+*********************************************************************************
+
+                            RELEASE NOTES
+
+*********************************************************************************
+
+2/10/2021 1.0.0
+Initial version
+* Display of predefined leagues
+* Display the results for each league
+* Display the results for each team of the league
+* Display the standing of the league
+* Calculate the prospects
+* Calculate the forecasts
+* Admin page
+* Foresee historic data
