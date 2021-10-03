@@ -3,7 +3,8 @@
                             RELEASE NOTES
 
 *********************************************************************************
-
+3/10/2021 1.0.1
+* Removed redundant logging
 2/10/2021 1.0.0
 Initial version
 * Display of predefined leagues

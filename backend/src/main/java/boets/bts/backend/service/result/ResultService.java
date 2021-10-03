@@ -113,7 +113,6 @@ public class ResultService {
     // each 15 minutes starting at 5 minutes after the hour
     @Scheduled(cron = "* 5-59/15 * * * ?")
     public void scheduleResults() throws Exception {
-        logger.info("Scheduler triggered to update results ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
             logger.info("Running cron job to update results ..");
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());

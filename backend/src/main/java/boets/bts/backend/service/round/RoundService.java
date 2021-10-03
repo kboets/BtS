@@ -78,7 +78,7 @@ public class RoundService {
 
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
-        if(!currentRoundHandlerOptional.isPresent()) {
+        if(currentRoundHandlerOptional.isEmpty()) {
             logger.warn("Could not retrieve a current round handler for league {} ", league.getName());
             throw new NotFoundException("Could not retrieve a current round handler");
         }
@@ -151,7 +151,6 @@ public class RoundService {
      */
     @Scheduled(cron = "* 1-59/15 * * * ?")
     public void scheduleRound() {
-        logger.info("Scheduler triggered to update rounds ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for non historic data");

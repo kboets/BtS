@@ -70,7 +70,6 @@ public class StandingService {
     // each 30 minutes
     @Scheduled(cron = "* 7-59/15 * * * ?")
     public void scheduleStandings() {
-        logger.info("Scheduler triggered to update standings ..");
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()) {
             logger.info("Running cron job to update standings ..");
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
