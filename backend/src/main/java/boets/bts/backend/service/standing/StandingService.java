@@ -46,7 +46,9 @@ public class StandingService {
 
     public List<StandingDto> getCurrentStandingForLeague(Long leagueId) {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
+        logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
         List<Standing> standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRound.getRoundNumber());
+        logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
         return standingMapper.toStandingDtos(standingsForLeagueByRound);
     }
 

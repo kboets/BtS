@@ -17,7 +17,7 @@ export class StandingService {
         return this.http.get<Standing[]>(`/btsapi/api/standing/league/${leagueId}`)
             .pipe(
                 //tap(data => console.log('get all standing for league  '+leagueId, JSON.stringify(data))),
-                shareReplay(1),
+                //shareReplay(1),
                 catchError(this.handleHttpError)
             );
     }

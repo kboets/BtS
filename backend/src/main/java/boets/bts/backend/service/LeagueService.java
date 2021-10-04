@@ -66,30 +66,6 @@ public class LeagueService  {
     }
 
     public List<LeagueDto> getCurrentLeagues() {
-        boolean isChanged = false;
-        List<LeagueDto> leaguesCurrentSeason = this.getAndVerifyPersistedLeaguesRequestedSeason();
-        Map<Long, League> leagueMap = new HashMap<>();
-
-        if(leaguesCurrentSeason.stream().anyMatch(leagueDto -> leagueDto.getTeamDtos().isEmpty())) {
-            isChanged = true;
-            List<League> leaguesToBeUpdates = leagueMapper.toLeagues(leaguesCurrentSeason);
-            for(League league: leaguesToBeUpdates) {
-                if(league.getTeams().isEmpty()) {
-                    teamService.updateLeagueWithTeams(league);
-                    leagueMap.put(league.getId(),league);
-                }
-            }
-        }
-        if(isChanged) {
-            //List<League> updatedLeagues = leagueRepository.saveAll(leagueMap.values());
-            List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(new ArrayList<>(leagueMap.values()));
-            return leagueDtoList;
-        }
-
-        return leaguesCurrentSeason;
-    }
-
-    private List<LeagueDto> getAndVerifyPersistedLeaguesRequestedSeason() {
         int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
         if(leagues.isEmpty() || leagues.size() < allowedCountries.size()) {
@@ -114,14 +90,19 @@ public class LeagueService  {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
             selectedLeagues.addAll(leagueBettingDefiner.retrieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
-        //4. verify if has all rounds
+        //4. verify if league has all rounds + teams
         selectedLeagues = selectedLeagues.stream()
                 .filter(league -> league.getRounds().isEmpty())
+                .peek(roundService::updateLeagueWithRounds)
+                .collect(Collectors.toList());
+        selectedLeagues = selectedLeagues.stream()
+                .filter(league -> league.getTeams().isEmpty())
                 .peek(teamService::updateLeagueWithTeams)
                 .collect(Collectors.toList());
+
         //5. persist to database
         leagueRepository.saveAll(selectedLeagues);
-        //5. make check if league is still current
+        //6. check if league is still current
         verifyPersistedLeagueIsCurrent();
         return selectedLeagues;
     }
