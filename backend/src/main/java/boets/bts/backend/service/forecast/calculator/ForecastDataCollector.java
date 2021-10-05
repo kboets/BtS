@@ -57,7 +57,7 @@ public class ForecastDataCollector {
         Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), currentSeason);
         forecastData.setCurrentRound(roundMapper.toRoundDto(currentRound));
         // get all played games
-        List<Result> playedGames = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, currentRound.getRoundNumber()-1));
+        List<Result> playedGames = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, currentRound.getRoundNumber()));
         playedGames.sort(Comparator.comparing(Result::getRoundNumber, Comparator.reverseOrder()));
         if(currentRound.getRoundNumber() > 10) {
             // make sure only 10 rounds are taken into account

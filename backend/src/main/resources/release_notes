@@ -3,6 +3,9 @@
                             RELEASE NOTES
 
 *********************************************************************************
+5/10/2021 1.0.2
+bugfixed forecast
+update logging schedulers
 3/10/2021 1.0.1
 * Removed redundant logging
 2/10/2021 1.0.0
