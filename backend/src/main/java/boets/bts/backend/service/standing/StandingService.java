@@ -48,7 +48,7 @@ public class StandingService {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
         List<Standing> standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRound.getRoundNumber());
-        logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
+        logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.isEmpty()?"NOT FOUND":standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
         return standingMapper.toStandingDtos(standingsForLeagueByRound);
     }
 
@@ -59,12 +59,11 @@ public class StandingService {
             return standingsForRound;
         }
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
-        logger.info("Could not find standing of round {} for league {} of season {}", roundNumber, league.getName(), season);
         Optional<StandingRetriever> standingOptionalRetriever = standingRetrieverSelector.select(league, currentRound, roundNumber);
         if(standingOptionalRetriever.isPresent()) {
             return standingOptionalRetriever.get().getStanding(league, currentRound, roundNumber);
         }
-
+        logger.info("Could not find standing of round {} for league {} of season {}", roundNumber, league.getName(), season);
         return Collections.emptyList();
     }
 
