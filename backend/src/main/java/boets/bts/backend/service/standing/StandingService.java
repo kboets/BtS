@@ -8,6 +8,7 @@ import boets.bts.backend.repository.standing.StandingSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.service.standing.retriever.StandingRetriever;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
@@ -46,8 +47,15 @@ public class StandingService {
 
     public List<StandingDto> getCurrentStandingForLeague(Long leagueId) {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
-        logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
-        List<Standing> standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRound.getRoundNumber());
+        List<Standing> standingsForLeagueByRound;
+        if(WebUtils.isWeekend()) {
+            int currentRoundNumber = currentRound.getRoundNumber()-1;
+            logger.info("Current round {} for league {} while getting standings", currentRoundNumber, leagueId);
+            standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRoundNumber);
+        } else {
+            logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
+            standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRound.getRoundNumber());
+        }
         logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.isEmpty()?"NOT FOUND":standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
         return standingMapper.toStandingDtos(standingsForLeagueByRound);
     }
