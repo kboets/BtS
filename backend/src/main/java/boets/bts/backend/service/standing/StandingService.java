@@ -76,15 +76,8 @@ public class StandingService {
     }
 
     public List<StandingDto> getStandingRoundAndLeague(Long leagueId, int roundNumber) {
-        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
-        List<Standing> standings;
-        // check if requested round is current round during weekend, take previous round
-        if(currentRound.getRoundNumber() == roundNumber && WebUtils.isWeekend()) {
-            int previousRound = roundNumber-1;
-            standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), previousRound);
-        } else {
-            standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), roundNumber);
-        }
+        int validateRound = getValidatedRound(roundNumber, leagueId);
+        List<Standing> standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), validateRound);
         return standingMapper.toStandingDtos(standings);
     }
 
@@ -100,5 +93,17 @@ public class StandingService {
             }
             adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
         }
+    }
+
+    private int getValidatedRound(int roundNumber, Long leagueId) {
+        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
+        if(roundNumber >= currentRound.getRoundNumber()) {
+            if(WebUtils.isWeekend()) {
+                return currentRound.getRoundNumber()-1;
+            } else {
+                return currentRound.getRoundNumber();
+            }
+        }
+        return roundNumber;
     }
 }
