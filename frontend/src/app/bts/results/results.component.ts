@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {LeagueService} from "../league/league.service";
-import {catchError, map, tap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {BehaviorSubject, combineLatest, EMPTY, merge, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Round} from "../domain/round";
@@ -44,7 +44,8 @@ export class ResultsComponent implements OnInit {
     //all results until next round
     resultAllUntilNextRound$: Observable<Result[]>
 
-    standing$: Observable<Standing[]>;
+    standings$: Observable<Standing[]>;
+    requestedStanding$: Observable<Standing[]>;
     //last 5 or 8 results for specific team
     resultsLatest4Teams$: Observable<Result[]>;
     resultsAll4Teams$: Observable<Result[]>;
@@ -196,16 +197,22 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        //standing for the league
-        this.standing$ = this.standingService.getStandingForLeague(+league_id)
+        //requested standing for league
+        this.requestedStanding$ = this.selectedRound$
             .pipe(
-                //tap(()=> console.log('arrived in the standing ')),
-                map(items => items.sort(ResultsComponent.sortByStandingRank),
-                catchError(err => {
-                    this.errorMessageSubject.next(err);
-                    return EMPTY;
-                })
-            ));
+                switchMap(selectedRound => this.standingService.getStandingForLeagueAndRound(+league_id, +selectedRound.playRound))
+            );
+
+        //standings for the league
+        // this.standings$ = this.standingService.getStandingForLeague(+league_id)
+        //     .pipe(
+        //         //tap(()=> console.log('arrived in the standing ')),
+        //         map(items => items.sort(ResultsComponent.sortByStandingRank),
+        //         catchError(err => {
+        //             this.errorMessageSubject.next(err);
+        //             return EMPTY;
+        //         })
+        //     ));
 
         this.allRounds$.subscribe((data) =>{
             this.allRounds = data;

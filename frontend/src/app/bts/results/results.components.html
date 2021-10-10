@@ -88,10 +88,11 @@
                 </p-panel>
             </div>
         </div>
+        <!-- standing -->
         <div class="p-col-6">
             <div class="box">
                 <p-panel header="Klassement" *ngIf="showStanding" >
-                    <ng-container *ngIf="standing$ | async as standings">
+                    <ng-container *ngIf="requestedStanding$ | async as standings">
                         <p-table [value]="standings" [autoLayout]="true" [columns]="columns">
                             <ng-template pTemplate="header">
                                 <tr>

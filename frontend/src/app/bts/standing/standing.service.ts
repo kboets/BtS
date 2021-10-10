@@ -22,6 +22,14 @@ export class StandingService {
             );
     }
 
+    getStandingForLeagueAndRound(leagueId: number, roundNumber: number) : Observable<Standing[]> {
+        return this.http.get<Standing[]>(`/btsapi/api/standing/league/${leagueId}/${roundNumber}`)
+            .pipe(
+                //tap(data => console.log('get all standing for league  '+leagueId, JSON.stringify(data))),
+                //shareReplay(1),
+                catchError(this.handleHttpError)
+            );
+    }
 
     private handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handleHttpError of standing service "+error.message);
