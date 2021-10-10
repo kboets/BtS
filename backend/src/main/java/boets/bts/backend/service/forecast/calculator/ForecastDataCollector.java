@@ -6,10 +6,9 @@ import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
-import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.LeagueService;
-import boets.bts.backend.service.result.ResultService;
+import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.service.round.RoundService;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultMapper;
 import boets.bts.backend.web.round.RoundMapper;
@@ -34,14 +33,17 @@ public class ForecastDataCollector {
     private final RoundMapper roundMapper;
     private final ResultMapper resultMapper;
     private final LeagueRepository leagueRepository;
+    private final RoundRepository roundRepository;
 
-    public ForecastDataCollector(RoundService roundService, ResultRepository resultRepository, LeagueMapper leagueMapper, RoundMapper roundMapper, ResultMapper resultMapper, LeagueRepository leagueRepository) {
+    public ForecastDataCollector(RoundService roundService, ResultRepository resultRepository, LeagueMapper leagueMapper,
+                                 RoundMapper roundMapper, ResultMapper resultMapper, LeagueRepository leagueRepository, RoundRepository roundRepository) {
         this.roundService = roundService;
         this.resultRepository = resultRepository;
         this.leagueMapper = leagueMapper;
         this.roundMapper = roundMapper;
         this.resultMapper = resultMapper;
         this.leagueRepository = leagueRepository;
+        this.roundRepository = roundRepository;
     }
 
     public ForecastData collectForecastData(League league) {
@@ -49,12 +51,10 @@ public class ForecastDataCollector {
         int currentSeason = persistedLeague.getSeason();
         ForecastData forecastData = new ForecastData();
         forecastData.setLeague(leagueMapper.toLeagueDto(persistedLeague));
-        // get next game
-        Round nextRound = roundService.getNextRound(league.getId());
-        List<Result> nextGames = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(league, nextRound.getRound()));
-        forecastData.setNextResults(resultMapper.toResultDtos(nextGames));
+        // handle next game
+        handleNextRound(forecastData, persistedLeague, currentSeason);
         // get current round
-        Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), currentSeason);
+        Round currentRound = getCurrentRound(league, currentSeason);
         forecastData.setCurrentRound(roundMapper.toRoundDto(currentRound));
         // get all played games
         List<Result> playedGames = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, currentRound.getRoundNumber()));
@@ -68,6 +68,37 @@ public class ForecastDataCollector {
             forecastData.setFinishedResults(resultMapper.toResultDtos(playedGames));
         }
         return forecastData;
+    }
+
+    /**
+     * Sets the next round with results, taking into account the weekend. In that case, the current round and results are taken.
+     * @param forecastData
+     */
+    private void handleNextRound(ForecastData forecastData, League league, int currentSeason) {
+        List<Result> nextGames;
+        Round nextRound;
+        if(WebUtils.isWeekend()) {
+            // take the current round
+            nextRound = roundService.getCurrentRoundForLeague(league.getId(), currentSeason);
+        } else {
+            nextRound = roundService.getNextRound(league.getId());
+        }
+        nextGames = resultRepository.findAll(ResultSpecs.getResultByLeagueAndRound(league, nextRound.getRound()));
+        forecastData.setNextResults(resultMapper.toResultDtos(nextGames));
+    }
+
+    /**
+     * Retrieves the current round, taking into account the weekend. In that case, the previous round is taken.
+     * @param league - the league
+     * @param currentSeason - the current season of the league
+     * @return Round - during the week, the current round, in weekend previous
+     */
+    private Round getCurrentRound(League league, int currentSeason) {
+        if(WebUtils.isWeekend()) {
+            return roundService.getPreviousRound(league.getId());
+        } else {
+            return roundService.getCurrentRoundForLeague(league.getId(), currentSeason);
+        }
     }
 
 }

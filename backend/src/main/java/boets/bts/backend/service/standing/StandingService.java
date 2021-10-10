@@ -75,6 +75,19 @@ public class StandingService {
         return Collections.emptyList();
     }
 
+    public List<StandingDto> getStandingRoundAndLeague(Long leagueId, int roundNumber) {
+        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
+        List<Standing> standings;
+        // check if requested round is current round during weekend, take previous round
+        if(currentRound.getRoundNumber() == roundNumber && WebUtils.isWeekend()) {
+            int previousRound = roundNumber-1;
+            standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), previousRound);
+        } else {
+            standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), roundNumber);
+        }
+        return standingMapper.toStandingDtos(standings);
+    }
+
 
     // each 30 minutes
     @Scheduled(cron = "* 7-59/15 * * * ?")

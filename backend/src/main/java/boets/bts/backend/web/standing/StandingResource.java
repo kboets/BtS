@@ -16,7 +16,7 @@ public class StandingResource {
 
     private Logger logger = LoggerFactory.getLogger(StandingResource.class);
 
-    private StandingService standingService;
+    private final StandingService standingService;
 
     public StandingResource(StandingService standingService) {
         this.standingService = standingService;
@@ -26,6 +26,13 @@ public class StandingResource {
     public List<StandingDto> getAllStandingForLeague(@PathVariable("league_id") Long league_id) {
         List<StandingDto> standingDtos = standingService.getCurrentStandingForLeague(league_id);
         logger.info("Standings found {}", standingDtos.size());
+        return standingDtos;
+    }
+
+    @GetMapping("/league/{league_id}/{roundNumber}")
+    public List<StandingDto> getStandingRoundAndLeague(@PathVariable("league_id") Long league_id, @PathVariable("roundNumber") Integer roundNumber) {
+        List<StandingDto> standingDtos = standingService.getStandingRoundAndLeague(league_id, roundNumber);
+        logger.info("Standing for round {} and league {} found ", roundNumber, league_id);
         return standingDtos;
     }
 }

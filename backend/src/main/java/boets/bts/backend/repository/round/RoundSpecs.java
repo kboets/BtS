@@ -49,4 +49,13 @@ public class RoundSpecs {
             return predicate;
         };
     }
+
+    public static Specification<Round> getRoundsByRoundNumber(Integer roundNumber) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
+
+            return predicate;
+        };
+    }
+
 }

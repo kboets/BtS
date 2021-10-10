@@ -4,7 +4,7 @@
         <Property name="log-path">bts_logs</Property>
     </Properties>
     <Appenders>
-        <Console name="Console-Appender" target="SYSTEM_OUT">
+        <Console name="console">
             <PatternLayout>
                 <pattern>
                     [%-5level] %d{dd-MM-yyyy HH:mm:ss} [%t] %c{1} - %msg%n
@@ -33,8 +33,8 @@
         <Logger name="boets.bts" level="info" additivity="false">
             <AppenderRef ref="App-File-Appender"/>
         </Logger>
-        <Root>
-            <AppenderRef ref="Console-Appender"/>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="console"/>
         </Root>
     </Loggers>
 </Configuration>

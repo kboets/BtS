@@ -14,6 +14,7 @@ import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +85,18 @@ public class RoundService {
         }
         CurrentRoundHandler currentRoundHandler = currentRoundHandlerOptional.get();
         return currentRoundHandler.save(currentPersistedRound.orElse(null), league, season);
+    }
+
+    public Round getPreviousRound(Long leagueId) {
+        Round currentRound = this.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        int previousRound = currentRound.getRoundNumber()-1;
+        Optional<Round> previousOptional = roundRepository.findAll(Specification.where(RoundSpecs.getRoundsByLeagueId(league).and(RoundSpecs.getRoundsByRoundNumber(previousRound)))).stream().findFirst();
+        if(previousOptional.isPresent()) {
+            return previousOptional.get();
+        }
+        logger.warn("Could not retrieve previous round {} for league {}, returning the current !", previousOptional, league.getName());
+        return currentRound;
     }
 
     public Round getNextRound(Long leagueId) {
