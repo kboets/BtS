@@ -3,6 +3,10 @@
                             RELEASE NOTES
 
 *********************************************************************************
+10/10/2021 1.1.0
+Improved standings :
+show standing on requested round
+on weekends, will show correct standing (of previous round)
 5/10/2021 1.0.2
 bugfixed forecast
 update logging schedulers
