@@ -31,10 +31,9 @@ public class ResultResource {
     public List<ResultDto> retrieveResultForLeague(@PathVariable("id") Long leagueId) {
         logger.info("get result for league  with id {} ", leagueId);
         try {
-            List<ResultDto> resultDtos = resultService.retrieveAllResultForLeague(leagueId);
-            return resultDtos;
+            return resultService.retrieveAllResultForLeague(leagueId);
         } catch (Exception e) {
-            logger.error("Something went wrong while getting results {} ", e);
+            logger.error("Something went wrong while getting results ", e);
             throw new GeneralException(e.getMessage());
         }
     }
@@ -45,7 +44,7 @@ public class ResultResource {
         try {
             return resultService.retrieveAllFinishedResults(true);
         } catch (Exception e) {
-            logger.error("Something went wrong while getting results of all selected leagues {} ", e);
+            logger.error("Something went wrong while getting results of all selected leagues ", e);
             throw new GeneralException(e.getMessage());
         }
 
@@ -57,7 +56,7 @@ public class ResultResource {
         try {
             return resultService.retrieveAllFinishedResults(false);
         } catch (Exception e) {
-            logger.error("Something went wrong while getting results of all non selected leagues {} ", e);
+            logger.error("Something went wrong while getting results of all non selected leagues ", e);
             throw new GeneralException(e.getMessage());
         }
 

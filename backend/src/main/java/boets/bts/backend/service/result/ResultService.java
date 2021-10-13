@@ -104,9 +104,10 @@ public class ResultService {
         return leaguesResults;
     }
 
-    public boolean removeAllResultsForLeague (Long leagueId) throws Exception {
+    public boolean removeAllResultsForLeague (Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s ",leagueId)));
         resultRepository.deleteByLeague(league);
+        adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
         return true;
     }
 

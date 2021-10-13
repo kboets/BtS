@@ -38,19 +38,18 @@ public class AdminService {
         Optional<Admin> optionalAdmin = adminRepository.findById(adminKeys);
         if(optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
-            return (admin.getDate().getDayOfMonth() == (LocalDateTime.now().getDayOfMonth()));
+            return (admin.getDate().getDayOfMonth() == (LocalDateTime.now().getDayOfMonth())
+                    && admin.getValue().equals("OK"));
         }
         return false;
     }
 
     public boolean executeAdmin(AdminKeys adminKeys, String value) {
-        if(!isTodayExecuted(adminKeys)) {
-            Admin adminToBeUpdated = getAdmin(adminKeys);
-            logger.info("Start updating adminKey " + adminToBeUpdated.getAdminKey().toString());
-            adminToBeUpdated.setDate(LocalDateTime.now());
-            adminToBeUpdated.setValue(value);
-            adminRepository.save(adminToBeUpdated);
-        }
+        Admin adminToBeUpdated = getAdmin(adminKeys);
+        logger.info("Start updating adminKey " + adminToBeUpdated.getAdminKey().toString());
+        adminToBeUpdated.setDate(LocalDateTime.now());
+        adminToBeUpdated.setValue(value);
+        adminRepository.save(adminToBeUpdated);
         return true;
     }
 

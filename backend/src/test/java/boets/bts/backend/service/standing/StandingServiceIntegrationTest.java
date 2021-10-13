@@ -37,4 +37,11 @@ public class StandingServiceIntegrationTest {
         assertThat(standings.isEmpty()).isFalse();
     }
 
+    @Test
+    public void verifyAllStandings() {
+        boolean validated = standingService.verifyAllStandings(3450L);
+        List<Standing> standings = standingService.getStandingsForLeagueByRound(3450L, 2021, 8);
+        assertThat(standings.isEmpty()).isFalse();
+    }
+
 }

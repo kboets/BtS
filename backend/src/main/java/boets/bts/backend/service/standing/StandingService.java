@@ -83,17 +83,38 @@ public class StandingService {
 
 
     // each 30 minutes
-    @Scheduled(cron = "* 7-59/15 * * * ?")
+    @Scheduled(cron = "* 7-59/5 * * * ?")
     public void scheduleStandings() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()) {
             logger.info("Running cron job to update standings ..");
+            boolean allValidated = true;
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
-                this.getCurrentStandingForLeague(leagueId);
+                if(!verifyAllStandings(leagueId)) {
+                    adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "NOK");
+                    allValidated=false;
+                }
             }
-            adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
+            if(allValidated) {
+                adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
+            }
         }
     }
+
+    protected boolean verifyAllStandings(Long leagueId) {
+        Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
+        int currentRoundNumber = currentRound.getRoundNumber();
+        boolean validated = true;
+        for(int i=1; i<=currentRoundNumber; i++) {
+            List<Standing> standings = getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), i);
+            if(standings.isEmpty()) {
+                validated = false;
+                break;
+            }
+        }
+        return validated;
+    }
+
 
     private int getValidatedRound(int roundNumber, Long leagueId) {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
