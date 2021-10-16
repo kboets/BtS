@@ -51,6 +51,14 @@ export class AdminService {
         });
     }
 
+    deleteStandings4League(id: string): Observable<boolean> {
+        return this.http.post<boolean>(`/btsapi/api/admin/deleteStanding`, id, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        });
+    }
+
     updateAdmin(admin: Admin): Observable<Admin> {
         return this.http.put<Admin>(`/btsapi/api/admin/update`, admin, {
             headers: new HttpHeaders({

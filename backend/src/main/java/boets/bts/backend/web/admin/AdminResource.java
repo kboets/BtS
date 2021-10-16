@@ -3,6 +3,7 @@ package boets.bts.backend.web.admin;
 import boets.bts.backend.domain.Admin;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.result.ResultService;
+import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.GeneralException;
 import org.slf4j.Logger;
@@ -17,14 +18,16 @@ public class AdminResource {
 
     private Logger logger = LoggerFactory.getLogger(AdminResource.class);
 
-    private AdminService adminService;
-    private AdminMapper adminMapper;
-    private ResultService resultService;
+    private final AdminService adminService;
+    private final AdminMapper adminMapper;
+    private final ResultService resultService;
+    private final StandingService standingService;
 
-    public AdminResource(AdminService adminService, AdminMapper adminMapper, ResultService resultService) {
+    public AdminResource(AdminService adminService, AdminMapper adminMapper, ResultService resultService, StandingService standingService) {
         this.adminService = adminService;
         this.adminMapper = adminMapper;
         this.resultService = resultService;
+        this.standingService = standingService;
     }
 
     @GetMapping("all")
@@ -42,7 +45,17 @@ public class AdminResource {
         try {
             return resultService.removeAllResultsForLeague(Long.parseLong(leagueId));
         } catch (Exception e) {
-            logger.error("Something went wrong while removing results {} ", e.getMessage());
+            logger.error("Error {} thrown while removing results for league {} ", e.getMessage(), leagueId);
+            throw new GeneralException(e.getMessage());
+        }
+    }
+
+    @PostMapping("deleteStanding")
+    public boolean removeAllStandingForLeague(@RequestBody String leagueId) {
+        try {
+            return standingService.removeAllStandingForLeague(Long.parseLong(leagueId));
+        } catch (Exception e) {
+            logger.error("Error {} thrown while removing standing for league {} ", e.getMessage(), leagueId);
             throw new GeneralException(e.getMessage());
         }
     }

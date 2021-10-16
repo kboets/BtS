@@ -111,14 +111,20 @@ public class ResultService {
         return true;
     }
 
-    // each 15 minutes starting at 5 minutes after the hour
-    @Scheduled(cron = "* 5-59/15 * * * ?")
+    // each 10 minutes starting at 3 minutes after the hour
+    @Scheduled(cron = "* 3-59/10 * * * ?")
     public void scheduleResults() throws Exception {
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()
+                && adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
             logger.info("Running cron job to update results ..");
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
-                this.verifyMissingResults(leagueId);
+                List<ResultDto> results = this.verifyMissingResults(leagueId);
+                if (results.isEmpty()) {
+                    logger.error("Could not verify the results of league {}", leagueId);
+                    adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
+                    break;
+                }
             }
             adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }

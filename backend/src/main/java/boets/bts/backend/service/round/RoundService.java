@@ -160,11 +160,12 @@ public class RoundService {
     }
 
     /**
-     * Cron job each 15 minutes
+     * Cron job each 10 minutes
      */
-    @Scheduled(cron = "* 1-59/15 * * * ?")
+    @Scheduled(cron = "* 1-59/10 * * * ?")
     public void scheduleRound() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
+            logger.info("Running cron job to update current round ..");
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for non historic data");
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));

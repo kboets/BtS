@@ -23,6 +23,7 @@ export class AdminComponent implements OnInit {
     errorMessage$ = this.errorMessageSubject.asObservable();
     selectedLeague: League;
     selectedLeagueRound: League;
+    selectedLeagueStanding: League;
     selectedSeasonAdmin: Admin;
     selectedRound: Round;
     adminDataList$: Observable<Admin[]>;
@@ -31,14 +32,18 @@ export class AdminComponent implements OnInit {
     currentSeason: number;
     selectedSeason: number;
 
-    resultDeleted$: Observable<boolean>;
+    showResultMessage: boolean;
+    showStandingMessage: boolean;
     seasonUpdated$: Observable<Admin>;
     selectedRoundUpdated$: Observable<Round>;
 
     columns: any[];
 
     constructor(private adminService: AdminService, private leagueService: LeagueService,
-                private confirmationService: ConfirmationService, private roundService: RoundService) {}
+                private confirmationService: ConfirmationService, private roundService: RoundService) {
+        this.showResultMessage = false;
+        this.showStandingMessage = false;
+    }
 
 
     ngOnInit(): void {
@@ -110,7 +115,28 @@ export class AdminComponent implements OnInit {
             header: 'Bevestiging',
             icon: 'pi pi-info-circle',
             accept: () => {
-                this.resultDeleted$ = this.adminService.deleteResults4League(this.selectedLeague.league_id);
+                this.adminService.deleteResults4League(this.selectedLeague.league_id)
+                    .subscribe((data) => {
+                        this.showResultMessage = true;
+                        this.removeAcknowledgeMessage();
+                    });
+
+            }
+
+        });
+    }
+
+    deleteStanding() {
+        this.confirmationService.confirm({
+            message: 'Verwijder al de standen ? Dit kan niet ongedaan gemaakt worden',
+            header: 'Bevestiging',
+            icon: 'pi pi-info-circle',
+            accept: () => {
+                this.adminService.deleteStandings4League(this.selectedLeagueStanding.league_id)
+                    .subscribe((data) => {
+                        this.showStandingMessage = true;
+                        this.removeAcknowledgeMessage();
+                    })
             }
 
         });
@@ -135,9 +161,16 @@ export class AdminComponent implements OnInit {
 
     getCurrentRound(): Round {
         let rounds = this.selectedLeagueRound.roundDtos;
-        let currentRound= _.findWhere(rounds , {"current": true});
-        return currentRound;
+        return  _.findWhere(rounds , {"current": true});
+    }
 
+    private removeAcknowledgeMessage() {
+        setTimeout(() => {
+            this.showStandingMessage = false;
+            this.showResultMessage = false;
+            this.selectedLeagueStanding = null;
+            this.selectedLeague = null;
+        }, 5000);
     }
 
 }

@@ -81,16 +81,25 @@ public class StandingService {
         return standingMapper.toStandingDtos(standings);
     }
 
+    public boolean removeAllStandingForLeague(Long leagueId) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s ",leagueId)));
+        standingRepository.deleteByLeague(league);
+        adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "NOK");
+        return true;
+    }
 
-    // each 30 minutes
-    @Scheduled(cron = "* 7-59/5 * * * ?")
+
+    // each 10 minutes, starting 5 minutes after each hour
+    @Scheduled(cron = "* 5-59/10 * * * ?")
     public void scheduleStandings() {
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()) {
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
+                && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
             logger.info("Running cron job to update standings ..");
             boolean allValidated = true;
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
             for (Long leagueId : leagueIds) {
                 if(!verifyAllStandings(leagueId)) {
+                    logger.error("Could not verify standing for League {} ", leagueId);
                     adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "NOK");
                     allValidated=false;
                 }

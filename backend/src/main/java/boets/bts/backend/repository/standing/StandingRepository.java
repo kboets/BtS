@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface StandingRepository extends JpaRepository<Standing, Long>, JpaSpecificationExecutor<Standing>{
 
+    void deleteByLeague(League league);
 }
 
