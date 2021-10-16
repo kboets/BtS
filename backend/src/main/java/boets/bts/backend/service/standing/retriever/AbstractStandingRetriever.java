@@ -58,6 +58,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     }
 
     protected List<Standing> saveAndReturn(List<Standing> standings, League league, int roundNumber) {
+        logger.info("Collecting all info before save of  standing");
         List<Standing> expandedStandings = standings.stream()
                 .peek(standing -> standing.setLeague(league))
                 .peek(standing -> standing.setTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(standing.getTeam().getTeamId(), league))

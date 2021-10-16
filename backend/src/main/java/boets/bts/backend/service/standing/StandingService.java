@@ -105,6 +105,7 @@ public class StandingService {
                 }
             }
             if(allValidated) {
+                logger.info("Successfully executed the standing scheduler");
                 adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
             }
         }

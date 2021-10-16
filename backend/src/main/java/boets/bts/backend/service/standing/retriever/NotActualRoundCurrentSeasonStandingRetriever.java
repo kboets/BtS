@@ -43,6 +43,5 @@ public class NotActualRoundCurrentSeasonStandingRetriever extends AbstractStandi
     public List<Standing> getStanding(League league, Round currentRound, int roundNumber) {
         logger.info("Recalculating or retrieving the standings of round {} of league {} for current season", roundNumber, league.getName());
         return super.retrieveOrCalculateMissingStandings(roundNumber, league);
-
     }
 }

@@ -126,6 +126,7 @@ public class ResultService {
                     break;
                 }
             }
+            logger.info("Successfully executed the results scheduler");
             adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
         }
     }

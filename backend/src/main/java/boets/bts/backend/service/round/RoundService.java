@@ -170,6 +170,7 @@ public class RoundService {
             logger.info("Scheduler started for non historic data");
             leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
+            logger.info("Successfully executed the scheduler scheduler");
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for historic data");
