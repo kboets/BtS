@@ -70,9 +70,10 @@ public class StandingService {
         Optional<StandingRetriever> standingOptionalRetriever = standingRetrieverSelector.select(league, currentRound, roundNumber);
         if(standingOptionalRetriever.isPresent()) {
             return standingOptionalRetriever.get().getStanding(league, currentRound, roundNumber);
+        } else {
+            logger.warn("Could not find standing retriever for league {}, current round {}", league.getName(), currentRound.getRoundNumber());
+            return Collections.emptyList();
         }
-        logger.info("Could not find standing of round {} for league {} of season {}", roundNumber, league.getName(), season);
-        return Collections.emptyList();
     }
 
     public List<StandingDto> getStandingRoundAndLeague(Long leagueId, int roundNumber) {

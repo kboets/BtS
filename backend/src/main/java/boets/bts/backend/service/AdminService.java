@@ -46,7 +46,6 @@ public class AdminService {
 
     public boolean executeAdmin(AdminKeys adminKeys, String value) {
         Admin adminToBeUpdated = getAdmin(adminKeys);
-        logger.info("Start updating adminKey " + adminToBeUpdated.getAdminKey().toString());
         adminToBeUpdated.setDate(LocalDateTime.now());
         adminToBeUpdated.setValue(value);
         adminRepository.save(adminToBeUpdated);
