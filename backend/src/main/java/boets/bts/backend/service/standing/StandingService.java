@@ -71,7 +71,7 @@ public class StandingService {
         if(standingOptionalRetriever.isPresent()) {
             return standingOptionalRetriever.get().getStanding(league, currentRound, roundNumber);
         } else {
-            logger.warn("Could not find standing retriever for league {}, current round {}", league.getName(), currentRound.getRoundNumber());
+            logger.warn("Could not find standing retriever for league {}, current round {}, round to check : {}", league.getName(), currentRound.getRoundNumber(), roundNumber);
             return Collections.emptyList();
         }
     }
