@@ -7,6 +7,7 @@ import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.standing.StandingRepository;
 import boets.bts.backend.repository.team.TeamRepository;
 import boets.bts.backend.service.AdminService;
+import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultMapper;
 import boets.bts.backend.web.round.RoundMapper;
@@ -35,7 +36,8 @@ public class NotActualRoundCurrentSeasonStandingRetriever extends AbstractStandi
     @Override
     public boolean accept(League league, Round currentRound, int roundNumber) {
         return !adminService.isHistoricData()
-                && currentRound.getRoundNumber() != roundNumber
+                && (currentRound.getRoundNumber() != roundNumber
+                || (currentRound.getRoundNumber() == roundNumber && WebUtils.isWeekend()))
                 && LocalDate.now().isAfter(league.getStartSeason());
     }
 
