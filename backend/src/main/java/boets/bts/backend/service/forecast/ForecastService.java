@@ -65,7 +65,8 @@ public class ForecastService {
         } else {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             forecasts.addAll(forecastCalculatorManager.calculateForecasts(leagues));
-            forecastMap.put(localDate, forecasts);
+            //setting it in comment, as a workaround for the force button (as it is always forced to recalculate the forecasts)
+            //forecastMap.put(localDate, forecasts);
         }
 
         return forecasts;
