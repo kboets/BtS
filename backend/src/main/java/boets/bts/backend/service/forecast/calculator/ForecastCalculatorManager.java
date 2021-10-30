@@ -212,7 +212,11 @@ public class ForecastCalculatorManager {
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException(String.format("Could not find a team with teamid %s in the list of forecastdetail", opponent.getTeamId())));
                 int score = forecastDetail.getResultScore() - otherTeamForecastDetail.getResultScore();
+                StringBuffer infoMessage = new StringBuffer(forecastDetail.getInfo());
                 forecastDetail.setScore(forecastDetail.getScore() + score);
+                infoMessage.append("<br>");
+                infoMessage.append("Eind score : ").append(forecastDetail.getScore()).append(" - ").append(otherTeamForecastDetail.getResultScore()).append(" = ").append(forecastDetail.getScore());
+                forecastDetail.setInfo(infoMessage.toString());
             }
         }
         forecastDetails.sort(Comparator.comparing(ForecastDetail::getScore, Comparator.reverseOrder()));

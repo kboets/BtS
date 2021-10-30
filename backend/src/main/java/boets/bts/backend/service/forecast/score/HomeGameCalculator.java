@@ -52,15 +52,26 @@ public class HomeGameCalculator implements ScoreCalculator {
 
     @Override
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
+        TeamDto homeTeam = forecastDetail.getTeam();
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append("Thuiswedstrijden :");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening winst thuis match : 20 punten - (aantal teams - rank tegenstrever)");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening verlies thuis match : 5 punten - (rank tegenstrever)");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening gelijk spel thuis match : 10 punten  - (aantal teams - rank tegenstrever)");
+        infoMessage.append("<br>");
+
         //retrieve number of teams
         LeagueDto leagueDto = forecastData.getLeague();
         int totalTeams = leagueDto.getTeamDtos().size();
         List<ResultDto> allResults = forecastDetail.getResults().stream().sorted(Comparator.comparing(ResultDto::getRoundNumber).reversed()).collect(Collectors.toList());
-        TeamDto homeTeam = forecastDetail.getTeam();
         // get latest home games for this team
         List<ResultDto> homeResultForTeam = latestHomeResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), homeTeam);
         // calculate score
         for(ResultDto resultDto: homeResultForTeam) {
+            int score;
             Long leagueId = Long.parseLong(forecastData.getLeague().getLeague_id());
             List<Standing> standings = standingService.getStandingsForLeagueByRound(leagueId, forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
             TeamDto nextOpponent = resultDto.getAwayTeam();
@@ -69,17 +80,52 @@ public class HomeGameCalculator implements ScoreCalculator {
             if(opponentStanding == null) {
                 logger.warn("Could not find standing for team {}", nextOpponent.getName());
             } else {
-                int score = getResultScore(resultDto, homeTeam);
                 if(hasLost(resultDto, homeTeam)) {
-                    score = score - opponentStanding.getRank();
+                    score = getResultScore(resultDto, homeTeam) - opponentStanding.getRank();
                 } else {
-                    score = score + (totalTeams - opponentStanding.getRank());
+                    score = getResultScore(resultDto, homeTeam) + (totalTeams - opponentStanding.getRank());
                 }
                 forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
             }
-
+            // create info message
+            infoMessage.append(createInfoMessage(resultDto, homeTeam, opponentStanding, forecastDetail, totalTeams));
         }
+        infoMessage.append("<br>")
+                .append("<h5>")
+                .append("Eind score thuis wedstrijden : ")
+                .append(forecastDetail.getResultScore())
+                .append("</h5>");
+        forecastDetail.setInfo(infoMessage.toString());
     }
+
+    private String createInfoMessage(ResultDto resultDto, TeamDto homeTeam, StandingDto opponentStanding, ForecastDetail forecastDetail, int totalTeams) {
+        StringBuffer infoMessage = new StringBuffer();
+        int score = getResultScore(resultDto, homeTeam);
+        if(hasWon(resultDto,homeTeam)) {
+            score = score + (totalTeams - opponentStanding.getRank());
+            infoMessage.append("<br>");
+            infoMessage.append("Winst tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
+                    .append(" - ").append(resultDto.getGoalsAwayTeam());
+            infoMessage.append("<br>");
+            infoMessage.append("Score : 20  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+        } else if(hasLost(resultDto, homeTeam)) {
+            score = score - opponentStanding.getRank();
+            infoMessage.append("<br>");
+            infoMessage.append("Verlies tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
+                    .append(" - ").append(resultDto.getGoalsAwayTeam());
+            infoMessage.append("<br>");
+            infoMessage.append("Score : 5  - ").append(opponentStanding.getRank()).append(" = ").append(score);
+        } else {
+            score = score + (totalTeams - opponentStanding.getRank());
+            infoMessage.append("<br>");
+            infoMessage.append("Gelijk tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
+                    .append(" - ").append(resultDto.getGoalsAwayTeam());
+            infoMessage.append("<br>");
+            infoMessage.append("Score : 10  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+        }
+        return infoMessage.toString();
+    }
+
 
     private int getResultScore(ResultDto resultDto, TeamDto homeTeam) {
         // calculate initial points based on result
@@ -106,4 +152,6 @@ public class HomeGameCalculator implements ScoreCalculator {
                 .limit(allowedGames)
                 .collect(Collectors.toList());
     }
+
+
 }

@@ -3,24 +3,37 @@
                             RELEASE NOTES
 
 *********************************************************************************
+15/10/2021 1.2.0
+new features :
+    Fix dependencies issues.
+bugfixes:
+
 13/10/2021 1.1.0
-* Improved standings :
-show standing on requested round
-on weekends, will show correct standing (of previous round)
-* update scheduler of standing
-* update the standing, changes on round.
+new features :
+    Improved standings :
+    show standing on requested round
+    on weekends, will show correct standing (of previous round)
+bugfixing :
+    update scheduler of standing
+    update the standing, changes on round.
+
 5/10/2021 1.0.2
-bugfixed forecast
-update logging schedulers
+bugfixing :
+    forecast
+    update logging schedulers
+
 3/10/2021 1.0.1
-* Removed redundant logging
+bugfixing :
+    Removed redundant logging
+
 2/10/2021 1.0.0
+new features :
 Initial version
-* Display of predefined leagues
-* Display the results for each league
-* Display the results for each team of the league
-* Display the standing of the league
-* Calculate the prospects
-* Calculate the forecasts
-* Admin page
-* Foresee historic data
+     Display of predefined leagues
+     Display the results for each league
+     Display the results for each team of the league
+     Display the standing of the league
+     Calculate the prospects
+     Calculate the forecasts
+     Admin page
+     Foresee historic data

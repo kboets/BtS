@@ -13,6 +13,7 @@ public class ForecastDetail {
         private TeamDto nextOpponent;
         private int resultScore;
         private int score;
+        private String info;
 
 
         public TeamDto getTeam() {
@@ -61,5 +62,13 @@ public class ForecastDetail {
 
         public void setResultScore(int resultScore) {
                 this.resultScore = resultScore;
+        }
+
+        public String getInfo() {
+                return info;
+        }
+
+        public void setInfo(String info) {
+                this.info = info;
         }
 }

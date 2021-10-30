@@ -9,4 +9,5 @@ export class ForecastDetail {
     nextResult: Result;
     teamPerformanceQualifier: TeamPerformanceQualifier;
     score: number;
+    info: string;
 }

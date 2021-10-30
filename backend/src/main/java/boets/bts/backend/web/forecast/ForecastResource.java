@@ -29,7 +29,7 @@ public class ForecastResource {
             List<Forecast> forecasts = forecastService.calculateForecast();
             return forecasts;
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error("Exception while calculating forecasts {} ", e.getMessage(), e);
             throw new GeneralException(e.getMessage());
         }
     }

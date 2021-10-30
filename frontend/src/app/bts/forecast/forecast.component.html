@@ -41,7 +41,8 @@
     </ng-container>
 </p-panel>
 
-<p-dialog header="Uitslagen ploeg : {{selectedForecastDetail?.team.name}}" [(visible)]="displayScoreInfo" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog header="Overzicht ploeg : {{selectedForecastDetail?.team.name}}" [(visible)]="displayScoreInfo" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <p [innerHTML]="selectedForecastDetail?.info"></p>
     <p>
         <p-table [value]="selectedForecastDetail?.results.reverse()">
             <ng-template pTemplate="header">

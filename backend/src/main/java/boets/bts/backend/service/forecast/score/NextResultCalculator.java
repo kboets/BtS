@@ -21,13 +21,26 @@ public class NextResultCalculator implements ScoreCalculator {
 
     @Override
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
+        StringBuffer infoMessage = new StringBuffer(forecastDetail.getInfo());
         ResultDto nextResult = forecastDetail.getNextResult();
         TeamDto teamDto = forecastDetail.getTeam();
+        int currentScore = forecastDetail.getResultScore();
         if (nextResult != null && nextResult.getHomeTeam().getTeamId().equals(teamDto.getTeamId())) {
             // next game is home game, add bonus to result
             forecastDetail.setScore(forecastDetail.getScore() + homeGame);
+            infoMessage
+                    .append("+ 10 punten vanwege thuismatch")
+                    .append(", totaal = ")
+                    .append(forecastDetail.getScore())
+                    .append("<br>");
         } else {
-            forecastDetail.setScore(forecastDetail.getScore() - 10);
+            forecastDetail.setScore(forecastDetail.getScore() - homeGame);
+            infoMessage
+                    .append("- 10 punten vanwege thuismatch")
+                    .append(", totaal = ")
+                    .append(forecastDetail.getScore())
+                    .append("<br>");
         }
+        forecastDetail.setInfo(infoMessage.toString());
     }
 }
