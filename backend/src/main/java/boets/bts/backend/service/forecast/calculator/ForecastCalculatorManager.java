@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -211,12 +212,26 @@ public class ForecastCalculatorManager {
                         .filter(forecastDetail1 -> forecastDetail1.getTeam().getTeamId().equals(opponent.getTeamId()))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException(String.format("Could not find a team with teamid %s in the list of forecastdetail", opponent.getTeamId())));
-                int score = forecastDetail.getResultScore() - otherTeamForecastDetail.getResultScore();
-                StringBuffer infoMessage = new StringBuffer(forecastDetail.getInfo());
-                forecastDetail.setScore(forecastDetail.getScore() + score);
-                infoMessage.append("<br>");
-                infoMessage.append("Eind score : ").append(forecastDetail.getScore()).append(" - ").append(otherTeamForecastDetail.getResultScore()).append(" = ").append(forecastDetail.getScore());
-                forecastDetail.setInfo(infoMessage.toString());
+                logger.info("The score of the own results :  {}", forecastDetail.getResultScore().intValue());
+                logger.info("The score of the opponent results :  {}", otherTeamForecastDetail.getResultScore().intValue());
+                BigInteger endScore = forecastDetail.getResultScore().subtract(otherTeamForecastDetail.getResultScore());
+                logger.info("The end score :  {}", endScore.intValue());
+                StringBuilder infoMessage = new StringBuilder();
+                forecastDetail.setScore(forecastDetail.getScore() + endScore.intValue());
+                infoMessage.append("<br>")
+                        .append("<h5>")
+                        .append("Eind score : ")
+                        .append(forecastDetail.getResultScore().intValue())
+                        .append(" - ")
+                        .append(otherTeamForecastDetail.getResultScore().intValue())
+                        .append(" = ")
+                        .append(forecastDetail.getScore())
+                        .append("</h5>");
+                StringBuilder builder = new StringBuilder();
+                builder.append(forecastDetail.getInfo())
+                        .append(infoMessage.toString());
+
+                forecastDetail.setInfo(builder.toString());
             }
         }
         forecastDetails.sort(Comparator.comparing(ForecastDetail::getScore, Comparator.reverseOrder()));

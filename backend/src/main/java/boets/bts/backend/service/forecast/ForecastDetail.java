@@ -3,6 +3,7 @@ package boets.bts.backend.service.forecast;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class ForecastDetail {
@@ -11,7 +12,7 @@ public class ForecastDetail {
         private List<ResultDto> results;
         private ResultDto nextResult;
         private TeamDto nextOpponent;
-        private int resultScore;
+        private BigInteger resultScore;
         private int score;
         private String info;
 
@@ -56,11 +57,11 @@ public class ForecastDetail {
                 this.nextOpponent = nextOpponent;
         }
 
-        public int getResultScore() {
+        public BigInteger getResultScore() {
                 return resultScore;
         }
 
-        public void setResultScore(int resultScore) {
+        public void setResultScore(BigInteger resultScore) {
                 this.resultScore = resultScore;
         }
 

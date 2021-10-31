@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,20 +40,19 @@ public class AwayGameCalculator implements ScoreCalculator {
     private final int awayLoseScore;
     private final StandingService standingService;
     private final StandingMapper standingMapper;
-    private final LeagueMapper leagueMapper;
 
-    public AwayGameCalculator(StandingService standingService, StandingMapper standingMapper, LeagueMapper leagueMapper) {
+    public AwayGameCalculator(StandingService standingService, StandingMapper standingMapper) {
         this.awayWinScore = 30;
         this.awayDrawScore = 15;
         this.awayLoseScore = 10;
         this.standingService = standingService;
         this.standingMapper = standingMapper;
-        this.leagueMapper = leagueMapper;
     }
 
     @Override
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
-        StringBuilder infoMessage = new StringBuilder(forecastDetail.getInfo());
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append(createInitMessage());
         //retrieve number of teams
         LeagueDto leagueDto = forecastData.getLeague();
         int totalTeams = leagueDto.getTeamDtos().size();
@@ -61,16 +61,8 @@ public class AwayGameCalculator implements ScoreCalculator {
         // get latest away games for this team
         List<ResultDto> awayResultsForTeam = latestAwayResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), awayTeam);
         // calculate score
-        int currentScore = forecastDetail.getScore();
-        int score = 0;
-        infoMessage.append("Uitwedstrijden ")
-                .append("<br>")
-                .append("Berekening winst uit match : 30 punten - (aantal teams - rank tegenstrever)")
-                .append("<br>")
-                .append("Berekening verlies uit match : 10 punten - (rank tegenstrever)")
-                .append("<br>")
-                .append("Berekening gelijk spel uit match : 15 punten  - (aantal teams - rank tegenstrever)")
-                .append("<br>");
+        BigInteger currentScore = forecastDetail.getResultScore();
+        BigInteger awayScore = BigInteger.valueOf(0);
         for(ResultDto resultDto: awayResultsForTeam) {
             Long leagueId = Long.parseLong(forecastData.getLeague().getLeague_id());
             List<Standing> standings = standingService.getStandingsForLeagueByRound(leagueId, forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
@@ -81,54 +73,103 @@ public class AwayGameCalculator implements ScoreCalculator {
                 logger.warn("Could not find standing for team {}", nextOpponent.getName());
             } else {
                 if(hasLost(resultDto, awayTeam)) {
-                    score = getInitialScore(resultDto, awayTeam) - opponentStanding.getPoints();
+                    BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));
+                    BigInteger opponentScore = BigInteger.valueOf(opponentStanding.getRank());
+                    BigInteger lostScoreResult = initialScore.subtract(opponentScore);
+                    awayScore = awayScore.add(lostScoreResult);
                 } else {
-                    score = getInitialScore(resultDto, awayTeam) + (totalTeams - opponentStanding.getRank());
+                    BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));
+                    BigInteger opponentScore = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+                    BigInteger notLostScoreResult = initialScore.add(opponentScore);
+                    awayScore = awayScore.add(notLostScoreResult);
                 }
-                currentScore = currentScore+score;
-                forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
             }
             infoMessage.append(createInfoMessage(resultDto, awayTeam, opponentStanding, forecastDetail, totalTeams));
         }
+        currentScore = currentScore.add(awayScore);
+        forecastDetail.setResultScore(currentScore);
         infoMessage.append("<br>")
                 .append("<h5>")
                 .append("Eind score uit wedstrijden : ")
-                .append(score)
+                .append(awayScore)
                 .append("</h5>");
         infoMessage.append("<br>");
 
-        forecastDetail.setInfo(infoMessage.toString());
+        StringBuilder builder = new StringBuilder();
+        builder.append(forecastDetail.getInfo());
+        builder.append(infoMessage.toString());
+
+        forecastDetail.setInfo(builder.toString());
 
     }
 
     private String createInfoMessage(ResultDto resultDto, TeamDto awayTeam, StandingDto opponentStanding, ForecastDetail forecastDetail, int totalTeams) {
         StringBuilder infoMessage = new StringBuilder();
         if(hasWon(resultDto,awayTeam)) {
-            int score = getInitialScore(resultDto, awayTeam) + (totalTeams - opponentStanding.getRank());
-            infoMessage.append("<br>");
-            infoMessage.append("Winst tegen ").append(resultDto.getHomeTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : 30  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));
+            BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+            BigInteger notLostScoreResult = initialScore.add(notLost);
+            infoMessage.append(appendResultMessage("winst", resultDto));
+            infoMessage.append(appendScoreMessage(totalTeams, opponentStanding, "winst", notLostScoreResult));
         } else if(hasLost(resultDto, awayTeam)) {
-            int score = (getInitialScore(resultDto, awayTeam) - opponentStanding.getPoints());
-            infoMessage.append("<br>");
-            infoMessage.append("Verlies tegen ").append(resultDto.getHomeTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : ")
-                    .append(getInitialScore(resultDto, awayTeam))
-                    .append(" - ")
-                    .append(opponentStanding.getRank()).append(" = ")
-                    .append(score);
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));
+            BigInteger lostScore = BigInteger.valueOf(opponentStanding.getRank());
+            BigInteger lostScoreResult = initialScore.subtract(lostScore);
+            infoMessage.append(appendResultMessage("verlies", resultDto));
+            infoMessage.append(appendScoreLostMessage(opponentStanding, lostScoreResult));
         } else {
-            int score = getInitialScore(resultDto, awayTeam) + (totalTeams - opponentStanding.getRank());
-            infoMessage.append("<br>");
-            infoMessage.append("Gelijk tegen ").append(resultDto.getHomeTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : 15  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));
+            BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+            BigInteger notLostScoreResult = initialScore.add(notLost);
+            infoMessage.append(appendResultMessage("gelijk", resultDto));
+            infoMessage.append(appendScoreMessage(totalTeams, opponentStanding, "draw", notLostScoreResult));
         }
+        return infoMessage.toString();
+    }
+
+    private String appendScoreMessage(int totalTeams, StandingDto opponentStanding, String result, BigInteger score) {
+        StringBuilder infoMessage = new StringBuilder();
+        int initScore;
+        if (result.equals("winst")) {
+            initScore = awayWinScore;
+        } else {
+            initScore = awayDrawScore;
+        }
+        infoMessage
+                .append("<br>")
+                .append("Score: ")
+                .append(initScore)
+                .append("+ (")
+                .append(totalTeams).append("-")
+                .append(opponentStanding.getRank())
+                .append(") = ")
+                .append(score);
+        return infoMessage.toString();
+    }
+
+    private String appendScoreLostMessage(StandingDto opponentStanding, BigInteger score) {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage
+                .append("<br>")
+                .append("Score: ")
+                .append(awayLoseScore)
+                .append(" - ")
+                .append(opponentStanding.getRank())
+                .append(" = ")
+                .append(score);
+        return infoMessage.toString();
+    }
+
+
+    private String appendResultMessage(String result, ResultDto resultDto) {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append("<br>")
+                .append(result)
+                .append(" tegen ")
+                .append(resultDto.getHomeTeam().getName()).append(" : ")
+                .append(resultDto.getGoalsHomeTeam())
+                .append(" - ")
+                .append(resultDto.getGoalsAwayTeam());
         return infoMessage.toString();
     }
 
@@ -156,5 +197,18 @@ public class AwayGameCalculator implements ScoreCalculator {
                 .filter(resultDto -> resultDto.getAwayTeam().getTeamId().equals(teamDto.getTeamId()))
                 .limit(allowedGames)
                 .collect(Collectors.toList());
+    }
+
+    private String createInitMessage() {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append("Uitwedstrijden ")
+                .append("<br>")
+                .append("Berekening winst uit match : 30 punten - (aantal teams - rank tegenstrever)")
+                .append("<br>")
+                .append("Berekening verlies uit match : 10 punten - (rank tegenstrever)")
+                .append("<br>")
+                .append("Berekening gelijk spel uit match : 15 punten  - (aantal teams - rank tegenstrever)")
+                .append("<br>");
+        return infoMessage.toString();
     }
 }

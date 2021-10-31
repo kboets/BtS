@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,15 +55,7 @@ public class HomeGameCalculator implements ScoreCalculator {
     public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
         TeamDto homeTeam = forecastDetail.getTeam();
         StringBuilder infoMessage = new StringBuilder();
-        infoMessage.append("Thuiswedstrijden :");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening winst thuis match : 20 punten - (aantal teams - rank tegenstrever)");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening verlies thuis match : 5 punten - (rank tegenstrever)");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening gelijk spel thuis match : 10 punten  - (aantal teams - rank tegenstrever)");
-        infoMessage.append("<br>");
-
+        infoMessage.append(createInitMessage());
         //retrieve number of teams
         LeagueDto leagueDto = forecastData.getLeague();
         int totalTeams = leagueDto.getTeamDtos().size();
@@ -70,8 +63,8 @@ public class HomeGameCalculator implements ScoreCalculator {
         // get latest home games for this team
         List<ResultDto> homeResultForTeam = latestHomeResultForTeam(allResults, forecastData.getCurrentRound().getRoundNumber(), homeTeam);
         // calculate score
+        BigInteger score = BigInteger.valueOf(0);
         for(ResultDto resultDto: homeResultForTeam) {
-            int score;
             Long leagueId = Long.parseLong(forecastData.getLeague().getLeague_id());
             List<Standing> standings = standingService.getStandingsForLeagueByRound(leagueId, forecastData.getLeague().getSeason(), resultDto.getRoundNumber());
             TeamDto nextOpponent = resultDto.getAwayTeam();
@@ -81,15 +74,21 @@ public class HomeGameCalculator implements ScoreCalculator {
                 logger.warn("Could not find standing for team {}", nextOpponent.getName());
             } else {
                 if(hasLost(resultDto, homeTeam)) {
-                    score = getResultScore(resultDto, homeTeam) - opponentStanding.getRank();
+                    BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
+                    BigInteger lostScore = BigInteger.valueOf(opponentStanding.getRank());
+                    BigInteger lostScoreResult = initialScore.subtract(lostScore);
+                    score = score.add(lostScoreResult);
                 } else {
-                    score = getResultScore(resultDto, homeTeam) + (totalTeams - opponentStanding.getRank());
+                    BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
+                    BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+                    BigInteger notLostScoreResult = initialScore.add(notLost);
+                    score = score.add(notLostScoreResult);
                 }
-                forecastDetail.setResultScore(forecastDetail.getResultScore() + score);
             }
             // create info message
-            infoMessage.append(createInfoMessage(resultDto, homeTeam, opponentStanding, forecastDetail, totalTeams));
+            infoMessage.append(createInfoMessage(resultDto, homeTeam, opponentStanding, totalTeams));
         }
+        forecastDetail.setResultScore(score);
         infoMessage.append("<br>")
                 .append("<h5>")
                 .append("Eind score thuis wedstrijden : ")
@@ -98,36 +97,41 @@ public class HomeGameCalculator implements ScoreCalculator {
         forecastDetail.setInfo(infoMessage.toString());
     }
 
-    private String createInfoMessage(ResultDto resultDto, TeamDto homeTeam, StandingDto opponentStanding, ForecastDetail forecastDetail, int totalTeams) {
-        StringBuffer infoMessage = new StringBuffer();
-        int score = getResultScore(resultDto, homeTeam);
+    private String createInfoMessage(ResultDto resultDto, TeamDto homeTeam, StandingDto opponentStanding, int totalTeams) {
+        StringBuilder infoMessage = new StringBuilder();
         if(hasWon(resultDto,homeTeam)) {
-            score = score + (totalTeams - opponentStanding.getRank());
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
+            BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+            BigInteger notLostScoreResult = initialScore.add(notLost);
             infoMessage.append("<br>");
             infoMessage.append("Winst tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
                     .append(" - ").append(resultDto.getGoalsAwayTeam());
             infoMessage.append("<br>");
-            infoMessage.append("Score : 20  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+            infoMessage.append("Score : 20  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(notLostScoreResult.intValue());
         } else if(hasLost(resultDto, homeTeam)) {
-            score = score - opponentStanding.getRank();
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
+            BigInteger lostScore = BigInteger.valueOf(opponentStanding.getRank());
+            BigInteger lostScoreResult = initialScore.subtract(lostScore);
             infoMessage.append("<br>");
             infoMessage.append("Verlies tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
                     .append(" - ").append(resultDto.getGoalsAwayTeam());
             infoMessage.append("<br>");
-            infoMessage.append("Score : 5  - ").append(opponentStanding.getRank()).append(" = ").append(score);
+            infoMessage.append("Score : 5  - ").append(opponentStanding.getRank()).append(" = ").append(lostScoreResult.intValue());
         } else {
-            score = score + (totalTeams - opponentStanding.getRank());
+            BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
+            BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
+            BigInteger notLostScoreResult = initialScore.add(notLost);
             infoMessage.append("<br>");
             infoMessage.append("Gelijk tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
                     .append(" - ").append(resultDto.getGoalsAwayTeam());
             infoMessage.append("<br>");
-            infoMessage.append("Score : 10  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(score);
+            infoMessage.append("Score : 10  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(notLostScoreResult.intValue());
         }
         return infoMessage.toString();
     }
 
 
-    private int getResultScore(ResultDto resultDto, TeamDto homeTeam) {
+    private int getInitialScore(ResultDto resultDto, TeamDto homeTeam) {
         // calculate initial points based on result
         int score;
         if(hasWon(resultDto, homeTeam)) {
@@ -151,6 +155,19 @@ public class HomeGameCalculator implements ScoreCalculator {
                 .filter(resultDto -> resultDto.getHomeTeam().getTeamId().equals(teamDto.getTeamId()))
                 .limit(allowedGames)
                 .collect(Collectors.toList());
+    }
+
+    private String createInitMessage() {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append("Thuiswedstrijden :");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening winst thuis match : 20 punten - (aantal teams - rank tegenstrever)");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening verlies thuis match : 5 punten - (rank tegenstrever)");
+        infoMessage.append("<br>");
+        infoMessage.append("Berekening gelijk spel thuis match : 10 punten  - (aantal teams - rank tegenstrever)");
+        infoMessage.append("<br>");
+        return  infoMessage.toString();
     }
 
 
