@@ -103,33 +103,68 @@ public class HomeGameCalculator implements ScoreCalculator {
             BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
             BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
             BigInteger notLostScoreResult = initialScore.add(notLost);
-            infoMessage.append("<br>");
-            infoMessage.append("Winst tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : 20  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(notLostScoreResult.intValue());
+            infoMessage.append(appendResultMessage("winst", resultDto));
+            infoMessage.append(appendScoreMessage(totalTeams, opponentStanding, "winst", notLostScoreResult));
         } else if(hasLost(resultDto, homeTeam)) {
             BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
             BigInteger lostScore = BigInteger.valueOf(opponentStanding.getRank());
             BigInteger lostScoreResult = initialScore.subtract(lostScore);
-            infoMessage.append("<br>");
-            infoMessage.append("Verlies tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : 5  - ").append(opponentStanding.getRank()).append(" = ").append(lostScoreResult.intValue());
+            infoMessage.append(appendResultMessage("verlies", resultDto));
+            infoMessage.append(appendScoreLostMessage(opponentStanding, lostScoreResult));
         } else {
             BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, homeTeam));
             BigInteger notLost = BigInteger.valueOf(totalTeams - opponentStanding.getRank());
             BigInteger notLostScoreResult = initialScore.add(notLost);
-            infoMessage.append("<br>");
-            infoMessage.append("Gelijk tegen ").append(resultDto.getAwayTeam().getName()).append(" : ").append(resultDto.getGoalsHomeTeam())
-                    .append(" - ").append(resultDto.getGoalsAwayTeam());
-            infoMessage.append("<br>");
-            infoMessage.append("Score : 10  + (").append(totalTeams).append("-").append(opponentStanding.getRank()).append(") = ").append(notLostScoreResult.intValue());
+            infoMessage.append(appendResultMessage("gelijk", resultDto));
+            infoMessage.append(appendScoreMessage(totalTeams, opponentStanding, "draw", notLostScoreResult));
         }
         return infoMessage.toString();
     }
 
+    private String appendResultMessage(String result, ResultDto resultDto) {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage.append("<br>")
+                .append(result)
+                .append(" tegen ")
+                .append(resultDto.getHomeTeam().getName()).append(" : ")
+                .append(resultDto.getGoalsHomeTeam())
+                .append(" - ")
+                .append(resultDto.getGoalsAwayTeam());
+        return infoMessage.toString();
+    }
+
+    private String appendScoreMessage(int totalTeams, StandingDto opponentStanding, String result, BigInteger score) {
+        StringBuilder infoMessage = new StringBuilder();
+        int initScore;
+        if (result.equals("winst")) {
+            initScore = homeWinScore;
+        } else {
+            initScore = homeDrawScore;
+        }
+        infoMessage
+                .append("<br>")
+                .append("Score: ")
+                .append(initScore)
+                .append("+ (")
+                .append(totalTeams).append("-")
+                .append(opponentStanding.getRank())
+                .append(") = ")
+                .append(score);
+        return infoMessage.toString();
+    }
+
+    private String appendScoreLostMessage(StandingDto opponentStanding, BigInteger score) {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage
+                .append("<br>")
+                .append("Score: ")
+                .append(homeLoseScore)
+                .append(" - ")
+                .append(opponentStanding.getRank())
+                .append(" = ")
+                .append(score);
+        return infoMessage.toString();
+    }
 
     private int getInitialScore(ResultDto resultDto, TeamDto homeTeam) {
         // calculate initial points based on result
