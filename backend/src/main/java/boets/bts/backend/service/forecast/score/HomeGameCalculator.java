@@ -85,8 +85,10 @@ public class HomeGameCalculator implements ScoreCalculator {
                     score = score.add(notLostScoreResult);
                 }
             }
-            // create info message
-            infoMessage.append(createInfoMessage(resultDto, homeTeam, opponentStanding, totalTeams));
+            if(opponentStanding != null) {
+                // create info message
+                infoMessage.append(createInfoMessage(resultDto, homeTeam, opponentStanding, totalTeams));
+            }
         }
         forecastDetail.setResultScore(score);
         infoMessage.append("<br>")
@@ -126,7 +128,7 @@ public class HomeGameCalculator implements ScoreCalculator {
         infoMessage.append("<br>")
                 .append(result)
                 .append(" tegen ")
-                .append(resultDto.getHomeTeam().getName()).append(" : ")
+                .append(resultDto.getAwayTeam().getName()).append(" : ")
                 .append(resultDto.getGoalsHomeTeam())
                 .append(" - ")
                 .append(resultDto.getGoalsAwayTeam());

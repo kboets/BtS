@@ -84,7 +84,9 @@ public class AwayGameCalculator implements ScoreCalculator {
                     awayScore = awayScore.add(notLostScoreResult);
                 }
             }
-            infoMessage.append(createInfoMessage(resultDto, awayTeam, opponentStanding, forecastDetail, totalTeams));
+            if(opponentStanding != null) {
+                infoMessage.append(createInfoMessage(resultDto, awayTeam, opponentStanding, forecastDetail, totalTeams));
+            }
         }
         currentScore = currentScore.add(awayScore);
         forecastDetail.setResultScore(currentScore);
