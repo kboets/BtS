@@ -137,13 +137,13 @@
                 </p-panel>
                 <p-divider></p-divider>
                 <p-panel header="All uitslagen {{selectedTeam.name}}" *ngIf="!showStanding" >
-                    <ng-container *ngIf="resultsAll4Teams$ | async as resultsAll4Teams">
-                        <p-table [value]="resultsAll4Teams" [autoLayout]="true">
-                            <ng-template pTemplate="body" let-resultsAll4Teams>
+                    <ng-container *ngIf="resultsAll4Teams$ | async as resultsAll4Team">
+                        <p-table [value]="resultsAll4Team" [autoLayout]="true">
+                            <ng-template pTemplate="body" let-result>
                                 <tr>
-                                    <td>{{resultsAll4Teams.eventDate | date: 'dd/MM/yyyy'}} </td>
-                                    <td><span [style]="determineColor(resultsAll4Teams)">{{resultsAll4Teams.homeTeam.name}} - {{resultsAll4Teams.awayTeam.name}}</span></td>
-                                    <td>{{resultsAll4Teams.goalsHomeTeam}} - {{resultsAll4Teams.goalsAwayTeam}}</td>
+                                    <td>{{result.eventDate | date: 'dd/MM/yyyy'}} </td>
+                                    <td><span [style]="determineColor(result)">{{result.homeTeam.name}} - {{result.awayTeam.name}}</span></td>
+                                    <td>{{result.goalsHomeTeam}} - {{result.goalsAwayTeam}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>

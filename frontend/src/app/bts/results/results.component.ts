@@ -145,7 +145,6 @@ export class ResultsComponent implements OnInit {
         this.results$ = this.resultService.getAllResultForLeague(+league_id)
             .pipe(
                 catchError(err => {
-                    console.log('entered in the catch Error');
                     this.errorMessageSubject.next(err);
                     return EMPTY;
                 })
@@ -190,7 +189,7 @@ export class ResultsComponent implements OnInit {
                     return result.round <= currentRound.round;
                 })
             }),
-            //tap(data => console.log('all results until the next round', JSON.stringify(data))),
+            //tap(data => console.log('all results until the next round', JSON.stringify(data.length))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
@@ -203,18 +202,7 @@ export class ResultsComponent implements OnInit {
                 switchMap(selectedRound => this.standingService.getStandingForLeagueAndRound(+league_id, +selectedRound.playRound))
             );
 
-        //standings for the league
-        // this.standings$ = this.standingService.getStandingForLeague(+league_id)
-        //     .pipe(
-        //         //tap(()=> console.log('arrived in the standing ')),
-        //         map(items => items.sort(ResultsComponent.sortByStandingRank),
-        //         catchError(err => {
-        //             this.errorMessageSubject.next(err);
-        //             return EMPTY;
-        //         })
-        //     ));
-
-        this.allRounds$.subscribe((data) =>{
+       this.allRounds$.subscribe((data) =>{
             this.allRounds = data;
             this.allRoundsAsString = _.map(this.allRounds, function (round) {
                 return round.round;
@@ -228,10 +216,26 @@ export class ResultsComponent implements OnInit {
         this.showStanding = false;
         this.selectedResult4TeamSubject.next(teamId);
 
+        // all results for a specific team
+        this.resultsAll4Teams$ = combineLatest(
+            [this.results$, this.selectedResult4TeamAction]
+        ).pipe(
+            map(([results, teamId]) => {
+                return _.filter(results, function (result) {
+                    //console.log('total number of results ', results.length);
+                    return result.matchStatus === 'Match Finished' && (result.awayTeam?.teamId === teamId || result.homeTeam?.teamId === teamId);
+                })
+            }),
+            //tap(data => console.log('all results 4 team ', JSON.stringify(data.length))),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })
+        );
 
         // latest 5 results for a specific team
         this.resultsLatest4Teams$ = combineLatest(
-            [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
+            [this.results$, this.selectedResult4TeamAction]
         ).pipe(
             //tap(()=> console.log('arrived in the results latest for team')),
             map(([results, teamId]) => {
@@ -247,29 +251,17 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        // all results for a specific team
-        this.resultsAll4Teams$ = combineLatest(
-            [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
-        ).pipe(
-            map(([results, teamId]) => {
-                return _.filter(results, function (result) {
-                    //console.log(" result team id " +result.homeTeam.teamId);
-                    return result.matchStatus === 'Match Finished' && (result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId);
-                })
-            }),
-            //tap(data => console.log('all results 4 team ', JSON.stringify(data))),
-            catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            })
-        );
+
 
         //get team
         combineLatest(
             [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
         ).pipe(
             map(([results, teamId]) => {
-                return _.chain(results).filter(function (result) { return result.homeTeam.teamId === teamId}).first().value();
+                return _.chain(results)
+                    .filter(function (result) { return result.homeTeam.teamId === teamId})
+                    .first()
+                    .value();
             }),
             //tap(data => console.log('all results 4 team ', JSON.stringify(data))),
             catchError(err => {
@@ -314,9 +306,9 @@ export class ResultsComponent implements OnInit {
     }
 
     determineColor(result: Result) : string {
-        if(result.homeTeam.name === this.selectedTeam.name) {
+        if(result.homeTeam?.name === this.selectedTeam.name) {
             return this.getColor(result, false);
-        } else if(result.awayTeam.name == this.selectedTeam.name) {
+        } else if(result.awayTeam?.name == this.selectedTeam.name) {
             return this.getColor(result, true);
         }
         return 'background-color:transparent'
