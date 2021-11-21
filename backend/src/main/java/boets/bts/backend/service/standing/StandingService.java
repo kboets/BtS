@@ -98,13 +98,15 @@ public class StandingService {
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
             boolean allValidated = true;
             List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
-            for (Long leagueId : leagueIds) {
+            for (Long leagueId: leagueIds) {
+                this.removeAllStandingForLeague(leagueId);
                 if(!verifyAllStandings(leagueId)) {
                     logger.error("Could not verify standing for League {} ", leagueId);
                     allValidated=false;
                     break;
                 }
             }
+
             if(allValidated) {
                 logger.info("Successfully executed the standing scheduler");
                 adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
