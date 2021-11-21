@@ -12,25 +12,23 @@ import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultMapper;
 import boets.bts.backend.web.round.RoundMapper;
 import boets.bts.backend.web.standing.StandingClient;
-import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Retrieves the actual standing of the current finished round of the current season that is already started.
  */
 @Component
-public class ActualRoundValidSeasonStandingRetriever extends AbstractStandingRetriever {
+public class RoundValidSeasonStandingRetriever extends AbstractStandingRetriever {
 
-    private static final Logger logger = LoggerFactory.getLogger(ActualRoundValidSeasonStandingRetriever.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoundValidSeasonStandingRetriever.class);
 
-    public ActualRoundValidSeasonStandingRetriever(LeagueMapper leagueMapper, RoundMapper roundMapper, StandingClient standingClient, AdminService adminService, StandingMapper standingMapper, TeamRepository teamRepository, StandingRepository standingRepository, ResultRepository resultRepository, ResultMapper resultMapper) {
+    public RoundValidSeasonStandingRetriever(LeagueMapper leagueMapper, RoundMapper roundMapper, StandingClient standingClient, AdminService adminService, StandingMapper standingMapper, TeamRepository teamRepository, StandingRepository standingRepository, ResultRepository resultRepository, ResultMapper resultMapper) {
         super(leagueMapper, roundMapper, standingClient, adminService, standingMapper, teamRepository, standingRepository, resultRepository, resultMapper);
     }
 
@@ -38,8 +36,8 @@ public class ActualRoundValidSeasonStandingRetriever extends AbstractStandingRet
     public boolean accept(League league, Round currentRound, int roundNumber) {
         return !adminService.isHistoricData()
                 && LocalDate.now().isAfter(league.getStartSeason())
-                && currentRound.getRoundNumber() == roundNumber
-                && !WebUtils.isWeekend();
+                && LocalDate.now().isBefore(league.getEndSeason());
+
     }
 
     @Override

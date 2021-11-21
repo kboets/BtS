@@ -116,7 +116,7 @@ public class StandingService {
 
     protected boolean verifyAllStandings(Long leagueId) {
         Round currentRound = roundService.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
-        int currentRoundNumber = currentRound.getRoundNumber();
+        int currentRoundNumber = getValidatedRound(currentRound.getRoundNumber(), leagueId);
         boolean validated = true;
         for(int i=1; i<=currentRoundNumber; i++) {
             logger.info("Running cron job to update standings for league {} and round {} ", leagueId, i);

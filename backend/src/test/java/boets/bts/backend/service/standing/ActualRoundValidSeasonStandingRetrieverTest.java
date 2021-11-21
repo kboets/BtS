@@ -3,7 +3,7 @@ package boets.bts.backend.service.standing;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.standing.retriever.ActualRoundValidSeasonStandingRetriever;
+import boets.bts.backend.service.standing.retriever.RoundValidSeasonStandingRetriever;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class ActualRoundValidSeasonStandingRetrieverTest {
 
     @InjectMocks
-    private ActualRoundValidSeasonStandingRetriever actualRoundValidSeasonStandingRetriever;
+    private RoundValidSeasonStandingRetriever roundValidSeasonStandingRetriever;
 
     @Mock
     private AdminService adminService;
@@ -30,7 +30,7 @@ public class ActualRoundValidSeasonStandingRetrieverTest {
         League league = League.LeagueBuilder.aLeague().withSeason(2021).withStartSeason(startSeason).build();
         Round currentRound = Round.RoundBuilder.aRound().withRoundNumber(3).build();
         when(adminService.getCurrentSeason()).thenReturn(2021);
-        assertThat(actualRoundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isTrue();
+        assertThat(roundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isTrue();
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ActualRoundValidSeasonStandingRetrieverTest {
         League league = League.LeagueBuilder.aLeague().withSeason(2021).withStartSeason(startSeason).build();
         Round currentRound = Round.RoundBuilder.aRound().withRoundNumber(3).build();
         when(adminService.getCurrentSeason()).thenReturn(2021);
-        assertThat(actualRoundValidSeasonStandingRetriever.accept(league, currentRound, 2)).isFalse();
+        assertThat(roundValidSeasonStandingRetriever.accept(league, currentRound, 2)).isFalse();
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ActualRoundValidSeasonStandingRetrieverTest {
         League league = League.LeagueBuilder.aLeague().withStartSeason(startSeason).build();
         Round currentRound = Round.RoundBuilder.aRound().withRoundNumber(3).build();
         when(adminService.getCurrentSeason()).thenReturn(2021);
-        assertThat(actualRoundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isFalse();
+        assertThat(roundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isFalse();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ActualRoundValidSeasonStandingRetrieverTest {
         League league = League.LeagueBuilder.aLeague().withSeason(2025).withStartSeason(startSeason).build();
         Round currentRound = Round.RoundBuilder.aRound().withRoundNumber(3).build();
         when(adminService.getCurrentSeason()).thenReturn(2025);
-        assertThat(actualRoundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isFalse();
+        assertThat(roundValidSeasonStandingRetriever.accept(league, currentRound, 3)).isFalse();
     }
 
 }
