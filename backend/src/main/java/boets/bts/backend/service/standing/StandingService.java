@@ -91,8 +91,8 @@ public class StandingService {
 
 
     // each 10 minutes, starting 5 minutes after each hour
-    //@Scheduled(cron = "* 5-59/10 * * * ?")
-    @Scheduled(cron = "* 0/1 * * * ?")
+    @Scheduled(cron = "* 5-59/10 * * * ?")
+    //@Scheduled(cron = "* 0/1 * * * ?")
     public void scheduleStandings() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
