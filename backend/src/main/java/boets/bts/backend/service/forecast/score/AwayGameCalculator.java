@@ -205,11 +205,17 @@ public class AwayGameCalculator implements ScoreCalculator {
         StringBuilder infoMessage = new StringBuilder();
         infoMessage.append("Uitwedstrijden ")
                 .append("<br>")
-                .append("Berekening winst uit match : 30 punten - (aantal teams - rank tegenstrever)")
+                .append("Berekening winst uit match :  ")
+                .append(awayWinScore)
+                .append(" punten - (aantal teams - rank tegenstrever)")
                 .append("<br>")
-                .append("Berekening verlies uit match : 10 punten - (rank tegenstrever)")
+                .append("Berekening verlies uit match : ")
+                .append(awayLoseScore)
+                .append(" punten - (rank tegenstrever)")
                 .append("<br>")
-                .append("Berekening gelijk spel uit match : 15 punten  - (aantal teams - rank tegenstrever)")
+                .append("Berekening gelijk spel uit match :  ")
+                .append(awayDrawScore)
+                .append(" punten  - (aantal teams - rank tegenstrever)")
                 .append("<br>");
         return infoMessage.toString();
     }

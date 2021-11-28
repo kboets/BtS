@@ -196,14 +196,20 @@ public class HomeGameCalculator implements ScoreCalculator {
 
     private String createInitMessage() {
         StringBuilder infoMessage = new StringBuilder();
-        infoMessage.append("Thuiswedstrijden :");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening winst thuis match : 20 punten - (aantal teams - rank tegenstrever)");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening verlies thuis match : 5 punten - (rank tegenstrever)");
-        infoMessage.append("<br>");
-        infoMessage.append("Berekening gelijk spel thuis match : 10 punten  - (aantal teams - rank tegenstrever)");
-        infoMessage.append("<br>");
+        infoMessage.append("Thuiswedstrijden :")
+                .append("<br>")
+                .append("Berekening winst thuis match : ")
+                .append(homeWinScore)
+                .append(" punten - (aantal teams - rank tegenstrever)")
+                .append("<br>")
+                .append("Berekening verlies thuis match : ")
+                .append(homeLoseScore)
+                .append(" punten - (rank tegenstrever)")
+                .append("<br>")
+                .append("Berekening gelijk spel thuis match : ")
+                .append(homeDrawScore)
+                .append("punten  - (aantal teams - rank tegenstrever)")
+                .append("<br>");
         return  infoMessage.toString();
     }
 
