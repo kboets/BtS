@@ -9,6 +9,7 @@ import {ForecastDetail} from "../domain/forecastDetail";
 import * as _ from 'underscore';
 import {AdminService} from "../admin/admin.service";
 import {AdminKeys} from "../domain/adminKeys";
+import {Table} from "primeng/table";
 
 @Component({
     selector: 'bts-forecast',
@@ -116,6 +117,10 @@ export class ForecastComponent implements OnInit {
     showScoreInfo(forecastDetail: ForecastDetail) {
         this.displayScoreInfo = true;
         this.selectedForecastDetail = forecastDetail;
+    }
+
+    clear(table: Table) {
+        table.clear();
     }
 
     private getDefaultForecast(): Forecast[] {
