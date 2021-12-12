@@ -12,14 +12,14 @@
                             *ngIf="!isExpanded" class="fa fa-plus-circle" aria-hidden="true"></i>
                             <i *ngIf="isExpanded" class="fa fa-minus-circle" aria-hidden="true"></i></a>
                     </th>
-                    <th>Competitie</th>
+                    <th pSortableColumn="league.name">Competitie<p-sortIcon field="league.name"></p-sortIcon></th>
                     <th>Team</th>
                     <th>Volgende wedstrijd</th>
                     <th>score</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-forecast let-rowIndex="rowIndex" let-expanded="expanded">
-                <tr *ngIf="rowGroupMetadata[forecast.league.name].index === rowIndex">
+                <tr>
                     <td colspan="5">
                         <button type="button" pButton pRipple [pRowToggler]="forecast" class="p-button-text p-button-rounded p-button-plain p-mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
                         <span class="p-text-bold p-ml-2">{{forecast.league.name}}</span>

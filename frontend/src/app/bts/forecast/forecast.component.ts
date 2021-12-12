@@ -19,17 +19,13 @@ export class ForecastComponent implements OnInit {
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
-    private selectedForecastSubject = new BehaviorSubject<string>('ALL');
-    selectedForecastAction$ = this.selectedForecastSubject.asObservable();
-
-    public forecasts$: Observable<Forecast[]>;
     public forecastData: Forecast[];
-    public forecastLeagues$: Observable<League[]>;
     public forecastDetails: ForecastDetail[];
     public isHistoricData: boolean;
     // sorting and expanding on table
     public isExpanded: boolean;
     public expandedRows = {};
+    public temDataLength: number;
 
     currentSeason: number;
     displayScoreInfo: boolean;
@@ -39,57 +35,15 @@ export class ForecastComponent implements OnInit {
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
         this.forecastDetails = [];
+        this.forecastData = [];
         this.displayScoreInfo = false;
         this.isExpanded = false;
+        this.temDataLength = 0;
     }
 
     ngOnInit(): void {
-        this.forecasts$ = this.forecastService.getForecasts()
-            .pipe(
-                catchError(err => {
-                    this.errorMessageSubject.next(err);
-                    return EMPTY;
-                })
-            );
+        this.getDefaultForecast();
 
-        this.forecastService.getForecasts()
-            .pipe(
-                catchError(err => {
-                    this.errorMessageSubject.next(err);
-                    return EMPTY;
-                })
-            ).subscribe(data => {
-                this.forecastData = data;
-        });
-
-        this.forecastLeagues$ = this.forecasts$
-            .pipe(
-                map(forecasts$ => forecasts$.map(forecasts$ => forecasts$.league))
-            );
-
-        combineLatest([this.forecasts$, this.selectedForecastAction$])
-            .pipe(
-                map(([forecasts , countryCode]) => {
-                    return _.map(forecasts, function (forecast) {
-                        if(countryCode === 'ALL') {
-                            return forecast.forecastDetails;
-                        } else if(forecast.league.countryCode === countryCode) {
-                            return forecast.forecastDetails;
-                        } else {
-                            return [];
-                        }
-                    })
-                  }
-                ),
-                catchError(err => {
-                    this.errorMessageSubject.next(err);
-                    return EMPTY;
-                })
-            ).subscribe((data)=> {
-                const details = _.flatten(data);
-                this.forecastDetails = _.sortBy(details,'score').reverse();
-
-            })
         //retrieve the current season as number.
         this.adminService.currentSeason$.subscribe((data) => {
             this.currentSeason = data;
@@ -108,10 +62,6 @@ export class ForecastComponent implements OnInit {
             .subscribe((data) => {
                 this.isHistoricData = data;
             })
-    }
-
-    selectLeague4Forecast() {
-        this.selectedForecastSubject.next(this.selectedForecastLeague.countryCode);
     }
 
     onSort() {
@@ -149,10 +99,36 @@ export class ForecastComponent implements OnInit {
         this.isExpanded = !this.isExpanded;
     }
 
+    onRowExpand() {
+        //console.log("row expanded", Object.keys(this.expandedRows).length);
+        if(Object.keys(this.expandedRows).length === this.temDataLength){
+            this.isExpanded = true;
+        }
+        //console.log(this.expandedRows);
+    }
+    onRowCollapse() {
+        //console.log("row collapsed",Object.keys(this.expandedRows).length);
+        if(Object.keys(this.expandedRows).length === 0){
+            this.isExpanded = false;
+        }
+    }
 
     showScoreInfo(forecastDetail: ForecastDetail) {
         this.displayScoreInfo = true;
         this.selectedForecastDetail = forecastDetail;
+    }
+
+    private getDefaultForecast(): Forecast[] {
+        this.forecastService.getForecasts()
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            ).subscribe(data => {
+            this.forecastData = data;
+        });
+        return this.forecastData;
     }
 
 }
