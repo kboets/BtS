@@ -23,17 +23,24 @@ export class ForecastComponent implements OnInit {
     selectedForecastAction$ = this.selectedForecastSubject.asObservable();
 
     public forecasts$: Observable<Forecast[]>;
+    public forecastData: Forecast[];
     public forecastLeagues$: Observable<League[]>;
     public forecastDetails: ForecastDetail[];
     public isHistoricData: boolean;
+    // sorting and expanding on table
+    public isExpanded: boolean;
+    public expandedRows = {};
+
     currentSeason: number;
     displayScoreInfo: boolean;
     selectedForecastLeague: League;
     selectedForecastDetail: ForecastDetail;
+    rowGroupMetadata: any;
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
         this.forecastDetails = [];
         this.displayScoreInfo = false;
+        this.isExpanded = false;
     }
 
     ngOnInit(): void {
@@ -44,6 +51,16 @@ export class ForecastComponent implements OnInit {
                     return EMPTY;
                 })
             );
+
+        this.forecastService.getForecasts()
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            ).subscribe(data => {
+                this.forecastData = data;
+        });
 
         this.forecastLeagues$ = this.forecasts$
             .pipe(
@@ -97,9 +114,44 @@ export class ForecastComponent implements OnInit {
         this.selectedForecastSubject.next(this.selectedForecastLeague.countryCode);
     }
 
+    onSort() {
+        this.updateRowGroupMetaData();
+    }
+
+    updateRowGroupMetaData() {
+        this.rowGroupMetadata = {};
+        if (this.forecastData) {
+            for (let i = 0; i < this.forecastData.length; i++) {
+                let rowData = this.forecastData[i];
+                let leagueName = rowData.league.name;
+                if (i == 0) {
+                    this.rowGroupMetadata[leagueName] = { index: 0, size: 1 };
+                } else {
+                    let previousRowData = this.forecastData[i - 1];
+                    let previousRowGroup = previousRowData.league.name;
+                    if (leagueName === previousRowGroup)
+                        this.rowGroupMetadata[leagueName].size++;
+                    else
+                        this.rowGroupMetadata[leagueName] = { index: i, size: 1 };
+                }
+            }
+        }
+    }
+
+    expandAll() {
+        if(!this.isExpanded){
+            this.forecastData.forEach(data =>{
+                this.expandedRows[data.league.name] = true;
+            })
+        } else {
+            this.expandedRows={};
+        }
+        this.isExpanded = !this.isExpanded;
+    }
+
+
     showScoreInfo(forecastDetail: ForecastDetail) {
         this.displayScoreInfo = true;
-        console.log('forecastDetail ', forecastDetail);
         this.selectedForecastDetail = forecastDetail;
     }
 

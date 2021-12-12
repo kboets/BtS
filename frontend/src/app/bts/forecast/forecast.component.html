@@ -2,44 +2,87 @@
     <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
     <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>
+<div class="card">
+        <p-table [value]="forecastData" dataKey="league.name" sortField="league.name" sortMode="single" (onSort)="onSort()"
+                 [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand()" (onRowCollapse)="onRowCollapse()">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem">
+                        <a style="cursor: pointer;font-size: 16px; color:teal;" (click)="expandAll()"><i
+                            *ngIf="!isExpanded" class="fa fa-plus-circle" aria-hidden="true"></i>
+                            <i *ngIf="isExpanded" class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                    </th>
+                    <th>Competitie</th>
+                    <th>Team</th>
+                    <th>Volgende wedstrijd</th>
+                    <th>score</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-forecast let-rowIndex="rowIndex" let-expanded="expanded">
+                <tr *ngIf="rowGroupMetadata[forecast.league.name].index === rowIndex">
+                    <td colspan="5">
+                        <button type="button" pButton pRipple [pRowToggler]="forecast" class="p-button-text p-button-rounded p-button-plain p-mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                        <span class="p-text-bold p-ml-2">{{forecast.league.name}}</span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-forecast>
+                <tr>
+                    <td colspan="5">
+                        <p-table [value]="forecast.forecastDetails">
+                            <ng-template pTemplate="body" let-forecastDetail>
+                                <tr>
 
-<p-panel header="Overzicht aanbeveling">
-    <ng-container *ngIf="forecasts$ | async as forecasts">
-        <div class="p-grid">
-            <div class="p-col-2">
-                <ng-container *ngIf="forecastLeagues$ | async as leagues">
-                    <div class="box">
-                        <p-dropdown  [options]="leagues" [(ngModel)]="selectedForecastLeague" optionLabel="name" placeholder="Kies een competitie" (onChange)="selectLeague4Forecast()"></p-dropdown>
-                    </div>
-                </ng-container>
-            </div>
-        </div>
-        <div class="p-grid">
-            <div class="p-col-12">
-                    <p-table [value]="forecastDetails" [autoLayout]="true">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>Competitie </th>
-                                <th>Team</th>
-                                <th><span>score</span></th>
-                                <th>Volgende wedstrijd</th>
-                                <th *ngIf="isHistoricData">Resultaat</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-forecastDetail>
-                            <tr>
-                                <td>{{selectedForecastLeague?selectedForecastLeague.name:"Alle competities"}}</td>
-                                <td>{{forecastDetail.team.name}}</td>
-                                <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.score}}</td>
-                                <td>{{forecastDetail.nextResult?.homeTeam?.name}} - {{forecastDetail.nextResult?.awayTeam?.name}}</td>
-                                <td *ngIf="isHistoricData">{{forecastDetail.nextResult.goalsHomeTeam}} - {{forecastDetail.nextResult.goalsAwayTeam}}</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-            </div>
-        </div>
-    </ng-container>
-</p-panel>
+                                        <td></td>
+                                        <td>{{forecastDetail.team.name}}</td>
+                                        <td>{{forecastDetail.nextResult.homeTeam.name}} - {{forecastDetail.nextResult.awayTeam.name}}<br/>
+                                            ({{forecastDetail.nextResult.eventDate | date: 'dd/MM/yyyy'}})</td>
+                                        <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.score}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </td>
+                </tr>
+             </ng-template>
+        </p-table>
+</div>
+<!--<p-panel header="Overzicht aanbeveling">-->
+<!--    <ng-container *ngIf="forecasts$ | async as forecasts">-->
+<!--        <div class="p-grid">-->
+<!--            <div class="p-col-2">-->
+<!--                <ng-container *ngIf="forecastLeagues$ | async as leagues">-->
+<!--                    <div class="box">-->
+<!--                        <p-dropdown  [options]="leagues" [(ngModel)]="selectedForecastLeague" optionLabel="name" placeholder="Kies een competitie" (onChange)="selectLeague4Forecast()"></p-dropdown>-->
+<!--                    </div>-->
+<!--                </ng-container>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="p-grid">-->
+<!--            <div class="p-col-12">-->
+<!--                    <p-table [value]="forecastDetails" [autoLayout]="true">-->
+<!--                        <ng-template pTemplate="header">-->
+<!--                            <tr>-->
+<!--                                <th>Competitie </th>-->
+<!--                                <th>Team</th>-->
+<!--                                <th><span>score</span></th>-->
+<!--                                <th>Volgende wedstrijd</th>-->
+<!--                                <th *ngIf="isHistoricData">Resultaat</th>-->
+<!--                            </tr>-->
+<!--                        </ng-template>-->
+<!--                        <ng-template pTemplate="body" let-forecastDetail>-->
+<!--                            <tr>-->
+<!--                                <td>{{selectedForecastLeague?selectedForecastLeague.name:"Alle competities"}}</td>-->
+<!--                                <td>{{forecastDetail.team.name}}</td>-->
+<!--                                <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.score}}</td>-->
+<!--                                <td>{{forecastDetail.nextResult?.homeTeam?.name}} - {{forecastDetail.nextResult?.awayTeam?.name}}</td>-->
+<!--                                <td *ngIf="isHistoricData">{{forecastDetail.nextResult.goalsHomeTeam}} - {{forecastDetail.nextResult.goalsAwayTeam}}</td>-->
+<!--                            </tr>-->
+<!--                        </ng-template>-->
+<!--                    </p-table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </ng-container>-->
+<!--</p-panel>-->
 
 <p-dialog header="Overzicht ploeg : {{selectedForecastDetail?.team.name}}" [(visible)]="displayScoreInfo" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <p [innerHTML]="selectedForecastDetail?.info"></p>
