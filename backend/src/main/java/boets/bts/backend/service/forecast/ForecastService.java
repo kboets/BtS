@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -61,7 +62,7 @@ public class ForecastService {
         }
         List<Forecast> savedForecasts = forecastMap.get(localDate);
         if(savedForecasts != null && !savedForecasts.isEmpty()) {
-            return forecastMap.get(localDate);
+            return savedForecasts;
         } else {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             forecasts.addAll(forecastCalculatorManager.calculateForecasts(leagues));
@@ -70,6 +71,43 @@ public class ForecastService {
         }
 
         return forecasts;
+    }
+
+    /**
+     * retrieves all the forecasts with the details that has a score that is lower or equal as the given score(s)
+     * @param scores
+     * @return
+     */
+    public List<Forecast> getRequestedForecasts(List<Integer> scores) throws Exception {
+        List<Forecast> forecasts = calculateForecast();
+        if (!scores.isEmpty()) {
+            for (Forecast forecast : forecasts) {
+                forecast.setForecastDetails(forecast.getForecastDetails().stream()
+                        .filter(forecastDetail -> forecastDetailScore(scores, forecastDetail))
+                        .collect(Collectors.toList()));
+            }
+            return forecasts;
+        }
+        return forecasts;
+
+    }
+
+    private boolean forecastDetailScore(List<Integer> scores, ForecastDetail forecastDetail) {
+        int forecastScore = forecastDetail.getScore();
+        boolean isValid = false;
+        for(int score: scores) {
+            if(score == 50 && forecastScore < score) {
+                isValid = true;
+                break;
+            } else if(score > 150 && forecastScore > 150) {
+                isValid = true;
+                break;
+            } else if(forecastScore >= (score-50) && forecastScore < score){
+                isValid = true;
+                break;
+            }
+        }
+        return isValid;
     }
 
 }

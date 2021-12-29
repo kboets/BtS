@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {BehaviorSubject, combineLatest, EMPTY, Observable, Subject} from "rxjs";
+import {EMPTY, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "./forecast.service";
@@ -21,12 +21,17 @@ export class ForecastComponent implements OnInit {
     errorMessage$ = this.errorMessageSubject.asObservable();
 
     public forecastData: Forecast[];
+    private forecastData$ : Observable<Forecast[]>;
     public forecastDetails: ForecastDetail[];
     public isHistoricData: boolean;
     // sorting and expanding on table
     public isExpanded: boolean;
     public expandedRows = {};
     public temDataLength: number;
+    // filtering the score
+    public scores: any[];
+    public selectedScores: any[];
+    private previousScores: any[];
 
     currentSeason: number;
     displayScoreInfo: boolean;
@@ -34,16 +39,57 @@ export class ForecastComponent implements OnInit {
     selectedForecastDetail: ForecastDetail;
     rowGroupMetadata: any;
 
+    // static filterForecastOnScore(forecast: Forecast, scores: number[]) : Forecast {
+    //     const filteredForecastDetails = [];
+    //     const allFilteredForecastDetails = [];
+    //     const details = forecast.forecastDetails;
+    //     //for each score, loop over the details and filter those who match the condition
+    //     scores.forEach(function (score, index) {
+    //         filteredForecastDetails[index] = ForecastComponent.filterForecastDetailsOnScore(details, score);
+    //         //console.log('score ', score, ' has details ', filteredForecastDetails);
+    //         allFilteredForecastDetails.push(_.flatten(filteredForecastDetails));
+    //     });
+    //     //forecast.forecastDetails = [];
+    //     forecast.forecastDetails = _.flatten(allFilteredForecastDetails);
+    //     return forecast;
+    // }
+    //
+    // static filterForecastDetailsOnScore(forecastDetails : ForecastDetail[], selectedScore) : ForecastDetail[] {
+    //     return  _.filter(forecastDetails, forecastDetail => {
+    //         if(selectedScore == 50) {
+    //             return (forecastDetail.score < selectedScore);
+    //         } else if(selectedScore > 150) {
+    //             return (forecastDetail.score > 150);
+    //         } else {
+    //             return (forecastDetail.score >= (selectedScore-50) && forecastDetail.score < selectedScore);
+    //         }
+    //     });
+    //
+    // }
+
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
         this.forecastDetails = [];
         this.forecastData = [];
         this.displayScoreInfo = false;
         this.isExpanded = false;
         this.temDataLength = 0;
+        this.selectedScores = [];
+        this.previousScores = [];
+        this.scores =[
+            {value: 50, label: '< 50'},
+            {value: 100, label: '50 > 100'},
+            {value: 150, label: '100 > 150'},
+            {value: 500, label: '> 150'}
+        ]
     }
 
+
     ngOnInit(): void {
-        this.getDefaultForecast();
+        this.forecastService.forecastRefreshNeeded$.subscribe(() => {
+            this.getForecastData();
+        })
+
+        this.getForecastData();
 
         //retrieve the current season as number.
         this.adminService.currentSeason$.subscribe((data) => {
@@ -101,14 +147,11 @@ export class ForecastComponent implements OnInit {
     }
 
     onRowExpand() {
-        //console.log("row expanded", Object.keys(this.expandedRows).length);
         if(Object.keys(this.expandedRows).length === this.temDataLength){
             this.isExpanded = true;
         }
-        //console.log(this.expandedRows);
     }
     onRowCollapse() {
-        //console.log("row collapsed",Object.keys(this.expandedRows).length);
         if(Object.keys(this.expandedRows).length === 0){
             this.isExpanded = false;
         }
@@ -121,19 +164,24 @@ export class ForecastComponent implements OnInit {
 
     clear(table: Table) {
         table.clear();
+        this.selectedScores = [];
+        this.forecastService.forecastRefreshNeeded$.next();
     }
 
-    private getDefaultForecast(): Forecast[] {
-        this.forecastService.getForecasts()
+    getRequestedScoreValue() {
+        if(_.isEqual(this.selectedScores, this.previousScores) === false) {
+            this.forecastService.forecastRefreshNeeded$.next();
+            this.previousScores = this.selectedScores.slice();
+        }
+    }
+
+    private getForecastData() {
+        this.forecastService.getFilteredForecasts(this.selectedScores)
             .pipe(
                 catchError(err => {
                     this.errorMessageSubject.next(err);
                     return EMPTY;
                 })
-            ).subscribe(data => {
-            this.forecastData = data;
-        });
-        return this.forecastData;
+            ).subscribe((result: Forecast[]) => this.forecastData = result);
     }
-
 }

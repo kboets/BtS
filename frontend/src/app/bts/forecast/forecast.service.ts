@@ -1,24 +1,40 @@
 import {Injectable} from "@angular/core";
-import {Observable, throwError} from "rxjs";
+import {Observable, Subject, throwError} from "rxjs";
 import {Forecast} from "../domain/forecast";
 import {catchError, shareReplay} from "rxjs/operators";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
+import {League} from "../domain/league";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ForecastService {
 
+    private _forecastRefreshNeeded$ = new Subject<Forecast []>();
+
     constructor(private http: HttpClient) {  }
 
-    getForecasts(): Observable<Forecast[]> {
+    get forecastRefreshNeeded$(): Subject<Forecast []> {
+        return this._forecastRefreshNeeded$;
+    }
+
+    getAllForecasts(): Observable<Forecast[]> {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(
-                shareReplay(1),
                 catchError(this.handleHttpError)
             );
     }
+
+    getFilteredForecasts(scores: number[]) : Observable<Forecast[]> {
+        return this.http.put<Forecast[]>(`/btsapi/api/forecast/requested`, scores, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+    }
+
+
 
     private handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handle HttpError of result service "+error.message);
