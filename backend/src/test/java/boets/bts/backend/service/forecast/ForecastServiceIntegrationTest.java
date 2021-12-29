@@ -62,7 +62,7 @@ public class ForecastServiceIntegrationTest {
         List<League> otherLeagues = leagues.stream().filter(league -> !league.getId().equals(2660L)).collect(Collectors.toList());
         setUpLeaguesWithRound(otherLeagues, 1);
         // calculate forecast
-        List<ForecastDto> forecastDtos = forecastService.calculateForecast();
+        List<ForecastDto> forecastDtos = forecastService.getAllForecasts();
         assertThat(forecastDtos.size()).isEqualTo(1);
     }
 

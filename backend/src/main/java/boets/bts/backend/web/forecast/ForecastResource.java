@@ -24,7 +24,7 @@ public class ForecastResource {
     @GetMapping("all")
     public List<ForecastDto> getAllWinForecast() {
         try {
-            return  forecastService.calculateForecast();
+            return forecastService.getAllForecasts();
         } catch (Exception e) {
             logger.error("Exception while calculating forecasts {} ", e.getMessage(), e);
             throw new GeneralException(e.getMessage());

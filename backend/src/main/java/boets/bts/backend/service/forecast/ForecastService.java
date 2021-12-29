@@ -35,39 +35,17 @@ public class ForecastService {
         this.forecastMap = new ConcurrentHashMap<>();
     }
 
-    public List<ForecastDto> calculateForecast() throws Exception {
+    public List<ForecastDto> getAllForecasts() throws Exception {
         LocalDate localDate = LocalDate.now();
         List<ForecastDto> forecastDtos = new ArrayList<>();
-        //before calculating, all rounds, results and standings must be updated.
-        if(adminService.isHistoricData()) {
-            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
-            forecastDtos.addAll(forecastCalculatorManager.calculateForecasts(leagues));
-            forecastMap.put(localDate, forecastDtos);
-            return forecastDtos;
-        }
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            logger.warn("Could not yet calculate forecasts as result is not yet up to date");
-            forecastMap.clear();
-            return forecastDtos;
-        }
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
-            logger.warn("Could not yet calculate forecasts as round is not yet up to date");
-            forecastMap.clear();
-            return forecastDtos;
-        }
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS)) {
-            logger.warn("Could not yet calculate forecasts as standings is not yet up to date");
-            forecastMap.clear();
-            return forecastDtos;
-        }
+
         List<ForecastDto> savedForecastDtos = forecastMap.get(localDate);
         if(savedForecastDtos != null && !savedForecastDtos.isEmpty()) {
             return savedForecastDtos;
         } else {
-            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
-            forecastDtos.addAll(forecastCalculatorManager.calculateForecasts(leagues));
+            forecastDtos.addAll(this.calculateForecasts());
             //setting it in comment, as a workaround for the force button (as it is always forced to recalculate the forecasts)
-            //forecastMap.put(localDate, forecasts);
+            forecastMap.put(localDate, forecastDtos);
         }
 
         return forecastDtos;
@@ -79,7 +57,7 @@ public class ForecastService {
      * @return
      */
     public List<ForecastDto> getRequestedForecasts(List<Integer> scores) throws Exception {
-        List<ForecastDto> forecastDtos = calculateForecast();
+        List<ForecastDto> forecastDtos = getAllForecasts();
         if (!scores.isEmpty()) {
             for (ForecastDto forecastDto : forecastDtos) {
                 forecastDto.setForecastDetails(forecastDto.getForecastDetails().stream()
@@ -91,6 +69,29 @@ public class ForecastService {
         return forecastDtos;
 
     }
+
+    private List<ForecastDto> calculateForecasts() throws Exception {
+        //before calculating, all rounds, results and standings must be updated.
+        if(adminService.isHistoricData()) {
+            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+            return  forecastCalculatorManager.calculateForecasts(leagues);
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            logger.warn("Could not yet calculate forecasts as result is not yet up to date");
+            return new ArrayList<>();
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
+            logger.warn("Could not yet calculate forecasts as round is not yet up to date");
+            return new ArrayList<>();
+        }
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS)) {
+            logger.warn("Could not yet calculate forecasts as standings is not yet up to date");
+            return new ArrayList<>();
+        }
+        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+        return forecastCalculatorManager.calculateForecasts(leagues);
+    }
+
 
     private boolean forecastDetailScore(List<Integer> scores, ForecastDetailDto forecastDetail) {
         int forecastScore = forecastDetail.getScore();
