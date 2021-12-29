@@ -92,7 +92,7 @@ public class ForecastService {
 
     }
 
-    private boolean forecastDetailScore(List<Integer> scores, ForecastDetail forecastDetail) {
+    private boolean forecastDetailScore(List<Integer> scores, ForecastDetailDto forecastDetail) {
         int forecastScore = forecastDetail.getScore();
         boolean isValid = false;
         for(int score: scores) {

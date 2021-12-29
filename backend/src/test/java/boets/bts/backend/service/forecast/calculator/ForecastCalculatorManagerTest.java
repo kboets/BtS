@@ -7,7 +7,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.forecast.ForecastDto;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +84,7 @@ public class ForecastCalculatorManagerTest {
         ForecastDto forecastDto = forecastContainer.getForecast();
         assertThat(forecastDto.getLeague().getLeague_id().equals(jupilerLeague.getId().toString())).isTrue();
         assertThat(forecastDto.getForecastDetails().size() == 18).isTrue();//number of teams
-        ForecastDetail forecastDetail = forecastDto.getForecastDetails().get(0);
+        ForecastDetailDto forecastDetail = forecastDto.getForecastDetails().get(0);
         assertThat(forecastDetail.getResults().size()).isEqualTo(10);
         assertThat(forecastDetail.getNextResult().getRoundNumber() == 12).isTrue();
     }

@@ -1,7 +1,7 @@
 package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
 import org.springframework.core.annotation.Order;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Locale;
 
 @Component
 @Order(3)
@@ -22,7 +21,7 @@ public class NextResultCalculator implements ScoreCalculator {
     }
 
     @Override
-    public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
+    public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
         StringBuilder infoMessage = new StringBuilder();
         ResultDto nextResult = forecastDetail.getNextResult();
         TeamDto teamDto = forecastDetail.getTeam();
@@ -44,7 +43,7 @@ public class NextResultCalculator implements ScoreCalculator {
         forecastDetail.setInfo(builder.toString());
     }
 
-    private String addMessage(ForecastDetail forecastDetail, String bonusMalus) {
+    private String addMessage(ForecastDetailDto forecastDetail, String bonusMalus) {
         String homeAwayMatch = bonusMalus.equals("+")?"thuis match":"uit match";
         StringBuilder infoMessage = new StringBuilder();
         infoMessage

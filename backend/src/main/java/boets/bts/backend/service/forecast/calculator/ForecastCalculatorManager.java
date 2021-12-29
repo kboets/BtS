@@ -7,7 +7,7 @@ import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.forecast.ForecastDto;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.forecast.score.ScoreCalculatorHandler;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.league.LeagueDto;
@@ -186,7 +186,7 @@ public class ForecastCalculatorManager {
         List<TeamDto> teams = leagueDto.getTeamDtos();
         //create forecast details
         for (TeamDto teamDto : teams) {
-            ForecastDetail forecastDetail = createForecastDetail(forecastData, teamDto);
+            ForecastDetailDto forecastDetail = createForecastDetail(forecastData, teamDto);
             forecastDto.getForecastDetails().add(forecastDetail);
         }
         return new ForecastContainer(forecastData, forecastDto);
@@ -194,19 +194,19 @@ public class ForecastCalculatorManager {
 
     protected ForecastDto calculateForecastResultScore(ForecastContainer forecastContainer) {
         ForecastDto forecastDto = forecastContainer.getForecast();
-        List<ForecastDetail> forecastDetails = forecastDto.getForecastDetails();
-        for(ForecastDetail forecastDetail : forecastDetails) {
+        List<ForecastDetailDto> forecastDetails = forecastDto.getForecastDetails();
+        for(ForecastDetailDto forecastDetail : forecastDetails) {
             scoreCalculatorHandler.calculateScore(forecastDetail, forecastContainer.getForecastData(), forecastDetails);
         }
         return forecastDto;
     }
 
     protected ForecastDto calculateForecastFinalScore(ForecastDto forecastDto) {
-        List<ForecastDetail> forecastDetails = forecastDto.getForecastDetails();
-        for(ForecastDetail forecastDetail : forecastDetails) {
+        List<ForecastDetailDto> forecastDetails = forecastDto.getForecastDetails();
+        for(ForecastDetailDto forecastDetail : forecastDetails) {
             TeamDto opponent = forecastDetail.getNextOpponent();
             if(opponent != null) {
-                ForecastDetail otherTeamForecastDetail = forecastDetails.stream()
+                ForecastDetailDto otherTeamForecastDetail = forecastDetails.stream()
                         .filter(forecastDetail1 -> forecastDetail1.getTeam().getTeamId().equals(opponent.getTeamId()))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException(String.format("Could not find a team with teamid %s in the list of forecastdetail", opponent.getTeamId())));
@@ -232,12 +232,12 @@ public class ForecastCalculatorManager {
                 forecastDetail.setInfo(builder.toString());
             }
         }
-        forecastDetails.sort(Comparator.comparing(ForecastDetail::getScore, Comparator.reverseOrder()));
+        forecastDetails.sort(Comparator.comparing(ForecastDetailDto::getScore, Comparator.reverseOrder()));
         return forecastDto;
     }
 
-    private ForecastDetail createForecastDetail(ForecastData forecastData, TeamDto teamDto) {
-        ForecastDetail forecastDetail = new ForecastDetail();
+    private ForecastDetailDto createForecastDetail(ForecastData forecastData, TeamDto teamDto) {
+        ForecastDetailDto forecastDetail = new ForecastDetailDto();
         forecastDetail.setTeam(teamDto);
         List<ResultDto> allNextResults = forecastData.getNextResults();
         // get next result for team

@@ -6,7 +6,7 @@ import boets.bts.backend.web.team.TeamDto;
 import java.math.BigInteger;
 import java.util.List;
 
-public class ForecastDetail {
+public class ForecastDetailDto {
 
         private TeamDto team;
         private List<ResultDto> results;

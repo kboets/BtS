@@ -1,7 +1,7 @@
 package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.team.TeamDto;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ScoreCalculator {
 
-    void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails);
+    void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails);
 
     default StandingDto getStandingOpponent(List<StandingDto> standings, TeamDto opponent) {
         return  standings.stream().filter(standing -> standing.getTeam().getId().equals(opponent.getId()))

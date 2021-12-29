@@ -9,7 +9,7 @@ public class ForecastDto {
 
     private LeagueDto league;
 
-    private List<ForecastDetail> forecastDetails;
+    private List<ForecastDetailDto> forecastDetails;
 
     public ForecastDto() {
     }
@@ -22,14 +22,14 @@ public class ForecastDto {
         this.league = league;
     }
 
-    public List<ForecastDetail> getForecastDetails() {
+    public List<ForecastDetailDto> getForecastDetails() {
         if(forecastDetails == null) {
             this.forecastDetails = new ArrayList<>();
         }
         return forecastDetails;
     }
 
-    public void setForecastDetails(List<ForecastDetail> forecastDetails) {
+    public void setForecastDetails(List<ForecastDetailDto> forecastDetails) {
         this.forecastDetails = forecastDetails;
     }
 

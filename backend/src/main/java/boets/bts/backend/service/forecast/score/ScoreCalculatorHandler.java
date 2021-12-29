@@ -1,7 +1,7 @@
 package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class ScoreCalculatorHandler {
         this.calculatorList = scoreCalculatorList;
     }
 
-    public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail>forecastDetails) {
+    public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto>forecastDetails) {
         for(ScoreCalculator scoreCalculator: calculatorList) {
             scoreCalculator.calculateScore(forecastDetail, forecastData,forecastDetails);
         }

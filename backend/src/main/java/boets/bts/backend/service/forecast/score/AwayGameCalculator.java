@@ -2,10 +2,9 @@ package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.domain.Standing;
 import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.league.LeagueDto;
-import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
@@ -50,7 +49,7 @@ public class AwayGameCalculator implements ScoreCalculator {
     }
 
     @Override
-    public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
+    public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
         StringBuilder infoMessage = new StringBuilder();
         infoMessage.append(createInitMessage());
         //retrieve number of teams
@@ -105,7 +104,7 @@ public class AwayGameCalculator implements ScoreCalculator {
 
     }
 
-    private String createInfoMessage(ResultDto resultDto, TeamDto awayTeam, StandingDto opponentStanding, ForecastDetail forecastDetail, int totalTeams) {
+    private String createInfoMessage(ResultDto resultDto, TeamDto awayTeam, StandingDto opponentStanding, ForecastDetailDto forecastDetail, int totalTeams) {
         StringBuilder infoMessage = new StringBuilder();
         if(hasWon(resultDto,awayTeam)) {
             BigInteger initialScore = BigInteger.valueOf(getInitialScore(resultDto, awayTeam));

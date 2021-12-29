@@ -2,7 +2,7 @@ package boets.bts.backend.service.forecast.score;
 
 import boets.bts.backend.domain.Standing;
 import boets.bts.backend.service.forecast.calculator.ForecastData;
-import boets.bts.backend.service.forecast.ForecastDetail;
+import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
@@ -52,7 +52,7 @@ public class HomeGameCalculator implements ScoreCalculator {
     }
 
     @Override
-    public void calculateScore(ForecastDetail forecastDetail, ForecastData forecastData, List<ForecastDetail> forecastDetails) {
+    public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
         TeamDto homeTeam = forecastDetail.getTeam();
         StringBuilder infoMessage = new StringBuilder();
         infoMessage.append(createInitMessage());
