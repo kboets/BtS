@@ -1,6 +1,6 @@
 package boets.bts.backend.web.forecast;
 
-import boets.bts.backend.service.forecast.Forecast;
+import boets.bts.backend.service.forecast.ForecastDto;
 import boets.bts.backend.service.forecast.ForecastService;
 import boets.bts.backend.web.exception.GeneralException;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class ForecastResource {
     }
 
     @GetMapping("all")
-    public List<Forecast> getAllWinForecast() {
+    public List<ForecastDto> getAllWinForecast() {
         try {
             return  forecastService.calculateForecast();
         } catch (Exception e) {
@@ -32,9 +32,9 @@ public class ForecastResource {
     }
 
     @PutMapping("requested")
-    public List<Forecast> getRequestedForecasts(@RequestBody List<Integer> scores) {
+    public List<ForecastDto> getRequestedForecasts(@RequestBody List<Integer> scores) {
         try {
-            List<Forecast> result = forecastService.getRequestedForecasts(scores);
+            List<ForecastDto> result = forecastService.getRequestedForecasts(scores);
             result.stream().sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()));
             return result;
         } catch (Exception e) {

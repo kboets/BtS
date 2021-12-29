@@ -1,6 +1,6 @@
 package boets.bts.backend.service.forecast.calculator;
 
-import boets.bts.backend.service.forecast.Forecast;
+import boets.bts.backend.service.forecast.ForecastDto;
 
 /**
  * Container object to hold the combination of a forecast and the forecast data.
@@ -8,18 +8,18 @@ import boets.bts.backend.service.forecast.Forecast;
 public class ForecastContainer {
 
     private ForecastData forecastData;
-    private Forecast forecast;
+    private ForecastDto forecastDto;
 
-    public ForecastContainer(ForecastData forecastData, Forecast forecast) {
+    public ForecastContainer(ForecastData forecastData, ForecastDto forecastDto) {
         this.forecastData = forecastData;
-        this.forecast = forecast;
+        this.forecastDto = forecastDto;
     }
 
     public ForecastData getForecastData() {
         return forecastData;
     }
 
-    public Forecast getForecast() {
-        return forecast;
+    public ForecastDto getForecast() {
+        return forecastDto;
     }
 }

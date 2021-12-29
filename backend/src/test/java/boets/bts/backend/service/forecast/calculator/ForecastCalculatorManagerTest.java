@@ -1,16 +1,13 @@
 package boets.bts.backend.service.forecast.calculator;
 
 import boets.bts.backend.domain.Admin;
-import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.forecast.Forecast;
+import boets.bts.backend.service.forecast.ForecastDto;
 import boets.bts.backend.service.forecast.ForecastDetail;
-import boets.bts.backend.service.forecast.calculator.ForecastCalculatorManager;
-import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -85,10 +81,10 @@ public class ForecastCalculatorManagerTest {
         assertThat(forecastData.getLeague().getName().equals(jupilerLeague.getName())).isTrue();
         //test forecast creation
         ForecastContainer forecastContainer = forecastCalculatorManager.calculateForecast(forecastData);
-        Forecast forecast = forecastContainer.getForecast();
-        assertThat(forecast.getLeague().getLeague_id().equals(jupilerLeague.getId().toString())).isTrue();
-        assertThat(forecast.getForecastDetails().size() == 18).isTrue();//number of teams
-        ForecastDetail forecastDetail = forecast.getForecastDetails().get(0);
+        ForecastDto forecastDto = forecastContainer.getForecast();
+        assertThat(forecastDto.getLeague().getLeague_id().equals(jupilerLeague.getId().toString())).isTrue();
+        assertThat(forecastDto.getForecastDetails().size() == 18).isTrue();//number of teams
+        ForecastDetail forecastDetail = forecastDto.getForecastDetails().get(0);
         assertThat(forecastDetail.getResults().size()).isEqualTo(10);
         assertThat(forecastDetail.getNextResult().getRoundNumber() == 12).isTrue();
     }
@@ -103,8 +99,8 @@ public class ForecastCalculatorManagerTest {
         setUpLeaguesWithRound(new ArrayList<>(Collections.singletonList(league1)), 11);
         requestedLeagues.add(jupilerLeague);
         requestedLeagues.add(league1);
-        List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(requestedLeagues);
-        assertThat(forecasts.size()).isEqualTo(2);
+        List<ForecastDto> forecastDtos = forecastCalculatorManager.calculateForecasts(requestedLeagues);
+        assertThat(forecastDtos.size()).isEqualTo(2);
 
     }
     @Test
@@ -112,8 +108,8 @@ public class ForecastCalculatorManagerTest {
         List<League> requestedLeagues = new ArrayList<>();
         League league1 = leagues.stream().filter(league -> league.getId().equals(3506L)).findFirst().orElseThrow(() -> new IllegalStateException(String.format("Could not retrieve League 1 with id %s", 3506)));
         requestedLeagues.add(league1);
-        List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(requestedLeagues);
-        assertThat(forecasts.size()).isEqualTo(1);
+        List<ForecastDto> forecastDtos = forecastCalculatorManager.calculateForecasts(requestedLeagues);
+        assertThat(forecastDtos.size()).isEqualTo(1);
     }
 
     public void setUpLeaguesWithRound(List<League> leagues, int roundNumber) {

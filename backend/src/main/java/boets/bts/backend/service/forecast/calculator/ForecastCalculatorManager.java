@@ -6,19 +6,17 @@ import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.forecast.Forecast;
+import boets.bts.backend.service.forecast.ForecastDto;
 import boets.bts.backend.service.forecast.ForecastDetail;
 import boets.bts.backend.service.forecast.score.ScoreCalculatorHandler;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
-import boets.bts.backend.web.results.ResultMapper;
 import boets.bts.backend.web.team.TeamDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -51,9 +49,9 @@ public class ForecastCalculatorManager {
         this.scoreCalculatorHandler = scoreCalculatorHandler;
     }
 
-    public List<Forecast> calculateForecasts(List<League> requestedLeagues) throws Exception {
-        List<Forecast> forecasts = new ArrayList<>();
-        CompletableFuture<Stream<Optional<Forecast>>> forecastCompletableFutureStream = requestedLeagues.stream()
+    public List<ForecastDto> calculateForecasts(List<League> requestedLeagues) throws Exception {
+        List<ForecastDto> forecastDtos = new ArrayList<>();
+        CompletableFuture<Stream<Optional<ForecastDto>>> forecastCompletableFutureStream = requestedLeagues.stream()
                 // async check if league has enough played games to get forecasted.
                 .map(this::isLeagueReadyForForecastAsync)
                 //async retrieve all forecast data for each league
@@ -63,7 +61,7 @@ public class ForecastCalculatorManager {
                 // async calculate scores
                 .map(this::calculateScoreAsync)
                 // async calculate final score
-                .map(forecast -> calculateFinalScoreAsync(forecast, forecasts))
+                .map(forecast -> calculateFinalScoreAsync(forecast, forecastDtos))
                 .collect(toFuture());
         return getForecastsFromStream(forecastCompletableFutureStream);
         //return forecasts;
@@ -76,9 +74,9 @@ public class ForecastCalculatorManager {
      * @return List of Forecast
      * @throws Exception if complection failed
      */
-    private List<Forecast> getForecastsFromStream(CompletableFuture<Stream<Optional<Forecast>>> forecastStreamFuture) throws Exception {
+    private List<ForecastDto> getForecastsFromStream(CompletableFuture<Stream<Optional<ForecastDto>>> forecastStreamFuture) throws Exception {
         try {
-            Stream<Optional<Forecast>> forecastDataStream =
+            Stream<Optional<ForecastDto>> forecastDataStream =
                     //Wait until all the data have been collected and calculated
                     forecastStreamFuture.join();
             return forecastDataStream
@@ -150,10 +148,10 @@ public class ForecastCalculatorManager {
      * @param dataSetFuture - CompletableFuture of a Forecast ready to calculate all result score
      * @return A Completable future of the Forecast with all result scores calculated
      */
-    private CompletableFuture<Optional<Forecast>> calculateFinalScoreAsync(CompletableFuture<Optional<Object>> dataSetFuture, List<Forecast> forecasts) {
+    private CompletableFuture<Optional<ForecastDto>> calculateFinalScoreAsync(CompletableFuture<Optional<Object>> dataSetFuture, List<ForecastDto> forecastDtos) {
         return dataSetFuture
                 .thenApplyAsync(dataSetOpt ->
-                        dataSetOpt.map(dataSet -> calculateForecastFinalScore((Forecast) dataSet))
+                        dataSetOpt.map(dataSet -> calculateForecastFinalScore((ForecastDto) dataSet))
                 );
     }
 
@@ -182,29 +180,29 @@ public class ForecastCalculatorManager {
     }
 
     protected ForecastContainer calculateForecast(ForecastData forecastData) {
-        Forecast forecast = new Forecast();
+        ForecastDto forecastDto = new ForecastDto();
         LeagueDto leagueDto = forecastData.getLeague();
-        forecast.setLeague(leagueDto);
+        forecastDto.setLeague(leagueDto);
         List<TeamDto> teams = leagueDto.getTeamDtos();
         //create forecast details
         for (TeamDto teamDto : teams) {
             ForecastDetail forecastDetail = createForecastDetail(forecastData, teamDto);
-            forecast.getForecastDetails().add(forecastDetail);
+            forecastDto.getForecastDetails().add(forecastDetail);
         }
-        return new ForecastContainer(forecastData, forecast);
+        return new ForecastContainer(forecastData, forecastDto);
     }
 
-    protected Forecast calculateForecastResultScore(ForecastContainer forecastContainer) {
-        Forecast forecast = forecastContainer.getForecast();
-        List<ForecastDetail> forecastDetails = forecast.getForecastDetails();
+    protected ForecastDto calculateForecastResultScore(ForecastContainer forecastContainer) {
+        ForecastDto forecastDto = forecastContainer.getForecast();
+        List<ForecastDetail> forecastDetails = forecastDto.getForecastDetails();
         for(ForecastDetail forecastDetail : forecastDetails) {
             scoreCalculatorHandler.calculateScore(forecastDetail, forecastContainer.getForecastData(), forecastDetails);
         }
-        return forecast;
+        return forecastDto;
     }
 
-    protected Forecast calculateForecastFinalScore(Forecast forecast) {
-        List<ForecastDetail> forecastDetails = forecast.getForecastDetails();
+    protected ForecastDto calculateForecastFinalScore(ForecastDto forecastDto) {
+        List<ForecastDetail> forecastDetails = forecastDto.getForecastDetails();
         for(ForecastDetail forecastDetail : forecastDetails) {
             TeamDto opponent = forecastDetail.getNextOpponent();
             if(opponent != null) {
@@ -235,7 +233,7 @@ public class ForecastCalculatorManager {
             }
         }
         forecastDetails.sort(Comparator.comparing(ForecastDetail::getScore, Comparator.reverseOrder()));
-        return forecast;
+        return forecastDto;
     }
 
     private ForecastDetail createForecastDetail(ForecastData forecastData, TeamDto teamDto) {

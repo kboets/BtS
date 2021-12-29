@@ -25,7 +25,7 @@ bugfixing :
 
 5/10/2021 1.0.2
 bugfixing :
-    forecast
+    forecastDto
     update logging schedulers
 
 3/10/2021 1.0.1
@@ -39,6 +39,6 @@ Initial version
      Display the results for each team of the league
      Display the standing of the league
      Calculate the prospects
-     Calculate the forecasts
+     Calculate the forecastDtos
      Admin page
      Foresee historic data

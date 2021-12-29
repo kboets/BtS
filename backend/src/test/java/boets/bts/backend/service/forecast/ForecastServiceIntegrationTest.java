@@ -7,7 +7,6 @@ import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.LeagueService;
 import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,8 +62,8 @@ public class ForecastServiceIntegrationTest {
         List<League> otherLeagues = leagues.stream().filter(league -> !league.getId().equals(2660L)).collect(Collectors.toList());
         setUpLeaguesWithRound(otherLeagues, 1);
         // calculate forecast
-        List<Forecast> forecasts = forecastService.calculateForecast();
-        assertThat(forecasts.size()).isEqualTo(1);
+        List<ForecastDto> forecastDtos = forecastService.calculateForecast();
+        assertThat(forecastDtos.size()).isEqualTo(1);
     }
 
     public void setUpLeaguesWithRound(List<League> leagues, int roundNumber) {

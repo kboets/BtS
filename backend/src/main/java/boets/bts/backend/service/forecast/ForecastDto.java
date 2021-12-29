@@ -2,17 +2,16 @@ package boets.bts.backend.service.forecast;
 
 import boets.bts.backend.web.league.LeagueDto;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Forecast implements Serializable {
+public class ForecastDto {
 
     private LeagueDto league;
 
     private List<ForecastDetail> forecastDetails;
 
-    public Forecast() {
+    public ForecastDto() {
     }
 
     public LeagueDto getLeague() {
