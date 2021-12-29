@@ -39,9 +39,9 @@ public class ForecastService {
         LocalDate localDate = LocalDate.now();
         List<ForecastDto> forecastDtos = new ArrayList<>();
 
-        List<ForecastDto> savedForecastDtos = forecastMap.get(localDate);
-        if(savedForecastDtos != null && !savedForecastDtos.isEmpty()) {
-            return savedForecastDtos;
+        List<ForecastDto> cachedForecastDtos = forecastMap.get(localDate);
+        if(cachedForecastDtos != null && !cachedForecastDtos.isEmpty()) {
+            return cachedForecastDtos;
         } else {
             forecastDtos.addAll(this.calculateForecasts());
             //setting it in comment, as a workaround for the force button (as it is always forced to recalculate the forecasts)
@@ -59,12 +59,15 @@ public class ForecastService {
     public List<ForecastDto> getRequestedForecasts(List<Integer> scores) throws Exception {
         List<ForecastDto> forecastDtos = getAllForecasts();
         if (!scores.isEmpty()) {
+            List<ForecastDto> filteredForecasts = new ArrayList<>();
             for (ForecastDto forecastDto : forecastDtos) {
-                forecastDto.setForecastDetails(forecastDto.getForecastDetails().stream()
+                ForecastDto copiedForecastDto = new ForecastDto(forecastDto);
+                copiedForecastDto.setForecastDetails(copiedForecastDto.getForecastDetails().stream()
                         .filter(forecastDetail -> forecastDetailScore(scores, forecastDetail))
                         .collect(Collectors.toList()));
+                filteredForecasts.add(copiedForecastDto);
             }
-            return forecastDtos;
+            return filteredForecasts;
         }
         return forecastDtos;
 

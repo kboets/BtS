@@ -4,72 +4,84 @@ import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ForecastDetailDto {
 
-        private TeamDto team;
-        private List<ResultDto> results;
-        private ResultDto nextResult;
-        private TeamDto nextOpponent;
-        private BigInteger resultScore;
-        private int score;
-        private String info;
+    private TeamDto team;
+    private List<ResultDto> results;
+    private ResultDto nextResult;
+    private TeamDto nextOpponent;
+    private BigInteger resultScore;
+    private int score;
+    private String info;
 
+    public ForecastDetailDto() {
+    }
 
-        public TeamDto getTeam() {
-                return team;
-        }
+    public ForecastDetailDto(ForecastDetailDto forecastDetailDto) {
+        this.setTeam(forecastDetailDto.getTeam());
+        this.setResults(new ArrayList<>(forecastDetailDto.getResults()));
+        this.setNextResult(forecastDetailDto.getNextResult());
+        this.setNextOpponent(forecastDetailDto.getNextOpponent());
+        this.setScore(forecastDetailDto.getScore());
+        this.setInfo(forecastDetailDto.getInfo());
+    }
 
-        public void setTeam(TeamDto team) {
-                this.team = team;
-        }
+    public TeamDto getTeam() {
+        return team;
+    }
 
-        public List<ResultDto> getResults() {
-                return results;
-        }
+    public void setTeam(TeamDto team) {
+        this.team = team;
+    }
 
-        public void setResults(List<ResultDto> results) {
-                this.results = results;
-        }
+    public List<ResultDto> getResults() {
+        return results;
+    }
 
-        public ResultDto getNextResult() {
-                return nextResult;
-        }
+    public void setResults(List<ResultDto> results) {
+        this.results = results;
+    }
 
-        public void setNextResult(ResultDto nextResult) {
-                this.nextResult = nextResult;
-        }
+    public ResultDto getNextResult() {
+        return nextResult;
+    }
 
-        public int getScore() {
-                return score;
-        }
+    public void setNextResult(ResultDto nextResult) {
+        this.nextResult = nextResult;
+    }
 
-        public void setScore(int score) {
-                this.score = score;
-        }
+    public int getScore() {
+        return score;
+    }
 
-        public TeamDto getNextOpponent() {
-                return nextOpponent;
-        }
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-        public void setNextOpponent(TeamDto nextOpponent) {
-                this.nextOpponent = nextOpponent;
-        }
+    public TeamDto getNextOpponent() {
+        return nextOpponent;
+    }
 
-        public BigInteger getResultScore() {
-                return resultScore;
-        }
+    public void setNextOpponent(TeamDto nextOpponent) {
+        this.nextOpponent = nextOpponent;
+    }
 
-        public void setResultScore(BigInteger resultScore) {
-                this.resultScore = resultScore;
-        }
+    public BigInteger getResultScore() {
+        return resultScore;
+    }
 
-        public String getInfo() {
-                return info;
-        }
+    public void setResultScore(BigInteger resultScore) {
+        this.resultScore = resultScore;
+    }
 
-        public void setInfo(String info) {
-                this.info = info;
-        }
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

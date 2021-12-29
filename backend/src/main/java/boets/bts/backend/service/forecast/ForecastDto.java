@@ -14,6 +14,15 @@ public class ForecastDto {
     public ForecastDto() {
     }
 
+    public ForecastDto(ForecastDto forecastDto) {
+        this.setLeague(forecastDto.getLeague());
+        List<ForecastDetailDto> copiedForecastDetails = new ArrayList<>();
+        for(ForecastDetailDto forecastDetailDto: forecastDto.getForecastDetails()) {
+            copiedForecastDetails.add(new ForecastDetailDto(forecastDetailDto));
+        }
+        this.setForecastDetails(copiedForecastDetails);
+    }
+
     public LeagueDto getLeague() {
         return league;
     }
