@@ -44,7 +44,6 @@ public class ForecastService {
             return cachedForecastDtos;
         } else {
             forecastDtos.addAll(this.calculateForecasts());
-            //setting it in comment, as a workaround for the force button (as it is always forced to recalculate the forecasts)
             forecastMap.put(localDate, forecastDtos);
         }
 

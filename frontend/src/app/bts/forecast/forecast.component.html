@@ -52,7 +52,21 @@
                                 <tr>
                                         <td></td>
                                         <td>{{forecastDetail.team?.name}}</td>
-                                        <td>{{forecastDetail.nextResult?.homeTeam?.name}} - {{forecastDetail.nextResult?.awayTeam?.name}}<br/>
+                                        <td>
+                                            <ng-container *ngIf="isSameHomeTeam(forecastDetail)">
+                                                <strong>{{forecastDetail.nextResult?.homeTeam?.name}}</strong>
+                                            </ng-container>
+                                            <ng-container *ngIf="!isSameHomeTeam(forecastDetail)">
+                                                {{forecastDetail.nextResult?.homeTeam?.name}}
+                                            </ng-container>
+                                            -
+                                            <ng-container *ngIf="isSameAwayTeam(forecastDetail)">
+                                                <strong>{{forecastDetail.nextResult?.awayTeam?.name}}</strong>
+                                            </ng-container>
+                                            <ng-container *ngIf="!isSameAwayTeam(forecastDetail)">
+                                                {{forecastDetail.nextResult?.awayTeam?.name}}
+                                            </ng-container>
+                                            <br/>
                                             ({{forecastDetail.nextResult?.eventDate | date: 'dd/MM/yyyy'}})</td>
                                         <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.score}}</td>
                                 </tr>

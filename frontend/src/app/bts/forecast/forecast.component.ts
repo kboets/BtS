@@ -10,10 +10,12 @@ import * as _ from 'underscore';
 import {AdminService} from "../admin/admin.service";
 import {AdminKeys} from "../domain/adminKeys";
 import {Table} from "primeng/table";
+import {Teams} from "../domain/teams";
 
 @Component({
     selector: 'bts-forecast',
-    templateUrl: './forecast.component.html'
+    templateUrl: './forecast.component.html',
+    styleUrls:['./forecast.css']
 })
 export class ForecastComponent implements OnInit {
 
@@ -39,33 +41,6 @@ export class ForecastComponent implements OnInit {
     selectedForecastDetail: ForecastDetail;
     rowGroupMetadata: any;
 
-    // static filterForecastOnScore(forecast: Forecast, scores: number[]) : Forecast {
-    //     const filteredForecastDetails = [];
-    //     const allFilteredForecastDetails = [];
-    //     const details = forecast.forecastDetails;
-    //     //for each score, loop over the details and filter those who match the condition
-    //     scores.forEach(function (score, index) {
-    //         filteredForecastDetails[index] = ForecastComponent.filterForecastDetailsOnScore(details, score);
-    //         //console.log('score ', score, ' has details ', filteredForecastDetails);
-    //         allFilteredForecastDetails.push(_.flatten(filteredForecastDetails));
-    //     });
-    //     //forecast.forecastDetails = [];
-    //     forecast.forecastDetails = _.flatten(allFilteredForecastDetails);
-    //     return forecast;
-    // }
-    //
-    // static filterForecastDetailsOnScore(forecastDetails : ForecastDetail[], selectedScore) : ForecastDetail[] {
-    //     return  _.filter(forecastDetails, forecastDetail => {
-    //         if(selectedScore == 50) {
-    //             return (forecastDetail.score < selectedScore);
-    //         } else if(selectedScore > 150) {
-    //             return (forecastDetail.score > 150);
-    //         } else {
-    //             return (forecastDetail.score >= (selectedScore-50) && forecastDetail.score < selectedScore);
-    //         }
-    //     });
-    //
-    // }
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
         this.forecastDetails = [];
@@ -133,6 +108,20 @@ export class ForecastComponent implements OnInit {
                 }
             }
         }
+    }
+
+    isSameHomeTeam(forecastDetail: ForecastDetail): boolean {
+        return this.isSameTeam(forecastDetail.team, forecastDetail.nextResult.homeTeam);
+    }
+
+    isSameAwayTeam(forecastDetail: ForecastDetail) : boolean {
+        return this.isSameTeam(forecastDetail.team, forecastDetail.nextResult.awayTeam);
+    }
+
+    private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {
+        console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
+        return detailTeam.name === otherTeam.name;
+
     }
 
     expandAll() {
