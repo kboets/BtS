@@ -5,3 +5,7 @@
 .normal {
     font-weight: normal;
 }
+
+.margin {
+    margin-left: 20px;
+}

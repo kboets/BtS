@@ -26,14 +26,9 @@
                     <th>Volgende wedstrijd</th>
                     <th>
                         score
+                        <p-multiSelect class="margin" [options]="scores" [(ngModel)]="selectedScores" optionLabel="label" optionValue="value" (onClick)="getRequestedScoreValue()"></p-multiSelect>
+
                     </th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th><p-multiSelect [options]="scores" [(ngModel)]="selectedScores" optionLabel="label" optionValue="value" (onClick)="getRequestedScoreValue()"></p-multiSelect> </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-forecast let-rowIndex="rowIndex" let-expanded="expanded">
