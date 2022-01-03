@@ -9,17 +9,11 @@ import javax.persistence.criteria.Predicate;
 public class StandingSpecs {
 
     public static Specification<Standing> forLeague(League league) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league.getId());
-            return predicate;
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("league"), league.getId());
     }
 
     public static Specification<Standing> forRound(int roundNumber) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
-            return predicate;
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
     }
 
     public static Specification<Standing> forSeason(int season) {

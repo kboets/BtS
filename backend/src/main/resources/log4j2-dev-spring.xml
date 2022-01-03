@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration monitorInterval="60">
     <Properties>
-        <Property name="log-path">C://tmp/logs/prod</Property>
+        <Property name="log-path">C://tmp/logs/develop</Property>
     </Properties>
     <Appenders>
         <Console name="console">

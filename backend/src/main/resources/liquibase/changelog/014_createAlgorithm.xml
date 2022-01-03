@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_algorithm" author="kboets">
+        <createTable tableName="ALGORITHM">
+            <column autoIncrement="true" name="algorithm_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="name" type="varchar(250)">
+                <constraints nullable="false" />
+            </column>
+            <column name="type" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="home_win" type="int"/>
+            <column name="home_lose" type="int"/>
+            <column name="home_draw" type="int"/>
+            <column name="away_win" type="int"/>
+            <column name="away_lose" type="int"/>
+            <column name="away_draw" type="int"/>
+            <column name="home_bonus" type="int"/>
+            <column name="away_malus" type="int"/>
+            <column name="current" type="boolean"/>
+        </createTable>
+
+    </changeSet>
+
+
+</databaseChangeLog>
