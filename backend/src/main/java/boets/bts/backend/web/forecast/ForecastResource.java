@@ -15,7 +15,7 @@ import java.util.List;
 public class ForecastResource {
 
     private final ForecastService forecastService;
-    private static Logger logger = LoggerFactory.getLogger(ForecastResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(ForecastResource.class);
 
     public ForecastResource(ForecastService forecastService) {
         this.forecastService = forecastService;
@@ -35,7 +35,7 @@ public class ForecastResource {
     public List<ForecastDto> getRequestedForecasts(@RequestBody List<Integer> scores) {
         try {
             List<ForecastDto> result = forecastService.getRequestedForecasts(scores);
-            result.stream().sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()));
+            //result.stream().sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()));
             return result;
         } catch (Exception e) {
             logger.error("Exception while calculating forecasts {} ", e.getMessage(), e);

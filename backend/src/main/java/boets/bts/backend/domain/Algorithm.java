@@ -46,6 +46,8 @@ public class Algorithm {
     private Integer awayMalus;
     @Column
     private boolean current;
+    @Column
+    private Integer threshold;
 
     public Algorithm() {
         this.type = "WIN";
@@ -113,5 +115,13 @@ public class Algorithm {
 
     public void setCurrent(boolean current) {
         this.current = current;
+    }
+
+    public Integer getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
     }
 }

@@ -12,7 +12,7 @@
             </PatternLayout>
         </Console>
         <RollingFile name="App-File-Appender" fileName="${log-path}/bts.log"
-                     filePattern="${log-path}/bts-%d{yyyy-MM-dd}-%i.log">
+                     filePattern="${log-path}/bts-%d{dd-MM-yyyy}-%i.log">
             <PatternLayout>
                 <Pattern> [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
             </PatternLayout>
@@ -23,7 +23,7 @@
             <DefaultRolloverStrategy max="5" />
         </RollingFile>
         <RollingFile name="SpringBoot-File-Appender" fileName="${log-path}/springboot.log"
-                     filePattern="${log-path}/springboot-%d{yyyy-MM-dd}-%i.log">
+                     filePattern="${log-path}/springboot-%d{dd-MM-yyyy}-%i.log">
             <PatternLayout>
                 <Pattern>
                     [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n

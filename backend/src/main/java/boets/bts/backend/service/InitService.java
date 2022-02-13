@@ -53,7 +53,7 @@ public class InitService implements AdminChangeListener {
     public void initMetaData() {
         this.initAllCountries();
         List<League> leagues = this.initAllAvailableLeagues();
-        this.initCurrentRounds(leagues);
+        //this.initCurrentRounds(leagues);
         //this.initStandings(leagues);
     }
 

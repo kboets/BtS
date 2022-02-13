@@ -90,7 +90,9 @@ public class LeagueService  {
             LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
             selectedLeagues.addAll(leagueBettingDefiner.retrieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
-        //4. verify if league has all rounds + teams
+        //4. persist to database
+        leagueRepository.saveAll(selectedLeagues);
+        //5. verify if league has all rounds + teams
         selectedLeagues = selectedLeagues.stream()
                 .filter(league -> league.getRounds().isEmpty())
                 .peek(roundService::updateLeagueWithRounds)
@@ -100,8 +102,8 @@ public class LeagueService  {
                 .peek(teamService::updateLeagueWithTeams)
                 .collect(Collectors.toList());
 
-        //5. persist to database
-        leagueRepository.saveAll(selectedLeagues);
+        //leagueRepository.saveAll(selectedLeagues);
+
         //6. check if league is still current
         verifyPersistedLeagueIsCurrent();
         return selectedLeagues;

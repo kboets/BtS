@@ -26,6 +26,8 @@
             <column name="home_bonus" type="int"/>
             <column name="away_malus" type="int"/>
             <column name="current" type="boolean"/>
+            <column name="threshold" type="int"/>
+
         </createTable>
 
     </changeSet>

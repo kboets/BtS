@@ -43,6 +43,7 @@ import {ResultsComponent} from "./bts/results/results.component";
 import {ProspectComponent} from "./bts/prospect/prospect.component";
 import {AdminComponent} from "./bts/admin/admin.component";
 import {ForecastComponent} from "./bts/forecast/forecast.component";
+import {AlgorithmComponent} from "./bts/algorithm/algorithm.component";
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import {ForecastComponent} from "./bts/forecast/forecast.component";
                     {path: 'result', component: ResultsComponent},
                     {path: 'prospect', component: ProspectComponent},
                     {path: 'forecast', component: ForecastComponent},
+                    {path: 'algorithm', component: AlgorithmComponent},
                     {path: 'admin', component: AdminComponent},
                     {path: '', component: DashboardDemoComponent},
                     {path: 'uikit/formlayout', component: FormLayoutDemoComponent},
