@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Observable, throwError} from "rxjs";
-import {Forecast} from "../domain/forecast";
 import {Algorithm} from "../domain/algorithm";
 
 @Injectable({

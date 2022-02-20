@@ -1,11 +1,110 @@
 <p-panel header="Algorithm">
-    <form [formGroup]="algorithmForm">
+    <!-- no algorithm  -->
+    <div *ngIf="(algorithm | keyvalue)?.length && !addAlgorithm">
         <h5>Huidig algoritme</h5>
         <div class="p-field p-grid">
             <div class="p-col">
-
+                Er is nog geen algoritme gedefinieerd
             </div>
         </div>
-    </form>
+        <div class="p-field p-grid">
+            <div class="p-col-12 p-grid"></div>
+        </div>
+        <div class="p-field p-grid">
+            <div class="p-col-12 p-grid">
+                <button pButton type="button" label="Voeg toe" style="margin-right: .5rem"
+                        (click)="openAddForm()"></button>
+            </div>
+        </div>
+    </div>
+    <!-- add algorithm  -->
+    <div *ngIf="addAlgorithm">
+        <form [formGroup]="addAlgorithmForm" (ngSubmit)="onAddSubmit()">
+            <h4>Nieuw algoritme</h4>
+            <div class="p-fluid p-grid p-formgrid p-mt-3">
+                <div class="p-field p-col-12 p-md-3">
+                    <label for="name">Naam</label>
+                    <input id="name" type="text" aria-describedby="name-help" [ngClass]="{'ng-invalid ng-dirty': submitted && addForm.name.errors}" formControlName="name" pInputText />
+                    <div *ngIf="submitted && addForm.name.errors" class="p-error">
+                        <div *ngIf="addForm.name.errors.required">Naam is verplicht</div>
+                    </div>
+                </div>
+                <div class="p-field p-col-12 p-md-3 p-ml-6">
+                        <label for="threshold">Threshold</label>
+                        <p-inputNumber [showButtons]="true" id="threshold" inputId="threshold" [min]="0" [max]="150"
+                                       [step]="10" formControlName="threshold"></p-inputNumber>
+                </div>
+            </div>
+            <div class="p-fluid p-grid p-formgrid p-mt-2 p-mb-4">
+                <div class="p-field-checkbox p-col-12 p-md-3">
+                    <p-checkbox id="current" formControlName="current"></p-checkbox>
+                    <label for="current" class="p-ml-3">Huidig algoritme</label>
+                </div>
+            </div>
+            <fieldset>
+                <legend><h5>Values</h5></legend>
+                <h5>Thuis</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="homeWin">Winst</label>
+                        <p-inputNumber [showButtons]="true" id="homeWin" inputId="homeWin" [min]="0" [max]="100"
+                                       [step]="5" formControlName="homeWin"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="homeDraw">Gelijk</label>
+                        <p-inputNumber [showButtons]="true" id="homeDraw" inputId="homeDraw" [min]="0" [max]="60"
+                                       [step]="5" formControlName="homeDraw"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="homeLost">Verlies</label>
+                        <p-inputNumber [showButtons]="true" id="homeLost" inputId="homeLost" [min]="-80" [max]="50"
+                                       [step]="5" formControlName="homeLost"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="homeBonus">Bonus</label>
+                        <p-inputNumber [showButtons]="true" id="homeBonus" inputId="homeBonus" [min]="0" [max]="50"
+                                       [step]="5" formControlName="homeBonus"></p-inputNumber>
+                    </div>
+                </div>
+                <h5>Uit</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="awayWin">Winst</label>
+                        <p-inputNumber [showButtons]="true" id="awayWin" inputId="awayWin" [min]="0" [max]="100"
+                                       [step]="5" formControlName="awayWin"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="awayDraw">Gelijk</label>
+                        <p-inputNumber [showButtons]="true" id="awayDraw" inputId="awayDraw" [min]="0" [max]="60"
+                                       [step]="5" formControlName="awayDraw"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="awayLost">Verlies</label>
+                        <p-inputNumber [showButtons]="true" id="awayLost" inputId="awayLost" [min]="-60" [max]="60"
+                                       [step]="5" formControlName="awayLost"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="awayMalus">Malus</label>
+                        <p-inputNumber [showButtons]="true" id="awayMalus" inputId="awayMalus" [min]="-50" [max]="0"
+                                       [step]="5" formControlName="awayMalus"></p-inputNumber>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="p-fluid p-grid p-formgrid p-mt-6">
+                <p-button type="submit" label="Submit" icon="pi pi-check" iconPos="left"></p-button>
+                <p-button type="button" label="Reset" (onClick)="onAddReset()" class="p-ml-6" icon="pi pi-times-circle"></p-button>
+            </div>
+        </form>
+    </div>
+
+
+    <!--        <div class="p-field p-grid" *ngIf="!(algorithm | keyvalue)?.length">-->
+    <!--            <h5>Huidig algoritme</h5>-->
+    <!--            <div class="p-col-1">-->
+    <!--                <label>Naam</label>-->
+    <!--                {{algorithm.name}}-->
+    <!--            </div>-->
+    <!--        </div>-->
+
 
 </p-panel>
