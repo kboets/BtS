@@ -1,15 +1,13 @@
+import {AlgorithmPoints} from "./AlgorithmPoints";
+
 export interface Algorithm {
     algorithm_id: number;
     type: string,
     name: string,
     current: boolean;
     threshold: number;
-    homeWin: number;
-    homeDraw: number;
-    homeLost: number;
+    homePoints: AlgorithmPoints;
     homeBonus: number;
-    awayWin: number;
-    awayDraw: number;
-    awayLost: number;
+    awayPoints: AlgorithmPoints;
     awayMalus: number;
 }

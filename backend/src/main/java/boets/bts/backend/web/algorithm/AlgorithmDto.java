@@ -1,18 +1,14 @@
 package boets.bts.backend.web.algorithm;
 
-import javax.persistence.Column;
+import boets.bts.backend.domain.AlgorithmPoints;
 
 public class AlgorithmDto {
 
     private Long algorithm_id;
     private String type;
     private String name;
-    private int homeWin;
-    private int homeDraw;
-    private int homeLose;
-    private int awayWin;
-    private int awayDraw;
-    private int awayLose;
+    private AlgorithmPointsDto homePoints;
+    private AlgorithmPointsDto awayPoints;
     private Integer homeBonus;
     private Integer awayMalus;
     private boolean current;
@@ -43,52 +39,20 @@ public class AlgorithmDto {
         this.name = name;
     }
 
-    public int getHomeWin() {
-        return homeWin;
+    public AlgorithmPointsDto getHomePoints() {
+        return homePoints;
     }
 
-    public void setHomeWin(int homeWin) {
-        this.homeWin = homeWin;
+    public void setHomePoints(AlgorithmPointsDto homePoints) {
+        this.homePoints = homePoints;
     }
 
-    public int getHomeDraw() {
-        return homeDraw;
+    public AlgorithmPointsDto getAwayPoints() {
+        return awayPoints;
     }
 
-    public void setHomeDraw(int homeDraw) {
-        this.homeDraw = homeDraw;
-    }
-
-    public int getHomeLose() {
-        return homeLose;
-    }
-
-    public void setHomeLose(int homeLose) {
-        this.homeLose = homeLose;
-    }
-
-    public int getAwayWin() {
-        return awayWin;
-    }
-
-    public void setAwayWin(int awayWin) {
-        this.awayWin = awayWin;
-    }
-
-    public int getAwayDraw() {
-        return awayDraw;
-    }
-
-    public void setAwayDraw(int awayDraw) {
-        this.awayDraw = awayDraw;
-    }
-
-    public int getAwayLose() {
-        return awayLose;
-    }
-
-    public void setAwayLose(int awayLose) {
-        this.awayLose = awayLose;
+    public void setAwayPoints(AlgorithmPointsDto awayPoints) {
+        this.awayPoints = awayPoints;
     }
 
     public Integer getHomeBonus() {

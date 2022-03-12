@@ -37,7 +37,7 @@
             </div>
             <div class="p-fluid p-grid p-formgrid p-mt-2 p-mb-4">
                 <div class="p-field-checkbox p-col-12 p-md-3">
-                    <p-checkbox id="current" formControlName="current"></p-checkbox>
+                    <p-checkbox id="current" binary="true" [formControl]="addAlgorithmForm.controls['current']"></p-checkbox>
                     <label for="current" class="p-ml-3">Huidig algoritme</label>
                 </div>
             </div>

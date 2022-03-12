@@ -96,7 +96,7 @@ public class ForecastCalculatorManager {
      */
     private CompletableFuture<Optional<League>> isLeagueReadyForForecastAsync(League league) {
         return CompletableFuture
-                // Asynchronously check if league has at least 5 played games.
+                // Asynchronously check if league has at least 6 played games.
                 .supplyAsync(() -> {
                     boolean isLeagueReady = isLeagueReadyToForecast(league);
                     if(isLeagueReady) {

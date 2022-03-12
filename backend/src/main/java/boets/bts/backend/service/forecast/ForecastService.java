@@ -37,13 +37,13 @@ public class ForecastService {
 
     public List<ForecastDto> getAllForecasts() throws Exception {
         LocalDate localDate = LocalDate.now();
-        List<ForecastDto> forecastDtos = new ArrayList<>();
+        List<ForecastDto> forecastDtos;
 
         List<ForecastDto> cachedForecastDtos = forecastMap.get(localDate);
         if(cachedForecastDtos != null && !cachedForecastDtos.isEmpty()) {
             return cachedForecastDtos;
         } else {
-            forecastDtos.addAll(this.calculateForecasts());
+            forecastDtos = new ArrayList<>(this.calculateForecasts());
             forecastMap.put(localDate, forecastDtos);
         }
 

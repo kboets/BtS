@@ -3,7 +3,7 @@ package boets.bts.backend.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ALGORITHM")
+@Table
 public class Algorithm {
 
     @Id

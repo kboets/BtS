@@ -46,7 +46,7 @@ export class AlgorithmComponent implements OnInit {
             awayLost: 0,
             awayMalus: 0,
             name: ['', Validators.required],
-            current: {value: false, disabled: false},
+            current: {value: false},
             threshold: 0
         })
     }
@@ -58,9 +58,13 @@ export class AlgorithmComponent implements OnInit {
         if (this.addAlgorithmForm.invalid) {
             return;
         }
-        this.submitted = Object.assign(this.newAlgorithm, this.addAlgorithmForm.value)
-        console.log(this.newAlgorithm);
+        this.setAlgorithmValues();
+        this.algorithmService.saveAlgorithm(this.newAlgorithm)
+            .subscribe(data => {
+                // add confirmation message
+                // handle outcome
 
+            } );
     }
 
     onAddReset() {
@@ -68,8 +72,32 @@ export class AlgorithmComponent implements OnInit {
         this.createAddForm();
     }
 
-    public openAddForm() {
+    openAddForm() {
         this.addAlgorithm = true;
+    }
+
+    private setAlgorithmValues() {
+        this.newAlgorithm = {} as Algorithm;
+        this.newAlgorithm.homePoints = {
+            'win' : this.addAlgorithmForm.get('homeWin').value,
+            'draw' : this.addAlgorithmForm.get('homeDraw').value,
+            'lose' : this.addAlgorithmForm.get('homeLost').value
+        }
+        this.newAlgorithm.awayPoints = {
+            'win' : this.addAlgorithmForm.get('awayWin').value,
+            'draw' : this.addAlgorithmForm.get('awayDraw').value,
+            'lose' : this.addAlgorithmForm.get('awayLost').value
+        }
+        this.newAlgorithm.name = this.addAlgorithmForm.get('name').value;
+        this.newAlgorithm.threshold = this.addAlgorithmForm.get('threshold').value;
+        if (this.addAlgorithmForm.get('current').value === true) {
+            this.newAlgorithm.current = true;
+        } else {
+            this.newAlgorithm.current = true;
+        }
+        this.newAlgorithm.type = 'WIN';
+        this.newAlgorithm.homeBonus = this.addAlgorithmForm.get('homeBonus').value;
+        this.newAlgorithm.awayMalus = this.addAlgorithmForm.get('awayMalus').value;
     }
 
 

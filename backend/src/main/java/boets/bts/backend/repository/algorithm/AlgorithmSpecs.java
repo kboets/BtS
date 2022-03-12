@@ -1,4 +1,4 @@
-package boets.bts.backend.repository.forecast;
+package boets.bts.backend.repository.algorithm;
 
 import boets.bts.backend.domain.Algorithm;
 import org.springframework.data.jpa.domain.Specification;
