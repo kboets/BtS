@@ -28,7 +28,7 @@ public class NonExistingRoundHandler extends AbstractCurrentRoundHandler {
 
     @Override
     public boolean accept(Optional<Round> roundOptional) {
-        return !roundOptional.isPresent();
+        return roundOptional.isEmpty();
     }
 
     @Override

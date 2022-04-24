@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Handles if the persisted current round has not the actual date of today.
@@ -41,6 +42,12 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
     public Round save(Round round, League league, int season)  {
         logger.info("current round {} with current date {} is outdated", round.getRound(), round.getCurrentDate());
         Round currentRoundUpdated = this.getCurrentClientRound(round.getLeague().getId(), round.getSeason());
+        // check if current round exist in db
+        if (!currentRoundExistAlready(league.getRounds(), currentRoundUpdated)) {
+            Round lastRound = getLastRound(league.getRounds());
+            lastRound.setCurrentDate(LocalDate.now());
+            return roundRepository.save(lastRound);
+        }
         Round verifiedRound = verifyRetrievedRound(currentRoundUpdated);
         if(round.getRound().equals(verifiedRound.getRound())) {
             //logger.info("current round {} is still current, update date", round.getRound());
@@ -54,5 +61,20 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
             round.setCurrent(false);
         }
         return roundRepository.save(round);
+    }
+
+    /**
+     * Verifies for the specific extra play-off rounds.
+     *
+     */
+    private boolean currentRoundExistAlready(Set<Round> rounds, Round newRound) {
+        List<String> existingRoundNames = rounds.stream().map(Round::getRound).collect(Collectors.toList());
+        return existingRoundNames.contains(newRound.getRound());
+    }
+
+    private Round getLastRound(Set<Round> rounds) {
+        List<Round> allRounds = new ArrayList<>(rounds);
+        allRounds.sort(Comparator.comparing(Round::getRoundNumber));
+        return allRounds.get(allRounds.size()-1);
     }
 }

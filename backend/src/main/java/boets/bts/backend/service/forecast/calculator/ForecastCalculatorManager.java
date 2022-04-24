@@ -64,7 +64,6 @@ public class ForecastCalculatorManager {
                 .map(forecast -> calculateFinalScoreAsync(forecast, forecastDtos))
                 .collect(toFuture());
         return getForecastsFromStream(forecastCompletableFutureStream);
-        //return forecasts;
     }
 
     /**
@@ -72,7 +71,7 @@ public class ForecastCalculatorManager {
      *
      * @param forecastStreamFuture - Stream of CompletableFuture.
      * @return List of Forecast
-     * @throws Exception if complection failed
+     * @throws Exception
      */
     private List<ForecastDto> getForecastsFromStream(CompletableFuture<Stream<Optional<ForecastDto>>> forecastStreamFuture) throws Exception {
         try {
@@ -80,8 +79,7 @@ public class ForecastCalculatorManager {
                     //Wait until all the data have been collected and calculated
                     forecastStreamFuture.join();
             return forecastDataStream
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .flatMap(Optional::stream)
                     .collect(Collectors.toList());
         } catch (CompletionException clex) {
             throw new Exception(clex.getCause());

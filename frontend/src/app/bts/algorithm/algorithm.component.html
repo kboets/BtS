@@ -1,6 +1,10 @@
 <p-panel header="Algorithm">
+    <ng-container *ngIf="errorMessage$ | async as errorMessage">
+        <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
+    </ng-container>
+
     <!-- no algorithm  -->
-    <div *ngIf="(algorithm | keyvalue)?.length && !addAlgorithm">
+    <div *ngIf="(currentAlgorithm | keyvalue)?.length && !addAlgorithm">
         <h5>Huidig algoritme</h5>
         <div class="p-field p-grid">
             <div class="p-col">
@@ -17,6 +21,13 @@
             </div>
         </div>
     </div>
+    <!-- existing algorithm  -->
+    <div *ngIf="!((currentAlgorithm | keyvalue)?.length) && !addAlgorithm">
+        <h5>Huidig algoritme</h5>
+
+    </div>
+
+
     <!-- add algorithm  -->
     <div *ngIf="addAlgorithm">
         <form [formGroup]="addAlgorithmForm" (ngSubmit)="onAddSubmit()">

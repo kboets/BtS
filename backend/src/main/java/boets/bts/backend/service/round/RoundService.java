@@ -78,6 +78,11 @@ public class RoundService {
         }
 
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
+        // check if current round is last round
+        if (currentPersistedRound.isPresent() && currentPersistedRound.get().getRoundNumber().intValue() == getLastRound(leagueId).getRoundNumber().intValue()) {
+            logger.info("Current round {} is last round, no more updates for league {} ", currentPersistedRound.get(), league.getName());
+            return currentPersistedRound.get();
+        }
         Optional<CurrentRoundHandler> currentRoundHandlerOptional = currentRoundHandlerSelector.select(currentPersistedRound);
         if(currentRoundHandlerOptional.isEmpty()) {
             logger.warn("Could not retrieve a current round handler for league {} ", league.getName());
