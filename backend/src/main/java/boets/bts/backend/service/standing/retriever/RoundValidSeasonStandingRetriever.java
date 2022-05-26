@@ -35,8 +35,7 @@ public class RoundValidSeasonStandingRetriever extends AbstractStandingRetriever
     @Override
     public boolean accept(League league, Round currentRound, int roundNumber) {
         return !adminService.isHistoricData()
-                && LocalDate.now().isAfter(league.getStartSeason())
-                && LocalDate.now().isBefore(league.getEndSeason());
+                && LocalDate.now().isAfter(league.getStartSeason());
 
     }
 

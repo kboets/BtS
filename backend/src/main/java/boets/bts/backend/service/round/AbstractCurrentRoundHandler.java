@@ -2,14 +2,13 @@ package boets.bts.backend.service.round;
 
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.web.WebUtils;
-import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler {
@@ -22,10 +21,14 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
         this.roundMapper = roundMapper;
     }
 
-    protected Round getCurrentClientRound(long leagueId, int season)  {
+    protected Optional<Round> getCurrentClientRound(long leagueId, int season)  {
         Optional<RoundDto> currentRoundOptional = roundClient.getCurrentRoundForLeagueAndSeason(leagueId, season);
-        RoundDto roundDto = currentRoundOptional.orElseThrow(() -> new NotFoundException(String.format("Could not find current round for league %s from season %s", leagueId, season)));
-        return roundMapper.toRound(roundDto);
+        if (currentRoundOptional.isPresent()) {
+            RoundDto roundDto = currentRoundOptional.get();
+            return Optional.of(roundMapper.toRound(roundDto));
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -49,6 +52,12 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
             }
         }
         return clientRound;
+    }
+
+    protected Round getLastRound(Set<Round> rounds) {
+        List<Round> allRounds = new ArrayList<>(rounds);
+        allRounds.sort(Comparator.comparing(Round::getRoundNumber));
+        return allRounds.get(allRounds.size()-1);
     }
 
 

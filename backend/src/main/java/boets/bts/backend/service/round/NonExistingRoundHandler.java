@@ -34,8 +34,14 @@ public class NonExistingRoundHandler extends AbstractCurrentRoundHandler {
     @Override
     public Round save(Round round, League league, int season)  {
         logger.info("No current round found for league {} and season {} ", league.getName(), season);
-        Round clientRound = getCurrentClientRound(league.getId(), season);
-        Round verifiedRound = verifyRetrievedRound(clientRound);
+        Optional<Round> clientOptionalRound = getCurrentClientRound(league.getId(), season);
+        // for Jupiler League in playoff, it can happen it does not find a Round
+        if(clientOptionalRound.isEmpty()) {
+            Round lastRound = getLastRound(league.getRounds());
+            lastRound.setCurrentDate(LocalDate.now());
+            return roundRepository.save(lastRound);
+        }
+        Round verifiedRound = verifyRetrievedRound(clientOptionalRound.get());
         //now get persisted round
         Optional<Round> persistedOptionalRound = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(league, verifiedRound.getRound()));
         if(!persistedOptionalRound.isPresent()) {

@@ -41,26 +41,36 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
     @Override
     public Round save(Round round, League league, int season)  {
         logger.info("current round {} with current date {} is outdated", round.getRound(), round.getCurrentDate());
-        Round currentRoundUpdated = this.getCurrentClientRound(round.getLeague().getId(), round.getSeason());
-        // check if current round exist in db
-        if (!currentRoundExistAlready(league.getRounds(), currentRoundUpdated)) {
-            Round lastRound = getLastRound(league.getRounds());
-            lastRound.setCurrentDate(LocalDate.now());
+        Optional<Round> currentOptionalRoundUpdated = this.getCurrentClientRound(round.getLeague().getId(), round.getSeason());
+        // for Jupiler League in playoff, it can happen it does not find a Round
+        if (currentOptionalRoundUpdated.isEmpty()) {
+            Round lastRound = setCurrentDayForLastRound(league);
             return roundRepository.save(lastRound);
         }
-        Round verifiedRound = verifyRetrievedRound(currentRoundUpdated);
+        // check if current round exist in db, if not set current day for last round
+        if (!currentRoundExistAlready(league.getRounds(), currentOptionalRoundUpdated.get())) {
+            Round lastRound = setCurrentDayForLastRound(league);
+            return roundRepository.save(lastRound);
+        }
+        Round verifiedRound = verifyRetrievedRound(currentOptionalRoundUpdated.get());
         if(round.getRound().equals(verifiedRound.getRound())) {
             //logger.info("current round {} is still current, update date", round.getRound());
             round.setCurrentDate(LocalDate.now());
         } else {
             //logger.info("current round {} is no longer current, update with latest", round.getRound());
-            Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(league, verifiedRound.getRound())).orElseThrow(() -> new NotFoundException(String.format("Could not find round in database with name %s and league %s", currentRoundUpdated.getRound(), league.getName())));
+            Round roundToBeUpdated = roundRepository.findOne(RoundSpecs.getRoundByNameAndLeague(league, verifiedRound.getRound())).orElseThrow(() -> new NotFoundException(String.format("Could not find round in database with name %s and league %s", currentOptionalRoundUpdated.get().getRound(), league.getName())));
             roundToBeUpdated.setCurrentDate(LocalDate.now());
             roundToBeUpdated.setCurrent(true);
             roundRepository.save(roundToBeUpdated);
             round.setCurrent(false);
         }
         return roundRepository.save(round);
+    }
+
+    private Round setCurrentDayForLastRound(League league) {
+        Round lastRound = getLastRound(league.getRounds());
+        lastRound.setCurrentDate(LocalDate.now());
+        return lastRound;
     }
 
     /**
@@ -72,9 +82,5 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
         return existingRoundNames.contains(newRound.getRound());
     }
 
-    private Round getLastRound(Set<Round> rounds) {
-        List<Round> allRounds = new ArrayList<>(rounds);
-        allRounds.sort(Comparator.comparing(Round::getRoundNumber));
-        return allRounds.get(allRounds.size()-1);
-    }
+
 }
