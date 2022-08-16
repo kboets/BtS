@@ -16,7 +16,6 @@ public interface ILeagueClient {
 
     List<LeagueDto> allLeaguesForSeason(int year);
 
-
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     default JsonArray parseAllLeaguesRawJson(String jsonAsString) {

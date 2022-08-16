@@ -225,7 +225,7 @@ public class ForecastCalculatorManager {
                         .append("</h5>");
                 StringBuilder builder = new StringBuilder();
                 builder.append(forecastDetail.getInfo())
-                        .append(infoMessage.toString());
+                        .append(infoMessage);
 
                 forecastDetail.setInfo(builder.toString());
             }

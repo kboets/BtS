@@ -10,17 +10,22 @@ import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.service.standing.retriever.StandingRetriever;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
+import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,30 +95,49 @@ public class StandingService {
     }
 
 
-    // each 10 minutes, starting 5 minutes after each hour
-    @Scheduled(cron = "* 5-59/10 * * * ?")
-    //@Scheduled(cron = "* 0/1 * * * ?")
+    /**
+     * Cron job each day at 4 AM
+     */
+    @Scheduled(cron ="0 0 4 * * *")
     public void scheduleStandings() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            boolean allValidated = true;
-            List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
-            for (Long leagueId: leagueIds) {
-                this.removeAllStandingForLeague(leagueId);
-                if(!verifyAllStandings(leagueId)) {
-                    logger.error("Could not verify standing for League {} ", leagueId);
-                    allValidated=false;
-                    break;
-                }
-            }
-
-            if(allValidated) {
-                logger.info("Successfully executed the standing scheduler");
-                adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
-            } else {
-                adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "NOK");
-            }
+            this.dailyUpdateStandings();
         }
+    }
+    private void dailyUpdateStandings() {
+        AtomicInteger numberOfAttempts = new AtomicInteger();
+        RetryPolicy<Object> retryStandingPolicy = RetryPolicy.builder()
+                .handle(Exception.class)
+                .onRetry(executionEvent -> logger.warn("An exception occurred while calculating standings, retrying for the {} time", numberOfAttempts.incrementAndGet()))
+                .withDelay(Duration.ofSeconds(30))
+                .withMaxAttempts(3)
+                .build();
+
+        Failsafe.with(retryStandingPolicy)
+                .onSuccess(result -> {
+                    logger.info("Daily calculation of standings successfully done");
+                    adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
+                })
+                .onFailure(result -> {
+                    logger.error("Daily calculation of standing was not successfully after {} attempts, final attempt failed", numberOfAttempts.get());
+                    adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "NOK");
+                })
+                .run(() -> {
+                    boolean allValidated = true;
+                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
+                    for (Long leagueId: leagueIds) {
+                        this.removeAllStandingForLeague(leagueId);
+                        if(!verifyAllStandings(leagueId)) {
+                            logger.error("Could not verify standing for League {} ", leagueId);
+                            allValidated=false;
+                            break;
+                        }
+                    }
+                    if (!allValidated) {
+                        throw new Exception("Not all standings could be calculated");
+                    }
+                });
     }
 
     protected boolean verifyAllStandings(Long leagueId) {

@@ -85,6 +85,7 @@ export class AlgorithmComponent implements OnInit {
         } else {
             this.algorithmService.saveAlgorithm(this.newAlgorithm)
                 .subscribe(data => {
+                    console.log('algorithm saves successfully', data);
                     this.algorithmService.algorithmRefreshNeeded$.next(data);
                 } );
         }

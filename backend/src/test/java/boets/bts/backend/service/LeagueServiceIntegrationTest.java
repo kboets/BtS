@@ -19,11 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("mock")
 public class LeagueServiceIntegrationTest {
-
-
     @Autowired
     private LeagueService leagueService;
-
 
     @Test
     public void testGetLeagues_shouldReturnOneLeagueForBelgian() {

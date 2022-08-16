@@ -35,13 +35,15 @@ public class TeamService {
      * @return League - the updated League
      */
     public void updateLeagueWithTeams(League league) {
-        Optional<List<TeamDto>> optionalTeamDtos = teamClient.retrieveTeamsOfLeague(league.getId());
-        if(optionalTeamDtos.isPresent()) {
-            logger.info("Could retrieve {} teams for league {} ", optionalTeamDtos.get().size(), league.getName());
-            List<Team> teams = teamMapper.toTeams(optionalTeamDtos.get());
-            teams.forEach(team -> team.setLeague(league));
-            league.getTeams().addAll(teams);
-            teamRepository.saveAll(teams);
+        if (league.getTeams().isEmpty()) {
+            Optional<List<TeamDto>> optionalTeamDtos = teamClient.retrieveTeamsOfLeague(league.getId());
+            if(optionalTeamDtos.isPresent()) {
+                logger.info("Could retrieve {} teams for league {} ", optionalTeamDtos.get().size(), league.getName());
+                List<Team> teams = teamMapper.toTeams(optionalTeamDtos.get());
+                teams.forEach(team -> team.setLeague(league));
+                league.getTeams().addAll(teams);
+                teamRepository.saveAll(teams);
+            }
         }
     }
 

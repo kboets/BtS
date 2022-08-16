@@ -21,7 +21,7 @@ public class AlgorithmResource {
 
     @GetMapping("all")
     public List<AlgorithmDto> getAllAlgorithm() {
-        return Collections.emptyList();
+        return algorithmService.getAll();
     }
 
     @PostMapping("save")

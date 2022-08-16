@@ -12,6 +12,8 @@ import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;
 import boets.bts.backend.web.round.RoundMapper;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,8 +21,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Transactional
@@ -76,7 +80,6 @@ public class RoundService {
                 this.updateRoundWithRoundNumber(allRoundsForLeague);
             }
         }
-
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         // check if current round is last round
         if (currentPersistedRound.isPresent() && currentPersistedRound.get().getRoundNumber().intValue() == getLastRound(leagueId).getRoundNumber().intValue()) {
@@ -164,24 +167,44 @@ public class RoundService {
         return roundRepository.save(newCurrentRound);
     }
 
+
+
     /**
-     * Cron job each 10 minutes
+     * Cron job each day at 2 AM
      */
-    @Scheduled(cron = "* 1-59/10 * * * ?")
+    @Scheduled(cron ="0 0 2 * * *")
     public void scheduleRound() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
-            logger.info("Running cron job to update current round ..");
-            List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
-            logger.info("Scheduler started for non historic data");
-            leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
-            adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
-            logger.info("Successfully executed the scheduler scheduler");
+            this.dailyUpdateRounds();
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
             logger.info("Scheduler started for historic data");
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
             leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
         }
+    }
+
+    private void dailyUpdateRounds() {
+        AtomicInteger numberOfAttempts = new AtomicInteger();
+        RetryPolicy<Object> retryDownloadPolicy = RetryPolicy.builder()
+                .handle(Exception.class)
+                .onRetry(executionEvent -> logger.warn("An exception occurred while updating rounds, retrying for the {} time", numberOfAttempts.incrementAndGet()))
+                .withDelay(Duration.ofSeconds(30))
+                .withMaxAttempts(3)
+                .build();
+        Failsafe.with(retryDownloadPolicy)
+                .onSuccess(result -> {
+                    logger.info("Daily update of rounds successfully done");
+                    adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
+                })
+                .onFailure(result -> {
+                    logger.error("Daily update of rounds was not successfully after {} attempts, final attempt failed", numberOfAttempts.get());
+                    adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "NOK");
+                })
+                .run(() -> {
+                    List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+                    leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+                });
     }
 
     private void updateRoundWithRoundNumber(Set<Round> roundSet) {

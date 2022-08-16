@@ -34,9 +34,11 @@ public class InitService implements AdminChangeListener {
     private final LeagueMapper leagueMapper;
     private final AdminService adminService;
     private final StandingService standingService;
+    private final TeamService teamService;
+
 
     public InitService(CountryClient countryClient, CountryRepository countryRepository, CountryMapper countryMapper, LeagueService leagueService, RoundService roundService,
-                       LeagueMapper leagueMapper, AdminService adminService, StandingService standingService) {
+                       LeagueMapper leagueMapper, AdminService adminService, StandingService standingService, TeamService teamService) {
         this.countryClient = countryClient;
         this.countryRepository = countryRepository;
         this.countryMapper = countryMapper;
@@ -45,6 +47,7 @@ public class InitService implements AdminChangeListener {
         this.leagueMapper = leagueMapper;
         this.adminService = adminService;
         this.standingService = standingService;
+        this.teamService = teamService;
         this.adminService.addAdminChangeListener(this);
 
     }
@@ -53,8 +56,8 @@ public class InitService implements AdminChangeListener {
     public void initMetaData() {
         this.initAllCountries();
         List<League> leagues = this.initAllAvailableLeagues();
-        //this.initCurrentRounds(leagues);
-        //this.initStandings(leagues);
+        this.initCurrentRounds(leagues);
+        this.initCurrentTeams(leagues);
     }
 
 
@@ -67,14 +70,20 @@ public class InitService implements AdminChangeListener {
     }
 
     public List<League> initAllAvailableLeagues() {
-        return leagueMapper.toLeagues(leagueService.getCurrentLeagues());
+        return leagueService.initCurrentLeagues();
     }
 
     public void initCurrentRounds(List<League> leagues) {
-        if(! adminService.isHistoricData()) {
+        if(!adminService.isHistoricData()) {
             leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
         } else {
             leagues.forEach(league ->  roundService.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
+        }
+    }
+
+    public void initCurrentTeams(List<League> leagues) {
+        if(!adminService.isHistoricData()) {
+            leagues.forEach(teamService::updateLeagueWithTeams);
         }
     }
 

@@ -16,6 +16,8 @@ import boets.bts.backend.web.forecast.LeagueResultsDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -23,7 +25,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +36,14 @@ public class ResultService {
 
     private Logger logger = LoggerFactory.getLogger(ResultService.class);
 
-    private ResultRepository resultRepository;
-    private ResultHandlerSelector resultHandlerSelector;
-    private ResultMapper resultMapper;
-    private RoundService roundService;
-    private LeagueRepository leagueRepository;
-    private LeagueMapper leagueMapper;
-    private TeamService teamService;
-    private AdminService adminService;
+    private final ResultRepository resultRepository;
+    private final ResultHandlerSelector resultHandlerSelector;
+    private final ResultMapper resultMapper;
+    private final RoundService roundService;
+    private final LeagueRepository leagueRepository;
+    private final LeagueMapper leagueMapper;
+    private final TeamService teamService;
+    private final AdminService adminService;
 
     public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
                          LeagueRepository leagueRepository, TeamService teamService, LeagueMapper leagueMapper, AdminService adminService) {
@@ -111,26 +115,46 @@ public class ResultService {
         return true;
     }
 
-    // each 10 minutes starting at 3 minutes after the hour
-    @Scheduled(cron = "* 3-59/10 * * * ?")
+    /**
+     * Cron job each day at 3 AM
+     */
+    @Scheduled(cron ="0 0 3 * * *")
     public void scheduleResults() throws Exception {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
-            logger.info("Running cron job to update results ..");
-            List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
-            for (Long leagueId : leagueIds) {
-                List<ResultDto> results = this.verifyMissingResults(leagueId);
-                if (results.isEmpty()) {
-                    logger.error("Could not verify the results of league {}", leagueId);
-                    adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
-                    break;
-                }
-            }
-            logger.info("Successfully executed the results scheduler");
-            adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
+            this.dailyUpdateResults();
         }
     }
 
+    private void dailyUpdateResults() {
+        AtomicInteger numberOfAttempts = new AtomicInteger();
+        RetryPolicy<Object> retryResultsPolicy = RetryPolicy.builder()
+                .handle(Exception.class)
+                .onRetry(executionEvent -> logger.warn("An exception occurred while updating results, retrying for the {} time", numberOfAttempts.incrementAndGet()))
+                .withDelay(Duration.ofSeconds(30))
+                .withMaxAttempts(3)
+                .build();
+        Failsafe.with(retryResultsPolicy)
+                .onSuccess(result -> {
+                    logger.info("Daily update of results successfully done");
+                    adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
+                })
+                .onFailure(result -> {
+                    logger.error("Daily update of results was not successfully after {} attempts, final attempt failed", numberOfAttempts.get());
+                    adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
+                })
+                .run(() -> {
+                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
+                    for (Long leagueId : leagueIds) {
+                        List<ResultDto> results = this.verifyMissingResults(leagueId);
+                        if (results.isEmpty()) {
+                            logger.error("Could not verify the results of league {}", leagueId);
+                            //adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
+                            break;
+                        }
+                    }
+                });
+    }
 
 
 

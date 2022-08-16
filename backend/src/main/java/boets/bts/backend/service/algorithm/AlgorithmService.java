@@ -35,4 +35,9 @@ public class AlgorithmService {
         }
         return algorithmMapper.toDto(algorithmRepository.save(algorithm));
     }
+
+    public List<AlgorithmDto> getAll() {
+        List<Algorithm> all = algorithmRepository.findAll();
+        return algorithmMapper.toDtos(all);
+    }
 }
