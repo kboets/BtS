@@ -167,13 +167,7 @@ public class RoundService {
         return roundRepository.save(newCurrentRound);
     }
 
-
-
-    /**
-     * Cron job each day at 2 AM
-     */
-    @Scheduled(cron ="0 0 2 * * *")
-    public void scheduleRound() {
+    public void initRounds() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
             this.dailyUpdateRounds();
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
@@ -182,6 +176,14 @@ public class RoundService {
             adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
             leagues.forEach(league -> this.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
         }
+    }
+
+    /**
+     * Cron job each day at 2 AM
+     */
+    @Scheduled(cron ="0 0 2 * * *")
+    public void scheduleRound() {
+        this.initRounds();
     }
 
     private void dailyUpdateRounds() {

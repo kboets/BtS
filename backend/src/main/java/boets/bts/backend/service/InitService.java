@@ -4,12 +4,12 @@ package boets.bts.backend.service;
 import boets.bts.backend.domain.Country;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.repository.country.CountryRepository;
+import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.country.CountryClient;
 import boets.bts.backend.web.country.CountryDto;
 import boets.bts.backend.web.country.CountryMapper;
-import boets.bts.backend.web.league.LeagueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -31,24 +31,24 @@ public class InitService implements AdminChangeListener {
     private final CountryMapper countryMapper;
     private final LeagueService leagueService;
     private final RoundService roundService;
-    private final LeagueMapper leagueMapper;
     private final AdminService adminService;
     private final StandingService standingService;
     private final TeamService teamService;
+    private final ResultService resultService;
 
 
     public InitService(CountryClient countryClient, CountryRepository countryRepository, CountryMapper countryMapper, LeagueService leagueService, RoundService roundService,
-                       LeagueMapper leagueMapper, AdminService adminService, StandingService standingService, TeamService teamService) {
+                       AdminService adminService, StandingService standingService, TeamService teamService, ResultService resultService) {
         this.countryClient = countryClient;
         this.countryRepository = countryRepository;
         this.countryMapper = countryMapper;
         this.leagueService = leagueService;
         this.roundService = roundService;
-        this.leagueMapper = leagueMapper;
         this.adminService = adminService;
         this.standingService = standingService;
         this.teamService = teamService;
         this.adminService.addAdminChangeListener(this);
+        this.resultService = resultService;
 
     }
 
@@ -56,8 +56,11 @@ public class InitService implements AdminChangeListener {
     public void initMetaData() {
         this.initAllCountries();
         List<League> leagues = this.initAllAvailableLeagues();
-        this.initCurrentRounds(leagues);
         this.initCurrentTeams(leagues);
+        this.initCurrentRounds(leagues);
+        this.resultService.initResultService();
+        this.standingService.initStanding();
+
     }
 
 
@@ -75,7 +78,7 @@ public class InitService implements AdminChangeListener {
 
     public void initCurrentRounds(List<League> leagues) {
         if(!adminService.isHistoricData()) {
-            leagues.forEach(league ->  roundService.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
+            leagues.forEach(league ->  roundService.initRounds());
         } else {
             leagues.forEach(league ->  roundService.setCurrentRoundForHistoricData(league.getId(), adminService.getCurrentSeason()));
         }
@@ -85,10 +88,6 @@ public class InitService implements AdminChangeListener {
         if(!adminService.isHistoricData()) {
             leagues.forEach(teamService::updateLeagueWithTeams);
         }
-    }
-
-    public void initStandings(List<League> leagues) {
-        leagues.forEach(league -> standingService.getCurrentStandingForLeague(league.getId()));
     }
 
     private void handleCountryDtos(Optional <List<CountryDto>> countryDtos) {

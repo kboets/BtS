@@ -115,15 +115,19 @@ public class ResultService {
         return true;
     }
 
+    public void initResultService() {
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()
+                && adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
+            this.dailyUpdateResults();
+        }
+    }
+
     /**
      * Cron job each day at 3 AM
      */
     @Scheduled(cron ="0 0 3 * * *")
     public void scheduleResults() throws Exception {
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()
-                && adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
-            this.dailyUpdateResults();
-        }
+        this.initResultService();
     }
 
     private void dailyUpdateResults() {
@@ -145,13 +149,16 @@ public class ResultService {
                 })
                 .run(() -> {
                     List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
+                    boolean allValidated = true;
                     for (Long leagueId : leagueIds) {
                         List<ResultDto> results = this.verifyMissingResults(leagueId);
                         if (results.isEmpty()) {
                             logger.error("Could not verify the results of league {}", leagueId);
-                            //adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
-                            break;
+                            allValidated = false;
                         }
+                    }
+                    if (!allValidated) {
+                        throw new Exception("Not all results could be retrieved");
                     }
                 });
     }

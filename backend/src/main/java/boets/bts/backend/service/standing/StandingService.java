@@ -94,17 +94,21 @@ public class StandingService {
         return true;
     }
 
+    public void initStanding() {
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
+                && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            this.dailyUpdateStandings();
+        }
+    }
 
     /**
      * Cron job each day at 4 AM
      */
     @Scheduled(cron ="0 0 4 * * *")
     public void scheduleStandings() {
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
-                && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            this.dailyUpdateStandings();
-        }
+        this.initStanding();
     }
+
     private void dailyUpdateStandings() {
         AtomicInteger numberOfAttempts = new AtomicInteger();
         RetryPolicy<Object> retryStandingPolicy = RetryPolicy.builder()
