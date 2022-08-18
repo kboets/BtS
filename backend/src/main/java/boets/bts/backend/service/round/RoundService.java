@@ -183,6 +183,7 @@ public class RoundService {
      */
     @Scheduled(cron ="0 0 2 * * *")
     public void scheduleRound() {
+        logger.info("Scheduler started to init rounds");
         this.initRounds();
     }
 

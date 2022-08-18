@@ -106,6 +106,7 @@ public class StandingService {
      */
     @Scheduled(cron ="0 0 4 * * *")
     public void scheduleStandings() {
+        logger.info("Scheduler started to init standing");
         this.initStanding();
     }
 

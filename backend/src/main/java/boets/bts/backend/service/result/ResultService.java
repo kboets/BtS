@@ -116,8 +116,7 @@ public class ResultService {
     }
 
     public void initResultService() {
-        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()
-                && adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS)) {
+        if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && !adminService.isHistoricData()) {
             this.dailyUpdateResults();
         }
     }
@@ -126,7 +125,8 @@ public class ResultService {
      * Cron job each day at 3 AM
      */
     @Scheduled(cron ="0 0 3 * * *")
-    public void scheduleResults() throws Exception {
+    public void scheduleResults()  {
+        logger.info("Scheduler started to init results");
         this.initResultService();
     }
 
