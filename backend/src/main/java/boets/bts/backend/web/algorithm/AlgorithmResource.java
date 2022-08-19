@@ -23,6 +23,10 @@ public class AlgorithmResource {
     public List<AlgorithmDto> getAllAlgorithm() {
         return algorithmService.getAll();
     }
+    @GetMapping("current")
+    public AlgorithmDto getCurrentAlgoritm() {
+        return algorithmService.getCurrent();
+    }
 
     @PostMapping("save")
     public AlgorithmDto saveOrUpdate(@RequestBody AlgorithmDto algorithmDto) {

@@ -10,8 +10,8 @@ import {catchError} from "rxjs/operators";
 })
 export class AlgorithmService {
 
-    private _algorithmRefreshNeeded$ = new Subject<Algorithm>();
-    algorithmRefreshAction$ = this._algorithmRefreshNeeded$.asObservable();
+    private readonly _algorithmRefreshNeeded$;
+    algorithmRefreshAction$;
 
 
     get algorithmRefreshNeeded$(): Subject<Algorithm> {
@@ -19,10 +19,23 @@ export class AlgorithmService {
     }
 
     constructor(private http: HttpClient) {
+        this._algorithmRefreshNeeded$ = new Subject<Algorithm>();
+        this.algorithmRefreshAction$ = this._algorithmRefreshNeeded$.asObservable();
+
     }
 
     getAlgorithms(): Observable<Algorithm[]> {
         return this.http.get<Algorithm[]>(`/btsapi/api/algorithm/all`, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }).pipe(
+            catchError(AlgorithmService.handleHttpError)
+        )
+    }
+
+    getCurrentAlgorithme(): Observable<Algorithm> {
+        return this.http.get<Algorithm>(`/btsapi/api/algorithm/current`, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })

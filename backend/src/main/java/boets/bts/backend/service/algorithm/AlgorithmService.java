@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,5 +40,10 @@ public class AlgorithmService {
     public List<AlgorithmDto> getAll() {
         List<Algorithm> all = algorithmRepository.findAll();
         return algorithmMapper.toDtos(all);
+    }
+
+    public AlgorithmDto getCurrent() {
+        Optional<Algorithm> algorithmOptional = algorithmRepository.findAll().stream().filter(Algorithm::isCurrent).findFirst();
+        return algorithmOptional.map(algorithmMapper::toDto).orElse(null);
     }
 }

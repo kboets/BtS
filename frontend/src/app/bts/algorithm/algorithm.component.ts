@@ -1,11 +1,11 @@
 import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AlgorithmService} from "./algorithm.service";
-import {EMPTY, Observable, Subject} from "rxjs";
-import * as _ from 'underscore';
+import {EMPTY, Subject} from "rxjs";
 import {Algorithm} from "../domain/algorithm";
 import {GeneralError} from "../domain/generalError";
-import {catchError} from "rxjs/operators";
+import {catchError, debounceTime} from "rxjs/operators";
+
 @Component({
     selector: 'bts-algorithm',
     templateUrl: './algorithm.component.html'
@@ -16,41 +16,62 @@ export class AlgorithmComponent implements OnInit {
     errorMessage$ = this.errorMessageSubject.asObservable();
 
     private allAlgorithms: Algorithm[];
-    public currentAlgorithm;
+    public currentAlgorithm: Algorithm;
     public addAlgorithm: boolean;
     newAlgorithm: Algorithm;
     submitted = false;
     addAlgorithmForm: FormGroup;
+    confirmationMessage: string;
+    isSavedOK: boolean;
+    isEmptyAlgorithme: boolean;
 
     constructor(private fb: FormBuilder, private algorithmService: AlgorithmService) {
         this.addAlgorithm = false;
         this.newAlgorithm = {} as Algorithm;
+        this.confirmationMessage = 'Het algoritme werd opgeslagen en is nu de standaard';
+        this.isSavedOK = false;
+        this.isEmptyAlgorithme = true;
+        this.allAlgorithms = [];
     }
 
     ngOnInit(): void {
         this.createAddForm();
-        this.handleAlgorithm();
+        this.retrieveCurrentAlgorithm();
+        //this.retrieveAllAlgorithm();
 
         this.algorithmService.algorithmRefreshAction$
-            .subscribe(this.handleAlgorithm);
+            .subscribe(
+                console.log('refresh action called'),
+                this.retrieveAllAlgorithm
+            );
     }
 
-    private handleAlgorithm() {
-        this.algorithmService.getAlgorithms()
+    private retrieveCurrentAlgorithm() {
+        this.algorithmService.getCurrentAlgorithme()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })
         ).subscribe((data) => {
-                this.allAlgorithms = data;
-                this.getCurrentAlgorithm(data);
-            })
+            this.currentAlgorithm = data;
+            if (data !== null) {
+                this.isEmptyAlgorithme = false;
+            }
+        })
     }
 
-    private getCurrentAlgorithm(data: Algorithm[]) {
-        this.currentAlgorithm = _.chain(data).filter( function (algorithm){
-            return algorithm.current === true;
-        }).first(1)
+
+
+    private retrieveAllAlgorithm() {
+        this.algorithmService.getAlgorithms()
+            .pipe(debounceTime(1000))
+            .pipe(catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            ).subscribe((data) => {
+                this.allAlgorithms = data;
+            })
     }
 
     private createAddForm() {
@@ -83,13 +104,20 @@ export class AlgorithmComponent implements OnInit {
             dataError.userFriendlyMessage = 'Dit algoritme bestaat reeds.'
             this.errorMessageSubject.next(dataError);
         } else {
-            this.algorithmService.saveAlgorithm(this.newAlgorithm)
-                .subscribe(data => {
-                    console.log('algorithm saves successfully', data);
-                    this.algorithmService.algorithmRefreshNeeded$.next(data);
-                } );
+            this.saveAlgorithm();
         }
+    }
 
+    private saveAlgorithm() {
+        this.algorithmService.saveAlgorithm(this.newAlgorithm)
+            .subscribe((data) => {
+                this.algorithmService.algorithmRefreshNeeded$.next(data);
+                this.retrieveCurrentAlgorithm();
+                this.removeAcknowledgeMessage();
+                this.addAlgorithm = false;
+                this.isSavedOK = true;
+                this.isEmptyAlgorithme = false;
+            })
     }
 
     private verifyAlreadyExisting(): boolean {
@@ -140,9 +168,15 @@ export class AlgorithmComponent implements OnInit {
         this.newAlgorithm.type = 'WIN';
         this.newAlgorithm.homeBonus = this.addAlgorithmForm.get('homeBonus').value;
         this.newAlgorithm.awayMalus = this.addAlgorithmForm.get('awayMalus').value;
+        console.log('new algortime ', this.newAlgorithm);
+
     }
 
 
-
+    private removeAcknowledgeMessage() {
+        setTimeout(() => {
+            this.isSavedOK = false;
+        }, 5000);
+    }
 
 }
