@@ -181,7 +181,7 @@ public class RoundService {
     /**
      * Cron job each day at 2 AM
      */
-    @Scheduled(cron ="0 0 2 * * *")
+    @Scheduled(cron ="0 0 2,14 * * *")
     public void scheduleRound() {
         logger.info("Scheduler started to init rounds");
         this.initRounds();
@@ -193,7 +193,7 @@ public class RoundService {
                 .handle(Exception.class)
                 .onRetry(executionEvent -> logger.warn("An exception occurred while updating rounds, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))
-                .withMaxAttempts(3)
+                .withMaxAttempts(1)
                 .build();
         Failsafe.with(retryDownloadPolicy)
                 .onSuccess(result -> {

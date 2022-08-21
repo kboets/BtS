@@ -8,6 +8,9 @@
 <ng-container *ngIf="showStandingMessage">
     <p-message severity="info" text="De rangschikking(en) van {{selectedLeagueStanding.name}} zijn verwijderd."></p-message>
 </ng-container>
+<ng-container *ngIf="showLeagueMessage">
+    <p-message severity="info" text="De competitie {{selectedLeagueDelete.name}} werd verwijderd."></p-message>
+</ng-container>
 <ng-container *ngIf="seasonUpdated$ | async as seizoenUpdate">
     <p-message severity="info" text="Het seizoen werd aangepast: huidig seizoen : {{seizoenUpdate.value}}."></p-message>
 </ng-container>
@@ -73,6 +76,26 @@
             <div class="p-col-2" *ngIf="selectedLeagueStanding">
                 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
                 <div class="box"><button pButton type="button" label="Verwijder rangschikking" (click)="deleteStanding()" style="margin-right: .5rem"></button></div>
+            </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-2"></div>
+        </div>
+        <!-- verwijder league -->
+        <div class="p-grid">
+            <div class="p-col-2">
+                <div class="box">Verwijder competitie</div>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="allLeagues$ | async as leagues">
+                    <div class="box">
+                        <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeagueDelete" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="p-col-2" *ngIf="selectedLeagueDelete">
+                <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+                <div class="box"><button pButton type="button" label="Verwijder competitie" (click)="deleteLeague()" style="margin-right: .5rem"></button></div>
             </div>
         </div>
         <div class="p-grid">

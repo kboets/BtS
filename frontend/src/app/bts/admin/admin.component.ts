@@ -24,6 +24,7 @@ export class AdminComponent implements OnInit {
     selectedLeague: League;
     selectedLeagueRound: League;
     selectedLeagueStanding: League;
+    selectedLeagueDelete: League;
     selectedSeasonAdmin: Admin;
     selectedRound: Round;
     adminDataList$: Observable<Admin[]>;
@@ -34,6 +35,7 @@ export class AdminComponent implements OnInit {
 
     showResultMessage: boolean;
     showStandingMessage: boolean;
+    showLeagueMessage:boolean;
     seasonUpdated$: Observable<Admin>;
     selectedRoundUpdated$: Observable<Round>;
 
@@ -43,6 +45,7 @@ export class AdminComponent implements OnInit {
                 private confirmationService: ConfirmationService, private roundService: RoundService) {
         this.showResultMessage = false;
         this.showStandingMessage = false;
+        this.showLeagueMessage = false;
     }
 
 
@@ -135,6 +138,22 @@ export class AdminComponent implements OnInit {
                 this.adminService.deleteStandings4League(this.selectedLeagueStanding.league_id)
                     .subscribe((data) => {
                         this.showStandingMessage = true;
+                        this.removeAcknowledgeMessage();
+                    })
+            }
+
+        });
+    }
+
+    deleteLeague() {
+        this.confirmationService.confirm({
+            message: 'Verwijder deze competitie ? Dit kan niet ongedaan gemaakt worden',
+            header: 'Bevestiging',
+            icon: 'pi pi-info-circle',
+            accept: () => {
+                this.adminService.deleteLeague(this.selectedLeagueDelete.league_id)
+                    .subscribe((data) => {
+                        this.showLeagueMessage = true;
                         this.removeAcknowledgeMessage();
                     })
             }

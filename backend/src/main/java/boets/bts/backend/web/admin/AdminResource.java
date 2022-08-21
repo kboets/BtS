@@ -2,6 +2,7 @@ package boets.bts.backend.web.admin;
 
 import boets.bts.backend.domain.Admin;
 import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.LeagueService;
 import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.WebUtils;
@@ -22,12 +23,15 @@ public class AdminResource {
     private final AdminMapper adminMapper;
     private final ResultService resultService;
     private final StandingService standingService;
+    private final LeagueService leagueService;
 
-    public AdminResource(AdminService adminService, AdminMapper adminMapper, ResultService resultService, StandingService standingService) {
+    public AdminResource(AdminService adminService, AdminMapper adminMapper, ResultService resultService,
+                         StandingService standingService, LeagueService leagueService) {
         this.adminService = adminService;
         this.adminMapper = adminMapper;
         this.resultService = resultService;
         this.standingService = standingService;
+        this.leagueService = leagueService;
     }
 
     @GetMapping("all")
@@ -56,6 +60,17 @@ public class AdminResource {
             return standingService.removeAllStandingForLeague(Long.parseLong(leagueId));
         } catch (Exception e) {
             logger.error("Error {} thrown while removing standing for league {} ", e.getMessage(), leagueId);
+            throw new GeneralException(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteLeague")
+    public boolean deleteLeague(@RequestBody String leagueId) {
+        try {
+            logger.info("Request to delete league id {}", leagueId);
+            return leagueService.deleteLeague(Long.parseLong(leagueId));
+        } catch (Exception e) {
+            logger.error("Error {} thrown while removing league {} ", e.getMessage(), leagueId);
             throw new GeneralException(e.getMessage());
         }
     }

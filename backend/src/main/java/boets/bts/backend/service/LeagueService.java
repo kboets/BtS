@@ -5,7 +5,9 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefiner;
 import boets.bts.backend.service.leagueDefiner.LeagueBettingDefinerFactory;
+import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.service.round.RoundService;
+import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.league.ILeagueClient;
 import boets.bts.backend.web.league.LeagueDto;
@@ -32,24 +34,27 @@ public class LeagueService  {
     private final LeagueRepository leagueRepository;
     private final ILeagueClient leagueClient;
     private final LeagueMapper leagueMapper;
-    private final TeamService teamService;
+    private final StandingService standingService;
     private final LeagueBettingDefinerFactory leagueBettingDefinerFactory;
     private final RoundService roundService;
+    private final ResultService resultService;
     private final AdminService adminService;
 
 
-    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, TeamService teamService
-            , LeagueBettingDefinerFactory leagueBettingDefinerFactory, RoundService roundService, AdminService adminService) {
+    public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, StandingService standingService,
+                         LeagueBettingDefinerFactory leagueBettingDefinerFactory, RoundService roundService, AdminService adminService,
+                         ResultService resultService) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
-        this.teamService = teamService;
+        this.standingService = standingService;
         this.leagueBettingDefinerFactory = leagueBettingDefinerFactory;
         this.roundService = roundService;
         this.adminService = adminService;
+        this.resultService = resultService;
     }
     //each day at 1 am
-    @Scheduled(cron ="0 0 1 * * *")
+    @Scheduled(cron ="0 0 1,13 * * *")
     public void scheduled() {
         this.initCurrentLeagues();
     }
@@ -88,8 +93,15 @@ public class LeagueService  {
         return leagues;
     }
 
+    public boolean deleteLeague(Long leagueId) {
+        resultService.removeAllResultsForLeague(leagueId);
+        standingService.removeAllStandingForLeague(leagueId);
+        leagueRepository.deleteById(leagueId);
+        return true;
+    }
+
     private void retrieveAndFilterAndPersistLeagues(int currentSeason, List<League> leagues) {
-        logger.info("No leagues found in database for season start year {}, start retrieving", currentSeason);
+        logger.info("Not all leagues found in database for season start year {}, start retrieving", currentSeason);
         //1 make call to webservice to retrieve all Leagues of current season
         List<League> clientLeagues = retrieveLeaguesFromWebService(currentSeason);
         //2. filter the leagues for the allowed country's
@@ -111,21 +123,6 @@ public class LeagueService  {
         }
         //6. check if league is still current
         verifyPersistedLeagueIsCurrent();
-
-
-        //5. verify if league has all rounds + teams
-//        selectedLeagues = selectedLeagues.stream()
-//                .filter(league -> league.getRounds().isEmpty())
-//                .peek(roundService::updateLeagueWithRounds)
-//                .collect(Collectors.toList());
-//        selectedLeagues = selectedLeagues.stream()
-//                .filter(league -> league.getTeams().isEmpty())
-//                .peek(teamService::updateLeagueWithTeams)
-//                .collect(Collectors.toList());
-
-        //leagueRepository.saveAll(selectedLeagues);
-
-
     }
 
     public List<LeagueDto> updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {

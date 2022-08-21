@@ -9,7 +9,6 @@ import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.TeamService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.forecast.LeagueResultsDto;
@@ -26,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -42,17 +43,15 @@ public class ResultService {
     private final RoundService roundService;
     private final LeagueRepository leagueRepository;
     private final LeagueMapper leagueMapper;
-    private final TeamService teamService;
     private final AdminService adminService;
 
     public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
-                         LeagueRepository leagueRepository, TeamService teamService, LeagueMapper leagueMapper, AdminService adminService) {
+                         LeagueRepository leagueRepository, LeagueMapper leagueMapper, AdminService adminService) {
         this.resultRepository = resultRepository;
         this.resultHandlerSelector = resultHandlerSelector;
         this.resultMapper = resultMapper;
         this.roundService = roundService;
         this.leagueRepository = leagueRepository;
-        this.teamService = teamService;
         this.leagueMapper = leagueMapper;
         this.adminService = adminService;
     }
@@ -124,7 +123,7 @@ public class ResultService {
     /**
      * Cron job each day at 3 AM
      */
-    @Scheduled(cron ="0 0 3 * * *")
+    @Scheduled(cron ="0 0 3,15 * * *")
     public void scheduleResults()  {
         logger.info("Scheduler started to init results");
         this.initResultService();

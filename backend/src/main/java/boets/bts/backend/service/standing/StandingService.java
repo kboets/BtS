@@ -1,6 +1,9 @@
 package boets.bts.backend.service.standing;
 
-import boets.bts.backend.domain.*;
+import boets.bts.backend.domain.AdminKeys;
+import boets.bts.backend.domain.League;
+import boets.bts.backend.domain.Round;
+import boets.bts.backend.domain.Standing;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.standing.StandingRepository;
@@ -10,7 +13,6 @@ import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.service.standing.retriever.StandingRetriever;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.NotFoundException;
-import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
 import boets.bts.backend.web.standing.StandingMapper;
 import dev.failsafe.Failsafe;
@@ -40,6 +42,7 @@ public class StandingService {
     private final RoundService roundService;
     private final AdminService adminService;
     private final StandingRetrieverSelector standingRetrieverSelector;
+    private AtomicInteger numberOfAttempts;
 
     public StandingService(StandingRepository standingRepository, StandingMapper standingMapper, LeagueRepository leagueRepository, RoundService roundService, AdminService adminService, StandingRetrieverSelector standingRetrieverSelector) {
         this.standingRepository = standingRepository;
@@ -48,6 +51,7 @@ public class StandingService {
         this.roundService = roundService;
         this.adminService = adminService;
         this.standingRetrieverSelector = standingRetrieverSelector;
+        numberOfAttempts = new AtomicInteger();
     }
 
     public List<StandingDto> getCurrentStandingForLeague(Long leagueId) {
@@ -97,6 +101,7 @@ public class StandingService {
     public void initStanding() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            this.numberOfAttempts.set(0);
             this.dailyUpdateStandings();
         }
     }
@@ -104,19 +109,18 @@ public class StandingService {
     /**
      * Cron job each day at 4 AM
      */
-    @Scheduled(cron ="0 0 4 * * *")
+    @Scheduled(cron ="0 0 4,16 * * *")
     public void scheduleStandings() {
         logger.info("Scheduler started to init standing");
         this.initStanding();
     }
 
     private void dailyUpdateStandings() {
-        AtomicInteger numberOfAttempts = new AtomicInteger();
         RetryPolicy<Object> retryStandingPolicy = RetryPolicy.builder()
                 .handle(Exception.class)
                 .onRetry(executionEvent -> logger.warn("An exception occurred while calculating standings, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))
-                .withMaxAttempts(3)
+                .withMaxAttempts(1)
                 .build();
 
         Failsafe.with(retryStandingPolicy)

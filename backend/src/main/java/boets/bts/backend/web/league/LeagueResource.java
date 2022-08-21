@@ -41,8 +41,6 @@ public class LeagueResource {
         } catch (Exception e) {
             throw new GeneralException(e.getMessage());
         }
-
-
     }
 
     @PutMapping("/toSelected")
@@ -56,5 +54,6 @@ public class LeagueResource {
         List<Long> ids = leagueIds.stream().map(Long::parseLong).collect(Collectors.toList());
         return leagueService.updateLeagueAvailableOrSelectable(ids, false);
     }
+
 
 }
