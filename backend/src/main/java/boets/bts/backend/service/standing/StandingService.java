@@ -144,7 +144,7 @@ public class StandingService {
                         }
                     }
                     if (!allValidated) {
-                        throw new Exception("Not all standings could be calculated");
+                        logger.error("Not all standings could be calculated");
                     }
                 });
     }

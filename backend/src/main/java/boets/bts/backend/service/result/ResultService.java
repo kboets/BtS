@@ -132,7 +132,6 @@ public class ResultService {
     private void dailyUpdateResults() {
         AtomicInteger numberOfAttempts = new AtomicInteger();
         RetryPolicy<Object> retryResultsPolicy = RetryPolicy.builder()
-                .handle(Exception.class)
                 .onRetry(executionEvent -> logger.warn("An exception occurred while updating results, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))
                 .withMaxAttempts(3)
@@ -157,7 +156,8 @@ public class ResultService {
                         }
                     }
                     if (!allValidated) {
-                        throw new Exception("Not all results could be retrieved");
+                        logger.error("Not all results could be retrieved");
+                       // return null;
                     }
                 });
     }

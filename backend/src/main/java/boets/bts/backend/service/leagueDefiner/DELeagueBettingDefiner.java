@@ -11,7 +11,7 @@ public class DELeagueBettingDefiner implements LeagueBettingDefiner {
     @Override
     public List<League> retrieveAllowedBettingLeague(List<League> allLeagues) {
         return allLeagues.stream()
-                .filter(league -> league.getName().contains("Bundesliga 1") && !league.getName().contains("Women"))
+                .filter(league -> league.getName().equals("Bundesliga"))
                 .collect(Collectors.toList());
     }
 }
