@@ -42,6 +42,12 @@ public class AlgorithmService {
         return algorithmMapper.toDtos(all);
     }
 
+    public List<AlgorithmDto> getAllButCurrent() {
+        return algorithmMapper.toDtos(algorithmRepository.findAll().stream()
+                .filter(algorithm -> !algorithm.isCurrent())
+                .collect(Collectors.toList()));
+    }
+
     public AlgorithmDto getCurrent() {
         Optional<Algorithm> algorithmOptional = algorithmRepository.findAll().stream().filter(Algorithm::isCurrent).findFirst();
         return algorithmOptional.map(algorithmMapper::toDto).orElse(null);

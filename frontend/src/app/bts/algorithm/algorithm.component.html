@@ -97,13 +97,17 @@
             </div>
         </div>
         <div class="p-field p-grid p-mt-5">
-            <div class="p-col-2">
+            <div class="p-col-2" *ngIf="!addAlgorithm">
                 <button pButton type="button" label="Voeg toe" style="margin-right: .5rem"
                         (click)="openAddForm()"></button>
             </div>
-            <div class="p-col-2">
+            <div class="p-col-2" *ngIf="!addAlgorithm && allAlgorithms.length > 0">
                 <button pButton type="button" label="Overzicht anderen" style="margin-right: .5rem"
                         (click)="openAddForm()"></button>
+            </div>
+            <div class="p-col-2" *ngIf="addAlgorithm">
+                <button pButton type="button" label="Undo" style="margin-right: .5rem"
+                        (click)="undoAddForm()"></button>
             </div>
         </div>
     </div>
@@ -188,15 +192,5 @@
             </div>
         </form>
     </div>
-
-
-    <!--        <div class="p-field p-grid" *ngIf="!(algorithm | keyvalue)?.length">-->
-    <!--            <h5>Huidig algoritme</h5>-->
-    <!--            <div class="p-col-1">-->
-    <!--                <label>Naam</label>-->
-    <!--                {{algorithm.name}}-->
-    <!--            </div>-->
-    <!--        </div>-->
-
 
 </p-panel>

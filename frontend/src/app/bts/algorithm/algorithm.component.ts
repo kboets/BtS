@@ -37,13 +37,13 @@ export class AlgorithmComponent implements OnInit {
     ngOnInit(): void {
         this.createAddForm();
         this.retrieveCurrentAlgorithm();
-        //this.retrieveAllAlgorithm();
+        this.retrieveAllButCurrentAlgorithm();
 
         this.algorithmService.algorithmRefreshAction$
-            .subscribe(
-                console.log('refresh action called'),
-                this.retrieveAllAlgorithm
-            );
+            .subscribe(()=> {
+                this.retrieveCurrentAlgorithm();
+                this.retrieveAllButCurrentAlgorithm();
+            });
     }
 
     private retrieveCurrentAlgorithm() {
@@ -62,8 +62,8 @@ export class AlgorithmComponent implements OnInit {
 
 
 
-    private retrieveAllAlgorithm() {
-        this.algorithmService.getAlgorithms()
+    private retrieveAllButCurrentAlgorithm() {
+        this.algorithmService.getAllButCurrentAlgorithms()
             .pipe(debounceTime(1000))
             .pipe(catchError(err => {
                     this.errorMessageSubject.next(err);
@@ -99,7 +99,7 @@ export class AlgorithmComponent implements OnInit {
         }
         this.setAlgorithmValues();
 
-        if (this.verifyAlreadyExisting() === true) {
+        if (this.verifyAlreadyExisting()) {
             let dataError = new GeneralError();
             dataError.userFriendlyMessage = 'Dit algoritme bestaat reeds.'
             this.errorMessageSubject.next(dataError);
@@ -111,8 +111,6 @@ export class AlgorithmComponent implements OnInit {
     private saveAlgorithm() {
         this.algorithmService.saveAlgorithm(this.newAlgorithm)
             .subscribe((data) => {
-                this.algorithmService.algorithmRefreshNeeded$.next(data);
-                this.retrieveCurrentAlgorithm();
                 this.removeAcknowledgeMessage();
                 this.addAlgorithm = false;
                 this.isSavedOK = true;
@@ -146,6 +144,10 @@ export class AlgorithmComponent implements OnInit {
         this.addAlgorithm = true;
     }
 
+    undoAddForm() {
+        this.addAlgorithm = false;
+    }
+
     private setAlgorithmValues() {
         this.newAlgorithm = {} as Algorithm;
         this.newAlgorithm.homePoints = {
@@ -168,7 +170,6 @@ export class AlgorithmComponent implements OnInit {
         this.newAlgorithm.type = 'WIN';
         this.newAlgorithm.homeBonus = this.addAlgorithmForm.get('homeBonus').value;
         this.newAlgorithm.awayMalus = this.addAlgorithmForm.get('awayMalus').value;
-        console.log('new algortime ', this.newAlgorithm);
 
     }
 

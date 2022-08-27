@@ -3,7 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Observable, Subject, throwError} from "rxjs";
 import {Algorithm} from "../domain/algorithm";
-import {catchError} from "rxjs/operators";
+import {catchError, tap} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -34,6 +34,16 @@ export class AlgorithmService {
         )
     }
 
+    getAllButCurrentAlgorithms(): Observable<Algorithm[]> {
+        return this.http.get<Algorithm[]>(`/btsapi/api/algorithm/allNotCurrent`, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }).pipe(
+            catchError(AlgorithmService.handleHttpError)
+        )
+    }
+
     getCurrentAlgorithme(): Observable<Algorithm> {
         return this.http.get<Algorithm>(`/btsapi/api/algorithm/current`, {
             headers: new HttpHeaders({
@@ -50,6 +60,9 @@ export class AlgorithmService {
                 'Content-Type': 'application/json'
             })
         }).pipe(
+            tap(() => {
+                this._algorithmRefreshNeeded$.next()
+            }),
             catchError(AlgorithmService.handleHttpError)
         );
     }

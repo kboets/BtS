@@ -23,6 +23,12 @@ public class AlgorithmResource {
     public List<AlgorithmDto> getAllAlgorithm() {
         return algorithmService.getAll();
     }
+
+    @GetMapping("allNotCurrent")
+    public List<AlgorithmDto> getAllButCurrentAlgorithm() {
+        return algorithmService.getAllButCurrent();
+    }
+
     @GetMapping("current")
     public AlgorithmDto getCurrentAlgoritm() {
         return algorithmService.getCurrent();

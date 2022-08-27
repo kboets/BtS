@@ -44,6 +44,7 @@ public class ResultService {
     private final LeagueRepository leagueRepository;
     private final LeagueMapper leagueMapper;
     private final AdminService adminService;
+    private AtomicInteger numberOfAttempts;
 
     public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
                          LeagueRepository leagueRepository, LeagueMapper leagueMapper, AdminService adminService) {
@@ -54,6 +55,7 @@ public class ResultService {
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
         this.adminService = adminService;
+        numberOfAttempts = new AtomicInteger();
     }
 
     public List<ResultDto> verifyMissingResults(Long leagueId) throws Exception {
@@ -121,16 +123,22 @@ public class ResultService {
     }
 
     /**
-     * Cron job each day at 3 AM
+     * each hour
      */
-    @Scheduled(cron ="0 0 3,15 * * *")
+    @Scheduled(cron ="0 0 * * * *")
     public void scheduleResults()  {
         logger.info("Scheduler started to init results");
         this.initResultService();
     }
 
+
+    @Scheduled(cron = "@daily")
+    public void resetNumberOfAttempt() {
+        numberOfAttempts = new AtomicInteger();
+    }
+
+
     private void dailyUpdateResults() {
-        AtomicInteger numberOfAttempts = new AtomicInteger();
         RetryPolicy<Object> retryResultsPolicy = RetryPolicy.builder()
                 .onRetry(executionEvent -> logger.warn("An exception occurred while updating results, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))

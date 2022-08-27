@@ -38,6 +38,7 @@ public class RoundService {
     private final LeagueRepository leagueRepository;
     private final CurrentRoundHandlerSelector currentRoundHandlerSelector;
     private final AdminService adminService;
+    private AtomicInteger numberOfAttempts;
 
     public RoundService(RoundMapper roundMapper, IRoundClient roundClient, RoundRepository roundRepository, LeagueRepository leagueRepository, CurrentRoundHandlerSelector currentRoundHandlerSelector,
                         AdminService adminService) {
@@ -47,6 +48,7 @@ public class RoundService {
         this.leagueRepository = leagueRepository;
         this.currentRoundHandlerSelector = currentRoundHandlerSelector;
         this.adminService = adminService;
+        this.numberOfAttempts = new AtomicInteger();
     }
 
     /**
@@ -178,22 +180,26 @@ public class RoundService {
         }
     }
 
+    @Scheduled(cron = "@daily")
+    public void resetNumberOfAttempt() {
+        numberOfAttempts = new AtomicInteger();
+    }
+
     /**
      * Cron job each day at 2 AM
      */
-    @Scheduled(cron ="0 0 2,14 * * *")
+    @Scheduled(cron ="0 0 * * * *")
     public void scheduleRound() {
         logger.info("Scheduler started to init rounds");
         this.initRounds();
     }
 
     private void dailyUpdateRounds() {
-        AtomicInteger numberOfAttempts = new AtomicInteger();
         RetryPolicy<Object> retryDownloadPolicy = RetryPolicy.builder()
                 .handle(Exception.class)
                 .onRetry(executionEvent -> logger.warn("An exception occurred while updating rounds, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))
-                .withMaxAttempts(1)
+                .withMaxAttempts(3)
                 .build();
         Failsafe.with(retryDownloadPolicy)
                 .onSuccess(result -> {

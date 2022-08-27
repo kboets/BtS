@@ -101,9 +101,13 @@ public class StandingService {
     public void initStanding() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
-            this.numberOfAttempts.set(0);
             this.dailyUpdateStandings();
         }
+    }
+
+    @Scheduled(cron = "@daily")
+    public void resetNumberOfAttempt() {
+        numberOfAttempts = new AtomicInteger();
     }
 
     /**
@@ -120,7 +124,7 @@ public class StandingService {
                 .handle(Exception.class)
                 .onRetry(executionEvent -> logger.warn("An exception occurred while calculating standings, retrying for the {} time", numberOfAttempts.incrementAndGet()))
                 .withDelay(Duration.ofSeconds(30))
-                .withMaxAttempts(1)
+                .withMaxAttempts(3)
                 .build();
 
         Failsafe.with(retryStandingPolicy)
