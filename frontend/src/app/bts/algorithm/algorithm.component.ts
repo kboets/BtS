@@ -17,6 +17,7 @@ export class AlgorithmComponent implements OnInit {
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
+    private allButCurrentAlgorithms: Algorithm[];
     private allAlgorithms: Algorithm[];
     public currentAlgorithm: Algorithm;
     public addAlgorithm: boolean;
@@ -27,15 +28,15 @@ export class AlgorithmComponent implements OnInit {
     addAlgorithmForm: FormGroup;
     confirmationMessage: string;
     isSavedOK: boolean;
-    isEmptyAlgorithme: boolean;
+    isEmptyAlgorithm: boolean;
 
     constructor(private fb: FormBuilder, private algorithmService: AlgorithmService, private confirmationService: ConfirmationService) {
         this.addAlgorithm = false;
         this.newAlgorithm = {} as Algorithm;
         this.confirmationMessage = 'Het algoritme werd opgeslagen en is nu de standaard';
         this.isSavedOK = false;
-        this.isEmptyAlgorithme = true;
-        this.allAlgorithms = [];
+        this.isEmptyAlgorithm = true;
+        this.allButCurrentAlgorithms = [];
         this.viewOthers = false;
         this.showDeleteMessage = false;
 
@@ -45,11 +46,13 @@ export class AlgorithmComponent implements OnInit {
         this.createAddForm();
         this.retrieveCurrentAlgorithm();
         this.retrieveAllButCurrentAlgorithm();
+        this.retrieveAllAlgorithm();
 
         this.algorithmService.algorithmRefreshAction$
             .subscribe(()=> {
                 this.retrieveCurrentAlgorithm();
                 this.retrieveAllButCurrentAlgorithm();
+                this.retrieveAllAlgorithm();
             });
     }
 
@@ -62,7 +65,7 @@ export class AlgorithmComponent implements OnInit {
         ).subscribe((data) => {
             this.currentAlgorithm = data;
             if (data !== null) {
-                this.isEmptyAlgorithme = false;
+                this.isEmptyAlgorithm = false;
             }
         })
     }
@@ -75,11 +78,23 @@ export class AlgorithmComponent implements OnInit {
                     return EMPTY;
                 })
             ).subscribe((data) => {
-                this.allAlgorithms = data;
-                if (this.allAlgorithms.length === 0) {
+                this.allButCurrentAlgorithms = data;
+                if (this.allButCurrentAlgorithms.length === 0) {
                     this.viewOthers = false;
                 }
             })
+    }
+
+    private retrieveAllAlgorithm() {
+        this.algorithmService.getAlgorithms()
+            .pipe(debounceTime(1000))
+            .pipe(catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            ).subscribe((data) => {
+                this.allAlgorithms = data;
+        })
     }
 
     private createAddForm() {
@@ -106,7 +121,6 @@ export class AlgorithmComponent implements OnInit {
             return;
         }
         this.setAlgorithmValues();
-
         if (this.verifyAlreadyExisting()) {
             let dataError = new GeneralError();
             dataError.userFriendlyMessage = 'Dit algoritme bestaat reeds.'
@@ -122,25 +136,19 @@ export class AlgorithmComponent implements OnInit {
                 this.removeAcknowledgeMessage();
                 this.addAlgorithm = false;
                 this.isSavedOK = true;
-                this.isEmptyAlgorithme = false;
+                this.isEmptyAlgorithm = false;
             })
     }
 
     private verifyAlreadyExisting(): boolean {
-        this.allAlgorithms.forEach(algoritm => {
-            if (this.newAlgorithm.homeBonus === algoritm.homeBonus
-                && this.newAlgorithm.awayMalus === algoritm.awayMalus
-                && this.newAlgorithm.awayPoints.win === algoritm.awayPoints.win
-                && this.newAlgorithm.awayPoints.lose === algoritm.awayPoints.lose
-                && this.newAlgorithm.awayPoints.draw === algoritm.awayPoints.draw
-                && this.newAlgorithm.homePoints.win === algoritm.homePoints.win
-                && this.newAlgorithm.homePoints.lose === algoritm.homePoints.lose
-                && this.newAlgorithm.homePoints.draw === algoritm.homePoints.draw
-            ) {
+        let isSame = false;
+        this.allAlgorithms.forEach(algorithm => {
+            isSame = this.isSameAlgorithm(algorithm);
+            if (isSame) {
                 return true;
             }
         })
-        return false;
+        return isSame;
     }
 
     onAddReset() {
@@ -168,7 +176,7 @@ export class AlgorithmComponent implements OnInit {
                 this.removeAcknowledgeMessage();
                 this.addAlgorithm = false;
                 this.isSavedOK = true;
-                this.isEmptyAlgorithme = false;
+                this.isEmptyAlgorithm = false;
             })
     }
 
@@ -211,6 +219,17 @@ export class AlgorithmComponent implements OnInit {
         this.newAlgorithm.homeBonus = this.addAlgorithmForm.get('homeBonus').value;
         this.newAlgorithm.awayMalus = this.addAlgorithmForm.get('awayMalus').value;
 
+    }
+
+    private isSameAlgorithm(algorithm: Algorithm) {
+        return this.newAlgorithm.homeBonus === algorithm.homeBonus
+            && this.newAlgorithm.awayMalus === algorithm.awayMalus
+            && this.newAlgorithm.awayPoints.win === algorithm.awayPoints.win
+            && this.newAlgorithm.awayPoints.lose === algorithm.awayPoints.lose
+            && this.newAlgorithm.awayPoints.draw === algorithm.awayPoints.draw
+            && this.newAlgorithm.homePoints.win === algorithm.homePoints.win
+            && this.newAlgorithm.homePoints.lose === algorithm.homePoints.lose
+            && this.newAlgorithm.homePoints.draw === algorithm.homePoints.draw;
     }
 
 

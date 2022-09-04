@@ -4,14 +4,13 @@
 <ng-container *ngIf="showDeleteMessage">
     <p-message class="p-mb-2" severity="info" text="Het algoritme werd verwijderd."></p-message>
 </ng-container>
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
+</ng-container>
 
 <p-panel header="Algoritme">
-    <ng-container *ngIf="errorMessage$ | async as errorMessage">
-        <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
-    </ng-container>
-
     <!-- no algorithm  -->
-    <div *ngIf="isEmptyAlgorithme">
+    <div *ngIf="isEmptyAlgorithm">
         <h5>Huidig algoritme</h5>
         <div class="p-field p-grid">
             <div class="p-col">
@@ -29,7 +28,7 @@
         </div>
     </div>
     <!-- existing algorithm  -->
-    <div *ngIf="!isEmptyAlgorithme">
+    <div *ngIf="!isEmptyAlgorithm">
         <h4>Huidig algoritme</h4>
         <div class="p-grid p-mt-3">
             <div class="p-col-1">
@@ -54,16 +53,16 @@
                 <label><strong>{{currentAlgorithm?.homePoints.win}}</strong></label>
             </div>
             <div class="p-col-1">
-                <label for="name">Verlies: </label>
-            </div>
-            <div class="p-col-1">
-                <label><strong>{{currentAlgorithm?.homePoints.lose}}</strong></label>
-            </div>
-            <div class="p-col-1">
                 <label for="name">Gelijk: </label>
             </div>
             <div class="p-col-1">
                 <label><strong>{{currentAlgorithm?.homePoints.draw}}</strong></label>
+            </div>
+            <div class="p-col-1">
+                <label for="name">Verlies: </label>
+            </div>
+            <div class="p-col-1">
+                <label><strong>{{currentAlgorithm?.homePoints.lose}}</strong></label>
             </div>
             <div class="p-col-1">
                 <label for="name">Bonus: </label>
@@ -81,16 +80,16 @@
                 <label><strong>{{currentAlgorithm?.awayPoints.win}}</strong></label>
             </div>
             <div class="p-col-1">
-                <label for="name">Verlies: </label>
-            </div>
-            <div class="p-col-1">
-                <label><strong>{{currentAlgorithm?.awayPoints.lose}}</strong></label>
-            </div>
-            <div class="p-col-1">
                 <label for="name">Gelijk: </label>
             </div>
             <div class="p-col-1">
                 <label><strong>{{currentAlgorithm?.awayPoints.draw}}</strong></label>
+            </div>
+            <div class="p-col-1">
+                <label for="name">Verlies: </label>
+            </div>
+            <div class="p-col-1">
+                <label><strong>{{currentAlgorithm?.awayPoints.lose}}</strong></label>
             </div>
             <div class="p-col-1">
                 <label for="name">Malus: </label>
@@ -104,7 +103,7 @@
                 <button pButton type="button" label="Voeg toe" style="margin-right: .5rem"
                         (click)="openAddForm()"></button>
             </div>
-            <div class="p-col-2" *ngIf="!addAlgorithm && allAlgorithms.length > 0 && !viewOthers">
+            <div class="p-col-2" *ngIf="!addAlgorithm && allButCurrentAlgorithms.length > 0 && !viewOthers">
                 <button pButton type="button" label="Overzicht anderen" style="margin-right: .5rem"
                         (click)="openOthers()"></button>
             </div>
@@ -117,7 +116,7 @@
 
     <!-- overview other algorithms -->
     <div *ngIf="viewOthers">
-        <p-table [value]="allAlgorithms" class="p-mt-2">
+        <p-table [value]="allButCurrentAlgorithms" class="p-mt-2">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Naam</th>
