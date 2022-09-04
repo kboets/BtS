@@ -37,6 +37,15 @@ public class AlgorithmService {
         return algorithmMapper.toDto(algorithmRepository.save(algorithm));
     }
 
+    public boolean delete(Long id) {
+        try {
+            algorithmRepository.deleteById(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public List<AlgorithmDto> getAll() {
         List<Algorithm> all = algorithmRepository.findAll();
         return algorithmMapper.toDtos(all);

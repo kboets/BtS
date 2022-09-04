@@ -39,4 +39,10 @@ public class AlgorithmResource {
         logger.info("saving algorithm {}", algorithmDto.getName());
         return  algorithmService.save(algorithmDto);
     }
+
+    @PostMapping("delete")
+    public boolean delete(@RequestBody AlgorithmDto algorithmDto) {
+        logger.info("delete algorithm {}", algorithmDto.getName());
+        return  algorithmService.delete(algorithmDto.getAlgorithm_id());
+    }
 }

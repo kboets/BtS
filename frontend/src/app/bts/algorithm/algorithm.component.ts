@@ -5,9 +5,11 @@ import {EMPTY, Subject} from "rxjs";
 import {Algorithm} from "../domain/algorithm";
 import {GeneralError} from "../domain/generalError";
 import {catchError, debounceTime} from "rxjs/operators";
+import {ConfirmationService, MessageService} from "primeng/api";
 
 @Component({
     selector: 'bts-algorithm',
+    providers: [ConfirmationService, MessageService],
     templateUrl: './algorithm.component.html'
 })
 export class AlgorithmComponent implements OnInit {
@@ -18,6 +20,8 @@ export class AlgorithmComponent implements OnInit {
     private allAlgorithms: Algorithm[];
     public currentAlgorithm: Algorithm;
     public addAlgorithm: boolean;
+    public viewOthers: boolean;
+    public showDeleteMessage:boolean;
     newAlgorithm: Algorithm;
     submitted = false;
     addAlgorithmForm: FormGroup;
@@ -25,13 +29,16 @@ export class AlgorithmComponent implements OnInit {
     isSavedOK: boolean;
     isEmptyAlgorithme: boolean;
 
-    constructor(private fb: FormBuilder, private algorithmService: AlgorithmService) {
+    constructor(private fb: FormBuilder, private algorithmService: AlgorithmService, private confirmationService: ConfirmationService) {
         this.addAlgorithm = false;
         this.newAlgorithm = {} as Algorithm;
         this.confirmationMessage = 'Het algoritme werd opgeslagen en is nu de standaard';
         this.isSavedOK = false;
         this.isEmptyAlgorithme = true;
         this.allAlgorithms = [];
+        this.viewOthers = false;
+        this.showDeleteMessage = false;
+
     }
 
     ngOnInit(): void {
@@ -60,8 +67,6 @@ export class AlgorithmComponent implements OnInit {
         })
     }
 
-
-
     private retrieveAllButCurrentAlgorithm() {
         this.algorithmService.getAllButCurrentAlgorithms()
             .pipe(debounceTime(1000))
@@ -71,6 +76,9 @@ export class AlgorithmComponent implements OnInit {
                 })
             ).subscribe((data) => {
                 this.allAlgorithms = data;
+                if (this.allAlgorithms.length === 0) {
+                    this.viewOthers = false;
+                }
             })
     }
 
@@ -146,6 +154,38 @@ export class AlgorithmComponent implements OnInit {
 
     undoAddForm() {
         this.addAlgorithm = false;
+        this.viewOthers = false;
+    }
+
+    openOthers() {
+        this.viewOthers = true;
+    }
+
+    setAlgorithmCurrent(algorithm: Algorithm) {
+        algorithm.current = true;
+        this.algorithmService.saveAlgorithm(algorithm)
+            .subscribe((data) => {
+                this.removeAcknowledgeMessage();
+                this.addAlgorithm = false;
+                this.isSavedOK = true;
+                this.isEmptyAlgorithme = false;
+            })
+    }
+
+    deleteAlgorithme(algorithm: Algorithm) {
+        this.confirmationService.confirm({
+            message: 'Verwijder dit algoritme ? Dit kan niet ongedaan gemaakt worden',
+            header: 'Bevestiging',
+            icon: 'pi pi-info-circle',
+            accept: () => {
+                this.algorithmService.deleteAlgorithm(algorithm)
+                    .subscribe((data) => {
+                        this.showDeleteMessage = true;
+                        this.removeAcknowledgeMessage();
+                    })
+            }
+
+        });
     }
 
     private setAlgorithmValues() {
@@ -177,6 +217,7 @@ export class AlgorithmComponent implements OnInit {
     private removeAcknowledgeMessage() {
         setTimeout(() => {
             this.isSavedOK = false;
+            this.showDeleteMessage = false;
         }, 5000);
     }
 

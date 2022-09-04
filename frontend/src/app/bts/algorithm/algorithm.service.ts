@@ -67,6 +67,19 @@ export class AlgorithmService {
         );
     }
 
+    deleteAlgorithm(algorithm: Algorithm): Observable<boolean> {
+        return this.http.post<boolean>(`/btsapi/api/algorithm/delete`, algorithm, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }).pipe(
+            tap((result) => {
+                this._algorithmRefreshNeeded$.next()
+            }),
+            catchError(AlgorithmService.handleHttpError)
+        );
+    }
+
     private static handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handle HttpError of algorithm service " + error.message);
         let dataError = new GeneralError();

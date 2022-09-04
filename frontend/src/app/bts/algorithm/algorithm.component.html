@@ -1,6 +1,9 @@
 <ng-container *ngIf="isSavedOK">
     <p-message class="p-mb-2" severity="info" text="{{confirmationMessage}}"></p-message>
 </ng-container>
+<ng-container *ngIf="showDeleteMessage">
+    <p-message class="p-mb-2" severity="info" text="Het algoritme werd verwijderd."></p-message>
+</ng-container>
 
 <p-panel header="Algoritme">
     <ng-container *ngIf="errorMessage$ | async as errorMessage">
@@ -97,19 +100,57 @@
             </div>
         </div>
         <div class="p-field p-grid p-mt-5">
-            <div class="p-col-2" *ngIf="!addAlgorithm">
+            <div class="p-col-2" *ngIf="!addAlgorithm && !viewOthers">
                 <button pButton type="button" label="Voeg toe" style="margin-right: .5rem"
                         (click)="openAddForm()"></button>
             </div>
-            <div class="p-col-2" *ngIf="!addAlgorithm && allAlgorithms.length > 0">
+            <div class="p-col-2" *ngIf="!addAlgorithm && allAlgorithms.length > 0 && !viewOthers">
                 <button pButton type="button" label="Overzicht anderen" style="margin-right: .5rem"
-                        (click)="openAddForm()"></button>
+                        (click)="openOthers()"></button>
             </div>
-            <div class="p-col-2" *ngIf="addAlgorithm">
+            <div class="p-col-2" *ngIf="addAlgorithm || viewOthers">
                 <button pButton type="button" label="Undo" style="margin-right: .5rem"
                         (click)="undoAddForm()"></button>
             </div>
         </div>
+    </div>
+
+    <!-- overview other algorithms -->
+    <div *ngIf="viewOthers">
+        <p-table [value]="allAlgorithms" class="p-mt-2">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Naam</th>
+                    <th>Thuis winst</th>
+                    <th>Thuis verlies</th>
+                    <th>Thuis gelijk</th>
+                    <th>Thuis bonus</th>
+                    <th>Uit winst</th>
+                    <th>Uit verlies</th>
+                    <th>Uit gelijk</th>
+                    <th>Uit malus</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-algorithme>
+                <tr>
+                    <td>{{algorithme.name}}</td>
+                    <td>{{algorithme.homePoints.win}}</td>
+                    <td>{{algorithme.homePoints.lose}}</td>
+                    <td>{{algorithme.homePoints.draw}}</td>
+                    <td>{{algorithme.homeBonus}}</td>
+                    <td>{{algorithme.awayPoints.lose}}</td>
+                    <td>{{algorithme.awayPoints.lose}}</td>
+                    <td>{{algorithme.awayPoints.draw}}</td>
+                    <td>{{algorithme.awayMalus}}</td>
+                    <td><button pButton type="button" label="maak huidig" style="margin-right: .5rem"
+                            (click)="setAlgorithmCurrent(algorithme)"></button></td>
+                    <td><p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+                        <button pButton type="button" label="verwijder" style="margin-right: .5rem"  (click)="deleteAlgorithme(algorithme)"></button></td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 
 
