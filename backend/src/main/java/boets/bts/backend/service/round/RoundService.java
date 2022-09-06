@@ -171,6 +171,7 @@ public class RoundService {
 
     public void initRounds() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) && !adminService.isHistoricData()) {
+            logger.info("Scheduler started to init rounds");
             this.dailyUpdateRounds();
         } else if(!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) && adminService.isHistoricData()) {
             List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
@@ -190,7 +191,6 @@ public class RoundService {
      */
     @Scheduled(cron ="0 0 * * * *")
     public void scheduleRound() {
-        logger.info("Scheduler started to init rounds");
         this.initRounds();
     }
 

@@ -41,7 +41,7 @@ public class RoundValidSeasonStandingRetriever extends AbstractStandingRetriever
 
     @Override
     public List<Standing> getStanding(League league, Round currentRound, int roundNumber) {
-        logger.info("Retrieving actual standing of league {} for current season that is started  !", league.getName());
+        //logger.info("Retrieving actual standing of league {} for current season that is started  !", league.getName());
         return super.retrieveOrCalculateMissingStandings(roundNumber, league);
     }
 }

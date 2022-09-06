@@ -41,7 +41,7 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
     public List<Result> getResult(League league) throws Exception {
         List<Result> allResults = resultRepository.findAll(ResultSpecs.forLeague(league));
         List<Result> allNonFinished = allResults.stream().filter(result -> result.getEventDate().isBefore(LocalDate.now()) && !result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
-        logger.info("Total number of non finished results {} for league {} ", allNonFinished.size(), league.getName());
+        //logger.info("Total number of non finished results {} for league {} ", allNonFinished.size(), league.getName());
         if(!allNonFinished.isEmpty()) {
             List<ResultDto> clientResultDtos = resultClient.retrieveAllResultForLeague(league.getId(), adminService.getCurrentSeason()).orElseGet(Collections::emptyList);
             boolean isUpdated = false;
@@ -53,7 +53,7 @@ public class NonEmptyResultHandler extends AbstractResultHandler {
                         missingResult.setGoalsHomeTeam(resultDto.getGoalsHomeTeam());
                         missingResult.setGoalsAwayTeam(resultDto.getGoalsAwayTeam());
                         isUpdated = true;
-                        logger.info("Following result is updated {} ", missingResult.getId());
+                        //logger.info("Following result is updated {} ", missingResult.getId());
                     }
                 }
             }

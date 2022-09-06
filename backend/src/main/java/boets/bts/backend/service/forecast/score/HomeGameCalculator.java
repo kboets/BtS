@@ -1,9 +1,12 @@
 package boets.bts.backend.service.forecast.score;
 
+import boets.bts.backend.domain.Algorithm;
 import boets.bts.backend.domain.Standing;
+import boets.bts.backend.service.algorithm.AlgorithmService;
 import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.standing.StandingService;
+import boets.bts.backend.web.algorithm.AlgorithmDto;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.results.ResultDto;
@@ -32,20 +35,20 @@ import java.util.stream.Collectors;
 @Component
 @Order(1)
 @Transactional
-public class HomeGameCalculator implements ScoreCalculator {
+public class HomeGameCalculator extends AbstractGameCalculator {
 
     private final static Logger logger = LoggerFactory.getLogger(HomeGameCalculator.class);
-    private final int homeWinScore;
-    private final int homeDrawScore;
-    private final int homeLoseScore;
+    private int homeWinScore;
+    private int homeDrawScore;
+    private int homeLoseScore;
     private final StandingService standingService;
     private final StandingMapper standingMapper;
-    private final LeagueMapper leagueMapper;
 
-    public HomeGameCalculator(StandingService standingService, StandingMapper standingMapper, LeagueMapper leagueMapper) {
+    public HomeGameCalculator(StandingService standingService, StandingMapper standingMapper, AlgorithmService algorithmService) {
+        super(algorithmService);
         this.standingService = standingService;
         this.standingMapper = standingMapper;
-        this.leagueMapper = leagueMapper;
+        //default values in case no algorithm is set
         this.homeWinScore = 20;
         this.homeDrawScore = 10;
         this.homeLoseScore = 5;
@@ -53,6 +56,12 @@ public class HomeGameCalculator implements ScoreCalculator {
 
     @Override
     public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
+        AlgorithmDto current = super.getCurrentAlgorithm();
+        if (current != null) {
+            this.homeWinScore = current.getHomePoints().getWin();
+            this.homeDrawScore = current.getHomePoints().getDraw();
+            this.homeLoseScore = current.getHomePoints().getLose();
+        }
         TeamDto homeTeam = forecastDetail.getTeam();
         StringBuilder infoMessage = new StringBuilder();
         infoMessage.append(createInitMessage());
@@ -212,6 +221,7 @@ public class HomeGameCalculator implements ScoreCalculator {
                 .append("<br>");
         return  infoMessage.toString();
     }
+
 
 
 }

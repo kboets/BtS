@@ -59,13 +59,13 @@ public class StandingService {
         List<Standing> standingsForLeagueByRound;
         if(WebUtils.isWeekend()) {
             int currentRoundNumber = currentRound.getRoundNumber()-1;
-            logger.info("Current round {} for league {} while getting standings", currentRoundNumber, leagueId);
+            //logger.info("Current round {} for league {} while getting standings", currentRoundNumber, leagueId);
             standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRoundNumber);
         } else {
-            logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
+            //logger.info("Current round {} for league {} while getting standings", currentRound.getRoundNumber(), leagueId);
             standingsForLeagueByRound = this.getStandingsForLeagueByRound(leagueId, adminService.getCurrentSeason(), currentRound.getRoundNumber());
         }
-        logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.isEmpty()?"NOT FOUND":standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
+        //logger.info("Retrieved standing {} for league {}", standingsForLeagueByRound.isEmpty()?"NOT FOUND":standingsForLeagueByRound.get(0).getAllSubStanding().getMatchPlayed(), leagueId);
         return standingMapper.toStandingDtos(standingsForLeagueByRound);
     }
 
@@ -101,6 +101,7 @@ public class StandingService {
     public void initStanding() {
         if(!adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS) && !adminService.isHistoricData()
                 && adminService.isTodayExecuted(AdminKeys.CRON_RESULTS)) {
+            logger.info("Scheduler started to init standing");
             this.dailyUpdateStandings();
         }
     }
@@ -115,7 +116,6 @@ public class StandingService {
      */
     @Scheduled(cron ="0 0 4,16 * * *")
     public void scheduleStandings() {
-        logger.info("Scheduler started to init standing");
         this.initStanding();
     }
 

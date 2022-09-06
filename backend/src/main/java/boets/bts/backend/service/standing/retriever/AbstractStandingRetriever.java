@@ -58,7 +58,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     }
 
     protected List<Standing> saveAndReturn(List<Standing> standings, League league, int roundNumber) {
-        logger.info("Collecting all info before save of  standing");
+        //logger.info("Collecting all info before save of  standing");
         List<Standing> expandedStandings = standings.stream()
                 .peek(standing -> standing.setLeague(league))
                 .peek(standing -> standing.setTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(standing.getTeam().getTeamId(), league))
@@ -78,7 +78,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
         if(!standingsForRound.isEmpty()) {
             return standingsForRound;
         }
-        logger.info("Start recalculating the standing for league {} and round {} ", league.getName(), roundNumber);
+        //logger.info("Start recalculating the standing for league {} and round {} ", league.getName(), roundNumber);
         List<Result> results = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, roundNumber));
         List<StandingDto> calculatedStandingDtos = standingCalculator.calculateStandings(leagueMapper.toLeagueDto(league), resultMapper.toResultDtos(results), roundNumber);
         List<Standing> calculatedStandings = standingMapper.toStandings(calculatedStandingDtos);

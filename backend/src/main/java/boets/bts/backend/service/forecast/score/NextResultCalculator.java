@@ -1,7 +1,9 @@
 package boets.bts.backend.service.forecast.score;
 
+import boets.bts.backend.service.algorithm.AlgorithmService;
 import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetailDto;
+import boets.bts.backend.web.algorithm.AlgorithmDto;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.team.TeamDto;
 import org.springframework.core.annotation.Order;
@@ -12,16 +14,21 @@ import java.util.List;
 
 @Component
 @Order(3)
-public class NextResultCalculator implements ScoreCalculator {
+public class NextResultCalculator extends AbstractGameCalculator {
 
     private int homeGame;
 
-    public NextResultCalculator() {
+    public NextResultCalculator(AlgorithmService algorithmService) {
+        super(algorithmService);
         homeGame = 10;
     }
 
     @Override
     public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
+        AlgorithmDto current = super.getCurrentAlgorithm();
+        if (current != null) {
+            this.homeGame = current.getHomeBonus();
+        }
         StringBuilder infoMessage = new StringBuilder();
         ResultDto nextResult = forecastDetail.getNextResult();
         TeamDto teamDto = forecastDetail.getTeam();

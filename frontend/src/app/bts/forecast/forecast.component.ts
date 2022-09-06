@@ -119,7 +119,7 @@ export class ForecastComponent implements OnInit {
     }
 
     private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {
-        console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
+        //console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
         return detailTeam.name === otherTeam.name;
 
     }

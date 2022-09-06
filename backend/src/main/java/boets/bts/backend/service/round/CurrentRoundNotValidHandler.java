@@ -40,7 +40,7 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
 
     @Override
     public Round save(Round round, League league, int season)  {
-        logger.info("current round {} with current date {} is outdated", round.getRound(), round.getCurrentDate());
+        //logger.info("current round {} with current date {} is outdated", round.getRound(), round.getCurrentDate());
         Optional<Round> currentOptionalRoundUpdated = this.getCurrentClientRound(round.getLeague().getId(), round.getSeason());
         // for Jupiler League in playoff, it can happen it does not find a Round
         if (currentOptionalRoundUpdated.isEmpty()) {

@@ -1,9 +1,12 @@
 package boets.bts.backend.service.forecast.score;
 
+import boets.bts.backend.domain.Algorithm;
 import boets.bts.backend.domain.Standing;
+import boets.bts.backend.service.algorithm.AlgorithmService;
 import boets.bts.backend.service.forecast.calculator.ForecastData;
 import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.standing.StandingService;
+import boets.bts.backend.web.algorithm.AlgorithmDto;
 import boets.bts.backend.web.league.LeagueDto;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.standing.StandingDto;
@@ -31,25 +34,33 @@ import java.util.stream.Collectors;
 @Component
 @Order(2)
 @Transactional
-public class AwayGameCalculator implements ScoreCalculator {
+public class AwayGameCalculator extends AbstractGameCalculator {
 
     private final static  Logger logger = LoggerFactory.getLogger(AwayGameCalculator.class);
-    private final int awayWinScore;
-    private final int awayDrawScore;
-    private final int awayLoseScore;
+    private int awayWinScore;
+    private int awayDrawScore;
+    private int awayLoseScore;
     private final StandingService standingService;
     private final StandingMapper standingMapper;
 
-    public AwayGameCalculator(StandingService standingService, StandingMapper standingMapper) {
+    public AwayGameCalculator(StandingService standingService, StandingMapper standingMapper, AlgorithmService algorithmService) {
+        super(algorithmService);
+        this.standingService = standingService;
+        this.standingMapper = standingMapper;
+        //default values
         this.awayWinScore = 30;
         this.awayDrawScore = 15;
         this.awayLoseScore = 10;
-        this.standingService = standingService;
-        this.standingMapper = standingMapper;
     }
 
     @Override
     public void calculateScore(ForecastDetailDto forecastDetail, ForecastData forecastData, List<ForecastDetailDto> forecastDetails) {
+        AlgorithmDto current = super.getCurrentAlgorithm();
+        if(current != null) {
+            this.awayWinScore = current.getAwayPoints().getWin();
+            this.awayDrawScore = current.getAwayPoints().getDraw();
+            this.awayLoseScore = current.getAwayPoints().getLose();
+        }
         StringBuilder infoMessage = new StringBuilder();
         infoMessage.append(createInitMessage());
         //retrieve number of teams
