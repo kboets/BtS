@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@ActiveProfiles("mock")
+@ActiveProfiles("integration")
 public class EmptyResultHandlerTest {
 
     @Autowired
