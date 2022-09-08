@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class NotHistoricDataRule implements ForecastRule {
 
     private final AdminService adminService;
-    private static final String errorMessage = "In historic mode";
+    public static final String errorMessage = "In historic mode";
 
     public NotHistoricDataRule(AdminService adminService) {
         this.adminService = adminService;
