@@ -1,8 +1,8 @@
 package boets.bts.backend.service.forecast2.validator;
 
 import boets.bts.backend.domain.Forecast;
+import boets.bts.backend.domain.League;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,27 +18,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("mock")
 @Transactional
-public class AllDataUpdatedRuleTest {
+public class IsLeagueReadyRuleTest {
 
     @Autowired
-    public AllDataUpdatedRule rule;
+    private IsLeagueReadyRule rule;
     private Forecast forecast;
 
     @Before
-    public void init() {
+    public void setUp() {
+        League league = new League();
+        league.setId(4366L);
         forecast = new Forecast();
+        forecast.setLeague(league);
     }
-    @Ignore // adapt the current date or it will not work
+
     @Test
-    @Sql(scripts = "/boets/bts/backend/service/forecast/validator/admin-data.sql")
-    public void givenTodayUpdated_shouldReturnTrue() {
+    @Sql(scripts = {"/boets/bts/backend/service/forecast/validator/league-be.sql", "/boets/bts/backend/service/forecast/validator/result-be-valid.sql"})
+    public void givenValidBELeague_shouldReturnTrue() {
         assertThat(rule.validate(forecast)).isTrue();
     }
 
     @Test
-    @Sql(scripts = "/boets/bts/backend/service/forecast/validator/admin-historic-data.sql")
-    public void givenTodayNotUpdated_shouldReturnFalse() {
+    @Sql(scripts = {"/boets/bts/backend/service/forecast/validator/league-be.sql", "/boets/bts/backend/service/forecast/validator/result-be-invalid.sql"})
+    public void givenInValidBELeague_shouldReturnFalse() {
         assertThat(rule.validate(forecast)).isFalse();
     }
-
 }
