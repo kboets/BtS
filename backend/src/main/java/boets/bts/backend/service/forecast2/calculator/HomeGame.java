@@ -20,8 +20,8 @@ public class HomeGame implements ScoreCalculator {
     @Override
     public void calculate(ForecastDetail forecastDetail) {
         // get all results for this team
-        List<In>
-        resultRepository.findAll(ResultSpecs.)
+        //List<In>
+        //resultRepository.findAll(ResultSpecs.)
 
 
     }
