@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create_forecast_detail;" author="kboets">
+        <createTable tableName="FORECASTDETAIL">
+            <column autoIncrement="true" name="forecast_detail_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="team_id" type="bigint"/>
+            <column name="opponent_id" type="bigint"/>
+            <column name="gameScore" type="bigint"/>
+            <column name="finalScore" type="bigint"/>
+            <column name="nextGame_id" type="bigint"/>
+
+        </createTable>
+        <addForeignKeyConstraint
+                constraintName="fk_forecast_detail_team"
+                referencedTableName="TEAM"
+                baseColumnNames="team_id"
+                baseTableName="FORECASTDETAIL" referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                constraintName="fk_forecast_detail_opponent"
+                referencedTableName="TEAM"
+                baseColumnNames="opponent_id"
+                baseTableName="FORECASTDETAIL" referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                constraintName="fk_forecast_detail_nextgame"
+                referencedTableName="RESULT"
+                baseColumnNames="nextGame_id"
+                baseTableName="FORECASTDETAIL" referencedColumnNames="result_id" />
+        <addForeignKeyConstraint
+                constraintName="fk_forecast_detail_forecast"
+                referencedTableName="FORECAST"
+                baseColumnNames="forecast_id"
+                baseTableName="FORECASTDETAIL" referencedColumnNames="forecast_id" />
+
+    </changeSet>
+
+
+</databaseChangeLog>

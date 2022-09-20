@@ -17,13 +17,12 @@ public class ForecastValidator {
     }
 
     public boolean validate(Forecast forecast) {
-        boolean isValid = false;
+        boolean isValid = true;
         for (ForecastRule rule: rules) {
             if (!rule.validate(forecast)) {
                 isValid = false;
                 break;
             }
-            isValid = true;
         }
         return isValid;
     }

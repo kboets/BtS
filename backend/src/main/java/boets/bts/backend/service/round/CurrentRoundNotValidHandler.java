@@ -53,8 +53,8 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
             return roundRepository.save(lastRound);
         }
         Round verifiedRound = verifyRetrievedRound(currentOptionalRoundUpdated.get());
-        if(round.getRound().equals(verifiedRound.getRound())) {
-            //logger.info("current round {} is still current, update date", round.getRound());
+        if(round.getRoundNumber() >= verifiedRound.getRoundNumber()) {
+            // round is current round
             round.setCurrentDate(LocalDate.now());
         } else {
             //logger.info("current round {} is no longer current, update with latest", round.getRound());

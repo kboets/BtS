@@ -3,6 +3,7 @@ package boets.bts.backend.repository.result;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.domain.Team;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,16 +13,28 @@ import java.util.List;
 public class ResultSpecs {
 
     public static Specification<Result> forLeague(League league) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
-            return predicate;
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("league"), league);
     }
 
     public static Specification<Result> forRound(int roundNumber) {
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
+    }
+
+    public static Specification<Result> forRounds(List<Integer> roundNumbers) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
-            return predicate;
+            CriteriaBuilder.In<Integer> inClause = criteriaBuilder.in(root.get("roundNumber"));
+            for(Integer roundNumber: roundNumbers) {
+                inClause.value(roundNumber);
+            }
+            return criteriaBuilder.and(inClause);
+        };
+    }
+
+    public static Specification<Result> forTeam(Team team) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicateHome = criteriaBuilder.equal(root.get("homeTeam"), team.getId());
+            Predicate predicateAway = criteriaBuilder.equal(root.get("awayTeam"), team.getId());
+            return criteriaBuilder.or(predicateHome, predicateAway);
         };
     }
 
@@ -59,26 +72,5 @@ public class ResultSpecs {
             return predicate;
         };
     }
-
-
-    public static Specification<Result> getFinishedResultForRounds(League league, List<String> rounds) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
-            predicate = criteriaBuilder.and(
-                    predicate, criteriaBuilder.equal(
-                            root.get("matchStatus"), "Match Finished"));
-            CriteriaBuilder.In<String> inClause = criteriaBuilder.in(root.get("round"));
-            for(String round: rounds) {
-                inClause.value(round);
-            }
-            predicate = criteriaBuilder.and(
-                    predicate, inClause);
-
-            return predicate;
-        };
-    }
-
-
-
 
 }

@@ -18,7 +18,7 @@ public class AllDataUpdatedRule implements ForecastRule {
 
 
     private final AdminService adminService;
-    public static final String errorMessage = "Daily update not done";
+    public static final String errorMessage = "Daily update not finished";
 
     public AllDataUpdatedRule(AdminService adminService) {
         this.adminService = adminService;
@@ -29,7 +29,7 @@ public class AllDataUpdatedRule implements ForecastRule {
         if (!adminService.isTodayExecuted(AdminKeys.CRON_RESULTS) || !adminService.isTodayExecuted(AdminKeys.CRON_ROUNDS) ||
                 !adminService.isTodayExecuted(AdminKeys.CRON_STANDINGS)) {
             forecast.setForecastResult(ForecastResult.FATAL);
-            forecast.setFeedback(errorMessage);
+            forecast.setMessage(errorMessage);
             return false;
         }
         return true;

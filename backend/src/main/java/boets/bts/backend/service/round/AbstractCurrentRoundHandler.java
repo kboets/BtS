@@ -44,11 +44,10 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
             int roundVal = Integer.parseInt(StringUtils.substringAfterLast(round, "_"));
             if(roundVal != 1) {
                 String previous = Integer.toString(roundVal-1);
-                StringBuilder builder = new StringBuilder();
-                builder.append(strippedRound);
-                builder.append("_");
-                builder.append(previous);
-                clientRound.setRound(builder.toString());
+                String builder = strippedRound +
+                        "_" +
+                        previous;
+                clientRound.setRound(builder);
             }
         }
         return clientRound;

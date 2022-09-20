@@ -40,6 +40,6 @@ public class NotHistoricDataRuleTest {
     public void givenNonHistoricData_shouldReturnFalse() {
         assertThat(rule.validate(forecast)).isFalse();
         assertThat(forecast.getForecastResult()).isEqualTo(ForecastResult.FATAL);
-        assertThat(forecast.getFeedback()).isEqualTo(NotHistoricDataRule.errorMessage);
+        assertThat(forecast.getMessage()).isEqualTo(NotHistoricDataRule.errorMessage);
     }
 }

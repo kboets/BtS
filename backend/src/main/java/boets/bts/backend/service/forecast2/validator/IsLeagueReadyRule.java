@@ -35,7 +35,7 @@ public class IsLeagueReadyRule implements ForecastRule {
         List<Result> results = resultRepository.findAll(ResultSpecs.getAllFinishedResult(league.getId()));
         if (results.size() < expectedResult) {
             forecast.setForecastResult(ForecastResult.FATAL);
-            forecast.setFeedback(errorMessage);
+            forecast.setMessage(errorMessage);
             return false;
         }
         return true;

@@ -23,7 +23,7 @@ public class NotHistoricDataRule implements ForecastRule {
         boolean isHistoric = adminService.isHistoricData();
         if (isHistoric) {
             forecast.setForecastResult(ForecastResult.FATAL);
-            forecast.setFeedback(errorMessage);
+            forecast.setMessage(errorMessage);
         }
         return !isHistoric;
     }

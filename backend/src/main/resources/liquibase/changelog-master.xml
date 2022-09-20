@@ -20,5 +20,6 @@
     <include file="/liquibase/changelog/012_updateStandingResult_addRoundNumber.xml" />
     <include file="/liquibase/changelog/013_updateStanding_addSeason.xml" />
     <include file="/liquibase/changelog/014_createAlgorithm.xml" />
+    <include file="/liquibase/changelog/015_createForecast.xml" />
 
 </databaseChangeLog>
