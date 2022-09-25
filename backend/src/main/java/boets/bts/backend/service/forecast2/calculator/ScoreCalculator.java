@@ -5,7 +5,7 @@ import boets.bts.backend.domain.ForecastDetail;
 
 public interface ScoreCalculator {
 
-    void calculate(ForecastDetail forecastDetail);
+    void calculate(Forecast forecast, ForecastDetail forecastDetail);
 
 
 }

@@ -34,7 +34,7 @@ public class ForecastCalculatorManager2 {
         for (Team team: teams) {
             ForecastDetail forecastDetail = new ForecastDetail();
             forecastDetail.setTeam(team);
-            Optional<Result> nextResult = resultRepository.findAll(ResultSpecs.forRound(forecast.getRound()).and(ResultSpecs.forLeague(forecast.getLeague()).and(ResultSpecs.forRound(forecast.getRound()))))
+            Optional<Result> nextResult = resultRepository.findAll(ResultSpecs.forLeague(forecast.getLeague()).and(ResultSpecs.forRound(forecast.getRound()).and(ResultSpecs.forTeam(team))))
                     .stream().findFirst();
             if (nextResult.isPresent()) {
                 Result nextGame = nextResult.get();
