@@ -10,6 +10,7 @@ import boets.bts.backend.service.forecast.ForecastDto;
 import boets.bts.backend.service.forecast.ForecastDetailDto;
 import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,11 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("integration")
-@Transactional
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ActiveProfiles("integration")
+//@Transactional
+@Ignore
 public class ForecastCalculatorManagerTest {
 
     @Autowired

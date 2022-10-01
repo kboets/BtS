@@ -1,5 +1,6 @@
 package boets.bts.backend.web.standing;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class StandingClientIntegrationTest {

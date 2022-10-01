@@ -4,6 +4,7 @@ import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.standing.retriever.ActualRoundSeasonNotStartedStandingRetriever;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
-
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ActualRoundSeasonNotStartedStandingRetrieverTest {
 

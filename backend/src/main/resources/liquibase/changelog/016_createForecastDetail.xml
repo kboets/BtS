@@ -13,8 +13,9 @@
             </column>
             <column name="team_id" type="bigint"/>
             <column name="opponent_id" type="bigint"/>
-            <column name="gameScore" type="bigint"/>
-            <column name="finalScore" type="bigint"/>
+            <column name="homeScore" type="int"/>
+            <column name="awayScore" type="int"/>
+            <column name="finalScore" type="int"/>
             <column name="nextGame_id" type="bigint"/>
 
         </createTable>

@@ -9,6 +9,7 @@ import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,11 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("integration")
-@Transactional
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ActiveProfiles("integration")
+//@Transactional
+@Ignore
 public class ForecastServiceIntegrationTest {
 
     @Autowired

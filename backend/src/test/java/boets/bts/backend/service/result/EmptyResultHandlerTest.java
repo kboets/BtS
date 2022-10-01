@@ -6,12 +6,14 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@ActiveProfiles("integration")
+@ActiveProfiles("mock")
+@Transactional
 public class EmptyResultHandlerTest {
 
     @Autowired
@@ -56,6 +59,7 @@ public class EmptyResultHandlerTest {
     }
 
     @Test
+    @Ignore
     public void getResult_givenJupilerLeague_shouldReturnList() throws Exception {
         List<Result> allMissingResults = resultRepository.findAll(ResultSpecs.forLeague(league));
         assertThat(allMissingResults.isEmpty()).isTrue();

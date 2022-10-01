@@ -30,7 +30,10 @@ public class ForecastDetail implements Serializable {
     @Column
     private int finalScore;
     @Column
-    private BigInteger gameScore;
+    private int homeScore;
+    @Column
+    private int awayScore;
+
 
     public Long getId() {
         return id;
@@ -72,12 +75,20 @@ public class ForecastDetail implements Serializable {
         this.finalScore = finalScore;
     }
 
-    public BigInteger getGameScore() {
-        return gameScore;
+    public int getHomeScore() {
+        return homeScore;
     }
 
-    public void setGameScore(BigInteger gameScore) {
-        this.gameScore = gameScore;
+    public void setHomeScore(int homeScore) {
+        this.homeScore = homeScore;
+    }
+
+    public int getAwayScore() {
+        return awayScore;
+    }
+
+    public void setAwayScore(int awayScore) {
+        this.awayScore = awayScore;
     }
 
     public Result getNextGame() {
