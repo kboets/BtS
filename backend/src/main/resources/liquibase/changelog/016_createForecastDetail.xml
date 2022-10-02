@@ -13,10 +13,15 @@
             </column>
             <column name="team_id" type="bigint"/>
             <column name="opponent_id" type="bigint"/>
+            <column name="forecast_id" type="bigint"/>
             <column name="homeScore" type="int"/>
             <column name="awayScore" type="int"/>
+            <column name="bonusMalusScore" type="int"/>
             <column name="finalScore" type="int"/>
             <column name="nextGame_id" type="bigint"/>
+            <column name="error_message" type="varchar(250)" />
+            <column name="forecastResult" type="varchar(100)"/>
+            <column name="message" type="clob" />
 
         </createTable>
         <addForeignKeyConstraint

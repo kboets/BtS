@@ -18,15 +18,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ActiveProfiles("mock")
 @Transactional
-public class HomeGameTest {
-
+public class AwayGameTest {
     @Autowired
-    private HomeGame homeGame;
+    private AwayGame awayGame;
     @Autowired
     private ResultRepository resultRepository;
     @Autowired
@@ -58,27 +57,14 @@ public class HomeGameTest {
         Team opponent = nextResult.getAwayTeam().getTeamId().equals(team.getTeamId())?nextResult.getHomeTeam():nextResult.getAwayTeam();
         forecastDetail.setOpponent(opponent);
         forecast.addForecastDetail(forecastDetail);
-
     }
 
     @Test
     @Sql(scripts = {"/boets/bts/backend/service/forecast/calculator/league-be.sql"})
-    public void calculate_givingJupilerLeague2022_shouldCalculateCorrect()  {
+    public void calculate_givingJupilerLeague2022_shouldCalculateCorrect() {
         initTest();
-        assertThat(forecastDetail.getHomeScore()).isEqualTo(0);
-        homeGame.calculate(forecast, forecastDetail);
-        assertThat(forecastDetail.getHomeScore()).isGreaterThan(0);
-        /*
-        1. OH Leuven - Westerlo : 2-0
-           -> 20  + (18 - 5) = 33
-        2. OH Leuven - Club Brugge: 0-3
-           -> 5 - 5 = 0
-        3. OH Leuven - Oostende: 2-1
-           ->  20 + (18 - 14) = 24
-           = 57
-         */
-        assertThat(forecastDetail.getHomeScore()).isEqualTo(57);
+        assertThat(forecastDetail.getAwayScore()).isEqualTo(0);
+        awayGame.calculate(forecast, forecastDetail);
+        assertThat(forecastDetail.getAwayScore()).isGreaterThan(0);
     }
-
-    //TODO tests also the unhappy scenario
 }

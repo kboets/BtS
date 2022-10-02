@@ -21,5 +21,6 @@
     <include file="/liquibase/changelog/013_updateStanding_addSeason.xml" />
     <include file="/liquibase/changelog/014_createAlgorithm.xml" />
     <include file="/liquibase/changelog/015_createForecast.xml" />
+    <include file="/liquibase/changelog/016_createForecastDetail.xml" />
 
 </databaseChangeLog>

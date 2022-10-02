@@ -24,35 +24,40 @@ public class HomeGame extends AbstractCalculator {
         //get last 3 played home games
         List<Result> homeResults = super.getPlayedGamesForTeam(forecast, forecastDetail.getTeam(), true);
         if (homeResults.size() != 3) {
-            //TODO add warning/fault message + stop calculation ?
             logger.warn("Team {} has not played 3 home games, can not calculate correct home points", forecastDetail.getTeam().getName());
+            forecastDetail.setErrorMessage(String.format("Team %s has not played 3 home games, can not calculate correct home points", forecastDetail.getTeam().getName()));
+            if (homeResults.size() == 2) {
+                forecastDetail.setForecastResult(ForecastResult.WARNING);
+            } else {
+                forecastDetail.setForecastResult(ForecastResult.FATAL);
+            }
         }
         //get algorithm
         Algorithm algorithm = forecast.getAlgorithm();
         int teams = forecast.getLeague().getTeams().size();
         //calculate score
-        int homescore = 0;
+        int homeScore = 0;
         for (Result result : homeResults) {
             Team opponent = result.getAwayTeam();
             int rankingOpponent = super.getOpponentRanking(forecast, opponent, result.getRoundNumber());
             if (isWinGame(forecastDetail.getTeam(), result)) {
                 int homeWinPoints = algorithm.getHomePoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
-                homescore = homescore + homeWinPoints;
-                homescore = homescore + opponentStandingPoints;
+                homeScore = homeScore + homeWinPoints;
+                homeScore = homeScore + opponentStandingPoints;
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 int homeLosePoints = algorithm.getHomePoints().getLose();
                 int totalScore = homeLosePoints - rankingOpponent;
-                homescore = homescore + totalScore;
+                homeScore = homeScore + totalScore;
             } else {
                 // draw
                 int homeDrawPoints = algorithm.getHomePoints().getDraw();
                 int opponentStandingPoints = teams - rankingOpponent;
-                homescore = homescore + homeDrawPoints;
-                homescore = homescore + opponentStandingPoints;
+                homeScore = homeScore + homeDrawPoints;
+                homeScore = homeScore + opponentStandingPoints;
             }
         }
-        forecastDetail.setHomeScore(homescore);
+        forecastDetail.setHomeScore(homeScore);
 
     }
 }

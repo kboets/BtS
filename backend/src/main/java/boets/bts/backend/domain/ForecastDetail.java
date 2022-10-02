@@ -33,7 +33,15 @@ public class ForecastDetail implements Serializable {
     private int homeScore;
     @Column
     private int awayScore;
-
+    @Column
+    private int bonusMalusScore;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ForecastResult forecastResult;
+    @Column
+    private String message;
+    @Column
+    private String errorMessage;
 
     public Long getId() {
         return id;
@@ -97,5 +105,37 @@ public class ForecastDetail implements Serializable {
 
     public void setNextGame(Result nextGame) {
         this.nextGame = nextGame;
+    }
+
+    public ForecastResult getForecastResult() {
+        return forecastResult;
+    }
+
+    public void setForecastResult(ForecastResult forecastResult) {
+        this.forecastResult = forecastResult;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getBonusMalusScore() {
+        return bonusMalusScore;
+    }
+
+    public void setBonusMalusScore(int bonusMalusScore) {
+        this.bonusMalusScore = bonusMalusScore;
     }
 }

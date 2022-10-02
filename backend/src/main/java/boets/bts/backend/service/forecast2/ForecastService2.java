@@ -7,6 +7,7 @@ import boets.bts.backend.repository.forecast.ForecastSpecs;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager2;
 import boets.bts.backend.service.forecast2.validator.ForecastValidator;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
@@ -29,15 +30,18 @@ public class ForecastService2 {
     private final RoundService roundService;
     private final ForecastRepository forecastRepository;
     private final ForecastValidator validator;
+    private final ForecastCalculatorManager2 forecastCalculatorManager2;
 
 
-    public ForecastService2(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository, ForecastValidator validator) {
+    public ForecastService2(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository,
+                            ForecastValidator validator, ForecastCalculatorManager2 forecastCalculatorManager2) {
         this.leagueRepository = leagueRepository;
         this.adminService = adminService;
         this.algorithmRepository = algorithmRepository;
         this.roundService = roundService;
         this.forecastRepository = forecastRepository;
         this.validator = validator;
+        this.forecastCalculatorManager2 = forecastCalculatorManager2;
     }
 
     /**
@@ -48,20 +52,22 @@ public class ForecastService2 {
      */
     public void calculateForecast(League league, int roundNumber, Algorithm algorithm) {
         Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(roundNumber)))
-                .stream().findFirst();
+                .stream()
+                .findFirst();
         Forecast forecast = optionalForecast.orElseGet(() -> new Forecast(league, roundNumber, algorithm));
         //1. validate forecast
         if (!validateForecast(forecast)) {
             // forecast is not valid, no calculation can be done
             forecast.setDate(LocalDateTime.now());
             forecastRepository.save(forecast);
-        } else if (forecast.getForecastDetails() == null) {
-            // forecast is valid, but not yet calculated
-            forecast.setSeason(WebUtils.getCurrentSeason());
+            return;
         }
-
-
-
+        //2. check if forecast needs to re-calculated
+        if (!isForecastCorrectCalculated(forecast)) {
+            forecast.setSeason(WebUtils.getCurrentSeason());
+            forecast = forecastCalculatorManager2.calculateForecast(forecast);
+            forecastRepository.save(forecast);
+        }
     }
 
     @Scheduled(cron ="0 0 * * * TUE-FRI")
@@ -99,6 +105,14 @@ public class ForecastService2 {
         return validator.validate(forecast);
     }
 
+    private boolean isForecastCorrectCalculated(Forecast forecast) {
+        if (forecast.getForecastDetails().isEmpty()) {
+            //no details yet, needs to be calculated
+            return false;
+        }
+        return forecast.getForecastDetails().stream()
+                .anyMatch(forecastDetail -> forecastDetail.getForecastResult().equals(ForecastResult.FATAL));
+    }
 
 
 

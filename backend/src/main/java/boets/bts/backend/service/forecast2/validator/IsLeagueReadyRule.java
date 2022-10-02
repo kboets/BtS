@@ -20,7 +20,7 @@ public class IsLeagueReadyRule implements ForecastRule {
 
     private final LeagueRepository leagueRepository;
     private final ResultRepository resultRepository;
-    public static final String errorMessage = "All teams not played 6 games";
+    public static final String errorMessage = "Not all teams played 6 games";
 
     public IsLeagueReadyRule(LeagueRepository leagueRepository, ResultRepository resultRepository) {
         this.leagueRepository = leagueRepository;

@@ -15,10 +15,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AllDataUpdatedRule implements ForecastRule {
-
-
     private final AdminService adminService;
-    public static final String errorMessage = "Daily update not finished";
+    public static final String errorMessage = "Daily update of rounds or results of standings not finished";
 
     public AllDataUpdatedRule(AdminService adminService) {
         this.adminService = adminService;
