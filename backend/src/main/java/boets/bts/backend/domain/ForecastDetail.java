@@ -10,6 +10,7 @@ public class ForecastDetail implements Serializable {
 
     @Id
     @Column(name="forecast_detail_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

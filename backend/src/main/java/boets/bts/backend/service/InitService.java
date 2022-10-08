@@ -61,7 +61,7 @@ public class InitService implements AdminChangeListener {
         this.initCurrentTeams(leagues);
         this.initCurrentRounds(leagues);
         this.resultService.initResultService();
-        this.standingService.initStanding();
+        //this.standingService.initStanding();
 
     }
 

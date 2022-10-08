@@ -12,6 +12,7 @@ public class Forecast implements Serializable {
 
     @Id
     @Column(name="forecast_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "league_id", referencedColumnName = "league_id")

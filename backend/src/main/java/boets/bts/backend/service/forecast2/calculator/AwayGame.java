@@ -38,7 +38,7 @@ public class AwayGame extends AbstractCalculator {
         //calculate score
         int awayScore = 0;
         for (Result result : awayResults) {
-            Team opponent = result.getAwayTeam();
+            Team opponent = result.getHomeTeam();
             int rankingOpponent = getOpponentRanking(forecast, opponent, result.getRoundNumber());
             if (isWinGame(forecastDetail.getTeam(), result)) {
                 int awayWinPoints = algorithm.getAwayPoints().getWin();

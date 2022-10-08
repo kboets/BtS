@@ -54,7 +54,7 @@ public class AwayGameTest {
         forecastDetail = new ForecastDetail();
         forecastDetail.setNextGame(nextResult);
         forecastDetail.setTeam(team);
-        Team opponent = nextResult.getAwayTeam().getTeamId().equals(team.getTeamId())?nextResult.getHomeTeam():nextResult.getAwayTeam();
+        Team opponent = nextResult.getHomeTeam();
         forecastDetail.setOpponent(opponent);
         forecast.addForecastDetail(forecastDetail);
     }
@@ -66,5 +66,15 @@ public class AwayGameTest {
         assertThat(forecastDetail.getAwayScore()).isEqualTo(0);
         awayGame.calculate(forecast, forecastDetail);
         assertThat(forecastDetail.getAwayScore()).isGreaterThan(0);
+         /*
+        1. Kortrijk - OH Leuven : 0-2
+           -> 30  + (18 - 14) = 34
+        2. Antwerp - OH Leuven : 4-2
+           -> 10 - 1 = 9
+        3. Standard Liege - OH Leuven  : 1-3
+           ->  30 + (18 - 16) = 32
+           = 75
+         */
+        assertThat(forecastDetail.getAwayScore()).isEqualTo(75);
     }
 }

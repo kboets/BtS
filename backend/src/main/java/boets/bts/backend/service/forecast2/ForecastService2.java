@@ -1,24 +1,22 @@
 package boets.bts.backend.service.forecast2;
 
-import boets.bts.backend.domain.*;
+import boets.bts.backend.domain.Algorithm;
+import boets.bts.backend.domain.Forecast;
+import boets.bts.backend.domain.ForecastResult;
+import boets.bts.backend.domain.League;
 import boets.bts.backend.repository.algorithm.AlgorithmRepository;
 import boets.bts.backend.repository.forecast.ForecastRepository;
-import boets.bts.backend.repository.forecast.ForecastSpecs;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager2;
 import boets.bts.backend.service.forecast2.validator.ForecastValidator;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -45,50 +43,64 @@ public class ForecastService2 {
     }
 
     /**
-     * Calculates and persist the forecast for this league and round and algorithm.
+     * In case the forecast is not yet persisted or contains warnings,
+     * calculates and persist a new forecast for this league and round and algorithm.
+     *
      * @param league - the league
      * @param roundNumber - the round number
-     * @param algorithm - the requested algorithm
+     * @param algorithms - the requested algorithms
+     * @return Forecast  -  the persisted forecast
      */
-    public void calculateForecast(League league, int roundNumber, Algorithm algorithm) {
-        Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(roundNumber)))
-                .stream()
-                .findFirst();
-        Forecast forecast = optionalForecast.orElseGet(() -> new Forecast(league, roundNumber, algorithm));
-        //1. validate forecast
-        if (!validateForecast(forecast)) {
-            // forecast is not valid, no calculation can be done
-            forecast.setDate(LocalDateTime.now());
-            forecastRepository.save(forecast);
-            return;
-        }
+    public boolean calculateForecast(League league, int roundNumber, List<Algorithm> algorithms) {
+////        Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(roundNumber)))
+////                .stream()
+////                .findFirst();
+//        Optional<Forecast> optionalForecast = Optional.empty();
+//        Forecast forecast = optionalForecast.orElseGet(() -> null);
+//        //1. validate forecast
+//        if (!validateForecast(forecast)) {
+//            // forecast is not valid, no calculation can be done
+//            forecast.setDate(LocalDateTime.now());
+//            forecastRepository.save(forecast);
+//        }
+        List<Forecast> forecasts = forecastCalculatorManager2.calculateForecasts(league, roundNumber, algorithms);
+
         //2. check if forecast needs to re-calculated
-        if (!isForecastCorrectCalculated(forecast)) {
-            forecast.setSeason(WebUtils.getCurrentSeason());
-            forecast = forecastCalculatorManager2.calculateForecast(forecast);
-            forecastRepository.save(forecast);
-        }
+//        if (!isForecastCorrectCalculated(forecast)) {
+//            forecast.setSeason(WebUtils.getCurrentSeason());
+//            forecast.setDate(LocalDateTime.now());
+//            try {
+//                forecast =
+//            } catch (Exception e) {
+//                // TODO handle correct exception
+//            }
+//            forecastRepository.save(forecast);
+//        }
+        return true;
     }
 
-    @Scheduled(cron ="0 0 * * * TUE-FRI")
+    //@Scheduled(cron ="0 0 * * * TUE-FRI")
+    @Scheduled(cron ="* * * * * *")
     protected void scheduleForecasts() {
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
-        for(League league: leagues) {
-            Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), season);
-            // start calculating forecast for each round, starting from round 7
-            for (int i = 7; i<=currentRound.getRoundNumber(); i++) {
-                this.calculateScheduledForecast4EachAlgorithm(league, i);
-            }
-        }
+        List<Algorithm> algorithms = algorithmRepository.findAll();
+
+//        for(League league: leagues) {
+//            Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), season);
+//            // start calculating forecast for each round, starting from round 7
+//            for (int i = 7; i<=currentRound.getRoundNumber(); i++) {
+//                this.calculateScheduledForecast4EachAlgorithm(league, i);
+//            }
+//        }
     }
 
-    protected void calculateScheduledForecast4EachAlgorithm(League league, int roundNumber) {
-        List<Algorithm> algorithms = algorithmRepository.findAll();
-        for(Algorithm algorithm: algorithms) {
-            this.calculateForecast(league, roundNumber, algorithm);
-        }
-    }
+//    protected void calculateScheduledForecast4EachAlgorithm(League league, int roundNumber) {
+//        List<Algorithm> algorithms = algorithmRepository.findAll();
+//        for(Algorithm algorithm: algorithms) {
+//            this.calculateForecast(league, roundNumber, algorithm);
+//        }
+//    }
 
     /**
      * Validates the forecast.  A forecast is valid when it has result ok or when validators return true.
