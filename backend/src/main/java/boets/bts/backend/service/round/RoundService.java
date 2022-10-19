@@ -141,7 +141,7 @@ public class RoundService {
         }
         Optional<Round> currentPersistedRound = roundRepository.findOne(RoundSpecs.getCurrentRoundForSeason(league, season));
         Round round;
-        if(!currentPersistedRound.isPresent()) {
+        if(currentPersistedRound.isEmpty()) {
             //take random round
             int random = rounds.size() - 10;
             List<Round> rounds1 = new ArrayList<>(rounds);
@@ -216,7 +216,7 @@ public class RoundService {
                 });
     }
 
-    private void updateRoundWithRoundNumber(Set<Round> roundSet) {
+    protected void updateRoundWithRoundNumber(Set<Round> roundSet) {
         List<Round> rounds = new ArrayList<>(roundSet);
         rounds.sort(Comparator.comparing(Round::getId));
         int index = 1;

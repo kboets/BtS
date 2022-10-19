@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@Profile("!mock")
+@Profile({"!mock", "!integration"})
 public class InitService implements AdminChangeListener {
 
     private Logger logger = LoggerFactory.getLogger(InitService.class);

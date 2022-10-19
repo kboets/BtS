@@ -14,8 +14,9 @@
             <column name="round" type="int"/>
             <column name="season" type="int"/>
             <column name="message" type="varchar(250)" />
-            <column name="forecastResult" type="varchar(100)"/>
+            <column name="forecast_result" type="varchar(100)"/>
             <column name="league_id" type="bigint"/>
+            <column name="algorithm_id" type="bigint"/>
             <column name="date" type="datetime"/>
         </createTable>
 
@@ -24,6 +25,12 @@
                 referencedTableName="LEAGUE"
                 baseColumnNames="league_id"
                 baseTableName="FORECAST" referencedColumnNames="league_id" />
+
+        <addForeignKeyConstraint
+                constraintName="fk_forecast_algorithm"
+                referencedTableName="ALGORITHM"
+                baseColumnNames="algorithm_id"
+                baseTableName="FORECAST" referencedColumnNames="algorithm_id" />
 
     </changeSet>
 

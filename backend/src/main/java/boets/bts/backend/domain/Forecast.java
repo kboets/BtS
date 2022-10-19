@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "FORECAST")
@@ -122,4 +123,41 @@ public class Forecast implements Serializable {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Forecast forecast = (Forecast) o;
+        return round == forecast.round && season == forecast.season && Objects.equals(id, forecast.id) && Objects.equals(league, forecast.league) && forecastResult == forecast.forecastResult && Objects.equals(message, forecast.message) && Objects.equals(algorithm, forecast.algorithm) && Objects.equals(forecastDetails, forecast.forecastDetails) && Objects.equals(date, forecast.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, league, round, season, forecastResult, message, algorithm, forecastDetails, date);
+    }
+
+    @Override
+    public String toString() {
+        return "Forecast{" +
+                "id=" + id +
+                ", league=" + league +
+                ", round=" + round +
+                ", season=" + season +
+                ", forecastResult=" + forecastResult +
+                ", message='" + message + '\'' +
+                ", algorithm=" + algorithm +
+                ", date=" + date +
+                '}';
+    }
+
+    public String dumpToLog() {
+        StringBuilder log = new StringBuilder(this.toString());
+        this.getForecastDetails().stream().forEach(forecastDetail -> {
+            log.append(forecastDetail.toString());
+        });
+        return log.toString();
+    }
+
+
 }

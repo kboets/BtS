@@ -3,6 +3,7 @@ package boets.bts.backend.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Objects;
 
 @Entity
 @Table(name = "FORECASTDETAIL")
@@ -139,4 +140,37 @@ public class ForecastDetail implements Serializable {
     public void setBonusMalusScore(int bonusMalusScore) {
         this.bonusMalusScore = bonusMalusScore;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ForecastDetail that = (ForecastDetail) o;
+        return finalScore == that.finalScore && homeScore == that.homeScore && awayScore == that.awayScore && bonusMalusScore == that.bonusMalusScore && Objects.equals(id, that.id) && Objects.equals(team, that.team) && Objects.equals(opponent, that.opponent) && Objects.equals(nextGame, that.nextGame) && Objects.equals(forecast, that.forecast) && forecastResult == that.forecastResult && Objects.equals(message, that.message) && Objects.equals(errorMessage, that.errorMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, team, opponent, nextGame, forecast, finalScore, homeScore, awayScore, bonusMalusScore, forecastResult, message, errorMessage);
+    }
+
+    @Override
+    public String toString() {
+        return "ForecastDetail{" +
+                "id=" + id +
+                ", team=" + team +
+                ", opponent=" + opponent +
+                ", nextGame=" + nextGame +
+                ", forecast=" + forecast +
+                ", finalScore=" + finalScore +
+                ", homeScore=" + homeScore +
+                ", awayScore=" + awayScore +
+                ", bonusMalusScore=" + bonusMalusScore +
+                ", forecastResult=" + forecastResult +
+                ", message='" + message + '\'' +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
+
+
 }

@@ -44,6 +44,9 @@ public class ForecastCalculatorManager2Test {
 
     @Before
     public void init() {
+        adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
+        adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
+        adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
         // Jupiler pro league
         league = leagueRepository.getById(4366L);
         algorithm = algorithmRepository.findAll(AlgorithmSpecs.current()).stream().findFirst().orElseThrow(() -> new IllegalArgumentException("Could not find current algorithm"));
@@ -79,6 +82,7 @@ public class ForecastCalculatorManager2Test {
 
     @Test
     public void validateLeague_givenNotAllValid_shouldReturnForecastWithErrorMessage() {
+        adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
         Forecast forecast = new Forecast(league, 7, algorithm);
         Forecast forecastValidated = forecastCalculatorManager2.validateLeague(forecast);
         assertThat(forecastValidated.getForecastResult()).isEqualTo(ForecastResult.FATAL);
@@ -88,11 +92,37 @@ public class ForecastCalculatorManager2Test {
     @Test
     public void validateLeague_givenAllValid_shouldReturnForecastWithoutErrorMessage() {
         Forecast forecast = new Forecast(league, 7, algorithm);
-        // update admin
-        adminService.executeAdmin(AdminKeys.CRON_RESULTS, "OK");
-        adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "OK");
-        adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
         Forecast forecastValidated = forecastCalculatorManager2.validateLeague(forecast);
         assertThat(forecastValidated.getForecastResult()).isNull();
+    }
+
+
+    @Test
+    public void createForecastDetail_givenValidForecast_shouldReturnForecastWithDetails() {
+        Forecast forecast = new Forecast(league, 7, algorithm);
+        Forecast forecastWithDetails = forecastCalculatorManager2.createForecastDetail(forecast);
+        assertThat(forecastWithDetails.getForecastResult()).isNull();
+        assertThat(forecastWithDetails.getForecastDetails().size()).isEqualTo(18);
+        // check OH LEUVEN -> next game (=7th round) should be against anderlecht
+        Optional<ForecastDetail> forecastDetailOpt = forecastWithDetails.getForecastDetails().stream()
+                .filter(forecastDetail -> forecastDetail.getTeam().getName().equalsIgnoreCase("OH Leuven"))
+                .findFirst();
+        assertThat(forecastDetailOpt.isPresent()).isTrue();
+        assertThat(forecastDetailOpt.get().getNextGame().getHomeTeam().getName()).isEqualTo("Anderlecht");
+    }
+
+    @Test
+    public void calculateScore_givenValidForecast_shouldReturnForecastScore() {
+        // update admin
+        Forecast forecast = new Forecast(league, 7, algorithm);
+        Forecast forecastWithDetails = forecastCalculatorManager2.createForecastDetail(forecast);
+        assertThat(forecastWithDetails.getForecastResult()).isNull();
+        assertThat(forecastWithDetails.getForecastDetails().size()).isEqualTo(18);
+        // check OH LEUVEN -> next game (=7th round) should be against anderlecht
+        Optional<ForecastDetail> forecastDetailOpt = forecastWithDetails.getForecastDetails().stream()
+                .filter(forecastDetail -> forecastDetail.getTeam().getName().equalsIgnoreCase("OH Leuven"))
+                .findFirst();
+        assertThat(forecastDetailOpt.isPresent()).isTrue();
+        assertThat(forecastDetailOpt.get().getNextGame().getHomeTeam().getName()).isEqualTo("Anderlecht");
     }
 }

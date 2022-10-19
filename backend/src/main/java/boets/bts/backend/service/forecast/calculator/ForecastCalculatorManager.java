@@ -25,7 +25,7 @@ import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static boets.bts.backend.service.forecast.calculator.StreamOfFuturesCollector.toFuture;
+import static boets.bts.backend.service.forecast2.calculator.StreamOfFuturesCollector.toFuture;
 
 @Component
 public class ForecastCalculatorManager {

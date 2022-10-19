@@ -1,4 +1,4 @@
-package boets.bts.backend.service.forecast.calculator;
+package boets.bts.backend.service.forecast2.calculator;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -5,10 +5,12 @@ import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.forecast.ForecastSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
+import boets.bts.backend.service.forecast.ForecastDto;
 import boets.bts.backend.service.forecast2.validator.ForecastValidator;
 import boets.bts.backend.web.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +19,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static boets.bts.backend.service.forecast2.calculator.StreamOfFuturesCollector.toFuture;
 
 @Component
-@Transactional
+//@Transactional
 public class ForecastCalculatorManager2 {
     private static final Logger logger = LoggerFactory.getLogger(ForecastCalculatorManager2.class);
 
     private final ResultRepository resultRepository;
     private final ForecastRepository forecastRepository;
-    private List<ScoreCalculator> scoreCalculators;
+    private final List<ScoreCalculator> scoreCalculators;
     private final ForecastValidator validator;
 
 
@@ -37,14 +44,44 @@ public class ForecastCalculatorManager2 {
         this.validator = validator;
     }
 
-    public List<Forecast> calculateForecasts(League league, int roundNumber, List<Algorithm> algorithms)  {
-
-
-        return null;
+    public List<Forecast> calculateForecasts(League league, List<Integer> roundNumbers, Algorithm algorithm) throws Exception {
+        CompletableFuture<Stream<Forecast>> forecastCompletableFutureStream = roundNumbers.stream()
+                // async verifies if league is already correct calculated.
+                .map((roundNumber) -> this.isLeagueAlreadyCalculatedAsync(league, roundNumber, algorithm))
+                // async validates the league
+                .map(this::validateLeagueAsync)
+                // async creates the details
+                .map(this::createForecastDetailsAsync)
+                // async calculates the home/away points
+                .map(this::calculateScoreAsync)
+                // async calculates the final points
+                .map(this::calculateFinalScoreAsync)
+                .collect(toFuture());
+        return getForecastsFromStream(forecastCompletableFutureStream);
     }
 
     /**
-     * Asynchronously check if a Forecast for this league, round and algorithm is ready calculated.  If not, creates a new basic Forecast.
+     * Collects all Forecasts from stream of CompletableFuture.
+     *
+     * @param forecastStreamFuture - Stream of CompletableFuture.
+     * @return List of Forecast
+     * @throws Exception
+     */
+    private List<Forecast> getForecastsFromStream(CompletableFuture<Stream<Forecast>> forecastStreamFuture) throws Exception {
+        try {
+            Stream<Forecast> forecastDataStream =
+                    //Wait until all the data have been collected and calculated
+                    forecastStreamFuture.join();
+            return forecastDataStream
+                    .collect(Collectors.toList());
+        } catch (CompletionException clex) {
+            logger.error("Exception thrown while calculating forecasts ", clex);
+            throw new Exception(clex.getCause());
+        }
+    }
+
+    /**
+     * Asynchronously check if a Forecast for this league, round and algorithm is already calculated.  If not, creates a new basic Forecast.
      * If yes, verifies if it is valid. In that case no further calculation must be done.
      *
      * @param league - the league
@@ -59,59 +96,56 @@ public class ForecastCalculatorManager2 {
     }
 
     /**
-     * Asynchronously validates the league. Uses the validator for.
+     * Asynchronously validates the league. Uses the ForecastValidator to perform the validations.
      *
      * @param dataSetFuture - CompletableFuture of a forecast ready to be validated
-     * @return A Completable futures of the ForecastData ready to calculate Forecasts.
+     * @return A Completable futures of the forecasts.
      */
-    private CompletableFuture<Optional<Object>> validateLeague(CompletableFuture<Optional<Forecast>> dataSetFuture) {
+    private CompletableFuture<Object> validateLeagueAsync(CompletableFuture<Optional<Forecast>> dataSetFuture) {
         return dataSetFuture
                 .thenApplyAsync(dataSetOpt -> dataSetOpt.map(this::validateLeague));
     }
 
     /**
-     * Asynchronously create all forecast details if there is no error message.
-     * @param dataSetFuture
-     * @return
+     * Asynchronously creates the forecast details in case no validation error is set.
+     * @param dataSetFuture CompletableFuture of a forecast ready to create each details.
+     * @return A Completable futures of the forecasts with details.
      */
-    private CompletableFuture<Forecast> createForecastDetailsAsync(CompletableFuture<Forecast> dataSetFuture) {
+    private CompletableFuture<Forecast> createForecastDetailsAsync(CompletableFuture<Object> dataSetFuture) {
         return dataSetFuture
                 .thenApplyAsync((dataSet) ->  {
-                    if (dataSet.getForecastResult() == null) {
-                        return createForecastDetail(dataSet);
+                    Forecast forecast = (Forecast) dataSet;
+                    if (forecast.getForecastResult() == null) {
+                        return createForecastDetail(forecast);
                     } else {
-                        return dataSet;
+                        return forecast;
                     }
                 });
     }
 
-    private CompletableFuture<Forecast> calculateAsync(Forecast forecast) {
-        return CompletableFuture
-                // Asynchronously calculate scores
-                .supplyAsync(() ->  {
-                    Forecast forecast1 = calculateScore(forecast);
-                    return forecast1;
-                });
-    }
-
-    private CompletableFuture<Forecast> calculateFinalScoreAsync(Forecast forecast) {
-        return CompletableFuture
-                // Asynchronously calculate scores
-                .supplyAsync(() ->  {
-                    Forecast forecast1 = calculateFinalScore(forecast);
-                    return forecast1;
-                });
+    /**
+     * Asynchronously all score for the last 3 home and away games.
+     * @param dataSetFuture CompletableFuture of a Forecast ready to calculate home and away points 
+     * @return CompletableFuture of a Forecast ready to calculate the final score
+     */
+    private CompletableFuture<Forecast> calculateScoreAsync(CompletableFuture<Forecast> dataSetFuture) {
+        return dataSetFuture                
+                .thenApplyAsync(this::calculateScore);
     }
 
     /**
-     *
-     * @param league
-     * @param roundNumber
-     * @param algorithm
-     * @return
+     * Asynchronously calculates the final score.
+     * @param dataSetFuture CompletableFuture of a Forecast ready to calculate the final score
+     * @return CompletableFuture of a Forecast ready to get persisted.
      */
+    private CompletableFuture<Forecast> calculateFinalScoreAsync(CompletableFuture<Forecast> dataSetFuture) {
+        return dataSetFuture                
+                .thenApplyAsync(this::calculateFinalScore);
+    }
+
+    
     protected Optional<Forecast> leagueAlreadyCalculated(League league, int roundNumber, Algorithm algorithm) {
-        Optional<Forecast> optionalForecast = forecastRepository.findAll(ForecastSpecs.forAlgorithm(algorithm).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(roundNumber)))
+        Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(7)))
                 .stream()
                 .findFirst();
         if (optionalForecast.isPresent()) {
@@ -134,7 +168,7 @@ public class ForecastCalculatorManager2 {
         return forecast;
     }
 
-    private Forecast createForecastDetail(Forecast forecast) {
+    protected Forecast createForecastDetail(Forecast forecast) {
         League league = forecast.getLeague();
         Set<Team> teams = league.getTeams();
         for (Team team: teams) {
@@ -187,7 +221,6 @@ public class ForecastCalculatorManager2 {
             } else {
                 forecastDetail.setForecastResult(ForecastResult.FATAL);
                 forecastDetail.setErrorMessage(String.format("Could not get forecast detail of opponent %s of team %s of round %s", forecastDetail.getOpponent().getName(), forecastDetail.getTeam().getName(), forecast.getRound()));
-                continue;
             }
         }
         return forecast;

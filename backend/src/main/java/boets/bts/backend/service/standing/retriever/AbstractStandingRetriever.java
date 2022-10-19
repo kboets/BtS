@@ -78,11 +78,9 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
         if(!standingsForRound.isEmpty()) {
             return standingsForRound;
         }
-        //logger.info("Start recalculating the standing for league {} and round {} ", league.getName(), roundNumber);
         List<Result> results = resultRepository.findAll(ResultSpecs.allFinishedResultsCurrentRoundIncluded(league, roundNumber));
         List<StandingDto> calculatedStandingDtos = standingCalculator.calculateStandings(leagueMapper.toLeagueDto(league), resultMapper.toResultDtos(results), roundNumber);
         List<Standing> calculatedStandings = standingMapper.toStandings(calculatedStandingDtos);
-        //logStanding(calculatedStandings, roundNumber);
         //save to database
         return saveAndReturn(calculatedStandings, league, roundNumber);
     }

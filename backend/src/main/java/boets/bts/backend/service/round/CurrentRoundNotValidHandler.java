@@ -7,6 +7,7 @@ import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -81,6 +82,7 @@ public class CurrentRoundNotValidHandler extends AbstractCurrentRoundHandler {
         List<String> existingRoundNames = rounds.stream().map(Round::getRound).collect(Collectors.toList());
         return existingRoundNames.contains(newRound.getRound());
     }
+
 
 
 }

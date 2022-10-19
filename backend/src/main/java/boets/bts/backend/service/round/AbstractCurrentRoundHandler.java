@@ -50,7 +50,15 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
                 clientRound.setRound(builder);
             }
         }
+        if (clientRound.getRoundNumber() == null) {
+            clientRound.setRoundNumber(extractRoundFromStringVersion(clientRound));
+        }
         return clientRound;
+    }
+
+    private int extractRoundFromStringVersion(Round round) {
+        String roundString = round.getRound();
+        return Integer.parseInt(StringUtils.substringAfterLast(roundString, "_"));
     }
 
     protected Round getLastRound(Set<Round> rounds) {
@@ -58,6 +66,7 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
         allRounds.sort(Comparator.comparing(Round::getRoundNumber));
         return allRounds.get(allRounds.size()-1);
     }
+
 
 
 }

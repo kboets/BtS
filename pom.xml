@@ -20,8 +20,7 @@
     </modules>
 
     <dependencyManagement>
-        <dependencies>
-        </dependencies>
+        <dependencies/>
     </dependencyManagement>
 
 
