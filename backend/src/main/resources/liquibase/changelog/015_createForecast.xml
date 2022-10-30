@@ -13,7 +13,7 @@
             </column>
             <column name="round" type="int"/>
             <column name="season" type="int"/>
-            <column name="message" type="varchar(250)" />
+            <column name="message" type="longtext" />
             <column name="forecast_result" type="varchar(100)"/>
             <column name="league_id" type="bigint"/>
             <column name="algorithm_id" type="bigint"/>

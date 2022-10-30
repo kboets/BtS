@@ -23,7 +23,7 @@ public class ForecastDetail implements Serializable {
     private Team opponent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nextGame_id", referencedColumnName = "result_id")
+    @JoinColumn(name = "next_game_id", referencedColumnName = "result_id")
     private Result nextGame;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,11 +36,14 @@ public class ForecastDetail implements Serializable {
     @Column
     private int awayScore;
     @Column
+    private int subTotal;
+    @Column
     private int bonusMalusScore;
     @Column
     @Enumerated(EnumType.STRING)
     private ForecastResult forecastResult;
     @Column
+    @Lob
     private String message;
     @Column
     private String errorMessage;
@@ -99,6 +102,14 @@ public class ForecastDetail implements Serializable {
 
     public void setAwayScore(int awayScore) {
         this.awayScore = awayScore;
+    }
+
+    public int getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(int subTotal) {
+        this.subTotal = subTotal;
     }
 
     public Result getNextGame() {

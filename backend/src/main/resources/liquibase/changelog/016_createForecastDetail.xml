@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="create_forecast_detail;" author="kboets">
+    <changeSet id="create_forecast_detail" author="kboets">
         <createTable tableName="FORECASTDETAIL">
             <column autoIncrement="true" name="forecast_detail_id" type="bigint">
                 <constraints nullable="false" primaryKey="true" />
@@ -14,14 +14,15 @@
             <column name="team_id" type="bigint"/>
             <column name="opponent_id" type="bigint"/>
             <column name="forecast_id" type="bigint"/>
-            <column name="homeScore" type="int"/>
-            <column name="awayScore" type="int"/>
-            <column name="bonusMalusScore" type="int"/>
-            <column name="finalScore" type="int"/>
-            <column name="nextGame_id" type="bigint"/>
+            <column name="home_score" type="int"/>
+            <column name="away_score" type="int"/>
+            <column name="bonus_malus_score" type="int"/>
+            <column name="final_score" type="int"/>
+            <column name="sub_total" type="int"/>
+            <column name="next_game_id" type="bigint"/>
             <column name="error_message" type="varchar(250)" />
-            <column name="forecastResult" type="varchar(100)"/>
-            <column name="message" type="clob" />
+            <column name="forecast_result" type="varchar(100)"/>
+            <column name="message" type="longtext" />
 
         </createTable>
         <addForeignKeyConstraint
@@ -37,7 +38,7 @@
         <addForeignKeyConstraint
                 constraintName="fk_forecast_detail_nextgame"
                 referencedTableName="RESULT"
-                baseColumnNames="nextGame_id"
+                baseColumnNames="next_game_id"
                 baseTableName="FORECASTDETAIL" referencedColumnNames="result_id" />
         <addForeignKeyConstraint
                 constraintName="fk_forecast_detail_forecast"

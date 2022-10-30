@@ -12,15 +12,19 @@ public class BonusOrMalus implements ScoreCalculator {
 
     @Override
     public void calculate(Forecast forecast, ForecastDetail forecastDetail) {
+        StringBuilder messageBuilder = new StringBuilder(forecastDetail.getMessage());
         // verify the next game is home or away
         Result nextGame = forecastDetail.getNextGame();
         boolean isHome = nextGame.getHomeTeam().getTeamId().equals(forecastDetail.getTeam().getTeamId());
         if (isHome) {
+            messageBuilder.append("<br>Next game is home game, add extra points:  <b>").append(forecast.getAlgorithm().getHomeBonus()).append("</b>");
             forecastDetail.setBonusMalusScore(forecast.getAlgorithm().getHomeBonus());
         } else {
+            messageBuilder.append("<br>Next game is away game, extract points :  <b>").append(forecast.getAlgorithm().getAwayMalus()).append("</b>");
             forecastDetail.setBonusMalusScore(forecast.getAlgorithm().getAwayMalus());
         }
         // set as temp final score: home score + away score +/- bonus/malus
         forecastDetail.setFinalScore(forecastDetail.getHomeScore() + forecastDetail.getAwayScore() + forecastDetail.getBonusMalusScore());
+        forecastDetail.setMessage(messageBuilder.toString());
     }
 }

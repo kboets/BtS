@@ -1,6 +1,9 @@
 package boets.bts.backend.service.forecast2;
 
-import boets.bts.backend.domain.*;
+import boets.bts.backend.domain.Algorithm;
+import boets.bts.backend.domain.Forecast;
+import boets.bts.backend.domain.League;
+import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.algorithm.AlgorithmRepository;
 import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.league.LeagueRepository;
@@ -9,7 +12,6 @@ import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager2;
 import boets.bts.backend.service.forecast2.validator.ForecastValidator;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 @Service
@@ -57,43 +57,41 @@ public class ForecastService2 {
      * @param algorithms - the requested algorithms
      */
     public void calculateForecast(League league, List<Integer> roundNumbers, List<Algorithm> algorithms) {
-        boolean hasNext = !algorithms.isEmpty();
         int index = 0;
 
         try {
-            while (hasNext) {
+            while (index < algorithms.size()) {
                 Algorithm algorithm = algorithms.get(index);
-                logger.info("Start calculating forecasts for League {} and algorithm {}", league.getName(), algorithm.getName());
                 List<Forecast> forecasts = forecastCalculatorManager2.calculateForecasts(league, roundNumbers, algorithm);
-                //forecastRepository.saveAll(forecasts);
+                forecastRepository.saveAll(forecasts);
                 logger.info("Forecast calculated :");
-                forecasts.forEach(Forecast::dumpToLog);
                 index++;
-                hasNext = index < algorithms.size();
             }
         } catch (Exception e) {
-            logger.error("Calculating the forecast for league {} throws an exception {}", league, e.getMessage());
+            logger.error("Calculating the forecast for league {} throws an exception {}", league.getName(), e.toString());
         }
 
     }
+    @Scheduled(cron ="0 0/30 * * * TUE-THU")
+    protected void scheduleForecast() {
+        logger.info("Start scheduleForecast");
+    }
 
-    //@Scheduled(cron ="0 0 * * * TUE-THUE")
-    // @Scheduled(cron ="* */2 * * * *")
-    protected void scheduleForecasts() {
+
+    @Scheduled(cron ="* */5 * * * *")
+    protected void scheduleForecasts2() {
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
         List<Algorithm> algorithms = algorithmRepository.findAll();
         int index = 0;
-        boolean hasNext = !leagues.isEmpty();
 
-        while(hasNext) {
+        while (index < leagues.size()) {
             League league = leagues.get(index);
             Round nextRound = roundService.getNextRound(league.getId());
             if (nextRound.getRoundNumber() > 6) {
                 this.calculateForecast(league, calculateRounds(league), algorithms);
             }
             index++;
-            hasNext = index < leagues.size();
         }
 
     }

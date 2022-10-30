@@ -2,7 +2,6 @@ package boets.bts.backend.repository.result;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.domain.Team;
 import org.springframework.data.jpa.domain.Specification;
 

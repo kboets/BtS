@@ -25,6 +25,7 @@ public class Forecast implements Serializable {
     @Enumerated(EnumType.STRING)
     private ForecastResult forecastResult;
     @Column
+    @Lob
     private String message;
     @ManyToOne
     @JoinColumn(name = "algorithm_id", referencedColumnName = "algorithm_id")
@@ -153,7 +154,7 @@ public class Forecast implements Serializable {
 
     public String dumpToLog() {
         StringBuilder log = new StringBuilder(this.toString());
-        this.getForecastDetails().stream().forEach(forecastDetail -> {
+        this.getForecastDetails().forEach(forecastDetail -> {
             log.append(forecastDetail.toString());
         });
         return log.toString();

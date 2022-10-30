@@ -1,6 +1,7 @@
 package boets.bts.backend.service.forecast2.validator;
 
 import boets.bts.backend.domain.Forecast;
+import boets.bts.backend.domain.ForecastResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,9 @@ public class ForecastValidator {
                 isValid = false;
                 break;
             }
+        }
+        if (isValid) {
+            forecast.setForecastResult(ForecastResult.OK);
         }
         return isValid;
     }
