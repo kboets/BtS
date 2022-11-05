@@ -47,26 +47,26 @@ public class HomeGame extends AbstractCalculator {
                 messageBuilder.append(this.appendResultMessage(WIN,result, true));
                 int homeWinPoints = algorithm.getHomePoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
-                homeScore = homeScore + homeWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, homeScore, algorithm, true));
-                homeScore = homeScore + opponentStandingPoints;
+                int currentWinPoints = homeWinPoints + opponentStandingPoints;
+                homeScore = homeScore + currentWinPoints;
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, currentWinPoints, algorithm, true));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, true));
                 int homeLosePoints = algorithm.getHomePoints().getLose();
                 int totalScore = homeLosePoints - rankingOpponent;
-                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, true));
                 homeScore = homeScore + totalScore;
+                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, true));
             } else {
                 // draw
                 messageBuilder.append(this.appendResultMessage(DRAW,result, true));
                 int homeDrawPoints = algorithm.getHomePoints().getDraw();
                 int opponentStandingPoints = teams - rankingOpponent;
-                homeScore = homeScore + homeDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, homeScore, algorithm,true));
-                homeScore = homeScore + opponentStandingPoints;
+                int currentDrawPoints = homeDrawPoints + opponentStandingPoints;
+                homeScore = homeScore + currentDrawPoints;
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, currentDrawPoints, algorithm,true));
             }
         }
-        messageBuilder.append("<br>")
+        messageBuilder.append("<br><br>")
                 .append("<b>")
                 .append("Eind score thuis wedstrijden : ")
                 .append(homeScore)
@@ -81,7 +81,7 @@ public class HomeGame extends AbstractCalculator {
     private String createInitMessage(Algorithm algorithm, Team team) {
         return "<h2>Overzicht ploeg " +
                 team.getName() +
-                "</h2><br><h3>Berekening thuiswedstrijden</h3>" +
+                "</h2><h3>Berekening thuiswedstrijden</h3>" +
                 "Winst : " +
                 algorithm.getHomePoints().getWin() +
                 " punten + (aantal teams - rank tegenstrever)" +
@@ -92,7 +92,8 @@ public class HomeGame extends AbstractCalculator {
                 "<br>" +
                 "geijkspel : " +
                 algorithm.getHomePoints().getDraw() +
-                " punten  + (aantal teams - rank tegenstrever)" +
+                " punten  + (aantal teams - rank tegenstrever)"+
                 "<br>";
+
     }
 }

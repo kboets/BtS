@@ -56,6 +56,7 @@ public class ForecastCalculatorManager2 {
                 .findFirst();
         if (optionalForecast.isPresent()) {
             Forecast forecast = optionalForecast.get();
+            logger.info("Forecast for League {} with round {} and algorithm {} was already calculated ", league.getName(), roundNumber, algorithm.getName());
             if(ForecastResult.OK.equals(forecast.getForecastResult())) {
                 return Optional.empty();
             } else {
@@ -94,6 +95,7 @@ public class ForecastCalculatorManager2 {
                 forecastDetail.setForecastResult(ForecastResult.FATAL);
             }
             forecast.addForecastDetail(forecastDetail);
+            forecastDetail.setForecast(forecast);
         }
         return forecast;
     }
@@ -114,7 +116,6 @@ public class ForecastCalculatorManager2 {
 
     private Forecast calculateFinalScore(Forecast forecast) {
         for(ForecastDetail forecastDetail: forecast.getForecastDetails()) {
-            StringBuilder messageBuilder = new StringBuilder(forecastDetail.getMessage());
             if (ForecastResult.FATAL.equals(forecastDetail.getForecastResult())) {
                 continue;
             }
@@ -126,17 +127,10 @@ public class ForecastCalculatorManager2 {
                     .findFirst();
             if (fdOptionalOpponent.isPresent()) {
                 ForecastDetail forecastDetailOpponent = fdOptionalOpponent.get();
-                int scoreOpponent = forecastDetailOpponent.getHomeScore()+forecastDetail.getAwayScore();
-                int finalScore = forecastDetail.getFinalScore() - scoreOpponent;
+                int scoreOpponent = forecastDetailOpponent.getHomeScore() + forecastDetailOpponent.getAwayScore();
+                int finalScore = forecastDetail.getSubTotal() - scoreOpponent;
                 forecastDetail.setFinalScore(finalScore);
-                messageBuilder.append("<br><h4>Eind score: </h4>")
-                        .append(forecastDetail.getFinalScore())
-                        .append(" - ")
-                        .append(scoreOpponent)
-                        .append(" = <b>")
-                        .append(finalScore)
-                        .append("</b>");
-                forecastDetail.setMessage(messageBuilder.toString());
+                forecastDetail.setMessage(createFinalScoreMessage(forecastDetail, scoreOpponent));
             } else {
                 forecastDetail.setForecastResult(ForecastResult.FATAL);
                 forecastDetail.setErrorMessage(String.format("Could not get forecast detail of opponent %s of team %s of round %s", forecastDetail.getOpponent().getName(), forecastDetail.getTeam().getName(), forecast.getRound()));
@@ -145,5 +139,29 @@ public class ForecastCalculatorManager2 {
         return forecast;
     }
 
+
+
+    private String createFinalScoreMessage(ForecastDetail forecastDetail, int scoreOpponent) {
+        StringBuilder messageBuilder = new StringBuilder(forecastDetail.getMessage());
+        messageBuilder.append("<br><h4>Eind score: </h4>")
+                .append("Sub totaal : ")
+                .append("<br>")
+                .append("totaal thuismatchen: ")
+                .append(forecastDetail.getHomeScore())
+                .append(" + totaal uitmatchen: ")
+                .append(forecastDetail.getAwayScore())
+                .append(" = ")
+                .append(forecastDetail.getSubTotal())
+                .append("<br>")
+                .append("eind totaal : ")
+                .append(forecastDetail.getSubTotal())
+                .append(" - ")
+                .append(" score tegenstrever : ")
+                .append(scoreOpponent)
+                .append(" = <b>")
+                .append(forecastDetail.getFinalScore())
+                .append("</b>");
+        return messageBuilder.toString();
+    }
 
 }

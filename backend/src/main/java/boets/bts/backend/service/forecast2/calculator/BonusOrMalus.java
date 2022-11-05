@@ -23,8 +23,7 @@ public class BonusOrMalus implements ScoreCalculator {
             messageBuilder.append("<br>Next game is away game, extract points :  <b>").append(forecast.getAlgorithm().getAwayMalus()).append("</b>");
             forecastDetail.setBonusMalusScore(forecast.getAlgorithm().getAwayMalus());
         }
-        // set as temp final score: home score + away score +/- bonus/malus
-        forecastDetail.setFinalScore(forecastDetail.getHomeScore() + forecastDetail.getAwayScore() + forecastDetail.getBonusMalusScore());
+        forecastDetail.setSubTotal(forecastDetail.getHomeScore() + forecastDetail.getAwayScore() + forecastDetail.getBonusMalusScore());
         forecastDetail.setMessage(messageBuilder.toString());
     }
 }

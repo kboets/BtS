@@ -64,7 +64,7 @@ public class ForecastService2 {
                 Algorithm algorithm = algorithms.get(index);
                 List<Forecast> forecasts = forecastCalculatorManager2.calculateForecasts(league, roundNumbers, algorithm);
                 forecastRepository.saveAll(forecasts);
-                logger.info("Forecast calculated :");
+                //logger.info("Forecast calculated :");
                 index++;
             }
         } catch (Exception e) {

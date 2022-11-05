@@ -48,23 +48,23 @@ public class AwayGame extends AbstractCalculator {
                 messageBuilder.append(this.appendResultMessage(WIN,result, false));
                 int awayWinPoints = algorithm.getAwayPoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
-                awayScore = awayScore + awayWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, awayScore, algorithm, false));
-                awayScore = awayScore + opponentStandingPoints;
+                int currentWinPoints = awayWinPoints + opponentStandingPoints;
+                awayScore = awayScore + currentWinPoints;
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, currentWinPoints, algorithm, false));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, false));
                 int awayLosePoints = algorithm.getAwayPoints().getLose();
                 int totalScore = awayLosePoints - rankingOpponent;
-                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, false));
                 awayScore = awayScore + totalScore;
+                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, false));
             } else {
                 // draw
                 messageBuilder.append(this.appendResultMessage(DRAW,result, false));
                 int awayDrawPoints = algorithm.getAwayPoints().getDraw();
                 int opponentStandingPoints = teams - rankingOpponent;
-                awayScore = awayScore + awayDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, awayScore, algorithm, false));
-                awayScore = awayScore + opponentStandingPoints;
+                int currentDrawPoints = awayDrawPoints + opponentStandingPoints;
+                awayScore = awayScore + currentDrawPoints;
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, currentDrawPoints, algorithm, false));
             }
         }
         messageBuilder.append("<br>")
@@ -87,9 +87,9 @@ public class AwayGame extends AbstractCalculator {
                 algorithm.getAwayPoints().getLose() +
                 " punten - (rank tegenstrever)" +
                 "<br>" +
-                "Berekening gelijk spel thuis match : " +
+                "gelijk spel : " +
                 algorithm.getAwayPoints().getDraw() +
-                "punten  + (aantal teams - rank tegenstrever)" +
+                " punten  + (aantal teams - rank tegenstrever)" +
                 "<br>";
     }
 }
