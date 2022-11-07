@@ -201,14 +201,8 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         return infoMessage.toString();
     }
 
-    protected String appendScoreMessageWinDraw(int totalTeams, int opponentStanding, String result, int score, Algorithm algorithm, boolean isHome) {
+    protected String appendScoreMessageWinDraw(int totalTeams, int opponentStanding, int finalScore, int initScore) {
         StringBuilder infoMessage = new StringBuilder();
-        int initScore;
-        if (result.equals(WIN)) {
-            initScore = isHome?algorithm.getHomePoints().getWin():algorithm.getAwayPoints().getWin();
-        } else {
-            initScore = isHome?algorithm.getHomePoints().getDraw():algorithm.getAwayPoints().getDraw();
-        }
         infoMessage
                 .append("<br>")
                 .append("score: ")
@@ -217,7 +211,7 @@ public abstract class AbstractCalculator implements ScoreCalculator {
                 .append(totalTeams).append("-")
                 .append(opponentStanding)
                 .append(") = ")
-                .append(score);
+                .append(finalScore);
         return infoMessage.toString();
     }
 

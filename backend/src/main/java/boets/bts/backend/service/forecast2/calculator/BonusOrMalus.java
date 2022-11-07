@@ -17,10 +17,20 @@ public class BonusOrMalus implements ScoreCalculator {
         Result nextGame = forecastDetail.getNextGame();
         boolean isHome = nextGame.getHomeTeam().getTeamId().equals(forecastDetail.getTeam().getTeamId());
         if (isHome) {
-            messageBuilder.append("<br>Next game is home game, add extra points:  <b>").append(forecast.getAlgorithm().getHomeBonus()).append("</b>");
+            messageBuilder.append("<br>Volgende wedstrijd is thuis : <br><b>")
+                    .append(forecastDetail.getTeam().getName())
+                    .append(" - ")
+                    .append(forecastDetail.getNextGame().getAwayTeam().getName())
+                    .append("</b> , voeg extra punten toe : ")
+                    .append(forecast.getAlgorithm().getHomeBonus());
             forecastDetail.setBonusMalusScore(forecast.getAlgorithm().getHomeBonus());
         } else {
-            messageBuilder.append("<br>Next game is away game, extract points :  <b>").append(forecast.getAlgorithm().getAwayMalus()).append("</b>");
+            messageBuilder.append("<br>Volgende wedstrijd is uit : <br><b>")
+                    .append(forecastDetail.getNextGame().getHomeTeam().getName())
+                    .append(" - ")
+                    .append(forecastDetail.getTeam().getName())
+                    .append("</b> , verminder met malus punten : ")
+                    .append(forecast.getAlgorithm().getAwayMalus());
             forecastDetail.setBonusMalusScore(forecast.getAlgorithm().getAwayMalus());
         }
         forecastDetail.setSubTotal(forecastDetail.getHomeScore() + forecastDetail.getAwayScore() + forecastDetail.getBonusMalusScore());

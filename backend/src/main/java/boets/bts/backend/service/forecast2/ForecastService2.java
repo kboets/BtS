@@ -72,7 +72,7 @@ public class ForecastService2 {
         }
 
     }
-    @Scheduled(cron ="0 0/30 * * * TUE-THU")
+    //@Scheduled(cron ="0 7/30 * * * TUE-THU")
     protected void scheduleForecast() {
         logger.info("Start scheduleForecast");
     }

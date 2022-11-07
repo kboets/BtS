@@ -40,6 +40,9 @@ public class ForecastDetail implements Serializable {
     @Column
     private int bonusMalusScore;
     @Column
+    private int opponentScore;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private ForecastResult forecastResult;
     @Column
@@ -152,17 +155,25 @@ public class ForecastDetail implements Serializable {
         this.bonusMalusScore = bonusMalusScore;
     }
 
+    public int getOpponentScore() {
+        return opponentScore;
+    }
+
+    public void setOpponentScore(int opponentScore) {
+        this.opponentScore = opponentScore;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ForecastDetail that = (ForecastDetail) o;
-        return finalScore == that.finalScore && homeScore == that.homeScore && awayScore == that.awayScore && bonusMalusScore == that.bonusMalusScore && Objects.equals(id, that.id) && Objects.equals(team, that.team) && Objects.equals(opponent, that.opponent) && Objects.equals(nextGame, that.nextGame) && Objects.equals(forecast, that.forecast) && forecastResult == that.forecastResult && Objects.equals(message, that.message) && Objects.equals(errorMessage, that.errorMessage);
+        return opponentScore == that.opponentScore && finalScore == that.finalScore && homeScore == that.homeScore && awayScore == that.awayScore && bonusMalusScore == that.bonusMalusScore && Objects.equals(id, that.id) && Objects.equals(team, that.team) && Objects.equals(opponent, that.opponent) && Objects.equals(nextGame, that.nextGame) && Objects.equals(forecast, that.forecast) && forecastResult == that.forecastResult && Objects.equals(message, that.message) && Objects.equals(errorMessage, that.errorMessage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, team, opponent, nextGame, forecast, finalScore, homeScore, awayScore, bonusMalusScore, forecastResult, message, errorMessage);
+        return Objects.hash(id, team, opponent, opponentScore, nextGame, forecast, finalScore, homeScore, awayScore, bonusMalusScore, forecastResult, message, errorMessage);
     }
 
     @Override
@@ -177,6 +188,7 @@ public class ForecastDetail implements Serializable {
                 ", homeScore=" + homeScore +
                 ", awayScore=" + awayScore +
                 ", bonusMalusScore=" + bonusMalusScore +
+                ", opponentScore=" + opponentScore +
                 ", forecastResult=" + forecastResult +
                 ", message='" + message + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +

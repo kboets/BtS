@@ -50,7 +50,7 @@ public class AwayGame extends AbstractCalculator {
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentWinPoints = awayWinPoints + opponentStandingPoints;
                 awayScore = awayScore + currentWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, currentWinPoints, algorithm, false));
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentWinPoints, awayWinPoints));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, false));
                 int awayLosePoints = algorithm.getAwayPoints().getLose();
@@ -64,11 +64,11 @@ public class AwayGame extends AbstractCalculator {
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentDrawPoints = awayDrawPoints + opponentStandingPoints;
                 awayScore = awayScore + currentDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, currentDrawPoints, algorithm, false));
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentDrawPoints, awayDrawPoints));
             }
         }
-        messageBuilder.append("<br>")
-                .append("Eind score uit wedstrijden : <b>")
+        messageBuilder.append("<br><b>")
+                .append("Eind score uit wedstrijden : ")
                 .append(awayScore)
                 .append("</b>")
                 .append("<br>");

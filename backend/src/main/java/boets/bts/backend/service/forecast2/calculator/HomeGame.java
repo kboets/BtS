@@ -49,7 +49,7 @@ public class HomeGame extends AbstractCalculator {
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentWinPoints = homeWinPoints + opponentStandingPoints;
                 homeScore = homeScore + currentWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, WIN, currentWinPoints, algorithm, true));
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentWinPoints, homeWinPoints));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, true));
                 int homeLosePoints = algorithm.getHomePoints().getLose();
@@ -63,7 +63,7 @@ public class HomeGame extends AbstractCalculator {
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentDrawPoints = homeDrawPoints + opponentStandingPoints;
                 homeScore = homeScore + currentDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, opponentStandingPoints, DRAW, currentDrawPoints, algorithm,true));
+                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentDrawPoints, homeDrawPoints));
             }
         }
         messageBuilder.append("<br><br>")

@@ -19,6 +19,7 @@
             <column name="bonus_malus_score" type="int"/>
             <column name="final_score" type="int"/>
             <column name="sub_total" type="int"/>
+            <column name="opponent_score" type="int"/>
             <column name="next_game_id" type="bigint"/>
             <column name="error_message" type="varchar(250)" />
             <column name="forecast_result" type="varchar(100)"/>
