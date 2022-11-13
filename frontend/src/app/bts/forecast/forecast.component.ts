@@ -111,11 +111,11 @@ export class ForecastComponent implements OnInit {
     }
 
     isSameHomeTeam(forecastDetail: ForecastDetail): boolean {
-        return this.isSameTeam(forecastDetail.team, forecastDetail.nextResult.homeTeam);
+        return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.homeTeam);
     }
 
     isSameAwayTeam(forecastDetail: ForecastDetail) : boolean {
-        return this.isSameTeam(forecastDetail.team, forecastDetail.nextResult.awayTeam);
+        return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.awayTeam);
     }
 
     private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {

@@ -4,7 +4,6 @@ import {Forecast} from "../domain/forecast";
 import {catchError, shareReplay} from "rxjs/operators";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
-import {League} from "../domain/league";
 
 @Injectable({
     providedIn: 'root'

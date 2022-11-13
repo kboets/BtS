@@ -10,7 +10,6 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager2;
-import boets.bts.backend.service.forecast2.validator.ForecastValidator;
 import boets.bts.backend.service.round.RoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,25 +25,24 @@ import java.util.stream.IntStream;
 @Service
 @Transactional
 @Profile({"!integration"})
-public class ForecastService2 {
-    private static final Logger logger = LoggerFactory.getLogger(ForecastService2.class);
+public class ForecastService {
+    private static final Logger logger = LoggerFactory.getLogger(ForecastService.class);
     private final LeagueRepository leagueRepository;
     private final AdminService adminService;
     private final AlgorithmRepository algorithmRepository;
     private final RoundService roundService;
     private final ForecastRepository forecastRepository;
-    private final ForecastValidator validator;
+
     private final ForecastCalculatorManager2 forecastCalculatorManager2;
 
 
-    public ForecastService2(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository,
-                            ForecastValidator validator, ForecastCalculatorManager2 forecastCalculatorManager2) {
+    public ForecastService(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository,
+                           ForecastCalculatorManager2 forecastCalculatorManager2) {
         this.leagueRepository = leagueRepository;
         this.adminService = adminService;
         this.algorithmRepository = algorithmRepository;
         this.roundService = roundService;
         this.forecastRepository = forecastRepository;
-        this.validator = validator;
         this.forecastCalculatorManager2 = forecastCalculatorManager2;
     }
 

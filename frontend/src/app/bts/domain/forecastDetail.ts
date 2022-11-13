@@ -1,11 +1,16 @@
 import {Teams} from "./teams";
 import {Result} from "./result";
+import {ForecastResult} from "./forecastResult";
 
 export class ForecastDetail {
     team: Teams;
-    nextOpponent: Teams;
-    results: Result[];
-    nextResult: Result;
-    score: number;
-    info: string;
+    opponent: Teams;
+    nextGame: Result;
+    finalScore: number;
+    homeScore: number;
+    awayScore: number;
+    opponentScore: number;
+    forecastResult:ForecastResult;
+    message: string;
+    errorMessage: string;
 }

@@ -1,8 +1,14 @@
 import {League} from "./league";
 import {ForecastDetail} from "./forecastDetail";
+import {ForecastResult} from "./forecastResult";
+import {Algorithm} from "./algorithm";
 
 export class Forecast {
     league: League;
-    forecastType: string;
+    round: number;
+    season: number;
+    forecastResult: ForecastResult;
+    message: string;
+    algorithmDto: Algorithm;
     forecastDetails: ForecastDetail[];
 }

@@ -2,15 +2,11 @@ package boets.bts.backend.service.forecast2;
 
 import boets.bts.backend.domain.*;
 import boets.bts.backend.repository.algorithm.AlgorithmRepository;
-import boets.bts.backend.repository.algorithm.AlgorithmSpecs;
 import boets.bts.backend.repository.league.LeagueRepository;
 
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
-import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.round.RoundService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +34,7 @@ public class ForecastService2Test {
     @Autowired
     private LeagueRepository leagueRepository;
     @Autowired
-    private ForecastService2 forecastService2;
+    private ForecastService forecastService;
     @Autowired
     private ResultRepository resultRepository;
     @Autowired
@@ -58,7 +54,7 @@ public class ForecastService2Test {
 
     @Test
     public void calculateRounds_givenJupilerLeague_shouldReturnOneElement() {
-        List<Integer> rounds = forecastService2.calculateRounds(league);
+        List<Integer> rounds = forecastService.calculateRounds(league);
         assertThat(rounds.size()).isEqualTo(2);
     }
 }

@@ -2,7 +2,6 @@ package boets.bts.backend.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
