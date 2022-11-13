@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -66,13 +67,20 @@ public class ForecastService {
                 List<ForecastDetailDto> forecastDetailDtos = forecastDto.getForecastDetails();
                 List<ForecastDetailDto> filteredDetails = forecastDetailDtos.stream()
                         .filter(forecastDetail -> forecastDetailScore(scores, forecastDetail))
+                        .sorted(Comparator.comparingInt(ForecastDetailDto::getFinalScore).reversed())
                         .collect(Collectors.toList());
                 forecastDto.setForecastDetails(filteredDetails);
                 filteredForecasts.add(forecastDto);
             }
             return filteredForecasts;
         }
-        return currentForecasts;
+        return currentForecasts.stream()
+                .peek(forecastDto -> {
+                    forecastDto.setForecastDetails(forecastDto.getForecastDetails().stream()
+                    .sorted(Comparator.comparingInt(ForecastDetailDto::getFinalScore).reversed())
+                    .collect(Collectors.toList()));
+                    })
+                .collect(Collectors.toList());
 
     }
 

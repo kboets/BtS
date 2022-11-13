@@ -49,21 +49,21 @@
                                         <td>{{forecastDetail.team?.name}}</td>
                                         <td>
                                             <ng-container *ngIf="isSameHomeTeam(forecastDetail)">
-                                                <strong>{{forecastDetail.nextResult?.homeTeam?.name}}</strong>
+                                                <strong>{{forecastDetail.nextGame?.homeTeam?.name}}</strong>
                                             </ng-container>
                                             <ng-container *ngIf="!isSameHomeTeam(forecastDetail)">
-                                                {{forecastDetail.nextResult?.homeTeam?.name}}
+                                                {{forecastDetail.nextGame?.homeTeam?.name}}
                                             </ng-container>
                                             -
                                             <ng-container *ngIf="isSameAwayTeam(forecastDetail)">
-                                                <strong>{{forecastDetail.nextResult?.awayTeam?.name}}</strong>
+                                                <strong>{{forecastDetail.nextGame?.awayTeam?.name}}</strong>
                                             </ng-container>
                                             <ng-container *ngIf="!isSameAwayTeam(forecastDetail)">
-                                                {{forecastDetail.nextResult?.awayTeam?.name}}
+                                                {{forecastDetail.nextGame?.awayTeam?.name}}
                                             </ng-container>
                                             <br/>
-                                            ({{forecastDetail.nextResult?.eventDate | date: 'dd/MM/yyyy'}})</td>
-                                        <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.score}}</td>
+                                            ({{forecastDetail.nextGame?.eventDate | date: 'dd/MM/yyyy'}})</td>
+                                        <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.finalScore}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -73,28 +73,8 @@
         </p-table>
 </div>
 
-<p-dialog header="Overzicht ploeg : {{selectedForecastDetail?.team.name}}" [(visible)]="displayScoreInfo" [style]="{width: '50vw'}" [baseZIndex]="10000">
-    <p [innerHTML]="selectedForecastDetail?.info"></p>
-    <p>
-        <p-table [value]="selectedForecastDetail?.results.reverse()">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Datum</th>
-                    <th>thuisploeg</th>
-                    <th>uitploeg</th>
-                    <th>score</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-result>
-                <tr>
-                    <td>{{result?.eventDate | date: 'dd/MM/yyyy'}}</td>
-                    <td>{{result?.homeTeam?.name}}</td>
-                    <td>{{result?.awayTeam.name}}</td>
-                    <td>{{result?.goalsHomeTeam}} - {{result.goalsAwayTeam}}</td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </p>
+<p-dialog [(visible)]="displayScoreInfo" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <p [innerHTML]="selectedForecastDetail?.message"></p>
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-check" (click)="displayScoreInfo=false" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
