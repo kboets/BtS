@@ -17,7 +17,7 @@ public interface ForecastMapper {
     @InheritInverseConfiguration
     Forecast toDomainModel(ForecastDto forecastDto);
 
-    List<ForecastDto> toDtos(List<ForecastDetail> forecastDetails);
+    List<ForecastDto> toDtos(List<Forecast> forecastDetails);
 
     List<Forecast> toDomainModels(List<ForecastDto> forecastDtoList);
 }
