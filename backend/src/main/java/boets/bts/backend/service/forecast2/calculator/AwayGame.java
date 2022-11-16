@@ -67,7 +67,8 @@ public class AwayGame extends AbstractCalculator {
                 messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentDrawPoints, awayDrawPoints));
             }
         }
-        messageBuilder.append("<br><b>")
+        messageBuilder.append("<br><br>")
+                .append("<b>")
                 .append("Eind score uit wedstrijden : ")
                 .append(awayScore)
                 .append("</b>")

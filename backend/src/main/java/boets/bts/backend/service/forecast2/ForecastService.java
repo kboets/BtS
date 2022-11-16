@@ -124,14 +124,22 @@ public class ForecastService {
         }
 
     }
-    //@Scheduled(cron ="0 7/30 * * * TUE-THU")
+
+
+    @Scheduled(cron ="0 7/30 * * * TUE-THU")
     protected void scheduleForecast() {
         logger.info("Start scheduleForecast");
+        this.initScheduleForecasts();
     }
 
 
     //@Scheduled(cron ="* */5 * * * *")
     protected void scheduleForecasts2() {
+        logger.info("Start scheduleForecast2");
+        this.initScheduleForecasts();
+    }
+
+    protected void initScheduleForecasts() {
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
         List<Algorithm> algorithms = algorithmRepository.findAll();
@@ -145,7 +153,6 @@ public class ForecastService {
             }
             index++;
         }
-
     }
 
     /**
