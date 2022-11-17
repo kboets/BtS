@@ -3,6 +3,12 @@
                             RELEASE NOTES
 
 *********************************************************************************
+11/07/2022 1.5.0
+new features:
+    persisted the forecasts
+bugfixes:
+
+
 24/04/2022 1.4.0
 new features:
     implemented algorithm page
