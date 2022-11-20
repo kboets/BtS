@@ -55,6 +55,23 @@ public class ForecastService {
     }
 
     /**
+     * Retrieves all the forecasts except the current.
+     * @return List of ForecastDto
+     */
+    public List<ForecastDto> getAllForecasts() {
+        List<Forecast> allForecasts = forecastRepository.findAll();
+        List<Forecast> currentForecasts = this.getCurrentForecasts();
+        List<Forecast> filteredForecasts = allForecasts.stream()
+                .filter(forecast -> !currentForecasts.contains(forecast))
+                .sorted(Comparator.comparingInt(Forecast::getRound).reversed())
+                .sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()))
+                .collect(Collectors.toList());
+        return forecastMapper.toDtos(filteredForecasts);
+
+    }
+
+
+    /**
      * Retrieves all the current forecasts with forecast details that have a score that is lower or equal as the given score(s)
      * @param scores - a list with scores, can be empty
      * @return List

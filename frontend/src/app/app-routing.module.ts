@@ -44,6 +44,7 @@ import {ProspectComponent} from "./bts/prospect/prospect.component";
 import {AdminComponent} from "./bts/admin/admin.component";
 import {ForecastComponent} from "./bts/forecast/forecast.component";
 import {AlgorithmComponent} from "./bts/algorithm/algorithm.component";
+import {ReviewComponent} from "./bts/review/review.component";
 
 @NgModule({
     imports: [
@@ -57,6 +58,7 @@ import {AlgorithmComponent} from "./bts/algorithm/algorithm.component";
                     {path: 'forecast', component: ForecastComponent},
                     {path: 'algorithm', component: AlgorithmComponent},
                     {path: 'admin', component: AdminComponent},
+                    {path: 'review', component: ReviewComponent},
                     {path: '', component: DashboardDemoComponent},
                     {path: 'uikit/formlayout', component: FormLayoutDemoComponent},
                     {path: 'uikit/input', component: InputDemoComponent},

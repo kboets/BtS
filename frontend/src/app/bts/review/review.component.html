@@ -1,0 +1,13 @@
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
+    <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
+</ng-container>
+
+<div class="card">
+    <p-panel header="Terugblik forecast">
+        <ng-container *ngIf="leagues$ | async as leagues">
+            <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" ></p-dropdown>
+        </ng-container>
+    </p-panel>
+
+</div>
