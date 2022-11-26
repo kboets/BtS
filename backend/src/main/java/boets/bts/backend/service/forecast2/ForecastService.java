@@ -94,8 +94,13 @@ public class ForecastService {
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
         Algorithm algorithm = algorithmRepository.findAll(AlgorithmSpecs.current()).get(0);
         for(League league: leagues) {
-            Round nextRound = getLatestRoundForForecast(league);
-            currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
+            Round nextRound = getLatestRoundForForecast(league, false);
+            List<Forecast> forecastsForLeague = forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm))));
+            if (forecastsForLeague.isEmpty()) {
+                nextRound = getLatestRoundForForecast(league, true);
+                forecastsForLeague = forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm))));
+            }
+            currentForecasts.addAll(forecastsForLeague);
         }
         return currentForecasts;
     }
@@ -188,10 +193,10 @@ public class ForecastService {
     }
 
 
-    private Round getLatestRoundForForecast(League league) {
+    private Round getLatestRoundForForecast(League league, boolean isCurrent) {
         LocalDate now = LocalDate.now();
         DayOfWeek today = now.getDayOfWeek();
-        if (WebUtils.isWeekend() || today.equals(DayOfWeek.MONDAY)) {
+        if (WebUtils.isWeekend() || today.equals(DayOfWeek.MONDAY) || isCurrent) {
             return roundService.getCurrentRoundForLeague(league.getId(), league.getSeason());
         } else {
             return roundService.getNextRound(league.getId());
