@@ -5,9 +5,16 @@
 
 <div class="card">
     <p-panel header="Terugblik forecast">
-        <ng-container *ngIf="leagues$ | async as leagues">
-            <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" ></p-dropdown>
-        </ng-container>
+        <p>geselecteerde competitie:   {{selectedLeague? selectedLeague.name:'none' }}</p>
+            <ng-container *ngIf="leagues$ | async as leagues">
+                <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" optionLabel="name" (onChange)="onLeagueChange()" placeholder="Selecteer competitie"></p-dropdown>
+            </ng-container>
+        <p>geselecteerde ronde:   {{selectedRound? selectedRound:'none' }}</p>
+        <p>
+            <ng-container *ngIf="rounds$ | async as rounds">
+                <p-dropdown [options]="rounds" [(ngModel)]="selectedRound"></p-dropdown>
+            </ng-container>
+        </p>
     </p-panel>
 
 </div>

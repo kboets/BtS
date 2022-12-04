@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
-import {EMPTY, Observable, Subject} from "rxjs";
+import {combineLatest, EMPTY, Observable, pipe, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "../forecast/forecast.service";
 import {AdminService} from "../admin/admin.service";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import * as _ from 'underscore';
 
@@ -18,15 +18,18 @@ export class ReviewComponent implements OnInit {
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
-    public forecastData: Forecast[];
-    public leagues$: Observable<string[]>;
-    public selectedLeague: string;
-    public leagues: League[];
+    public leagues$: Observable<League[]>;
+    public selectedLeague: League;
+    private selectedLeagueSubject = new Subject<League>();
+    selectedLeagueAction = this.selectedLeagueSubject.asObservable();
+
+    public rounds$: Observable<number[]>;
+    public selectedRound: number;
+
     private forecastData$: Observable<Forecast[]>;
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
-        this.forecastData = [];
-        this.leagues = [];
+
     }
 
     ngOnInit(): void {
@@ -40,16 +43,50 @@ export class ReviewComponent implements OnInit {
         this.leagues$ = this.forecastData$.pipe(
             map(forecasts => {
                 return _.map(forecasts, function (forecast) {
-                    return forecast.league.name;
+                    return forecast.league;
                 });
             }),
             map(leagues => {
-                return _.uniq(leagues);
+                return _.uniq(leagues, league => league.name);
             })
+            // tap(leagues => {
+            //     this.selectedLeagueSubject.next(_.first(leagues));
+            // })
         ).pipe(catchError(err => {
             this.errorMessageSubject.next(err);
             return EMPTY;
         }));
+
+
+
+        //get rounds
+        this.rounds$ = combineLatest(
+            [this.forecastData$, this.selectedLeagueAction]
+        ).pipe(
+            map(([forecasts, league]) => {
+                return _.filter(forecasts, function (forecast) {
+                    if (forecast.league.name === league.name) {
+                        return forecast;
+                    }
+                })
+            }),
+            map(forecasts => {
+                return _.map(forecasts, function (forecast) {
+                    return forecast.round;
+                });
+            }),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
+
     }
+
+
+
+    public onLeagueChange() {
+        this.selectedLeagueSubject.next(this.selectedLeague);
+    }
+
 
 }
