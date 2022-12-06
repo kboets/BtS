@@ -23,16 +23,20 @@ export class ReviewComponent implements OnInit {
     private selectedLeagueSubject = new Subject<League>();
     selectedLeagueAction = this.selectedLeagueSubject.asObservable();
 
-    public rounds$: Observable<number[]>;
-    public selectedRound: number;
+    public rounds$: Observable<Forecast[]>;
+    public forecastForRoundAndLeague: Forecast;
+    private selectedForecastSubject = new Subject<Forecast>();
+    selectedRoundAction = this.selectedForecastSubject.asObservable();
 
     private forecastData$: Observable<Forecast[]>;
+    public selectedForecast: Observable<Forecast>;
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
 
     }
 
     ngOnInit(): void {
+        //get all forecast data
         this.forecastData$ = this.forecastService.getAllForecasts()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -40,6 +44,7 @@ export class ReviewComponent implements OnInit {
             }));
 
 
+        //get all unique leagues from forecast data
         this.leagues$ = this.forecastData$.pipe(
             map(forecasts => {
                 return _.map(forecasts, function (forecast) {
@@ -48,10 +53,10 @@ export class ReviewComponent implements OnInit {
             }),
             map(leagues => {
                 return _.uniq(leagues, league => league.name);
+            }),
+            tap(leagues => {
+                this.selectedLeagueSubject.next(_.first(leagues));
             })
-            // tap(leagues => {
-            //     this.selectedLeagueSubject.next(_.first(leagues));
-            // })
         ).pipe(catchError(err => {
             this.errorMessageSubject.next(err);
             return EMPTY;
@@ -59,7 +64,7 @@ export class ReviewComponent implements OnInit {
 
 
 
-        //get rounds
+        //get rounds for selected league
         this.rounds$ = combineLatest(
             [this.forecastData$, this.selectedLeagueAction]
         ).pipe(
@@ -70,15 +75,16 @@ export class ReviewComponent implements OnInit {
                     }
                 })
             }),
-            map(forecasts => {
-                return _.map(forecasts, function (forecast) {
-                    return forecast.round;
-                });
+            tap(forecasts => {
+                this.forecastForRoundAndLeague =_.first(forecasts)
+                console.log('selectedForecast:', this.forecastForRoundAndLeague);
+                this.selectedForecastSubject.next(_.first(forecasts));
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
+
 
     }
 
@@ -88,5 +94,9 @@ export class ReviewComponent implements OnInit {
         this.selectedLeagueSubject.next(this.selectedLeague);
     }
 
+    public onRoundChange() {
+        console.log('selectedForecast: ', this.forecastForRoundAndLeague);
+        this.selectedForecastSubject.next(this.forecastForRoundAndLeague);
+    }
 
 }

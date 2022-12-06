@@ -5,16 +5,24 @@
 
 <div class="card">
     <p-panel header="Terugblik forecast">
+        <div class="p-grid">
+            <div class="p-col-2">Kies de competitie: </div>
+            <div class="p-col-2">Kies de ronde: </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-2">
+                <ng-container *ngIf="leagues$ | async as leagues">
+                    <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" optionLabel="name" (onChange)="onLeagueChange()"></p-dropdown>
+                </ng-container>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="rounds$ | async as rounds">
+                    <p-dropdown [options]="rounds" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
+                </ng-container>
+            </div>
+        </div>
         <p>geselecteerde competitie:   {{selectedLeague? selectedLeague.name:'none' }}</p>
-            <ng-container *ngIf="leagues$ | async as leagues">
-                <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" optionLabel="name" (onChange)="onLeagueChange()" placeholder="Selecteer competitie"></p-dropdown>
-            </ng-container>
-        <p>geselecteerde ronde:   {{selectedRound? selectedRound:'none' }}</p>
-        <p>
-            <ng-container *ngIf="rounds$ | async as rounds">
-                <p-dropdown [options]="rounds" [(ngModel)]="selectedRound"></p-dropdown>
-            </ng-container>
-        </p>
+        <p>geselecteerde ronde:   {{forecastForRoundAndLeague? forecastForRoundAndLeague.round:'none' }}</p>
     </p-panel>
 
 </div>
