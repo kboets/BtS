@@ -21,8 +21,49 @@
                 </ng-container>
             </div>
         </div>
-        <p>geselecteerde competitie:   {{selectedLeague? selectedLeague.name:'none' }}</p>
-        <p>geselecteerde ronde:   {{forecastForRoundAndLeague? forecastForRoundAndLeague.round:'none' }}</p>
+        <hr>
+        <div class="p-grid">
+            <div class="p-col-12">
+                <ng-container *ngIf="forecastForRoundAndLeague">
+                    <p-table [value]="forecastForRoundAndLeague.forecastDetails" [autoLayout]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'250px'}">Team</th>
+                                <th [ngStyle]="{'width':'150px'}">Punten</th>
+                                <th [ngStyle]="{'width':'350px'}">Wedstrijd</th>
+                                <th>Uitslag</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-forecastDetail>
+                            <tr>
+                                <td>{{forecastDetail.team?.name}}</td>
+                                <td>{{forecastDetail.finalScore}}</td>
+                                <td>
+                                    <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
+                                        <strong>{{forecastDetail.nextGame?.homeTeam?.name}}</strong>
+                                    </ng-container>
+                                    <ng-container *ngIf="!forecastUtility.isSameHomeTeam(forecastDetail)">
+                                        {{forecastDetail.nextGame?.homeTeam?.name}}
+                                    </ng-container>
+                                    -
+                                    <ng-container *ngIf="forecastUtility.isSameAwayTeam(forecastDetail)">
+                                        <strong>{{forecastDetail.nextGame?.awayTeam?.name}}</strong>
+                                    </ng-container>
+                                    <ng-container *ngIf="!forecastUtility.isSameAwayTeam(forecastDetail)">
+                                        {{forecastDetail.nextGame?.awayTeam?.name}}
+                                    </ng-container>
+                                </td>
+                                <td>{{forecastDetail.nextGame?.goalsHomeTeam}} - {{forecastDetail.nextGame?.goalsAwayTeam}}</td>
+                            </tr>
+
+
+                        </ng-template>
+                    </p-table>
+                </ng-container>
+            </div>
+        </div>
+
+
     </p-panel>
 
 </div>

@@ -11,6 +11,7 @@ import {AdminService} from "../admin/admin.service";
 import {AdminKeys} from "../domain/adminKeys";
 import {Table} from "primeng/table";
 import {Teams} from "../domain/teams";
+import {ForecastUtility} from "../common/forecastUtility";
 
 @Component({
     selector: 'bts-forecast',
@@ -19,11 +20,11 @@ import {Teams} from "../domain/teams";
 })
 export class ForecastComponent implements OnInit {
 
+    forecastUtility: ForecastUtility;
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
     public forecastData: Forecast[];
-    private forecastData$ : Observable<Forecast[]>;
     public forecastDetails: ForecastDetail[];
     public isHistoricData: boolean;
     // sorting and expanding on table
@@ -56,6 +57,7 @@ export class ForecastComponent implements OnInit {
             {value: 150, label: '100 > 150'},
             {value: 500, label: '> 150'}
         ]
+        this.forecastUtility = ForecastUtility.getInstance();
     }
 
 
@@ -110,19 +112,19 @@ export class ForecastComponent implements OnInit {
         }
     }
 
-    isSameHomeTeam(forecastDetail: ForecastDetail): boolean {
-        return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.homeTeam);
-    }
-
-    isSameAwayTeam(forecastDetail: ForecastDetail) : boolean {
-        return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.awayTeam);
-    }
-
-    private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {
-        //console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
-        return detailTeam.name === otherTeam.name;
-
-    }
+    // isSameHomeTeam(forecastDetail: ForecastDetail): boolean {
+    //     return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.homeTeam);
+    // }
+    //
+    // isSameAwayTeam(forecastDetail: ForecastDetail) : boolean {
+    //     return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.awayTeam);
+    // }
+    //
+    // private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {
+    //     //console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
+    //     return detailTeam.name === otherTeam.name;
+    //
+    // }
 
     expandAll() {
         if(!this.isExpanded){

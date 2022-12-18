@@ -7,6 +7,7 @@ import {AdminService} from "../admin/admin.service";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import * as _ from 'underscore';
+import {ForecastUtility} from "../common/forecastUtility";
 
 @Component({
     selector: 'bts-review',
@@ -15,6 +16,7 @@ import * as _ from 'underscore';
 })
 export class ReviewComponent implements OnInit {
 
+    forecastUtility: ForecastUtility;
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
@@ -29,10 +31,11 @@ export class ReviewComponent implements OnInit {
     selectedRoundAction = this.selectedForecastSubject.asObservable();
 
     private forecastData$: Observable<Forecast[]>;
-    public selectedForecast: Observable<Forecast>;
+
+    columns: any[];
 
     constructor(private forecastService: ForecastService, private adminService: AdminService) {
-
+        this.forecastUtility = ForecastUtility.getInstance();
     }
 
     ngOnInit(): void {
@@ -62,9 +65,7 @@ export class ReviewComponent implements OnInit {
             return EMPTY;
         }));
 
-
-
-        //get rounds for selected league
+        //get forecast for selected league and round
         this.rounds$ = combineLatest(
             [this.forecastData$, this.selectedLeagueAction]
         ).pipe(
@@ -77,7 +78,8 @@ export class ReviewComponent implements OnInit {
             }),
             tap(forecasts => {
                 this.forecastForRoundAndLeague =_.first(forecasts)
-                console.log('selectedForecast:', this.forecastForRoundAndLeague);
+                this.forecastForRoundAndLeague.forecastDetails.sort((n1,n2) => n2.finalScore - n1.finalScore)
+                //console.log('selectedForecast tap:', this.forecastForRoundAndLeague);
                 this.selectedForecastSubject.next(_.first(forecasts));
             }),
             catchError(err => {
@@ -89,13 +91,13 @@ export class ReviewComponent implements OnInit {
     }
 
 
-
     public onLeagueChange() {
         this.selectedLeagueSubject.next(this.selectedLeague);
     }
 
     public onRoundChange() {
-        console.log('selectedForecast: ', this.forecastForRoundAndLeague);
+        //console.log('selectedForecast onRoundChange: ', this.forecastForRoundAndLeague);
+        this.forecastForRoundAndLeague.forecastDetails.sort((n1,n2) => n2.finalScore - n1.finalScore)
         this.selectedForecastSubject.next(this.forecastForRoundAndLeague);
     }
 

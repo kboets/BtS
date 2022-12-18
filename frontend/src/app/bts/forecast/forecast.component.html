@@ -48,17 +48,17 @@
                                         <td></td>
                                         <td>{{forecastDetail.team?.name}}</td>
                                         <td>
-                                            <ng-container *ngIf="isSameHomeTeam(forecastDetail)">
+                                            <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
                                                 <strong>{{forecastDetail.nextGame?.homeTeam?.name}}</strong>
                                             </ng-container>
-                                            <ng-container *ngIf="!isSameHomeTeam(forecastDetail)">
+                                            <ng-container *ngIf="!forecastUtility.isSameHomeTeam(forecastDetail)">
                                                 {{forecastDetail.nextGame?.homeTeam?.name}}
                                             </ng-container>
                                             -
-                                            <ng-container *ngIf="isSameAwayTeam(forecastDetail)">
+                                            <ng-container *ngIf="forecastUtility.isSameAwayTeam(forecastDetail)">
                                                 <strong>{{forecastDetail.nextGame?.awayTeam?.name}}</strong>
                                             </ng-container>
-                                            <ng-container *ngIf="!isSameAwayTeam(forecastDetail)">
+                                            <ng-container *ngIf="!forecastUtility.isSameAwayTeam(forecastDetail)">
                                                 {{forecastDetail.nextGame?.awayTeam?.name}}
                                             </ng-container>
                                             <br/>
