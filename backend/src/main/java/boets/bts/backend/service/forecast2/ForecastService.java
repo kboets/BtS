@@ -58,7 +58,7 @@ public class ForecastService {
      * Retrieves all the forecasts except the current.
      * @return List of ForecastDto
      */
-    public List<ForecastDto> getAllForecasts() {
+    public List<ForecastDto> getAllExceptCurrentForecasts() {
         List<Forecast> allForecasts = forecastRepository.findAll();
         List<Forecast> currentForecasts = this.getCurrentForecasts();
         List<Forecast> filteredForecasts = allForecasts.stream()

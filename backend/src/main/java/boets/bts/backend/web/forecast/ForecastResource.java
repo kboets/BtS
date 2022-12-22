@@ -31,6 +31,6 @@ public class ForecastResource {
     }
     @GetMapping("all")
     public List<ForecastDto> getAllForecasts() {
-        return forecastService.getAllForecasts();
+        return forecastService.getAllExceptCurrentForecasts();
     }
 }

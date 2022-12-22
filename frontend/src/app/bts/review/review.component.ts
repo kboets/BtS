@@ -1,13 +1,14 @@
 import {Component, OnInit} from "@angular/core";
-import {combineLatest, EMPTY, Observable, pipe, Subject} from "rxjs";
+import {combineLatest, EMPTY, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "../forecast/forecast.service";
-import {AdminService} from "../admin/admin.service";
-import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import * as _ from 'underscore';
 import {ForecastUtility} from "../common/forecastUtility";
+import {AlgorithmService} from "../algorithm/algorithm.service";
+import {Algorithm} from "../domain/algorithm";
 
 @Component({
     selector: 'bts-review',
@@ -20,21 +21,30 @@ export class ReviewComponent implements OnInit {
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
+    // forecast data
+    private forecastData$: Observable<Forecast[]>;
+    private forecastsForAlgorithm$: Observable<Forecast[]>;
+
     public leagues$: Observable<League[]>;
     public selectedLeague: League;
     private selectedLeagueSubject = new Subject<League>();
-    selectedLeagueAction = this.selectedLeagueSubject.asObservable();
 
+    selectedLeagueAction = this.selectedLeagueSubject.asObservable();
     public rounds$: Observable<Forecast[]>;
     public forecastForRoundAndLeague: Forecast;
     private selectedForecastSubject = new Subject<Forecast>();
-    selectedRoundAction = this.selectedForecastSubject.asObservable();
 
-    private forecastData$: Observable<Forecast[]>;
+    selectedRoundAction = this.selectedForecastSubject.asObservable();
+    public algorithms$: Observable<Algorithm[]>;
+    public currentAlgorithm$: Observable<Algorithm>;
+    private selectedAlgorithmSubject = new Subject<Algorithm>();
+    selectedAlgorithmAction = this.selectedAlgorithmSubject.asObservable();
+
+    public selectedAlgorithm: Algorithm;
 
     columns: any[];
 
-    constructor(private forecastService: ForecastService, private adminService: AdminService) {
+    constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService) {
         this.forecastUtility = ForecastUtility.getInstance();
     }
 
@@ -42,6 +52,47 @@ export class ReviewComponent implements OnInit {
         //get all forecast data
         this.forecastData$ = this.forecastService.getAllForecasts()
             .pipe(catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
+
+        // get all algorithms
+        this.algorithms$ = this.algorithmService.getAlgorithms()
+            .pipe(
+                tap(algorithms => console.log('algorithms', algorithms)),
+                catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
+
+        // get current algorithms
+        this.currentAlgorithm$ = this.algorithmService.getCurrentAlgorithm()
+            .pipe(
+                tap(algorithm => {
+                    console.log('current algorithm ', algorithm);
+                    this.selectedAlgorithmSubject.next(algorithm);
+                    this.selectedAlgorithm = algorithm;
+                })
+            )
+            .pipe(catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
+
+
+        //get all forecast data for selected algorithm
+        this.forecastsForAlgorithm$ = combineLatest(
+            [this.forecastData$, this.selectedAlgorithmAction]
+        ).pipe(map(([forecasts, algorithm]) => {
+                return _.filter(forecasts, function (forecast) {
+                    if (forecast.algorithmDto.name === algorithm.name) {
+                        return forecast;
+                    }
+                })
+            }), tap(forecasts => {
+                console.log('forecast for algorithm ', forecasts);
+            }),
+            catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
@@ -77,9 +128,8 @@ export class ReviewComponent implements OnInit {
                 })
             }),
             tap(forecasts => {
-                this.forecastForRoundAndLeague =_.first(forecasts)
-                this.forecastForRoundAndLeague.forecastDetails.sort((n1,n2) => n2.finalScore - n1.finalScore)
-                //console.log('selectedForecast tap:', this.forecastForRoundAndLeague);
+                this.forecastForRoundAndLeague = _.first(forecasts)
+                this.handleChange();
                 this.selectedForecastSubject.next(_.first(forecasts));
             }),
             catchError(err => {
@@ -96,9 +146,18 @@ export class ReviewComponent implements OnInit {
     }
 
     public onRoundChange() {
-        //console.log('selectedForecast onRoundChange: ', this.forecastForRoundAndLeague);
-        this.forecastForRoundAndLeague.forecastDetails.sort((n1,n2) => n2.finalScore - n1.finalScore)
+        this.handleChange();
         this.selectedForecastSubject.next(this.forecastForRoundAndLeague);
     }
+
+    public onAlgorithmChange() {
+
+    }
+
+    private handleChange() {
+        this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
+        this.selectedAlgorithm = this.forecastForRoundAndLeague.algorithmDto;
+    }
+
 
 }

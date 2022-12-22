@@ -57,7 +57,7 @@ export class AlgorithmComponent implements OnInit {
     }
 
     private retrieveCurrentAlgorithm() {
-        this.algorithmService.getCurrentAlgorithme()
+        this.algorithmService.getCurrentAlgorithm()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;

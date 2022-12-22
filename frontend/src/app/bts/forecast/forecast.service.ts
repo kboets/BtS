@@ -22,7 +22,7 @@ export class ForecastService {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(
                 shareReplay(1),
-                catchError(this.handleHttpError)
+                catchError(ForecastService.handleHttpError)
             );
     }
 
@@ -36,7 +36,7 @@ export class ForecastService {
 
 
 
-    private handleHttpError(error: HttpErrorResponse) {
+    private static handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handle HttpError of result service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
