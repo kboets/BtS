@@ -3,7 +3,7 @@ import {AdminService} from "./admin.service";
 import {EMPTY, Observable, Subject} from "rxjs";
 import {Admin} from "../domain/admin";
 import {GeneralError} from "../domain/generalError";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {LeagueService} from "../league/league.service";
 import {League} from "../domain/league";
 import {ConfirmationService, MessageService} from "primeng/api";
@@ -178,7 +178,12 @@ export class AdminComponent implements OnInit {
         this.selectedRoundUpdated$ = this.roundService.updateCurrentRound(+this.selectedRound.roundId, +this.selectedLeagueRound.league_id);
     }
 
+    sortRounds() {
+        this.selectedLeagueRound.roundDtos.sort((a,b) => +a.playRound - +b.playRound);
+    }
+
     getCurrentRound(): Round {
+        this.sortRounds();
         let rounds = this.selectedLeagueRound.roundDtos;
         return  _.findWhere(rounds , {"current": true});
     }
