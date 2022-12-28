@@ -7,8 +7,10 @@ import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.forecast.ForecastSpecs;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
+import boets.bts.backend.repository.result.ResultRepository;
+import boets.bts.backend.repository.result.ResultSpecs;
 import boets.bts.backend.service.AdminService;
-import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager2;
+import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.forecast.ForecastDetailDto;
@@ -26,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,18 +43,21 @@ public class ForecastService {
     private final RoundService roundService;
     private final ForecastRepository forecastRepository;
     private final ForecastMapper forecastMapper;
-    private final ForecastCalculatorManager2 forecastCalculatorManager2;
+    private final ForecastCalculatorManager forecastCalculatorManager;
+
+    private final ResultRepository resultRepository;
 
 
     public ForecastService(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository,
-                           ForecastCalculatorManager2 forecastCalculatorManager2, ForecastMapper forecastMapper) {
+                           ForecastCalculatorManager forecastCalculatorManager, ForecastMapper forecastMapper, ResultRepository resultRepository) {
         this.leagueRepository = leagueRepository;
         this.adminService = adminService;
         this.algorithmRepository = algorithmRepository;
         this.roundService = roundService;
         this.forecastRepository = forecastRepository;
-        this.forecastCalculatorManager2 = forecastCalculatorManager2;
+        this.forecastCalculatorManager = forecastCalculatorManager;
         this.forecastMapper = forecastMapper;
+        this.resultRepository = resultRepository;
     }
 
     /**
@@ -111,7 +117,7 @@ public class ForecastService {
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
         Algorithm algorithm = algorithmRepository.findAll(AlgorithmSpecs.current()).get(0);
         for(League league: leagues) {
-            Round nextRound = getLatestRoundForForecast(league);
+            Round nextRound = getLastestRound(league);
             currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
         }
         return currentForecasts;
@@ -131,8 +137,10 @@ public class ForecastService {
         try {
             while (index < algorithms.size()) {
                 Algorithm algorithm = algorithms.get(index);
-                List<Forecast> forecasts = forecastCalculatorManager2.calculateForecasts(league, roundNumbers, algorithm);
-                forecastRepository.saveAll(forecasts);
+                List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(league, roundNumbers, algorithm);
+                if (!forecasts.isEmpty()) {
+                    forecastRepository.saveAll(forecasts);
+                }
                 //logger.info("Forecast calculated :");
                 index++;
             }
@@ -150,7 +158,7 @@ public class ForecastService {
     }
 
 
-    //@Scheduled(cron ="* */5 * * * *")
+    //@Scheduled(cron ="* */2 * * * *")
     protected void scheduleForecasts2() {
         logger.info("Start scheduleForecast2");
         this.initScheduleForecasts();
@@ -205,13 +213,21 @@ public class ForecastService {
     }
 
 
-    private Round getLatestRoundForForecast(League league) {
+    private Round getLastestRound(League league) {
         LocalDate now = LocalDate.now();
         DayOfWeek today = now.getDayOfWeek();
+        Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), league.getSeason());
         if (WebUtils.isWeekend() || today.equals(DayOfWeek.MONDAY)) {
-            return roundService.getCurrentRoundForLeague(league.getId(), league.getSeason());
-        } else {
-            return roundService.getNextRound(league.getId());
+            return currentRound;
         }
+        // if current round does not contain any finished matches, return current, otherwise return next
+        List<Result> nextResults = resultRepository.findAll(ResultSpecs.forLeague(league)
+                .and(ResultSpecs.forRound(currentRound.getRoundNumber())));
+        if (nextResults.stream().anyMatch(result -> result.getMatchStatus().equalsIgnoreCase("Match Finished"))) {
+            return roundService.getNextRound(league.getId());
+        } else {
+            return currentRound;
+        }
+
     }
 }

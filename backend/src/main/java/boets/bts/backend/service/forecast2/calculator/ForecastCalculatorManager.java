@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 
 @Component
 @Transactional
-public class ForecastCalculatorManager2 {
-    private static final Logger logger = LoggerFactory.getLogger(ForecastCalculatorManager2.class);
+public class ForecastCalculatorManager {
+    private static final Logger logger = LoggerFactory.getLogger(ForecastCalculatorManager.class);
 
     private final ResultRepository resultRepository;
     private final ForecastRepository forecastRepository;
@@ -31,8 +31,8 @@ public class ForecastCalculatorManager2 {
     private final ForecastValidator validator;
 
 
-    public ForecastCalculatorManager2(ResultRepository resultRepository, List<ScoreCalculator> scoreCalculators, ForecastRepository forecastRepository,
-                                      ForecastValidator validator) {
+    public ForecastCalculatorManager(ResultRepository resultRepository, List<ScoreCalculator> scoreCalculators, ForecastRepository forecastRepository,
+                                     ForecastValidator validator) {
         this.resultRepository = resultRepository;
         this.forecastRepository = forecastRepository;
         this.scoreCalculators = scoreCalculators;
@@ -51,7 +51,7 @@ public class ForecastCalculatorManager2 {
     }
     
     protected Optional<Forecast> leagueAlreadyCalculated(League league, int roundNumber, Algorithm algorithm) {
-        Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(7)))
+        Optional<Forecast> optionalForecast = forecastRepository.findAll(Specification.where(ForecastSpecs.forAlgorithm(algorithm)).and(ForecastSpecs.forLeague(league)).and(ForecastSpecs.forRound(roundNumber)))
                 .stream()
                 .findFirst();
         if (optionalForecast.isPresent()) {

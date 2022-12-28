@@ -3,6 +3,14 @@
                             RELEASE NOTES
 
 *********************************************************************************
+27/12/2022 1.6.0
+new features:
+    review forecasts
+bugfixes:
+    Correct order rounds in admin
+    Forecast calculation
+    Forecast retrieval
+
 11/07/2022 1.5.0
 new features:
     persisted the forecasts

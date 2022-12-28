@@ -112,7 +112,10 @@ public class RoundService {
     public Round getNextRound(Long leagueId) {
         Round currentRound = this.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         List<Round> getAllRounds = this.getAllRoundsForLeague(leagueId);
-        return getAllRounds.stream().filter(round -> round.getRoundNumber() == currentRound.getRoundNumber()+1).findFirst().orElse(currentRound);
+        return getAllRounds.stream()
+                .filter(round -> round.getRoundNumber() == currentRound.getRoundNumber()+1)
+                .findFirst()
+                .orElse(currentRound);
     }
 
     public Round getLastRound(Long leagueId) {
