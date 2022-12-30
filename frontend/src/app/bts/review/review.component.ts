@@ -72,17 +72,6 @@ export class ReviewComponent implements OnInit {
                 return EMPTY;
             }));
 
-        // // get current algorithms
-        // this.algorithmService.getCurrentAlgorithm()
-        //     .pipe(catchError(err => {
-        //         this.errorMessageSubject.next(err);
-        //         return EMPTY;
-        //     })).subscribe((algorithm) => {
-        //     this.selectedAlgorithm = algorithm;
-        //     //console.log('current algorithm ', this.selectedAlgorithm);
-        //     this.selectedAlgorithmSubject.next(algorithm);
-        // });
-
 
         //get all forecast data for selected algorithm
         this.forecastsForAlgorithm$ = combineLatest(
