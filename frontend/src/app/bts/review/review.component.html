@@ -7,6 +7,7 @@
         <div class="p-grid">
             <div class="p-col-2">Kies de competitie: </div>
             <div class="p-col-2">Kies de ronde: </div>
+            <div class="p-col-2">Algoritme: </div>
             <div class="p-col-2" *ngIf="(algorithms$ | async)?.length > 1"> Kies het algoritme: </div>
         </div>
         <div class="p-grid">
@@ -19,6 +20,9 @@
                 <ng-container *ngIf="rounds$ | async as rounds">
                     <p-dropdown [options]="rounds" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
                 </ng-container>
+            </div>
+            <div class="p-col-2">
+                <strong>{{selectedAlgorithm?.name}}</strong> (threshold: {{selectedAlgorithm?.threshold}})
             </div>
             <div class="p-col-2">
                 <ng-container *ngIf="(algorithms$ | async)?.length > 1">
@@ -47,18 +51,19 @@
                                 <td>{{forecastDetail.finalScore}}</td>
                                 <td>
                                     <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
-                                        <strong>{{forecastDetail.nextGame?.homeTeam?.name}}</strong>
+                                        <span [style]="determineHomeTeamColor(forecastDetail)">{{forecastDetail.nextGame?.homeTeam?.name}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="!forecastUtility.isSameHomeTeam(forecastDetail)">
-                                        {{forecastDetail.nextGame?.homeTeam?.name}}
+                                        <span>{{forecastDetail.nextGame?.homeTeam?.name}}</span>
                                     </ng-container>
                                     -
                                     <ng-container *ngIf="forecastUtility.isSameAwayTeam(forecastDetail)">
-                                        <strong>{{forecastDetail.nextGame?.awayTeam?.name}}</strong>
+                                        <span [style]="determineAwayTeamColor(forecastDetail)">{{forecastDetail.nextGame?.awayTeam?.name}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="!forecastUtility.isSameAwayTeam(forecastDetail)">
-                                        {{forecastDetail.nextGame?.awayTeam?.name}}
+                                        <span>{{forecastDetail.nextGame?.awayTeam?.name}}</span>
                                     </ng-container>
+
                                     <br>
                                     ({{forecastDetail.nextGame?.eventDate | date: 'dd/MM/yyyy'}})
                                 </td>

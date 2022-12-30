@@ -9,6 +9,8 @@ import * as _ from 'underscore';
 import {ForecastUtility} from "../common/forecastUtility";
 import {AlgorithmService} from "../algorithm/algorithm.service";
 import {Algorithm} from "../domain/algorithm";
+import {ForecastDetail} from "../domain/forecastDetail";
+import {Teams} from "../domain/teams";
 
 @Component({
     selector: 'bts-review',
@@ -17,29 +19,27 @@ import {Algorithm} from "../domain/algorithm";
 })
 export class ReviewComponent implements OnInit {
 
-    forecastUtility: ForecastUtility;
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
     // forecast data
+    forecastUtility: ForecastUtility;
     private forecastData$: Observable<Forecast[]>;
     private forecastsForAlgorithm$: Observable<Forecast[]>;
-
+    // leagues
     public leagues$: Observable<League[]>;
     public selectedLeague: League;
     private selectedLeagueSubject = new Subject<League>();
-
     selectedLeagueAction = this.selectedLeagueSubject.asObservable();
+    // rounds
     public rounds$: Observable<Forecast[]>;
     public forecastForRoundAndLeague: Forecast;
     private selectedForecastSubject = new Subject<Forecast>();
-
-    selectedRoundAction = this.selectedForecastSubject.asObservable();
+    // algorithm
     public algorithms$: Observable<Algorithm[]>;
     public currentAlgorithm$: Observable<Algorithm>;
     private selectedAlgorithmSubject = new Subject<Algorithm>();
     selectedAlgorithmAction = this.selectedAlgorithmSubject.asObservable();
-
     public selectedAlgorithm: Algorithm;
 
     columns: any[];
@@ -59,25 +59,29 @@ export class ReviewComponent implements OnInit {
         // get all algorithms
         this.algorithms$ = this.algorithmService.getAlgorithms()
             .pipe(
-                tap(algorithms => console.log('algorithms', algorithms)),
+                tap(algorithms => {
+                    for(const algorithm of algorithms) {
+                        if (algorithm.current) {
+                            this.selectedAlgorithm = algorithm;
+                            this.selectedAlgorithmSubject.next(algorithm);
+                        }
+                    }
+                }),
                 catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
 
-        // get current algorithms
-        this.currentAlgorithm$ = this.algorithmService.getCurrentAlgorithm()
-            .pipe(
-                tap(algorithm => {
-                    console.log('current algorithm ', algorithm);
-                    this.selectedAlgorithmSubject.next(algorithm);
-                    this.selectedAlgorithm = algorithm;
-                })
-            )
-            .pipe(catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            }));
+        // // get current algorithms
+        // this.algorithmService.getCurrentAlgorithm()
+        //     .pipe(catchError(err => {
+        //         this.errorMessageSubject.next(err);
+        //         return EMPTY;
+        //     })).subscribe((algorithm) => {
+        //     this.selectedAlgorithm = algorithm;
+        //     //console.log('current algorithm ', this.selectedAlgorithm);
+        //     this.selectedAlgorithmSubject.next(algorithm);
+        // });
 
 
         //get all forecast data for selected algorithm
@@ -140,6 +144,37 @@ export class ReviewComponent implements OnInit {
 
     }
 
+    public determineHomeTeamColor(forecastDetail: ForecastDetail): string {
+        if (this.needColorValue(forecastDetail)) {
+            if (forecastDetail.nextGame.goalsHomeTeam > forecastDetail.nextGame.goalsAwayTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+        }
+
+        return 'background-color:transparent'
+    }
+
+    public determineAwayTeamColor(forecastDetail: ForecastDetail): string {
+        if (this.needColorValue(forecastDetail)) {
+            if (forecastDetail.nextGame.goalsAwayTeam > forecastDetail.nextGame.goalsHomeTeam) {
+                return 'background-color:#20d077';
+            } else {
+                return 'background-color:#ef6262';
+            }
+        }
+
+        return 'background-color:transparent'
+    }
+
+    private needColorValue(forecastDetail: ForecastDetail): boolean {
+        if (forecastDetail.finalScore >= this.selectedAlgorithm.threshold) {
+            return true;
+        }
+        return false;
+    }
+
 
     public onLeagueChange() {
         this.selectedLeagueSubject.next(this.selectedLeague);
@@ -156,7 +191,7 @@ export class ReviewComponent implements OnInit {
 
     private handleChange() {
         this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
-        this.selectedAlgorithm = this.forecastForRoundAndLeague.algorithmDto;
+        //this.selectedAlgorithm = this.forecastForRoundAndLeague.algorithmDto;
     }
 
 
