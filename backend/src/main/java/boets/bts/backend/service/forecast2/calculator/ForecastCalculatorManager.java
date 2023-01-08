@@ -42,8 +42,9 @@ public class ForecastCalculatorManager {
     public List<Forecast> calculateForecasts(League league, List<Integer> roundNumbers, Algorithm algorithm)  {
            return roundNumbers.stream()
                 .map(roundNumber -> this.leagueAlreadyCalculated(league,roundNumber,algorithm))
-                .flatMap(optionalForecast -> optionalForecast.map(Stream::of).orElseGet(Stream::empty))
+                .flatMap(Optional::stream)
                 .map(this::validateLeague)
+                .flatMap(Optional::stream)
                 .map(this::createForecastDetail)
                 .map(this::calculateScore)
                 .map(this::calculateFinalScore)
@@ -68,12 +69,17 @@ public class ForecastCalculatorManager {
         }
     }
 
-    protected Forecast validateLeague(Forecast forecast) {
+    protected Optional<Forecast> validateLeague(Forecast forecast) {
         forecast.setForecastResult(null);
         forecast.setDate(LocalDateTime.now());
         forecast.setSeason(WebUtils.getCurrentSeason());
         validator.validate(forecast);
-        return forecast;
+        if (forecast.getForecastResult().equals(ForecastResult.FATAL)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(forecast);
+        }
+
     }
 
     protected Forecast createForecastDetail(Forecast forecast) {

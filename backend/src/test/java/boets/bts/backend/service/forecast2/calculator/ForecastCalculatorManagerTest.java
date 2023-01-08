@@ -84,16 +84,18 @@ public class ForecastCalculatorManagerTest {
     public void validateLeague_givenNotAllValid_shouldReturnForecastWithErrorMessage() {
         adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastValidated = forecastCalculatorManager.validateLeague(forecast);
-        assertThat(forecastValidated.getForecastResult()).isEqualTo(ForecastResult.FATAL);
-        assertThat(forecastValidated.getMessage()).isEqualTo(AllDataUpdatedRule.errorMessage);
+        Optional<Forecast> forecastValidated = forecastCalculatorManager.validateLeague(forecast);
+        assertThat(forecastValidated.isPresent()).isTrue();
+        assertThat(forecastValidated.get().getForecastResult()).isEqualTo(ForecastResult.FATAL);
+        assertThat(forecastValidated.get().getMessage()).isEqualTo(AllDataUpdatedRule.errorMessage);
     }
 
     @Test
     public void validateLeague_givenAllValid_shouldReturnForecastWithoutErrorMessage() {
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastValidated = forecastCalculatorManager.validateLeague(forecast);
-        assertThat(forecastValidated.getForecastResult()).isNull();
+        Optional<Forecast> forecastValidated = forecastCalculatorManager.validateLeague(forecast);
+        assertThat(forecastValidated.isPresent()).isTrue();
+        assertThat(forecastValidated.get().getForecastResult()).isNull();
     }
 
 

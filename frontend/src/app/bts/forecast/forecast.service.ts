@@ -18,6 +18,14 @@ export class ForecastService {
         return this._forecastRefreshNeeded$;
     }
 
+    getAllExceptForecasts(): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/allExceptCurrent`)
+            .pipe(
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
+            );
+    }
+
     getAllForecasts(): Observable<Forecast[]> {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(

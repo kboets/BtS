@@ -4,6 +4,7 @@ import {ForecastResult} from "./forecastResult";
 import {Algorithm} from "./algorithm";
 
 export class Forecast {
+    id: number;
     league: League;
     round: number;
     season: number;

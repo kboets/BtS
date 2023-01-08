@@ -20,10 +20,10 @@ public class RoundResource {
 
     private Logger logger = LoggerFactory.getLogger(RoundResource.class);
 
-    private RoundService roundService;
-    private RoundMapper roundMapper;
-    private AdminService adminService;
-    private LeagueMapper leagueMapper;
+    private final RoundService roundService;
+    private final RoundMapper roundMapper;
+    private final AdminService adminService;
+    private final LeagueMapper leagueMapper;
 
     public RoundResource(RoundService roundService, RoundMapper roundMapper, AdminService adminService, LeagueMapper leagueMapper) {
         this.roundService = roundService;

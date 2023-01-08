@@ -3,12 +3,14 @@ package boets.bts.backend.web.admin;
 import boets.bts.backend.domain.Admin;
 import boets.bts.backend.service.AdminService;
 import boets.bts.backend.service.LeagueService;
+import boets.bts.backend.service.forecast2.ForecastService;
 import boets.bts.backend.service.result.ResultService;
 import boets.bts.backend.service.standing.StandingService;
 import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.GeneralException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +26,16 @@ public class AdminResource {
     private final ResultService resultService;
     private final StandingService standingService;
     private final LeagueService leagueService;
+    private final ForecastService forecastService;
 
     public AdminResource(AdminService adminService, AdminMapper adminMapper, ResultService resultService,
-                         StandingService standingService, LeagueService leagueService) {
+                         StandingService standingService, LeagueService leagueService, ForecastService forecastService) {
         this.adminService = adminService;
         this.adminMapper = adminMapper;
         this.resultService = resultService;
         this.standingService = standingService;
         this.leagueService = leagueService;
+        this.forecastService = forecastService;
     }
 
     @GetMapping("all")
@@ -64,7 +68,7 @@ public class AdminResource {
         }
     }
 
-    @PostMapping("/deleteLeague")
+    @PostMapping("deleteLeague")
     public boolean deleteLeague(@RequestBody String leagueId) {
         try {
             logger.info("Request to delete league id {}", leagueId);
@@ -73,6 +77,18 @@ public class AdminResource {
             logger.error("Error {} thrown while removing league {} ", e.getMessage(), leagueId);
             throw new GeneralException(e.getMessage());
         }
+    }
+
+    @PostMapping("deleteForecasts")
+    public boolean deleteForecast(@RequestBody Long forecastId) {
+        try {
+            logger.info("Request to delete forecast for forecast id {} ", forecastId);
+            forecastService.deleteForecast(forecastId);
+        } catch (Exception e) {
+            logger.error("Error {} thrown while removing forecast {}", e.getMessage(), forecastId);
+            throw new GeneralException(e.getMessage());
+        }
+        return true;
     }
 
     @PutMapping("update")

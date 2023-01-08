@@ -29,8 +29,13 @@ public class ForecastResource {
             throw new GeneralException(e.getMessage());
         }
     }
+    @GetMapping("allExceptCurrent")
+    public List<ForecastDto> getAllButCurrentForecasts() {
+        return forecastService.getAllExceptCurrentForecasts();
+    }
+
     @GetMapping("all")
     public List<ForecastDto> getAllForecasts() {
-        return forecastService.getAllExceptCurrentForecasts();
+        return forecastService.getAllForecasts();
     }
 }

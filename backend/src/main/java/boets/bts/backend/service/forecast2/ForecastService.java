@@ -76,6 +76,19 @@ public class ForecastService {
 
     }
 
+    /**
+     * Retrieves all the forecasts.
+     * @return List of ForecastDto
+     */
+    public List<ForecastDto> getAllForecasts() {
+        List<Forecast> allForecasts = forecastRepository.findAll();
+        List<Forecast> filteredForecasts = allForecasts.stream()
+                .sorted(Comparator.comparingInt(Forecast::getRound).reversed())
+                .sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()))
+                .collect(Collectors.toList());
+        return forecastMapper.toDtos(filteredForecasts);
+
+    }
 
     /**
      * Retrieves all the current forecasts with forecast details that have a score that is lower or equal as the given score(s)
@@ -149,6 +162,11 @@ public class ForecastService {
         }
 
     }
+
+    public void deleteForecast(Long forecastId) {
+        forecastRepository.deleteById(forecastId);
+    }
+
 
 
     @Scheduled(cron ="0 7/30 * * * TUE-THU")

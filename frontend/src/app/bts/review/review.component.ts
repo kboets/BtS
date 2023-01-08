@@ -50,7 +50,7 @@ export class ReviewComponent implements OnInit {
 
     ngOnInit(): void {
         //get all forecast data
-        this.forecastData$ = this.forecastService.getAllForecasts()
+        this.forecastData$ = this.forecastService.getAllExceptForecasts()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
