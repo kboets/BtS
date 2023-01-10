@@ -22,7 +22,7 @@ import {ForecastService} from "../forecast/forecast.service";
 export class AdminComponent implements OnInit {
 
     private errorMessageSubject = new Subject<GeneralError>();
-    errorMessage$ = this.errorMessageSubject.asObservable();
+    errorMessageAction$ = this.errorMessageSubject.asObservable();
     private forecastLeagueSubject = new Subject<League>();
     selectedForecastLeagueAction = this.forecastLeagueSubject.asObservable();
     public forecastForRoundAndLeague: Forecast;
@@ -108,6 +108,16 @@ export class AdminComponent implements OnInit {
                 })
             );
 
+        // get all the forecasts
+       this.initForecastData();
+    }
+
+    public onForecastLeagueChange() {
+        this.selectedForecastRoundLeague = null;
+        this.forecastLeagueSubject.next(this.selectedForecastLeague);
+    }
+
+    private initForecastData() {
         this.allForecasts$ = this.forecastService.getAllForecasts()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -144,11 +154,6 @@ export class AdminComponent implements OnInit {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
-    }
-
-    public onForecastLeagueChange() {
-        this.selectedForecastRoundLeague = null;
-        this.forecastLeagueSubject.next(this.selectedForecastLeague);
     }
 
     private setCurrentAndPreviousSeason(adminDBSeason: Admin) {
@@ -217,7 +222,6 @@ export class AdminComponent implements OnInit {
                         this.removeAcknowledgeMessage();
                     })
             }
-
         });
     }
 
@@ -248,6 +252,7 @@ export class AdminComponent implements OnInit {
                 this.adminService.deleteForecast(this.selectedForecastRoundLeague.id)
                     .subscribe((data) => {
                         this.showForecastMessage = true;
+                        this.initForecastData();
                         this.removeAcknowledgeMessage();
                     })
             }
@@ -273,6 +278,7 @@ export class AdminComponent implements OnInit {
             this.selectedLeagueStanding = null;
             this.selectedLeague = null;
             this.selectedForecastLeague = null;
+            this.selectedForecastRoundLeague = null;
         }, 5000);
     }
 

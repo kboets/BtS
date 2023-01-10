@@ -1,4 +1,4 @@
-<ng-container *ngIf="errorMessage$ | async as errorMessage">
+<ng-container *ngIf="errorMessageAction$ | async as errorMessage">
     <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
     <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>

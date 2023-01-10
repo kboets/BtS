@@ -112,21 +112,7 @@ export class ForecastComponent implements OnInit {
         }
     }
 
-    // isSameHomeTeam(forecastDetail: ForecastDetail): boolean {
-    //     return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.homeTeam);
-    // }
-    //
-    // isSameAwayTeam(forecastDetail: ForecastDetail) : boolean {
-    //     return this.isSameTeam(forecastDetail.team, forecastDetail.nextGame.awayTeam);
-    // }
-    //
-    // private isSameTeam(detailTeam: Teams, otherTeam: Teams): boolean {
-    //     //console.log('detail team ', detailTeam.name, ' other team ', otherTeam.name);
-    //     return detailTeam.name === otherTeam.name;
-    //
-    // }
-
-    expandAll() {
+   expandAll() {
         if(!this.isExpanded){
             this.forecastData.forEach(data =>{
                 this.expandedRows[data.league.name] = true;
