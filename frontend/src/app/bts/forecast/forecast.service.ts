@@ -42,6 +42,12 @@ export class ForecastService {
         })
     }
 
+    runForecasts(): Observable<boolean> {
+        return this.http.get<boolean>(`/btsapi/api/forecast/recalculate`)
+            .pipe(
+                catchError(ForecastService.handleHttpError)
+            );
+    }
 
 
     private static handleHttpError(error: HttpErrorResponse) {

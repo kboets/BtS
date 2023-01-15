@@ -8,6 +8,7 @@ import boets.bts.backend.repository.standing.StandingSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -190,6 +191,9 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         String opponent = isHomeGame?result.getAwayTeam().getName():result.getHomeTeam().getName();
         infoMessage.append("<br>")
                 .append("<b>")
+                .append("(")
+                .append(result.getEventDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .append(")  ")
                 .append(winOrLose)
                 .append(" tegen ")
                 .append(opponent)

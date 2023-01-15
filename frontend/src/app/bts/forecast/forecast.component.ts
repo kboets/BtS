@@ -10,7 +10,6 @@ import * as _ from 'underscore';
 import {AdminService} from "../admin/admin.service";
 import {AdminKeys} from "../domain/adminKeys";
 import {Table} from "primeng/table";
-import {Teams} from "../domain/teams";
 import {ForecastUtility} from "../common/forecastUtility";
 
 @Component({
@@ -31,6 +30,7 @@ export class ForecastComponent implements OnInit {
     public isExpanded: boolean;
     public expandedRows = {};
     public temDataLength: number;
+    public isCalculating: boolean;
     // filtering the score
     public scores: any[];
     public selectedScores: any[];
@@ -90,6 +90,17 @@ export class ForecastComponent implements OnInit {
 
     onSort() {
         this.updateRowGroupMetaData();
+    }
+
+    runForecast() {
+        this.isCalculating= true;
+        this.forecastService.runForecasts()
+            .subscribe((success) => {
+                if(success) {
+                    this.getForecastData();
+                }
+                this.isCalculating = false;
+            })
     }
 
     updateRowGroupMetaData() {

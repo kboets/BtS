@@ -38,4 +38,10 @@ public class ForecastResource {
     public List<ForecastDto> getAllForecasts() {
         return forecastService.getAllForecasts();
     }
+
+    @GetMapping("recalculate")
+    public boolean calculateForecasts() {
+        return this.forecastService.initScheduleForecasts();
+
+    }
 }

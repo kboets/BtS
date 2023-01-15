@@ -182,7 +182,7 @@ public class ForecastService {
         this.initScheduleForecasts();
     }
 
-    protected void initScheduleForecasts() {
+    public boolean initScheduleForecasts() {
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
         List<Algorithm> algorithms = algorithmRepository.findAll();
@@ -196,6 +196,7 @@ public class ForecastService {
             }
             index++;
         }
+        return true;
     }
 
     /**

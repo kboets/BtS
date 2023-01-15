@@ -2,13 +2,20 @@
     <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
     <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>
+<ng-container *ngIf="isCalculating">
+    <p-message severity="info" text="De herberekening is bezig..."></p-message>
+</ng-container>
+
 <div class="card">
         <p-table #dt1 [value]="forecastData" dataKey="league.name" sortField="league.name" sortMode="single" (onSort)="onSort()"
                  [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand()" (onRowCollapse)="onRowCollapse()">
             <ng-template pTemplate="caption">
                 <div class="p-d-flex">
                     <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <button pButton label="Herbereken" class="p-ml-auto"   type="button"  (click)="runForecast() "></button>
                 </div>
+
+
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>

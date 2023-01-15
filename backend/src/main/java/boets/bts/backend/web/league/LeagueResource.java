@@ -34,7 +34,7 @@ public class LeagueResource {
 
         try {
             Optional<LeagueDto> leagueDto = leagueService.getLeagueDtoById(id);
-            if(!leagueDto.isPresent()) {
+            if(leagueDto.isEmpty()) {
                 throw new NotFoundException(String.format("No league found with id %s", id));
             }
             return leagueDto.get();
