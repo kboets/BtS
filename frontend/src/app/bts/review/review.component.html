@@ -50,6 +50,9 @@
                                 <td>{{forecastDetail.team?.name}}</td>
                                 <td>{{forecastDetail.finalScore}}</td>
                                 <td>
+                                    <ng-container *ngIf="forecastDetail.forecastResult != null">
+                                        <i class="pi pi-bell p-mr-2" style="background-color: #ef6262" (click)="showWarningMessage(forecastDetail)"></i>
+                                    </ng-container>
                                     <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
                                         <span [style]="determineHomeTeamColor(forecastDetail)">{{forecastDetail.nextGame?.homeTeam?.name}}</span>
                                     </ng-container>
@@ -69,15 +72,18 @@
                                 </td>
                                 <td>{{forecastDetail.nextGame?.goalsHomeTeam}} - {{forecastDetail.nextGame?.goalsAwayTeam}}</td>
                             </tr>
-
-
                         </ng-template>
                     </p-table>
                 </ng-container>
             </div>
         </div>
-
-
     </p-panel>
-
 </div>
+
+
+<p-dialog [(visible)]="displayWarningMessage" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <p [innerHTML]="warningForecastDetail?.errorMessage"></p>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="displayWarningMessage=false" label="Ok" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

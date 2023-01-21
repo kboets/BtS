@@ -6,6 +6,8 @@
 27/12/2022 1.6.0
 new features:
     review forecasts
+    show datums of played games on forecast
+    add icon for warning message on forecast + review
 bugfixes:
     Correct order rounds in admin
     Forecast calculation

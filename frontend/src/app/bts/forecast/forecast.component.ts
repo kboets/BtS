@@ -35,6 +35,9 @@ export class ForecastComponent implements OnInit {
     public scores: any[];
     public selectedScores: any[];
     private previousScores: any[];
+    public displayWarningMessage: boolean;
+    public warningForecastDetail: ForecastDetail;
+
 
     currentSeason: number;
     displayScoreInfo: boolean;
@@ -47,6 +50,7 @@ export class ForecastComponent implements OnInit {
         this.forecastDetails = [];
         this.forecastData = [];
         this.displayScoreInfo = false;
+        this.displayWarningMessage = false;
         this.isExpanded = false;
         this.temDataLength = 0;
         this.selectedScores = [];
@@ -148,6 +152,11 @@ export class ForecastComponent implements OnInit {
     showScoreInfo(forecastDetail: ForecastDetail) {
         this.displayScoreInfo = true;
         this.selectedForecastDetail = forecastDetail;
+    }
+
+    showWarningMessage(forecastDetail: ForecastDetail) {
+        this.displayWarningMessage = true;
+        this.warningForecastDetail = forecastDetail;
     }
 
     clear(table: Table) {

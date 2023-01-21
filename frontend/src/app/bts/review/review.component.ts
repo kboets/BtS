@@ -41,11 +41,14 @@ export class ReviewComponent implements OnInit {
     private selectedAlgorithmSubject = new Subject<Algorithm>();
     selectedAlgorithmAction = this.selectedAlgorithmSubject.asObservable();
     public selectedAlgorithm: Algorithm;
+    public displayWarningMessage: boolean;
+    public warningForecastDetail: ForecastDetail;
 
     columns: any[];
 
     constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService) {
         this.forecastUtility = ForecastUtility.getInstance();
+        this.displayWarningMessage = false;
     }
 
     ngOnInit(): void {
@@ -181,6 +184,11 @@ export class ReviewComponent implements OnInit {
     private handleChange() {
         this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
         //this.selectedAlgorithm = this.forecastForRoundAndLeague.algorithmDto;
+    }
+
+    showWarningMessage(forecastDetail: ForecastDetail) {
+        this.displayWarningMessage = true;
+        this.warningForecastDetail = forecastDetail;
     }
 
 
