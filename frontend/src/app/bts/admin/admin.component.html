@@ -1,4 +1,4 @@
-<ng-container *ngIf="errorMessage$ | async as errorMessage">
+<ng-container *ngIf="errorMessageAction$ | async as errorMessage">
     <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
     <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>
@@ -11,12 +11,16 @@
 <ng-container *ngIf="showLeagueMessage">
     <p-message severity="info" text="De competitie {{selectedLeagueDelete.name}} werd verwijderd."></p-message>
 </ng-container>
+<ng-container *ngIf="showForecastMessage">
+    <p-message severity="info" text="De forecast voor  {{selectedForecastLeague.name}} en speelronde {{selectedForecastRoundLeague.round}} werd verwijderd "></p-message>
+</ng-container>
 <ng-container *ngIf="seasonUpdated$ | async as seizoenUpdate">
     <p-message severity="info" text="Het seizoen werd aangepast: huidig seizoen : {{seizoenUpdate.value}}."></p-message>
 </ng-container>
 <ng-container *ngIf="selectedRoundUpdated$ | async as roundUpdated">
     <p-message severity="info" text="De huidige speelronde voor {{selectedLeagueRound.name}} werd aangepast naar speelronde {{roundUpdated.playRound}}"></p-message>
 </ng-container>
+
 
 <h5>Admin pagina</h5>
 <p-accordion [multiple]="true">
@@ -146,13 +150,39 @@
             <div class="p-col-2">
                 <ng-container *ngIf="selectedLeagueRound as league">
                     <div class="box">
-                        <p-dropdown [options]="league.roundDtos" dataKey="round" [(ngModel)]="selectedRound" optionLabel="round"  placeholder="Kies een speelronde"></p-dropdown>
+                        <p-dropdown [options]="league.roundDtos" dataKey="round" [(ngModel)]="selectedRound" optionLabel="playRound"  placeholder="Kies een speelronde"></p-dropdown>
                     </div>
                 </ng-container>
             </div>
             <div class="p-col-2" *ngIf="selectedRound">
                 <div class="box"><button pButton type="button" label="Verander ronde" (click)="updateRound()" style="margin-right: .5rem"></button></div>
             </div>
+        </div>
+        <!-- wijzig forecast  -->
+        <div class="p-grid">
+            <div class="p-col-2">
+                <div class="box">Verwijder forecast</div>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="forecastLeagues$ | async as leagues">
+                    <div class="box">
+                        <p-dropdown [options]="leagues" [(ngModel)]="selectedForecastLeague" optionLabel="name" (onChange)="onForecastLeagueChange()" placeholder="Kies een competitie"></p-dropdown>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="p-col-2">
+                <div class="p-col-2">
+                    <ng-container *ngIf="forecastLeagueAndRounds$ | async as rounds">
+                        <p-dropdown [options]="rounds" [(ngModel)]="selectedForecastRoundLeague" optionLabel="round" placeholder="Kies een speelronde" ></p-dropdown>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="p-col-2" *ngIf="selectedForecastRoundLeague">
+                <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+                <div class="box"><button pButton type="button" label="Verwijder Forecast" (click)="deleteForecast()" style="margin-right: .5rem"></button></div>
+            </div>
+
+
         </div>
     </p-accordionTab>
 

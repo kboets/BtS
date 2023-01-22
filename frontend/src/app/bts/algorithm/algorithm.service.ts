@@ -44,7 +44,7 @@ export class AlgorithmService {
         )
     }
 
-    getCurrentAlgorithme(): Observable<Algorithm> {
+    getCurrentAlgorithm(): Observable<Algorithm> {
         return this.http.get<Algorithm>(`/btsapi/api/algorithm/current`, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'

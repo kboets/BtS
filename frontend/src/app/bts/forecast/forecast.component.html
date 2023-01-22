@@ -2,13 +2,20 @@
     <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
     <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
 </ng-container>
+<ng-container *ngIf="isCalculating">
+    <p-message severity="info" text="De herberekening is bezig..."></p-message>
+</ng-container>
+
 <div class="card">
         <p-table #dt1 [value]="forecastData" dataKey="league.name" sortField="league.name" sortMode="single" (onSort)="onSort()"
                  [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand()" (onRowCollapse)="onRowCollapse()">
             <ng-template pTemplate="caption">
                 <div class="p-d-flex">
                     <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <button pButton label="Herbereken" class="p-ml-auto"   type="button"  (click)="runForecast() "></button>
                 </div>
+
+
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
@@ -48,22 +55,25 @@
                                         <td></td>
                                         <td>{{forecastDetail.team?.name}}</td>
                                         <td>
-                                            <ng-container *ngIf="isSameHomeTeam(forecastDetail)">
+                                            <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
                                                 <strong>{{forecastDetail.nextGame?.homeTeam?.name}}</strong>
                                             </ng-container>
-                                            <ng-container *ngIf="!isSameHomeTeam(forecastDetail)">
+                                            <ng-container *ngIf="!forecastUtility.isSameHomeTeam(forecastDetail)">
                                                 {{forecastDetail.nextGame?.homeTeam?.name}}
                                             </ng-container>
                                             -
-                                            <ng-container *ngIf="isSameAwayTeam(forecastDetail)">
+                                            <ng-container *ngIf="forecastUtility.isSameAwayTeam(forecastDetail)">
                                                 <strong>{{forecastDetail.nextGame?.awayTeam?.name}}</strong>
                                             </ng-container>
-                                            <ng-container *ngIf="!isSameAwayTeam(forecastDetail)">
+                                            <ng-container *ngIf="!forecastUtility.isSameAwayTeam(forecastDetail)">
                                                 {{forecastDetail.nextGame?.awayTeam?.name}}
                                             </ng-container>
                                             <br/>
                                             ({{forecastDetail.nextGame?.eventDate | date: 'dd/MM/yyyy'}})</td>
-                                        <td><i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.finalScore}}</td>
+                                        <td><ng-container *ngIf="forecastDetail.forecastResult != null">
+                                                <i class="pi pi-bell p-mr-2" style="background-color: #ef6262" (click)="showWarningMessage(forecastDetail)"></i>
+                                            </ng-container>
+                                            <i class="pi pi-question-circle p-mr-2" (click)="showScoreInfo(forecastDetail)"></i>{{forecastDetail.finalScore}}</td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -77,5 +87,12 @@
     <p [innerHTML]="selectedForecastDetail?.message"></p>
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-check" (click)="displayScoreInfo=false" label="Ok" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="displayWarningMessage" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <p [innerHTML]="warningForecastDetail?.errorMessage"></p>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="displayWarningMessage=false" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>

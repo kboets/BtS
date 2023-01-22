@@ -102,17 +102,22 @@ public class RoundService {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         int previousRound = currentRound.getRoundNumber()-1;
         Optional<Round> previousOptional = roundRepository.findAll(Specification.where(RoundSpecs.getRoundsByLeagueId(league).and(RoundSpecs.getRoundsByRoundNumber(previousRound)))).stream().findFirst();
-        if(previousOptional.isPresent()) {
-            return previousOptional.get();
+        if(previousOptional.isEmpty()) {
+            logger.warn("Could not retrieve previous round {} for league {}, returning the current !", previousOptional, league.getName());
+            return currentRound;
         }
-        logger.warn("Could not retrieve previous round {} for league {}, returning the current !", previousOptional, league.getName());
-        return currentRound;
+        return previousOptional.get();
     }
 
     public Round getNextRound(Long leagueId) {
         Round currentRound = this.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
-        List<Round> getAllRounds = this.getAllRoundsForLeague(leagueId);
-        return getAllRounds.stream().filter(round -> round.getRoundNumber() == currentRound.getRoundNumber()+1).findFirst().orElse(currentRound);
+        int nextRoundNumber = currentRound.getRoundNumber() + 1;
+        Optional<Round> nextRoundOptional = roundRepository.findOne(Specification.where(RoundSpecs.getRoundsByLeagueId(currentRound.getLeague())).and(RoundSpecs.getRoundsByRoundNumber(nextRoundNumber)));
+        if (nextRoundOptional.isEmpty()) {
+            logger.warn("Could not retrieve next round {} for league {}, returning the current !", nextRoundOptional, currentRound.getLeague().getName());
+            return currentRound;
+        }
+        return nextRoundOptional.get();
     }
 
     public Round getLastRound(Long leagueId) {

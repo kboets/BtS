@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {BehaviorSubject, combineLatest, Observable, Subject, throwError} from "rxjs";
 import {catchError, map, tap} from "rxjs/operators";
@@ -61,6 +61,14 @@ export class AdminService {
 
     deleteLeague(id: string): Observable<boolean> {
         return this.http.post<boolean>(`/btsapi/api/admin/deleteLeague`, id, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        });
+    }
+
+    deleteForecast(forecast_id: number) {
+        return this.http.post<boolean>(`/btsapi/api/admin/deleteForecasts`,  forecast_id, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("mock")
 @Sql(scripts = "/boets/bts/backend/service/forecast/calculator/valid-be-league.sql")
 @Transactional
-public class ForecastCalculatorManager2Test {
+public class ForecastCalculatorManagerTest {
 
     @Autowired
     private AlgorithmRepository algorithmRepository;
@@ -36,7 +36,7 @@ public class ForecastCalculatorManager2Test {
     @Autowired
     private ForecastRepository forecastRepository;
     @Autowired
-    private ForecastCalculatorManager2 forecastCalculatorManager2;
+    private ForecastCalculatorManager forecastCalculatorManager;
     @Autowired
     private AdminService adminService;
     private League league;
@@ -54,7 +54,7 @@ public class ForecastCalculatorManager2Test {
 
     @Test
     public void leagueAlreadyCalculated_givenNotCalculated_shouldReturnForecast() {
-        Optional<Forecast> forecastOptional = forecastCalculatorManager2.leagueAlreadyCalculated(league, 7, algorithm);
+        Optional<Forecast> forecastOptional = forecastCalculatorManager.leagueAlreadyCalculated(league, 7, algorithm);
         assertThat(forecastOptional.isPresent()).isTrue();
         assertThat(forecastOptional.get().getRound()).isEqualTo(7);
     }
@@ -65,7 +65,7 @@ public class ForecastCalculatorManager2Test {
         forecast.setForecastResult(ForecastResult.OK);
         forecastRepository.save(forecast);
         assertThat(forecastRepository.findAll().size()).isEqualTo(1);
-        Optional<Forecast> forecastOptional = forecastCalculatorManager2.leagueAlreadyCalculated(league, 7, algorithm);
+        Optional<Forecast> forecastOptional = forecastCalculatorManager.leagueAlreadyCalculated(league, 7, algorithm);
         assertThat(forecastOptional.isPresent()).isFalse();
     }
 
@@ -75,7 +75,7 @@ public class ForecastCalculatorManager2Test {
         forecast.setForecastResult(ForecastResult.WARNING);
         forecastRepository.save(forecast);
         assertThat(forecastRepository.findAll().size()).isEqualTo(1);
-        Optional<Forecast> forecastOptional = forecastCalculatorManager2.leagueAlreadyCalculated(league, 7, algorithm);
+        Optional<Forecast> forecastOptional = forecastCalculatorManager.leagueAlreadyCalculated(league, 7, algorithm);
         assertThat(forecastOptional.isPresent()).isTrue();
         assertThat(forecastOptional.get().getLeague().getName()).isEqualTo(league.getName());
     }
@@ -84,23 +84,25 @@ public class ForecastCalculatorManager2Test {
     public void validateLeague_givenNotAllValid_shouldReturnForecastWithErrorMessage() {
         adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastValidated = forecastCalculatorManager2.validateLeague(forecast);
-        assertThat(forecastValidated.getForecastResult()).isEqualTo(ForecastResult.FATAL);
-        assertThat(forecastValidated.getMessage()).isEqualTo(AllDataUpdatedRule.errorMessage);
+        Optional<Forecast> forecastValidated = forecastCalculatorManager.validateLeague(forecast);
+        assertThat(forecastValidated.isPresent()).isTrue();
+        assertThat(forecastValidated.get().getForecastResult()).isEqualTo(ForecastResult.FATAL);
+        assertThat(forecastValidated.get().getMessage()).isEqualTo(AllDataUpdatedRule.errorMessage);
     }
 
     @Test
     public void validateLeague_givenAllValid_shouldReturnForecastWithoutErrorMessage() {
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastValidated = forecastCalculatorManager2.validateLeague(forecast);
-        assertThat(forecastValidated.getForecastResult()).isNull();
+        Optional<Forecast> forecastValidated = forecastCalculatorManager.validateLeague(forecast);
+        assertThat(forecastValidated.isPresent()).isTrue();
+        assertThat(forecastValidated.get().getForecastResult()).isNull();
     }
 
 
     @Test
     public void createForecastDetail_givenValidForecast_shouldReturnForecastWithDetails() {
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastWithDetails = forecastCalculatorManager2.createForecastDetail(forecast);
+        Forecast forecastWithDetails = forecastCalculatorManager.createForecastDetail(forecast);
         assertThat(forecastWithDetails.getForecastResult()).isNull();
         assertThat(forecastWithDetails.getForecastDetails().size()).isEqualTo(18);
         // check OH LEUVEN -> next game (=7th round) should be against anderlecht
@@ -115,7 +117,7 @@ public class ForecastCalculatorManager2Test {
     public void calculateScore_givenValidForecast_shouldReturnForecastScore() {
         // update admin
         Forecast forecast = new Forecast(league, 7, algorithm);
-        Forecast forecastWithDetails = forecastCalculatorManager2.createForecastDetail(forecast);
+        Forecast forecastWithDetails = forecastCalculatorManager.createForecastDetail(forecast);
         assertThat(forecastWithDetails.getForecastResult()).isNull();
         assertThat(forecastWithDetails.getForecastDetails().size()).isEqualTo(18);
         // check OH LEUVEN -> next game (=7th round) should be against anderlecht

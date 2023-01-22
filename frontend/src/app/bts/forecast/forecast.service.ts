@@ -18,10 +18,19 @@ export class ForecastService {
         return this._forecastRefreshNeeded$;
     }
 
+    getAllExceptForecasts(): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/allExceptCurrent`)
+            .pipe(
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
+            );
+    }
+
     getAllForecasts(): Observable<Forecast[]> {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(
-                catchError(this.handleHttpError)
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
             );
     }
 
@@ -33,9 +42,15 @@ export class ForecastService {
         })
     }
 
+    runForecasts(): Observable<boolean> {
+        return this.http.get<boolean>(`/btsapi/api/forecast/recalculate`)
+            .pipe(
+                catchError(ForecastService.handleHttpError)
+            );
+    }
 
 
-    private handleHttpError(error: HttpErrorResponse) {
+    private static handleHttpError(error: HttpErrorResponse) {
         console.log("entering the handle HttpError of result service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;

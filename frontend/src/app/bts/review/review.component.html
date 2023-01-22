@@ -1,0 +1,89 @@
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <p-message severity="error" text="{{errorMessage}}"></p-message>
+</ng-container>
+
+<div class="card">
+    <p-panel header="Terugblik forecast">
+        <div class="p-grid">
+            <div class="p-col-2">Kies de competitie: </div>
+            <div class="p-col-2">Kies de ronde: </div>
+            <div class="p-col-2">Algoritme: </div>
+            <div class="p-col-2" *ngIf="(algorithms$ | async)?.length > 1"> Kies het algoritme: </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-2">
+                <ng-container *ngIf="leagues$ | async as leagues">
+                    <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" optionLabel="name" (onChange)="onLeagueChange()"></p-dropdown>
+                </ng-container>
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="rounds$ | async as rounds">
+                    <p-dropdown [options]="rounds" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
+                </ng-container>
+            </div>
+            <div class="p-col-2">
+                <strong>{{selectedAlgorithm?.name}}</strong> (threshold: {{selectedAlgorithm?.threshold}})
+            </div>
+            <div class="p-col-2">
+                <ng-container *ngIf="(algorithms$ | async)?.length > 1">
+                    <ng-container *ngIf="algorithms$ | async as algorithms">
+                        <p-dropdown [options]="algorithms" [(ngModel)]="selectedAlgorithm" optionLabel="name" (onChange)="onAlgorithmChange()"></p-dropdown>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <hr>
+        <div class="p-grid">
+            <div class="p-col-12">
+                <ng-container *ngIf="forecastForRoundAndLeague">
+                    <p-table [value]="forecastForRoundAndLeague.forecastDetails" [autoLayout]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'250px'}">Team</th>
+                                <th [ngStyle]="{'width':'150px'}">Punten</th>
+                                <th [ngStyle]="{'width':'350px'}">Wedstrijd</th>
+                                <th>Uitslag</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-forecastDetail>
+                            <tr>
+                                <td>{{forecastDetail.team?.name}}</td>
+                                <td>{{forecastDetail.finalScore}}</td>
+                                <td>
+                                    <ng-container *ngIf="forecastDetail.forecastResult != null">
+                                        <i class="pi pi-bell p-mr-2" style="background-color: #ef6262" (click)="showWarningMessage(forecastDetail)"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="forecastUtility.isSameHomeTeam(forecastDetail)">
+                                        <span [style]="determineHomeTeamColor(forecastDetail)">{{forecastDetail.nextGame?.homeTeam?.name}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!forecastUtility.isSameHomeTeam(forecastDetail)">
+                                        <span>{{forecastDetail.nextGame?.homeTeam?.name}}</span>
+                                    </ng-container>
+                                    -
+                                    <ng-container *ngIf="forecastUtility.isSameAwayTeam(forecastDetail)">
+                                        <span [style]="determineAwayTeamColor(forecastDetail)">{{forecastDetail.nextGame?.awayTeam?.name}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!forecastUtility.isSameAwayTeam(forecastDetail)">
+                                        <span>{{forecastDetail.nextGame?.awayTeam?.name}}</span>
+                                    </ng-container>
+
+                                    <br>
+                                    ({{forecastDetail.nextGame?.eventDate | date: 'dd/MM/yyyy'}})
+                                </td>
+                                <td>{{forecastDetail.nextGame?.goalsHomeTeam}} - {{forecastDetail.nextGame?.goalsAwayTeam}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </ng-container>
+            </div>
+        </div>
+    </p-panel>
+</div>
+
+
+<p-dialog [(visible)]="displayWarningMessage" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <p [innerHTML]="warningForecastDetail?.errorMessage"></p>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="displayWarningMessage=false" label="Ok" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

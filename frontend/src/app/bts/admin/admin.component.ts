@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {AdminService} from "./admin.service";
-import {EMPTY, Observable, Subject} from "rxjs";
+import {combineLatest, EMPTY, Observable, Subject} from "rxjs";
 import {Admin} from "../domain/admin";
 import {GeneralError} from "../domain/generalError";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {LeagueService} from "../league/league.service";
 import {League} from "../domain/league";
 import {ConfirmationService, MessageService} from "primeng/api";
@@ -11,6 +11,8 @@ import {AdminKeys} from "../domain/adminKeys";
 import * as _ from 'underscore';
 import {Round} from "../domain/round";
 import {RoundService} from "../round/round.service";
+import {Forecast} from "../domain/forecast";
+import {ForecastService} from "../forecast/forecast.service";
 
 @Component({
     selector: 'bts-admin',
@@ -20,7 +22,12 @@ import {RoundService} from "../round/round.service";
 export class AdminComponent implements OnInit {
 
     private errorMessageSubject = new Subject<GeneralError>();
-    errorMessage$ = this.errorMessageSubject.asObservable();
+    errorMessageAction$ = this.errorMessageSubject.asObservable();
+    private forecastLeagueSubject = new Subject<League>();
+    selectedForecastLeagueAction = this.forecastLeagueSubject.asObservable();
+    public forecastForRoundAndLeague: Forecast;
+    private selectedForecastSubject = new Subject<Forecast>();
+
     selectedLeague: League;
     selectedLeagueRound: League;
     selectedLeagueStanding: League;
@@ -29,23 +36,34 @@ export class AdminComponent implements OnInit {
     selectedRound: Round;
     adminDataList$: Observable<Admin[]>;
     allLeagues$: Observable<League[]>;
+    allForecasts$: Observable<Forecast[]>;
+    forecastLeagues$: Observable<League[]>
+    selectedForecastLeague: League;
+    forecastLeagueAndRounds$: Observable<Forecast[]>;
+    selectedForecastRoundLeague: Forecast;
+
+
     allSeasons: Admin[] = [];
     currentSeason: number;
     selectedSeason: number;
 
+
     showResultMessage: boolean;
     showStandingMessage: boolean;
     showLeagueMessage:boolean;
+    showForecastMessage:boolean;
     seasonUpdated$: Observable<Admin>;
     selectedRoundUpdated$: Observable<Round>;
 
     columns: any[];
 
     constructor(private adminService: AdminService, private leagueService: LeagueService,
-                private confirmationService: ConfirmationService, private roundService: RoundService) {
+                private confirmationService: ConfirmationService, private roundService: RoundService,
+                private forecastService: ForecastService) {
         this.showResultMessage = false;
         this.showStandingMessage = false;
         this.showLeagueMessage = false;
+        this.showForecastMessage = false;
     }
 
 
@@ -89,6 +107,53 @@ export class AdminComponent implements OnInit {
                     return EMPTY;
                 })
             );
+
+        // get all the forecasts
+       this.initForecastData();
+    }
+
+    public onForecastLeagueChange() {
+        this.selectedForecastRoundLeague = null;
+        this.forecastLeagueSubject.next(this.selectedForecastLeague);
+    }
+
+    private initForecastData() {
+        this.allForecasts$ = this.forecastService.getAllForecasts()
+            .pipe(catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
+
+        //get all unique leagues from forecast data
+        this.forecastLeagues$ = this.allForecasts$.pipe(
+            map(forecasts => {
+                return _.map(forecasts, function (forecast) {
+                    return forecast.league;
+                });
+            }),
+            map(leagues => {
+                return _.uniq(leagues, league => league.name);
+            })
+        ).pipe(catchError(err => {
+            this.errorMessageSubject.next(err);
+            return EMPTY;
+        }));
+
+        //get forecast for selected league and round
+        this.forecastLeagueAndRounds$ = combineLatest(
+            [this.allForecasts$, this.selectedForecastLeagueAction]
+        ).pipe(
+            map(([forecasts, league]) => {
+                return _.filter(forecasts, function (forecast) {
+                    if (forecast.league.name === league.name) {
+                        return forecast;
+                    }
+                })
+            }),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            }));
     }
 
     private setCurrentAndPreviousSeason(adminDBSeason: Admin) {
@@ -157,7 +222,6 @@ export class AdminComponent implements OnInit {
                         this.removeAcknowledgeMessage();
                     })
             }
-
         });
     }
 
@@ -178,7 +242,30 @@ export class AdminComponent implements OnInit {
         this.selectedRoundUpdated$ = this.roundService.updateCurrentRound(+this.selectedRound.roundId, +this.selectedLeagueRound.league_id);
     }
 
+    deleteForecast() {
+        console.log('deleteForecast');
+        this.confirmationService.confirm({
+            message: 'Verwijder deze forecast ? Dit kan niet ongedaan gemaakt worden',
+            header: 'Bevestiging',
+            icon: 'pi pi-info-circle',
+            accept: () => {
+                this.adminService.deleteForecast(this.selectedForecastRoundLeague.id)
+                    .subscribe((data) => {
+                        this.showForecastMessage = true;
+                        this.initForecastData();
+                        this.removeAcknowledgeMessage();
+                    })
+            }
+
+        });
+    }
+
+    sortRounds() {
+        this.selectedLeagueRound.roundDtos.sort((a,b) => +a.playRound - +b.playRound);
+    }
+
     getCurrentRound(): Round {
+        this.sortRounds();
         let rounds = this.selectedLeagueRound.roundDtos;
         return  _.findWhere(rounds , {"current": true});
     }
@@ -187,9 +274,14 @@ export class AdminComponent implements OnInit {
         setTimeout(() => {
             this.showStandingMessage = false;
             this.showResultMessage = false;
+            this.showForecastMessage = false;
             this.selectedLeagueStanding = null;
             this.selectedLeague = null;
+            this.selectedForecastLeague = null;
+            this.selectedForecastRoundLeague = null;
         }, 5000);
     }
+
+
 
 }
