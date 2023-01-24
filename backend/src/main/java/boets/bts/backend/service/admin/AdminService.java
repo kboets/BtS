@@ -1,4 +1,4 @@
-package boets.bts.backend.service;
+package boets.bts.backend.service.admin;
 
 import boets.bts.backend.domain.Admin;
 import boets.bts.backend.domain.AdminKeys;
@@ -6,6 +6,7 @@ import boets.bts.backend.repository.admin.AdminRepository;
 import boets.bts.backend.web.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,15 +24,22 @@ public class AdminService {
     private Logger logger = LoggerFactory.getLogger(AdminService.class);
     private final AdminRepository adminRepository;
     private List<AdminChangeListener> changeListeners;
+    private final Environment environment;
 
 
-    public AdminService(AdminRepository adminRepository) {
+    public AdminService(AdminRepository adminRepository, Environment environment) {
         this.changeListeners = new ArrayList<>();
         this.adminRepository = adminRepository;
+        this.environment = environment;
     }
 
     public void addAdminChangeListener(AdminChangeListener adminChangeListener) {
         changeListeners.add(adminChangeListener);
+    }
+
+    public String getCurrentVersion() {
+        logger.info("get current version {} ", environment.getProperty("application-version"));
+        return environment.getProperty("application-version");
     }
 
     public boolean isTodayExecuted(AdminKeys adminKeys) {

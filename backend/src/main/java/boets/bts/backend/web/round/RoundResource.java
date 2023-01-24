@@ -1,7 +1,7 @@
 package boets.bts.backend.web.round;
 
 import boets.bts.backend.domain.Round;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.web.league.LeagueMapper;
 import org.slf4j.Logger;

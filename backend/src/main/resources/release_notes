@@ -3,6 +3,13 @@
                             RELEASE NOTES
 
 *********************************************************************************
+1.7.0
+new features:
+    add pom project version to frontend
+
+bugfixes:
+
+
 22/02/2023 1.6.0
 new features:
     review forecasts

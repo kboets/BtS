@@ -4,7 +4,9 @@ import { PrimeNGConfig } from 'primeng/api';
 import { AppComponent } from './app.component';
 import {AdminService} from "./bts/admin/admin.service";
 import {catchError} from "rxjs/operators";
-import {EMPTY} from "rxjs";
+import {EMPTY, Observable} from "rxjs";
+import {dashCaseToCamelCase} from "@angular/compiler/src/util";
+import {Environment} from "./bts/domain/environment";
 
 @Component({
     selector: 'app-main',
@@ -34,6 +36,8 @@ export class AppMainComponent implements AfterViewInit, OnDestroy, OnInit {
 
     public topMenuLeaving: boolean;
 
+    public environment: Environment;
+
     documentClickListener: () => void;
 
     menuClick: boolean;
@@ -50,11 +54,19 @@ export class AppMainComponent implements AfterViewInit, OnDestroy, OnInit {
         this.primengConfig.ripple = true;
     }
 
-    isHistoricData$ = this.adminService.isHistoricData$.pipe(
+   isHistoricData$ = this.adminService.isHistoricData$.pipe(
         catchError(err => {
             return EMPTY;
         })
     )
+
+
+    environment$ = this.adminService.environment$.pipe(
+        catchError(err => {
+            return EMPTY;
+        })
+    )
+
 
 
     ngAfterViewInit() {

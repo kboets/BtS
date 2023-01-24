@@ -1,4 +1,4 @@
-package boets.bts.backend.service;
+package boets.bts.backend.service.admin;
 
 public interface AdminChangeListener {
 

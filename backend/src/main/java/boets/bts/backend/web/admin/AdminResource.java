@@ -1,7 +1,7 @@
 package boets.bts.backend.web.admin;
 
 import boets.bts.backend.domain.Admin;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.LeagueService;
 import boets.bts.backend.service.forecast2.ForecastService;
 import boets.bts.backend.service.result.ResultService;
@@ -10,7 +10,6 @@ import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.exception.GeneralException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +45,13 @@ public class AdminResource {
     @GetMapping("currentSeason")
     public int getCurrentSeason() {
         return WebUtils.getCurrentSeason();
+    }
+
+    @GetMapping("currentVersion")
+    public EnvironmentDto getCurrentVersion() {
+        EnvironmentDto environmentDto = new EnvironmentDto();
+        environmentDto.setVersion(this.adminService.getCurrentVersion());
+        return environmentDto;
     }
 
     @PostMapping("deleteResults")

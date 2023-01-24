@@ -3,7 +3,7 @@ package boets.bts.backend.service.forecast2.validator;
 import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.Forecast;
 import boets.bts.backend.domain.ForecastResult;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import org.springframework.stereotype.Component;
 
 /**

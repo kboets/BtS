@@ -2,16 +2,13 @@ package boets.bts.backend.service.result;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
-import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.team.TeamRepository;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.round.RoundService;
-import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.results.IResultClient;
-import boets.bts.backend.web.results.ResultClient;
 import boets.bts.backend.web.results.ResultDto;
 import boets.bts.backend.web.results.ResultMapper;
 import org.springframework.stereotype.Component;

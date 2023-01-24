@@ -1,6 +1,6 @@
 package boets.bts.backend.web.country;
 
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.web.ParentClient;
 import boets.bts.backend.web.WebUtils;
 import com.google.gson.JsonArray;

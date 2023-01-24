@@ -1,7 +1,7 @@
 package boets.bts.backend.web;
 
 import boets.bts.backend.domain.AdminKeys;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import okhttp3.Request;
 
 import java.util.concurrent.ConcurrentHashMap;

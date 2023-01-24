@@ -5,7 +5,7 @@ import boets.bts.backend.repository.algorithm.AlgorithmRepository;
 import boets.bts.backend.repository.algorithm.AlgorithmSpecs;
 import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.league.LeagueRepository;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.forecast2.validator.AllDataUpdatedRule;
 import org.junit.Before;
 import org.junit.Test;

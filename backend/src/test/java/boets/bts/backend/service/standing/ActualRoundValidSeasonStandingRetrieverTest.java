@@ -2,7 +2,7 @@ package boets.bts.backend.service.standing;
 
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.standing.retriever.RoundValidSeasonStandingRetriever;
 import org.junit.Ignore;
 import org.junit.Test;

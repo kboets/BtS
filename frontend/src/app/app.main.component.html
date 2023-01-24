@@ -37,11 +37,12 @@
                 <img src="assets/layout/images/logo.png" alt="" width="113">
             </div>
             <div class="profile">
-                <img src="assets/layout/images/profile.png" alt="" />
-                <a id="profile-button" href="#" (click)="toggleProfile($event)">
-                    <span class="username">Peggy Olson</span>
-                    <i class="pi pi-fw pi-cog"></i>
+<!--                <img src="assets/layout/images/profile.png" alt="" />-->
+                <a id="profile-button" href="#">
+                    <span class="username" *ngIf="environment$ | async as environment">version {{environment.version}} </span>
+<!--                    <i class="pi pi-fw pi-cog"></i>-->
                 </a>
+
                 <ul [@submenu]="profileActive ? 'visible' : 'hidden'">
                     <li><a href="#"><i class="pi pi-fw pi-sliders-h"></i><span>Account</span></a></li>
                     <li><a href="#"><i class="pi pi-fw pi-bell"></i><span>Notifications</span><span class="menu-badge">2</span></a></li>
@@ -53,6 +54,7 @@
     </div>
     <div class="main">
         <router-outlet></router-outlet>
+
     </div>
 
     <app-config></app-config>

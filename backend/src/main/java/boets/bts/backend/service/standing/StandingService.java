@@ -8,7 +8,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.standing.StandingRepository;
 import boets.bts.backend.repository.standing.StandingSpecs;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.round.RoundService;
 import boets.bts.backend.service.standing.retriever.StandingRetriever;
 import boets.bts.backend.web.WebUtils;

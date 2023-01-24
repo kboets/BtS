@@ -7,7 +7,7 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.round.RoundRepository;
 import boets.bts.backend.repository.round.RoundSpecs;
-import boets.bts.backend.service.AdminService;
+import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.web.exception.NotFoundException;
 import boets.bts.backend.web.round.IRoundClient;
 import boets.bts.backend.web.round.RoundDto;

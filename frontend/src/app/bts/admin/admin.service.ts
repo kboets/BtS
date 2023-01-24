@@ -4,6 +4,7 @@ import {GeneralError} from "../domain/generalError";
 import {BehaviorSubject, combineLatest, Observable, Subject, throwError} from "rxjs";
 import {catchError, map, tap} from "rxjs/operators";
 import {Admin} from "../domain/admin";
+import {Environment} from "../domain/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +36,13 @@ export class AdminService {
             catchError(this.handleHttpError)
         );
 
-    isHistoricData$ = combineLatest([this.currentSeason$, this.historicDataAction$])
+    environment$ = this.http.get<Environment>(`/btsapi/api/admin/currentVersion`)
+        .pipe(
+            tap(data => console.log('all admin data ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
+
+   isHistoricData$ = combineLatest([this.currentSeason$, this.historicDataAction$])
         .pipe(
             //tap(data => console.log('historic data ', JSON.stringify(data))),
             map(([currentSeason, selectedSeason]) =>
