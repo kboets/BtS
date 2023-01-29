@@ -243,7 +243,6 @@ export class AdminComponent implements OnInit {
     }
 
     deleteForecast() {
-        console.log('deleteForecast');
         this.confirmationService.confirm({
             message: 'Verwijder deze forecast ? Dit kan niet ongedaan gemaakt worden',
             header: 'Bevestiging',

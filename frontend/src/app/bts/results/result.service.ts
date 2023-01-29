@@ -65,7 +65,6 @@ export class ResultService {
     }
 
     private handleHttpError(error: HttpErrorResponse) {
-        console.log("entering the handle HttpError of result service "+error.message);
         let dataError = new GeneralError();
         dataError.errorNumber = error.status;
         dataError.errorMessage = error.message;

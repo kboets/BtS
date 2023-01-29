@@ -48,7 +48,6 @@ export class RoundService {
     }
 
     updateCurrentRound(roundId: number, leagueId: number): Observable<Round> {
-        console.log('in the update round', leagueId, roundId);
         return this.http.get<Round>(`/btsapi/api/round/update/${leagueId}/${roundId}`)
             .pipe(
                 shareReplay(1),
