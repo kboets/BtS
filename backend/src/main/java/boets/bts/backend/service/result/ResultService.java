@@ -4,6 +4,7 @@ import boets.bts.backend.domain.AdminKeys;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Result;
 import boets.bts.backend.domain.Round;
+import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
@@ -38,6 +39,7 @@ public class ResultService {
     private Logger logger = LoggerFactory.getLogger(ResultService.class);
 
     private final ResultRepository resultRepository;
+    private final ForecastRepository forecastRepository;
     private final ResultHandlerSelector resultHandlerSelector;
     private final ResultMapper resultMapper;
     private final RoundService roundService;
@@ -47,7 +49,7 @@ public class ResultService {
     private AtomicInteger numberOfAttempts;
 
     public ResultService(ResultRepository resultRepository, ResultHandlerSelector resultHandlerSelector, ResultMapper resultMapper, RoundService roundService,
-                         LeagueRepository leagueRepository, LeagueMapper leagueMapper, AdminService adminService) {
+                         LeagueRepository leagueRepository, LeagueMapper leagueMapper, AdminService adminService,ForecastRepository forecastRepository) {
         this.resultRepository = resultRepository;
         this.resultHandlerSelector = resultHandlerSelector;
         this.resultMapper = resultMapper;
@@ -55,6 +57,7 @@ public class ResultService {
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
         this.adminService = adminService;
+        this.forecastRepository = forecastRepository;
         numberOfAttempts = new AtomicInteger();
     }
 
@@ -111,6 +114,8 @@ public class ResultService {
 
     public boolean removeAllResultsForLeague (Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not find league with id %s ",leagueId)));
+        //delete forecast for this league
+        forecastRepository.deleteByLeague(league);
         resultRepository.deleteByLeague(league);
         adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
         return true;

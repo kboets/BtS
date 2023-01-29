@@ -8,7 +8,7 @@ new features:
     add pom project version to frontend
     remove server and app logs older as 3 days
 bugfixes:
-
+    remove results from admin
 
 22/02/2023 1.6.0
 new features:
