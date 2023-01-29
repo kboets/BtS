@@ -167,7 +167,9 @@ public class ForecastService {
     }
 
 
-
+    /**
+     * Each half hour, starting at 7 minutes after the hour, on Tuesday and Thursday.
+     */
     @Scheduled(cron ="0 7/30 * * * TUE-THU")
     protected void scheduleForecast() {
         logger.info("Start scheduleForecast");

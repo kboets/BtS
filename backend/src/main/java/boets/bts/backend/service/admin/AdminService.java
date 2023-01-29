@@ -38,7 +38,6 @@ public class AdminService {
     }
 
     public String getCurrentVersion() {
-        logger.info("get current version {} ", environment.getProperty("application-version"));
         return environment.getProperty("application-version");
     }
 
