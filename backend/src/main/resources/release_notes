@@ -6,7 +6,7 @@
 1.7.0
 new features:
     add pom project version to frontend
-
+    remove server and app logs older as 3 days
 bugfixes:
 
 
