@@ -35,9 +35,15 @@ public class AlgorithmResource {
     }
 
     @PostMapping("save")
-    public AlgorithmDto saveOrUpdate(@RequestBody AlgorithmDto algorithmDto) {
+    public AlgorithmDto save(@RequestBody AlgorithmDto algorithmDto) {
         logger.info("saving algorithm {}", algorithmDto.getName());
-        return  algorithmService.save(algorithmDto);
+        return  algorithmService.save(algorithmDto, false);
+    }
+
+    @PostMapping("update")
+    public AlgorithmDto update(@RequestBody AlgorithmDto algorithmDto) {
+        logger.info("update algorithm {}", algorithmDto.getName());
+        return  algorithmService.save(algorithmDto, true);
     }
 
     @PostMapping("delete")

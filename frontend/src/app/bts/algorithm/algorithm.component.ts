@@ -17,24 +17,30 @@ export class AlgorithmComponent implements OnInit {
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
 
-    private allButCurrentAlgorithms: Algorithm[];
+    public allButCurrentAlgorithms: Algorithm[];
     private allAlgorithms: Algorithm[];
     public currentAlgorithm: Algorithm;
     public addAlgorithm: boolean;
+    public editAlgorithm: boolean;
     public viewOthers: boolean;
     public showDeleteMessage:boolean;
     newAlgorithm: Algorithm;
     submitted = false;
-    addAlgorithmForm: FormGroup;
+    crudAlgorithmForm: FormGroup;
     confirmationMessage: string;
+    updateMessage: string
     isSavedOK: boolean;
+    isUpdateOK: boolean;
     isEmptyAlgorithm: boolean;
 
     constructor(private fb: FormBuilder, private algorithmService: AlgorithmService, private confirmationService: ConfirmationService) {
         this.addAlgorithm = false;
+        this.editAlgorithm = false;
         this.newAlgorithm = {} as Algorithm;
         this.confirmationMessage = 'Het algoritme werd opgeslagen en is nu de standaard';
+        this.updateMessage = 'Het algoritme werd gewijzigd.';
         this.isSavedOK = false;
+        this.isUpdateOK = false;
         this.isEmptyAlgorithm = true;
         this.allButCurrentAlgorithms = [];
         this.viewOthers = false;
@@ -43,7 +49,7 @@ export class AlgorithmComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.createAddForm();
+        this.createNewForm();
         this.retrieveCurrentAlgorithm();
         this.retrieveAllButCurrentAlgorithm();
         this.retrieveAllAlgorithm();
@@ -97,8 +103,8 @@ export class AlgorithmComponent implements OnInit {
         })
     }
 
-    private createAddForm() {
-        this.addAlgorithmForm = this.fb.group({
+    private createNewForm() {
+        this.crudAlgorithmForm = this.fb.group({
             homeWin: 0,
             homeDraw: 0,
             homeLost: 0,
@@ -113,21 +119,27 @@ export class AlgorithmComponent implements OnInit {
         })
     }
 
-    get addForm() { return this.addAlgorithmForm.controls; }
+    get addForm() { return this.crudAlgorithmForm.controls; }
 
     onAddSubmit() {
         this.submitted = true;
-        if (this.addAlgorithmForm.invalid) {
+        if (this.crudAlgorithmForm.invalid) {
             return;
         }
-        this.setAlgorithmValues();
-        if (this.verifyAlreadyExisting()) {
-            let dataError = new GeneralError();
-            dataError.userFriendlyMessage = 'Dit algoritme bestaat reeds.'
-            this.errorMessageSubject.next(dataError);
+        if (this.addAlgorithm) {
+            this.setAlgorithmValues();
+            if (this.verifyAlreadyExisting()) {
+                let dataError = new GeneralError();
+                dataError.userFriendlyMessage = 'Dit algoritme bestaat reeds.'
+                this.errorMessageSubject.next(dataError);
+            } else {
+                this.saveAlgorithm();
+            }
         } else {
-            this.saveAlgorithm();
+            this.currentAlgorithm.threshold = this.crudAlgorithmForm.get('threshold').value;
+            this.updateAlgorithm();
         }
+
     }
 
     private saveAlgorithm() {
@@ -136,6 +148,16 @@ export class AlgorithmComponent implements OnInit {
                 this.removeAcknowledgeMessage();
                 this.addAlgorithm = false;
                 this.isSavedOK = true;
+                this.isEmptyAlgorithm = false;
+            })
+    }
+
+    private updateAlgorithm() {
+        this.algorithmService.updateAlgorithm(this.currentAlgorithm)
+            .subscribe((data) => {
+                this.removeAcknowledgeMessage();
+                this.editAlgorithm = false;
+                this.isUpdateOK = true;
                 this.isEmptyAlgorithm = false;
             })
     }
@@ -153,15 +175,22 @@ export class AlgorithmComponent implements OnInit {
 
     onAddReset() {
         this.submitted = false;
-        this.createAddForm();
+        this.createNewForm();
     }
 
     openAddForm() {
         this.addAlgorithm = true;
+        this.createNewForm();
     }
 
-    undoAddForm() {
+    openEditForm() {
+        this.editAlgorithm = true;
+        this.crudAlgorithmForm.patchValue(this.currentAlgorithm);
+    }
+
+    undoCrudForm() {
         this.addAlgorithm = false;
+        this.editAlgorithm = false;
         this.viewOthers = false;
     }
 
@@ -199,25 +228,25 @@ export class AlgorithmComponent implements OnInit {
     private setAlgorithmValues() {
         this.newAlgorithm = {} as Algorithm;
         this.newAlgorithm.homePoints = {
-            'win' : this.addAlgorithmForm.get('homeWin').value,
-            'draw' : this.addAlgorithmForm.get('homeDraw').value,
-            'lose' : this.addAlgorithmForm.get('homeLost').value
+            'win' : this.crudAlgorithmForm.get('homeWin').value,
+            'draw' : this.crudAlgorithmForm.get('homeDraw').value,
+            'lose' : this.crudAlgorithmForm.get('homeLost').value
         }
         this.newAlgorithm.awayPoints = {
-            'win' : this.addAlgorithmForm.get('awayWin').value,
-            'draw' : this.addAlgorithmForm.get('awayDraw').value,
-            'lose' : this.addAlgorithmForm.get('awayLost').value
+            'win' : this.crudAlgorithmForm.get('awayWin').value,
+            'draw' : this.crudAlgorithmForm.get('awayDraw').value,
+            'lose' : this.crudAlgorithmForm.get('awayLost').value
         }
-        this.newAlgorithm.name = this.addAlgorithmForm.get('name').value;
-        this.newAlgorithm.threshold = this.addAlgorithmForm.get('threshold').value;
-        if (this.addAlgorithmForm.get('current').value === true) {
+        this.newAlgorithm.name = this.crudAlgorithmForm.get('name').value;
+        this.newAlgorithm.threshold = this.crudAlgorithmForm.get('threshold').value;
+        if (this.crudAlgorithmForm.get('current').value === true) {
             this.newAlgorithm.current = true;
         } else {
             this.newAlgorithm.current = true;
         }
         this.newAlgorithm.type = 'WIN';
-        this.newAlgorithm.homeBonus = this.addAlgorithmForm.get('homeBonus').value;
-        this.newAlgorithm.awayMalus = this.addAlgorithmForm.get('awayMalus').value;
+        this.newAlgorithm.homeBonus = this.crudAlgorithmForm.get('homeBonus').value;
+        this.newAlgorithm.awayMalus = this.crudAlgorithmForm.get('awayMalus').value;
 
     }
 
@@ -236,6 +265,7 @@ export class AlgorithmComponent implements OnInit {
     private removeAcknowledgeMessage() {
         setTimeout(() => {
             this.isSavedOK = false;
+            this.isUpdateOK = false;
             this.showDeleteMessage = false;
         }, 5000);
     }

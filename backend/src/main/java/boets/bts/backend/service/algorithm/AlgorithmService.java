@@ -23,10 +23,10 @@ public class AlgorithmService {
         this.algorithmRepository = algorithmRepository;
     }
 
-    public AlgorithmDto save(AlgorithmDto algorithmDto) {
+    public AlgorithmDto save(AlgorithmDto algorithmDto, boolean isUpdate) {
         Algorithm algorithm = algorithmMapper.toDomainModel(algorithmDto);
         // verify if algorithm is set to current
-        if(algorithm.isCurrent()) {
+        if(!isUpdate && algorithm.isCurrent()) {
             List<Algorithm> algorithmList = algorithmRepository.findAll().stream()
                     .filter(Algorithm::isCurrent)
                     .filter(algorithm1 -> !algorithm1.getId().equals(algorithm.getId()))

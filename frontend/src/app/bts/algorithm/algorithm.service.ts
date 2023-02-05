@@ -67,6 +67,19 @@ export class AlgorithmService {
         );
     }
 
+    updateAlgorithm(algorithm: Algorithm): Observable<Algorithm> {
+        return this.http.post<Algorithm>(`/btsapi/api/algorithm/update`, algorithm, {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }).pipe(
+            tap(() => {
+                this._algorithmRefreshNeeded$.next()
+            }),
+            catchError(AlgorithmService.handleHttpError)
+        );
+    }
+
     deleteAlgorithm(algorithm: Algorithm): Observable<boolean> {
         return this.http.post<boolean>(`/btsapi/api/algorithm/delete`, algorithm, {
             headers: new HttpHeaders({
