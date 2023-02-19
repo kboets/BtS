@@ -28,7 +28,7 @@
             </div>
             <div class="p-col-2">
                 <ng-container *ngIf="rounds$ | async as rounds">
-                    <p-dropdown [options]="rounds" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
+                    <p-dropdown [options]="sortRound(rounds)" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
                 </ng-container>
             </div>
         </div>

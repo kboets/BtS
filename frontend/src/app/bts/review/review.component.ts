@@ -11,6 +11,7 @@ import {AlgorithmService} from "../algorithm/algorithm.service";
 import {Algorithm} from "../domain/algorithm";
 import {ForecastDetail} from "../domain/forecastDetail";
 import {Teams} from "../domain/teams";
+import {LeagueService} from "../league/league.service";
 
 @Component({
     selector: 'bts-review',
@@ -47,7 +48,7 @@ export class ReviewComponent implements OnInit {
 
     columns: any[];
 
-    constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService) {
+    constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService, private leagueService: LeagueService) {
         this.forecastUtility = ForecastUtility.getInstance();
         this.displayWarningMessage = false;
     }
@@ -55,8 +56,7 @@ export class ReviewComponent implements OnInit {
     ngOnInit(): void {
         // 1. get all algorithms
         // 2. select the current
-        // 3. retrieve the forecast for this algorithm
-        // 4.
+        // 3. retrieve the forecast for this algorithm for each league and round
 
         this.algorithms$ = this.algorithmService.getAlgorithms()
             .pipe(
@@ -73,7 +73,12 @@ export class ReviewComponent implements OnInit {
                     return EMPTY;
                 }));
 
-        //
+        this.leagues$ = this.leagueService.leagues$.pipe(
+            tap(leagues => {
+                    this.selectedLeagueSubject.next(_.first(leagues));
+            }));
+
+
         this.forecastsForAlgorithm$ = this.selectedAlgorithmAction
             .pipe(
                 switchMap(() => this.forecastService.getReviewForecastsForAlgorithm(this.selectedAlgorithm.algorithm_id)),
@@ -83,23 +88,23 @@ export class ReviewComponent implements OnInit {
                 }));
 
 
-        //get all unique leagues from forecast data
-        this.leagues$ = this.forecastsForAlgorithm$.pipe(
-            map(forecasts => {
-                return _.map(forecasts, function (forecast) {
-                    return forecast.league;
-                });
-            }),
-            map(leagues => {
-                return _.uniq(leagues, league => league.name);
-            }),
-            tap(leagues => {
-                this.selectedLeagueSubject.next(_.first(leagues));
-            })
-        ).pipe(catchError(err => {
-            this.errorMessageSubject.next(err);
-            return EMPTY;
-        }));
+        // //get all unique leagues from forecast data
+        // this.leagues$ = this.forecastsForAlgorithm$.pipe(
+        //     map(forecasts => {
+        //         return _.map(forecasts, function (forecast) {
+        //             return forecast.league;
+        //         });
+        //     }),
+        //     map(leagues => {
+        //         return _.uniq(leagues, league => league.name);
+        //     }),
+        //     tap(leagues => {
+        //         this.selectedLeagueSubject.next(_.first(leagues));
+        //     })
+        // ).pipe(catchError(err => {
+        //     this.errorMessageSubject.next(err);
+        //     return EMPTY;
+        // }));
 
         //get forecast for selected league and round
         this.rounds$ = combineLatest(
@@ -113,16 +118,14 @@ export class ReviewComponent implements OnInit {
                 })
             }),
             tap(forecasts => {
-                this.forecastForRoundAndLeague = _.first(forecasts)
+                this.forecastForRoundAndLeague = _.last(forecasts)
                 this.handleChange();
-                this.selectedForecastSubject.next(_.first(forecasts));
+                this.selectedForecastSubject.next(_.last(forecasts));
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
-
-
     }
 
     public determineHomeTeamColor(forecastDetail: ForecastDetail): string {
@@ -170,9 +173,15 @@ export class ReviewComponent implements OnInit {
         this.selectedAlgorithmSubject.next(this.selectedAlgorithm);
     }
 
+    public sortRound(forecasts: Forecast[]) {
+        return forecasts.sort((n1, n2) => n2.round - n1.round);
+
+    }
     private handleChange() {
         this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
     }
+
+
 
     showWarningMessage(forecastDetail: ForecastDetail) {
         this.displayWarningMessage = true;
