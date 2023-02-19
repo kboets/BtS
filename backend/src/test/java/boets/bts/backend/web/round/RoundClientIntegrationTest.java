@@ -21,7 +21,7 @@ public class RoundClientIntegrationTest {
 
     @Test
     public void testgetAllRoundsForLeagueAndSeason_givenJupilerLeague_shouldReturn30Round() {
-        Optional<List<RoundDto>> roundDtos = roundClient.getAllRoundsForLeagueAndSeason(2019, 656L);
+        Optional<List<RoundDto>> roundDtos = roundClient.getAllRoundsForLeagueAndSeason(2022, 4366L);
         assertThat(roundDtos.isPresent()).isTrue();
         assertThat(roundDtos.get().size()).isEqualTo(30);
     }

@@ -4,6 +4,7 @@ import {Forecast} from "../domain/forecast";
 import {catchError, shareReplay} from "rxjs/operators";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
+import {Standing} from "../domain/standing";
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +19,21 @@ export class ForecastService {
         return this._forecastRefreshNeeded$;
     }
 
-    getAllExceptForecasts(): Observable<Forecast[]> {
+    getAllReviewForecasts(): Observable<Forecast[]> {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/allExceptCurrent`)
             .pipe(
                 shareReplay(1),
                 catchError(ForecastService.handleHttpError)
             );
+    }
+
+    getReviewForecastsForAlgorithm(algorithmId: number): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/reviewForAlgorithm/${algorithmId}`)
+            .pipe(
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
+            );
+
     }
 
     getAllForecasts(): Observable<Forecast[]> {

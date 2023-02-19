@@ -41,7 +41,11 @@ public class ForecastResource {
 
     @GetMapping("recalculate")
     public boolean calculateForecasts() {
-        return this.forecastService.initScheduleForecasts();
+        return this.forecastService.initCalculateForecasts();
 
+    }
+    @GetMapping("reviewForAlgorithm/{algorithmId}")
+    public List<ForecastDto> getReviewForecast(@PathVariable("algorithmId") Long algorithmId) {
+        return forecastService.getReviewForecastForAlgorithm(algorithmId);
     }
 }

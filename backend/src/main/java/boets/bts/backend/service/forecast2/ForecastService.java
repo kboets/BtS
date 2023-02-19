@@ -16,6 +16,7 @@ import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.forecast.ForecastDetailDto;
 import boets.bts.backend.web.forecast.ForecastDto;
 import boets.bts.backend.web.forecast.ForecastMapper;
+import liquibase.pro.packaged.F;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -73,6 +74,17 @@ public class ForecastService {
                 .collect(Collectors.toList());
         return forecastMapper.toDtos(filteredForecasts);
 
+    }
+
+    public List<ForecastDto> getReviewForecastForAlgorithm(Long algorithmId) {
+        Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
+        List<Forecast> reviewForecasts = new ArrayList<>();
+        List<League> getSelectedLeagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true));
+        for(League league: getSelectedLeagues) {
+            List<Integer> rounds = calculateReviewRounds(league);
+            reviewForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRounds(rounds).and(ForecastSpecs.forAlgorithm(algorithm).and(ForecastSpecs.forLeague(league)))));
+        }
+        return forecastMapper.toDtos(reviewForecasts);
     }
 
     /**
@@ -165,6 +177,10 @@ public class ForecastService {
     public void deleteForecast(Long forecastId) {
         forecastRepository.deleteById(forecastId);
     }
+    public boolean deleteByAlgorithm(Algorithm algorithm) {
+        forecastRepository.deleteByAlgorithm(algorithm);
+        return true;
+    }
 
 
     /**
@@ -173,20 +189,24 @@ public class ForecastService {
     @Scheduled(cron ="0 7/30 * * * TUE-THU")
     protected void scheduleForecast() {
         logger.info("Start scheduleForecast");
-        this.initScheduleForecasts();
+        this.initCalculateForecasts();
+    }
+
+    public boolean initCalculateForecasts() {
+        List<Algorithm> algorithms = algorithmRepository.findAll();
+        return initCalculateForecast(algorithms);
     }
 
 
-    //@Scheduled(cron ="* */2 * * * *")
-    protected void scheduleForecasts2() {
-        logger.info("Start scheduleForecast2");
-        this.initScheduleForecasts();
+    public boolean initForecastWithNewAlgorithm(Algorithm algorithm) {
+        List<Algorithm> algorithms = new ArrayList<>();
+        algorithms.add(algorithm);
+        return initCalculateForecast(algorithms);
     }
 
-    public boolean initScheduleForecasts() {
+    private boolean initCalculateForecast(List<Algorithm> algorithms) {
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
-        List<Algorithm> algorithms = algorithmRepository.findAll();
         int index = 0;
 
         while (index < leagues.size()) {
@@ -199,7 +219,6 @@ public class ForecastService {
         }
         return true;
     }
-
     /**
      * Gets all the rounds that should be calculated. It starts from round 6 until the next round.
      * Finishes when the last round is reached.
@@ -211,6 +230,19 @@ public class ForecastService {
         int start = 7;
         Round nextRound = roundService.getNextRound(league.getId());
         IntStream.rangeClosed(start, nextRound.getRoundNumber()).forEach(roundNumbers::add);
+        return roundNumbers;
+    }
+
+    /**
+     * Calculates all rounds except the last.
+     * @param league -
+     * @return List- a list with all rounds
+     */
+    protected List<Integer> calculateReviewRounds(League league) {
+        List<Integer> roundNumbers = new ArrayList<>();
+        int start = 7;
+        Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason());
+        IntStream.range(start, currentRound.getRoundNumber()).forEach(roundNumbers::add);
         return roundNumbers;
     }
 

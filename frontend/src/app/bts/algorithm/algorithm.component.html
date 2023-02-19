@@ -8,7 +8,7 @@
     <p-message class="p-mb-2" severity="info" text="Het algoritme werd verwijderd."></p-message>
 </ng-container>
 <ng-container *ngIf="errorMessage$ | async as errorMessage">
-    <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
+    <p-message severity="error" text="{{errorMessage}}"></p-message>
 </ng-container>
 
 <p-panel header="Algoritme">

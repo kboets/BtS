@@ -3,7 +3,7 @@ import {combineLatest, EMPTY, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "../forecast/forecast.service";
-import {catchError, filter, map, tap} from "rxjs/operators";
+import {catchError, filter, map, switchMap, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import * as _ from 'underscore';
 import {ForecastUtility} from "../common/forecastUtility";
@@ -41,6 +41,7 @@ export class ReviewComponent implements OnInit {
     private selectedAlgorithmSubject = new Subject<Algorithm>();
     selectedAlgorithmAction = this.selectedAlgorithmSubject.asObservable();
     public selectedAlgorithm: Algorithm;
+    public currentAlgorithm: Algorithm;
     public displayWarningMessage: boolean;
     public warningForecastDetail: ForecastDetail;
 
@@ -52,14 +53,11 @@ export class ReviewComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        //get all forecast data
-        this.forecastData$ = this.forecastService.getAllExceptForecasts()
-            .pipe(catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            }));
+        // 1. get all algorithms
+        // 2. select the current
+        // 3. retrieve the forecast for this algorithm
+        // 4.
 
-        // get all algorithms
         this.algorithms$ = this.algorithmService.getAlgorithms()
             .pipe(
                 tap(algorithms => {
@@ -71,31 +69,22 @@ export class ReviewComponent implements OnInit {
                     }
                 }),
                 catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            }));
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                }));
 
-
-        //get all forecast data for selected algorithm
-        this.forecastsForAlgorithm$ = combineLatest(
-            [this.forecastData$, this.selectedAlgorithmAction]
-        ).pipe(map(([forecasts, algorithm]) => {
-                return _.filter(forecasts, function (forecast) {
-                    if (forecast.algorithmDto.name === algorithm.name) {
-                        return forecast;
-                    }
-                })
-            }), tap(forecasts => {
-                console.log('forecast for algorithm ', forecasts);
-            }),
-            catchError(err => {
-                this.errorMessageSubject.next(err);
-                return EMPTY;
-            }));
+        //
+        this.forecastsForAlgorithm$ = this.selectedAlgorithmAction
+            .pipe(
+                switchMap(() => this.forecastService.getReviewForecastsForAlgorithm(this.selectedAlgorithm.algorithm_id)),
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                }));
 
 
         //get all unique leagues from forecast data
-        this.leagues$ = this.forecastData$.pipe(
+        this.leagues$ = this.forecastsForAlgorithm$.pipe(
             map(forecasts => {
                 return _.map(forecasts, function (forecast) {
                     return forecast.league;
@@ -114,7 +103,7 @@ export class ReviewComponent implements OnInit {
 
         //get forecast for selected league and round
         this.rounds$ = combineLatest(
-            [this.forecastData$, this.selectedLeagueAction]
+            [this.forecastsForAlgorithm$, this.selectedLeagueAction]
         ).pipe(
             map(([forecasts, league]) => {
                 return _.filter(forecasts, function (forecast) {
@@ -178,12 +167,11 @@ export class ReviewComponent implements OnInit {
     }
 
     public onAlgorithmChange() {
-
+        this.selectedAlgorithmSubject.next(this.selectedAlgorithm);
     }
 
     private handleChange() {
         this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
-        //this.selectedAlgorithm = this.forecastForRoundAndLeague.algorithmDto;
     }
 
     showWarningMessage(forecastDetail: ForecastDetail) {

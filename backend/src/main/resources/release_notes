@@ -3,11 +3,14 @@
                             RELEASE NOTES
 
 *********************************************************************************
-1.8.0
+(17/02/2023) 1.8.0
 new features:
-
+    allow updates of threshold algorithm
+    trigger the forecasts in case a new algorithm is created
+    delete the forecasts in case an algorithm is deleted
+    show option of multi algorithms in review page
 bugfixes:
-
+    handle the java.net.unknownHostException in ResultService and RoundService
 
 
 1.7.0
@@ -15,12 +18,12 @@ new features:
     add pom project version to frontend
     remove server and app logs older as 3 days
 bugfixes:
-    delete results from admin
+    fix delete results from admin
 
-22/02/2023 1.6.0
+22/01/2023 1.6.0
 new features:
     review forecasts
-    show datums of played games on forecast
+    show dates of played games on forecast
     add icon for warning message on forecast + review
 bugfixes:
     Correct order rounds in admin
