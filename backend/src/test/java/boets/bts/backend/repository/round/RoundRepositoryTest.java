@@ -3,7 +3,6 @@ package boets.bts.backend.repository.round;
 import boets.bts.backend.domain.League;
 import boets.bts.backend.domain.Round;
 import boets.bts.backend.repository.league.LeagueRepository;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +44,7 @@ public class RoundRepositoryTest {
 
     @Test
     public void testRoundsByLeagueId() {
-        List<Round> rounds = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+        List<Round> rounds = roundRepository.findAll(RoundSpecs.league(league));
         assertThat(rounds.size()).isEqualTo(34);
     }
 

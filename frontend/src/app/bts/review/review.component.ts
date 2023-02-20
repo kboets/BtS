@@ -3,15 +3,16 @@ import {combineLatest, EMPTY, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "../forecast/forecast.service";
-import {catchError, filter, map, switchMap, tap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import * as _ from 'underscore';
 import {ForecastUtility} from "../common/forecastUtility";
 import {AlgorithmService} from "../algorithm/algorithm.service";
 import {Algorithm} from "../domain/algorithm";
 import {ForecastDetail} from "../domain/forecastDetail";
-import {Teams} from "../domain/teams";
 import {LeagueService} from "../league/league.service";
+import {Round} from "../domain/round";
+import {RoundService} from "../round/round.service";
 
 @Component({
     selector: 'bts-review',
@@ -25,39 +26,40 @@ export class ReviewComponent implements OnInit {
 
     // forecast data
     forecastUtility: ForecastUtility;
-    private forecastData$: Observable<Forecast[]>;
-    private forecastsForAlgorithm$: Observable<Forecast[]>;
+    public forecastForRoundAndLeague$: Observable<Forecast>;
+
+
     // leagues
     public leagues$: Observable<League[]>;
     public selectedLeague: League;
     private selectedLeagueSubject = new Subject<League>();
     selectedLeagueAction = this.selectedLeagueSubject.asObservable();
+
     // rounds
-    public rounds$: Observable<Forecast[]>;
-    public forecastForRoundAndLeague: Forecast;
-    private selectedForecastSubject = new Subject<Forecast>();
+    public rounds$: Observable<Round[]>;
+    public selectedRound: Round;
+    private selectedRoundSubject = new Subject<Round>();
+    selectedRoundAction = this.selectedRoundSubject.asObservable();
+
     // algorithm
     public algorithms$: Observable<Algorithm[]>;
-    public currentAlgorithm$: Observable<Algorithm>;
+    public selectedAlgorithm: Algorithm;
     private selectedAlgorithmSubject = new Subject<Algorithm>();
     selectedAlgorithmAction = this.selectedAlgorithmSubject.asObservable();
-    public selectedAlgorithm: Algorithm;
     public currentAlgorithm: Algorithm;
     public displayWarningMessage: boolean;
     public warningForecastDetail: ForecastDetail;
 
     columns: any[];
 
-    constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService, private leagueService: LeagueService) {
+    constructor(private forecastService: ForecastService, private algorithmService: AlgorithmService,
+                private leagueService: LeagueService, private roundService: RoundService) {
         this.forecastUtility = ForecastUtility.getInstance();
         this.displayWarningMessage = false;
     }
 
     ngOnInit(): void {
-        // 1. get all algorithms
-        // 2. select the current
-        // 3. retrieve the forecast for this algorithm for each league and round
-
+        // 1. get all algorithms + select current
         this.algorithms$ = this.algorithmService.getAlgorithms()
             .pipe(
                 tap(algorithms => {
@@ -73,60 +75,64 @@ export class ReviewComponent implements OnInit {
                     return EMPTY;
                 }));
 
+        //2. get all leagues
         this.leagues$ = this.leagueService.leagues$.pipe(
             tap(leagues => {
-                    this.selectedLeagueSubject.next(_.first(leagues));
+                this.selectedLeague  = _.first(leagues);
+                this.selectedLeagueSubject.next(this.selectedLeague);
             }));
 
-
-        this.forecastsForAlgorithm$ = this.selectedAlgorithmAction
-            .pipe(
-                switchMap(() => this.forecastService.getReviewForecastsForAlgorithm(this.selectedAlgorithm.algorithm_id)),
-                catchError(err => {
-                    this.errorMessageSubject.next(err);
-                    return EMPTY;
-                }));
-
-
-        // //get all unique leagues from forecast data
-        // this.leagues$ = this.forecastsForAlgorithm$.pipe(
-        //     map(forecasts => {
-        //         return _.map(forecasts, function (forecast) {
-        //             return forecast.league;
-        //         });
-        //     }),
-        //     map(leagues => {
-        //         return _.uniq(leagues, league => league.name);
-        //     }),
-        //     tap(leagues => {
-        //         this.selectedLeagueSubject.next(_.first(leagues));
-        //     })
-        // ).pipe(catchError(err => {
-        //     this.errorMessageSubject.next(err);
-        //     return EMPTY;
-        // }));
-
-        //get forecast for selected league and round
-        this.rounds$ = combineLatest(
-            [this.forecastsForAlgorithm$, this.selectedLeagueAction]
-        ).pipe(
-            map(([forecasts, league]) => {
-                return _.filter(forecasts, function (forecast) {
-                    if (forecast.league.name === league.name) {
-                        return forecast;
-                    }
-                })
-            }),
-            tap(forecasts => {
-                this.forecastForRoundAndLeague = _.last(forecasts)
-                this.handleChange();
-                this.selectedForecastSubject.next(_.last(forecasts));
+        //3.  get all review rounds for selected league
+        this.rounds$ = this.selectedLeagueAction.pipe(
+            switchMap(() => this.forecastService.getAllReviewRounds(+this.selectedLeague.league_id)),
+            tap(rounds => {
+               this.selectedRound = _.last(rounds);
+               this.selectedRoundSubject.next(this.selectedRound);
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
-            }));
+            })
+        );
+
+        //get forecast for selected league and round and algorithm
+        combineLatest(
+            [this.selectedAlgorithmAction, this.selectedLeagueAction, this.selectedRoundAction]
+        ).pipe(
+            map(([algorithm, league, round]) => {
+                return this.forecastService.getReviewForecastsForAlgorithmRoundAndLeague(algorithm.algorithm_id, +league.league_id, +round.playRound)
+            }),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })).subscribe((forecasts) => {
+                this.forecastForRoundAndLeague$ = forecasts;
+            });
     }
+
+    public onAlgorithmChange() {
+        this.selectedAlgorithmSubject.next(this.selectedAlgorithm);
+    }
+
+    public onLeagueChange() {
+        this.selectedLeagueSubject.next(this.selectedLeague);
+    }
+
+    public onRoundChange() {
+        this.selectedRoundSubject.next(this.selectedRound);
+    }
+
+
+
+    public sortRound(rounds: Round[]) {
+        return rounds.sort((n1, n2) => +n2.playRound - +n1.playRound);
+
+    }
+    private handleChange(forecastDetails: ForecastDetail[]): ForecastDetail[] {
+        forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore);
+        return forecastDetails;
+    }
+
 
     public determineHomeTeamColor(forecastDetail: ForecastDetail): string {
         if (this.needColorValue(forecastDetail)) {
@@ -158,30 +164,6 @@ export class ReviewComponent implements OnInit {
         }
         return false;
     }
-
-
-    public onLeagueChange() {
-        this.selectedLeagueSubject.next(this.selectedLeague);
-    }
-
-    public onRoundChange() {
-        this.handleChange();
-        this.selectedForecastSubject.next(this.forecastForRoundAndLeague);
-    }
-
-    public onAlgorithmChange() {
-        this.selectedAlgorithmSubject.next(this.selectedAlgorithm);
-    }
-
-    public sortRound(forecasts: Forecast[]) {
-        return forecasts.sort((n1, n2) => n2.round - n1.round);
-
-    }
-    private handleChange() {
-        this.forecastForRoundAndLeague.forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore)
-    }
-
-
 
     showWarningMessage(forecastDetail: ForecastDetail) {
         this.displayWarningMessage = true;

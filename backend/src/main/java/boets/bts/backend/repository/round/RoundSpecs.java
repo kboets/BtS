@@ -5,17 +5,17 @@ import boets.bts.backend.domain.Round;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
-import java.util.List;
 
 public class RoundSpecs {
 
-    public static Specification<Round> getRoundByName(String roundName) {
+    public static Specification<Round> roundNumber(Integer roundNumber) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("round"), roundName);
-
+            Predicate predicate = criteriaBuilder.equal(root.get("roundNumber"), roundNumber);
             return predicate;
         };
     }
+
+
 
     public static Specification<Round> getRoundByNameAndLeague(League league, String roundName) {
         return (root, criteriaQuery, criteriaBuilder) -> {
@@ -42,7 +42,7 @@ public class RoundSpecs {
         };
     }
 
-    public static Specification<Round> getRoundsByLeagueId(League league) {
+    public static Specification<Round> league(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), league);
 

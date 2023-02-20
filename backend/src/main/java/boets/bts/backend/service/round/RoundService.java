@@ -101,7 +101,7 @@ public class RoundService {
         Round currentRound = this.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         int previousRound = currentRound.getRoundNumber()-1;
-        Optional<Round> previousOptional = roundRepository.findAll(Specification.where(RoundSpecs.getRoundsByLeagueId(league).and(RoundSpecs.getRoundsByRoundNumber(previousRound)))).stream().findFirst();
+        Optional<Round> previousOptional = roundRepository.findAll(Specification.where(RoundSpecs.league(league).and(RoundSpecs.getRoundsByRoundNumber(previousRound)))).stream().findFirst();
         if(previousOptional.isEmpty()) {
             logger.warn("Could not retrieve previous round {} for league {}, returning the current !", previousOptional, league.getName());
             return currentRound;
@@ -112,7 +112,7 @@ public class RoundService {
     public Round getNextRound(Long leagueId) {
         Round currentRound = this.getCurrentRoundForLeague(leagueId, adminService.getCurrentSeason());
         int nextRoundNumber = currentRound.getRoundNumber() + 1;
-        Optional<Round> nextRoundOptional = roundRepository.findOne(Specification.where(RoundSpecs.getRoundsByLeagueId(currentRound.getLeague())).and(RoundSpecs.getRoundsByRoundNumber(nextRoundNumber)));
+        Optional<Round> nextRoundOptional = roundRepository.findOne(Specification.where(RoundSpecs.league(currentRound.getLeague())).and(RoundSpecs.getRoundsByRoundNumber(nextRoundNumber)));
         if (nextRoundOptional.isEmpty()) {
             logger.warn("Could not retrieve next round {} for league {}, returning the current !", nextRoundOptional, currentRound.getLeague().getName());
             return currentRound;
@@ -122,14 +122,14 @@ public class RoundService {
 
     public Round getLastRound(Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
-        List<Round> rounds4League = roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+        List<Round> rounds4League = roundRepository.findAll(RoundSpecs.league(league));
         rounds4League.sort(Comparator.comparing(Round::getRoundNumber));
         return rounds4League.get(rounds4League.size()-1);
     }
 
     public List<Round> getAllRoundsForLeague(Long leagueId) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
-        return roundRepository.findAll(RoundSpecs.getRoundsByLeagueId(league));
+        return roundRepository.findAll(RoundSpecs.league(league));
     }
 
     public void setCurrentRoundForHistoricData(Long leagueId, int season) {

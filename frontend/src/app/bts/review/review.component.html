@@ -28,15 +28,15 @@
             </div>
             <div class="p-col-2">
                 <ng-container *ngIf="rounds$ | async as rounds">
-                    <p-dropdown [options]="sortRound(rounds)" [(ngModel)]="forecastForRoundAndLeague" optionLabel="round" (onChange)="onRoundChange()"></p-dropdown>
+                    <p-dropdown [options]="sortRound(rounds)" [(ngModel)]="selectedRound" optionLabel="playRound" (onChange)="onRoundChange()"></p-dropdown>
                 </ng-container>
             </div>
         </div>
         <hr>
         <div class="p-grid">
             <div class="p-col-12">
-                <ng-container *ngIf="forecastForRoundAndLeague">
-                    <p-table [value]="forecastForRoundAndLeague.forecastDetails" [autoLayout]="true">
+                <ng-container *ngIf="forecastForRoundAndLeague$ | async as forecastForRoundAndLeague">
+                    <p-table [value]="handleChange(forecastForRoundAndLeague.forecastDetails)" [autoLayout]="true">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'250px'}">Team</th>

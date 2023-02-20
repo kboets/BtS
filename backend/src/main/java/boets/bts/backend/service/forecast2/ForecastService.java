@@ -9,6 +9,8 @@ import boets.bts.backend.repository.league.LeagueRepository;
 import boets.bts.backend.repository.league.LeagueSpecs;
 import boets.bts.backend.repository.result.ResultRepository;
 import boets.bts.backend.repository.result.ResultSpecs;
+import boets.bts.backend.repository.round.RoundRepository;
+import boets.bts.backend.repository.round.RoundSpecs;
 import boets.bts.backend.service.admin.AdminService;
 import boets.bts.backend.service.forecast2.calculator.ForecastCalculatorManager;
 import boets.bts.backend.service.round.RoundService;
@@ -16,7 +18,8 @@ import boets.bts.backend.web.WebUtils;
 import boets.bts.backend.web.forecast.ForecastDetailDto;
 import boets.bts.backend.web.forecast.ForecastDto;
 import boets.bts.backend.web.forecast.ForecastMapper;
-import liquibase.pro.packaged.F;
+import boets.bts.backend.web.round.RoundDto;
+import boets.bts.backend.web.round.RoundMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -29,6 +32,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,6 +45,8 @@ public class ForecastService {
     private final AdminService adminService;
     private final AlgorithmRepository algorithmRepository;
     private final RoundService roundService;
+    private final RoundRepository roundRepository;
+    private final RoundMapper roundMapper;
     private final ForecastRepository forecastRepository;
     private final ForecastMapper forecastMapper;
     private final ForecastCalculatorManager forecastCalculatorManager;
@@ -48,8 +54,8 @@ public class ForecastService {
     private final ResultRepository resultRepository;
 
 
-    public ForecastService(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, ForecastRepository forecastRepository,
-                           ForecastCalculatorManager forecastCalculatorManager, ForecastMapper forecastMapper, ResultRepository resultRepository) {
+    public ForecastService(LeagueRepository leagueRepository, AdminService adminService, AlgorithmRepository algorithmRepository, RoundService roundService, RoundRepository roundRepository, ForecastRepository forecastRepository,
+                           ForecastCalculatorManager forecastCalculatorManager, ForecastMapper forecastMapper, RoundMapper roundMapper, ResultRepository resultRepository) {
         this.leagueRepository = leagueRepository;
         this.adminService = adminService;
         this.algorithmRepository = algorithmRepository;
@@ -58,6 +64,8 @@ public class ForecastService {
         this.forecastCalculatorManager = forecastCalculatorManager;
         this.forecastMapper = forecastMapper;
         this.resultRepository = resultRepository;
+        this.roundRepository = roundRepository;
+        this.roundMapper = roundMapper;
     }
 
     /**
@@ -81,10 +89,23 @@ public class ForecastService {
         List<Forecast> reviewForecasts = new ArrayList<>();
         List<League> getSelectedLeagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true));
         for(League league: getSelectedLeagues) {
-            List<Integer> rounds = calculateReviewRounds(league);
+            List<Integer> rounds = calculateReviewRoundNumbers(league);
             reviewForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRounds(rounds).and(ForecastSpecs.forAlgorithm(algorithm).and(ForecastSpecs.forLeague(league)))));
         }
         return forecastMapper.toDtos(reviewForecasts);
+    }
+
+    public ForecastDto getReviewForecast(Long algorithmId, Long leagueId, Integer roundNumber) {
+        Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
+        League league = leagueRepository.getReferenceById(leagueId);
+        Optional<Forecast> forecastOptional = forecastRepository.findAll(ForecastSpecs.forRound(roundNumber).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm))))
+                .stream().findFirst();
+        return forecastOptional.map(forecastMapper::toDto).orElse(null);
+    }
+
+    public List<RoundDto> getReviewRounds(Long leagueId) {
+        League league = leagueRepository.getReferenceById(leagueId);
+        return roundMapper.toRoundDtos(calculateReviewRounds(league));
     }
 
     /**
@@ -238,7 +259,16 @@ public class ForecastService {
      * @param league -
      * @return List- a list with all rounds
      */
-    protected List<Integer> calculateReviewRounds(League league) {
+    protected List<Round> calculateReviewRounds(League league) {
+        List<Round> rounds = new ArrayList<>();
+        List<Integer> roundNumbers = calculateReviewRoundNumbers(league);
+        for (Integer roundNumber: roundNumbers) {
+            rounds.addAll(roundRepository.findAll(RoundSpecs.roundNumber(roundNumber).and(RoundSpecs.league(league))));
+        }
+        return rounds;
+    }
+
+    protected List<Integer> calculateReviewRoundNumbers(League league) {
         List<Integer> roundNumbers = new ArrayList<>();
         int start = 7;
         Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason());

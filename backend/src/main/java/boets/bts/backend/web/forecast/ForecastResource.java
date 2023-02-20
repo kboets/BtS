@@ -1,7 +1,7 @@
 package boets.bts.backend.web.forecast;
-
 import boets.bts.backend.service.forecast2.ForecastService;
 import boets.bts.backend.web.exception.GeneralException;
+import boets.bts.backend.web.round.RoundDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +47,15 @@ public class ForecastResource {
     @GetMapping("reviewForAlgorithm/{algorithmId}")
     public List<ForecastDto> getReviewForecast(@PathVariable("algorithmId") Long algorithmId) {
         return forecastService.getReviewForecastForAlgorithm(algorithmId);
+    }
+
+    @GetMapping("review/{algorithmId}/{leagueId}/{round}")
+    public ForecastDto getRequestedReviewForecast(@PathVariable("algorithmId") Long algorithmId, @PathVariable("leagueId") Long leagueId, @PathVariable("round") Integer round) {
+        return forecastService.getReviewForecast(algorithmId, leagueId, round);
+    }
+
+    @GetMapping("reviewRounds/{leagueId}")
+    public List<RoundDto> getReviewRounds(@PathVariable ("leagueId") Long leagueId) {
+        return forecastService.getReviewRounds(leagueId);
     }
 }

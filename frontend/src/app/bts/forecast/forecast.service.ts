@@ -5,6 +5,7 @@ import {catchError, shareReplay} from "rxjs/operators";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
 import {Standing} from "../domain/standing";
+import {Round} from "../domain/round";
 
 @Injectable({
     providedIn: 'root'
@@ -19,16 +20,16 @@ export class ForecastService {
         return this._forecastRefreshNeeded$;
     }
 
-    getAllReviewForecasts(): Observable<Forecast[]> {
-        return this.http.get<Forecast[]>(`/btsapi/api/forecast/allExceptCurrent`)
+    getAllReviewRounds(leagueId: number): Observable<Round[]> {
+        return this.http.get<Round[]>(`/btsapi/api/forecast/reviewRounds/${leagueId}`)
             .pipe(
                 shareReplay(1),
                 catchError(ForecastService.handleHttpError)
             );
     }
 
-    getReviewForecastsForAlgorithm(algorithmId: number): Observable<Forecast[]> {
-        return this.http.get<Forecast[]>(`/btsapi/api/forecast/reviewForAlgorithm/${algorithmId}`)
+    getReviewForecastsForAlgorithmRoundAndLeague(algorithmId: number, leagueId: number, round: number): Observable<Forecast> {
+        return this.http.get<Forecast>(`/btsapi/api/forecast/review/${algorithmId}/${leagueId}/${round}`)
             .pipe(
                 shareReplay(1),
                 catchError(ForecastService.handleHttpError)
