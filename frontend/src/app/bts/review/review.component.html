@@ -14,13 +14,13 @@
             <div class="p-col-2">
                 <strong>{{selectedAlgorithm?.name}}</strong> (threshold: {{selectedAlgorithm?.threshold}})
             </div>
+            <ng-container *ngIf="(algorithms$ | async)?.length > 1">
             <div class="p-col-2">
-                <ng-container *ngIf="(algorithms$ | async)?.length > 1">
                     <ng-container *ngIf="algorithms$ | async as algorithms">
                         <p-dropdown [options]="algorithms" [(ngModel)]="selectedAlgorithm" optionLabel="name" (onChange)="onAlgorithmChange()"></p-dropdown>
                     </ng-container>
-                </ng-container>
             </div>
+            </ng-container>
             <div class="p-col-2">
                 <ng-container *ngIf="leagues$ | async as leagues">
                     <p-dropdown [options]="leagues" [(ngModel)]="selectedLeague" optionLabel="name" (onChange)="onLeagueChange()"></p-dropdown>
