@@ -1,4 +1,4 @@
-import {AlgorithmPoints} from "./AlgorithmPoints";
+import {AlgorithmPoints} from "./algorithmPoints";
 
 export interface Algorithm {
     algorithm_id: number;

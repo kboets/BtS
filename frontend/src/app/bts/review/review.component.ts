@@ -13,6 +13,7 @@ import {ForecastDetail} from "../domain/forecastDetail";
 import {LeagueService} from "../league/league.service";
 import {Round} from "../domain/round";
 import {RoundService} from "../round/round.service";
+import {ReviewPoints} from "../domain/reviewPoints";
 
 @Component({
     selector: 'bts-review',
@@ -27,8 +28,6 @@ export class ReviewComponent implements OnInit {
     // forecast data
     forecastUtility: ForecastUtility;
     public forecastForRoundAndLeague$: Observable<Forecast>;
-
-
     // leagues
     public leagues$: Observable<League[]>;
     public selectedLeague: League;
@@ -49,6 +48,7 @@ export class ReviewComponent implements OnInit {
     public currentAlgorithm: Algorithm;
     public displayWarningMessage: boolean;
     public warningForecastDetail: ForecastDetail;
+    public reviewPoints: ReviewPoints;
 
     columns: any[];
 
@@ -56,6 +56,7 @@ export class ReviewComponent implements OnInit {
                 private leagueService: LeagueService, private roundService: RoundService) {
         this.forecastUtility = ForecastUtility.getInstance();
         this.displayWarningMessage = false;
+        this.reviewPoints = {} as ReviewPoints;
     }
 
     ngOnInit(): void {
@@ -95,7 +96,7 @@ export class ReviewComponent implements OnInit {
             })
         );
 
-        //get forecast for selected league and round and algorithm
+        // get forecast for selected league and round and algorithm
         combineLatest(
             [this.selectedAlgorithmAction, this.selectedLeagueAction, this.selectedRoundAction]
         ).pipe(
@@ -105,8 +106,12 @@ export class ReviewComponent implements OnInit {
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
-            })).subscribe((forecasts) => {
-                this.forecastForRoundAndLeague$ = forecasts;
+            })).subscribe((forecastObs) => {
+                this.forecastForRoundAndLeague$ = forecastObs;
+                forecastObs.subscribe((data) => {
+                    this.calculateCorrectRoundHits(data);
+                });
+
             });
     }
 
@@ -122,8 +127,6 @@ export class ReviewComponent implements OnInit {
         this.selectedRoundSubject.next(this.selectedRound);
     }
 
-
-
     public sortRound(rounds: Round[]) {
         return rounds.sort((n1, n2) => +n2.playRound - +n1.playRound);
 
@@ -133,6 +136,37 @@ export class ReviewComponent implements OnInit {
         return forecastDetails;
     }
 
+    private calculateCorrectRoundHits(forecast : Forecast) {
+        console.log('calculate the correct round hits', forecast);
+        this.reviewPoints = new ReviewPoints();
+        const forecastDetails =  forecast.forecastDetails;
+        for(const forecastDetail of forecastDetails) {
+            if (this.needColorValue(forecastDetail)) {
+                debugger;
+                this.reviewPoints.totalRoundHits++;
+                this.calculateReviewPoints(forecastDetail, this.reviewPoints);
+            }
+        }
+
+    }
+
+    private calculateReviewPoints(forecastDetail: ForecastDetail, reviewPoints: ReviewPoints) {
+        if (this.forecastUtility.isSameHomeTeam(forecastDetail)) {
+            reviewPoints.totalRoundHomeHits++
+            if (forecastDetail.nextGame.goalsHomeTeam > forecastDetail.nextGame.goalsAwayTeam) {
+                // home team is the selected and has won
+                reviewPoints.totalRoundHomeCorrectHits++;
+                reviewPoints.totalRoundCorrectHits++;
+            }
+        } else if (this.forecastUtility.isSameAwayTeam(forecastDetail)) {
+            reviewPoints.totalRoundAwayHits++
+            if (forecastDetail.nextGame.goalsAwayTeam > forecastDetail.nextGame.goalsHomeTeam) {
+                // away team is the selected and has won
+                reviewPoints.totalRoundAwayCorrectHits++;
+                reviewPoints.totalRoundCorrectHits++;
+            }
+        }
+    }
 
     public determineHomeTeamColor(forecastDetail: ForecastDetail): string {
         if (this.needColorValue(forecastDetail)) {

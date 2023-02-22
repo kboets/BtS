@@ -124,12 +124,12 @@
                 <tr>
                     <th>Naam</th>
                     <th>Thuis winst</th>
-                    <th>Thuis verlies</th>
                     <th>Thuis gelijk</th>
+                    <th>Thuis verlies</th>
                     <th>Thuis bonus</th>
                     <th>Uit winst</th>
-                    <th>Uit verlies</th>
                     <th>Uit gelijk</th>
+                    <th>Uit verlies</th>
                     <th>Uit malus</th>
                     <th></th>
                     <th></th>
@@ -139,12 +139,12 @@
                 <tr>
                     <td>{{algorithme.name}}</td>
                     <td>{{algorithme.homePoints.win}}</td>
-                    <td>{{algorithme.homePoints.lose}}</td>
                     <td>{{algorithme.homePoints.draw}}</td>
+                    <td>{{algorithme.homePoints.lose}}</td>
                     <td>{{algorithme.homeBonus}}</td>
-                    <td>{{algorithme.awayPoints.lose}}</td>
-                    <td>{{algorithme.awayPoints.lose}}</td>
+                    <td>{{algorithme.awayPoints.win}}</td>
                     <td>{{algorithme.awayPoints.draw}}</td>
+                    <td>{{algorithme.awayPoints.lose}}</td>
                     <td>{{algorithme.awayMalus}}</td>
                     <td><button pButton type="button" label="maak huidig" style="margin-right: .5rem"
                             (click)="setAlgorithmCurrent(algorithme)"></button></td>
