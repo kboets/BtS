@@ -3,12 +3,13 @@
                             RELEASE NOTES
 
 *********************************************************************************
-(17/02/2023) 1.8.0
+(23/02/2023) 1.8.0
 new features:
     allow updates of threshold algorithm
     trigger the forecasts in case a new algorithm is created
     delete the forecasts in case an algorithm is deleted
     show option of multi algorithms in review page
+    show totals on review page
 bugfixes:
     handle the java.net.unknownHostException in ResultService and RoundService
 
