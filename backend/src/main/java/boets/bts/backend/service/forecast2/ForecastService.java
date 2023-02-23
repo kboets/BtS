@@ -103,6 +103,13 @@ public class ForecastService {
         return forecastOptional.map(forecastMapper::toDto).orElse(null);
     }
 
+    public List<ForecastDto> getReviewForecasts(Long algorithmId, Long leagueId) {
+        Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
+        League league = leagueRepository.getReferenceById(leagueId);
+        List<Forecast> forecasts = forecastRepository.findAll(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)));
+        return forecastMapper.toDtos(forecasts);
+    }
+
     public List<RoundDto> getReviewRounds(Long leagueId) {
         League league = leagueRepository.getReferenceById(leagueId);
         return roundMapper.toRoundDtos(calculateReviewRounds(league));

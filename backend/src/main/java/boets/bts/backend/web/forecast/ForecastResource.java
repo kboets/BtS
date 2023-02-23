@@ -49,6 +49,11 @@ public class ForecastResource {
         return forecastService.getReviewForecastForAlgorithm(algorithmId);
     }
 
+    @GetMapping("reviewForAlgorithmAndLeague/{algorithmId}/{leagueId}")
+    public List<ForecastDto> getReviewForecasts(@PathVariable("algorithmId") Long algorithmId, @PathVariable("leagueId") Long leagueId) {
+        return forecastService.getReviewForecasts(algorithmId, leagueId);
+    }
+
     @GetMapping("review/{algorithmId}/{leagueId}/{round}")
     public ForecastDto getRequestedReviewForecast(@PathVariable("algorithmId") Long algorithmId, @PathVariable("leagueId") Long leagueId, @PathVariable("round") Integer round) {
         return forecastService.getReviewForecast(algorithmId, leagueId, round);

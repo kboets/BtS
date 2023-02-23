@@ -37,6 +37,15 @@ export class ForecastService {
 
     }
 
+    getReviewForecastsForAlgorithmAndLeague(algorithmId: number, leagueId: number): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/reviewForAlgorithmAndLeague/${algorithmId}/${leagueId}`)
+            .pipe(
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
+            );
+
+    }
+
     getAllForecasts(): Observable<Forecast[]> {
         return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
             .pipe(

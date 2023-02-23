@@ -5,23 +5,40 @@
 <div class="card">
     <p-panel header="Terugblik forecast">
         <div class="p-grid">
-            <div class="p-col-2">deze ronde:</div>
-        </div>
-        <div class="p-grid">
-            <div class="p-col-2">totaal</div>
+            <div class="p-col-2">totaal alle rondes</div>
             <div class="p-col-2">thuis</div>
             <div class="p-col-2">uit</div>
         </div>
-
         <div class="p-grid">
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalRoundCorrectHits}}/{{reviewPoints.totalRoundHits}}</strong>
+                <strong>{{reviewPoints.totalCorrectHits}}/{{reviewPoints.totalHits}}</strong>
             </div>
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalRoundHomeCorrectHits}}/{{reviewPoints.totalRoundHomeHits}}</strong>
+                <strong>{{reviewPoints.totalHomeCorrectHits}}/{{reviewPoints.totalHomeHits}}</strong>
             </div>
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalRoundAwayCorrectHits}}/{{reviewPoints.totalRoundAwayHits}}</strong>
+                <strong>{{reviewPoints.totalAwayCorrectHits}}/{{reviewPoints.totalAwayHits}}</strong>
+            </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-2"></div>
+            <div class="p-col-2"></div>
+        </div>
+
+        <div class="p-grid">
+            <div class="p-col-2">totaal huidige ronde</div>
+            <div class="p-col-2">thuis</div>
+            <div class="p-col-2">uit</div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-2">
+                <strong>{{reviewPointsRound.totalRoundCorrectHits}}/{{reviewPointsRound.totalRoundHits}}</strong>
+            </div>
+            <div class="p-col-2">
+                <strong>{{reviewPointsRound.totalRoundHomeCorrectHits}}/{{reviewPointsRound.totalRoundHomeHits}}</strong>
+            </div>
+            <div class="p-col-2">
+                <strong>{{reviewPointsRound.totalRoundAwayCorrectHits}}/{{reviewPointsRound.totalRoundAwayHits}}</strong>
             </div>
         </div>
         <div class="p-grid">

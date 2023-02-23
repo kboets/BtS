@@ -28,6 +28,9 @@ export class ReviewComponent implements OnInit {
     // forecast data
     forecastUtility: ForecastUtility;
     public forecastForRoundAndLeague$: Observable<Forecast>;
+    public forecastForLeague$: Observable<Forecast[]>;
+
+
     // leagues
     public leagues$: Observable<League[]>;
     public selectedLeague: League;
@@ -48,6 +51,7 @@ export class ReviewComponent implements OnInit {
     public currentAlgorithm: Algorithm;
     public displayWarningMessage: boolean;
     public warningForecastDetail: ForecastDetail;
+    public reviewPointsRound: ReviewPoints;
     public reviewPoints: ReviewPoints;
 
     columns: any[];
@@ -56,6 +60,7 @@ export class ReviewComponent implements OnInit {
                 private leagueService: LeagueService, private roundService: RoundService) {
         this.forecastUtility = ForecastUtility.getInstance();
         this.displayWarningMessage = false;
+        this.reviewPointsRound = {} as ReviewPoints;
         this.reviewPoints = {} as ReviewPoints;
     }
 
@@ -64,7 +69,7 @@ export class ReviewComponent implements OnInit {
         this.algorithms$ = this.algorithmService.getAlgorithms()
             .pipe(
                 tap(algorithms => {
-                    for(const algorithm of algorithms) {
+                    for (const algorithm of algorithms) {
                         if (algorithm.current) {
                             this.selectedAlgorithm = algorithm;
                             this.selectedAlgorithmSubject.next(algorithm);
@@ -79,7 +84,7 @@ export class ReviewComponent implements OnInit {
         //2. get all leagues
         this.leagues$ = this.leagueService.leagues$.pipe(
             tap(leagues => {
-                this.selectedLeague  = _.first(leagues);
+                this.selectedLeague = _.first(leagues);
                 this.selectedLeagueSubject.next(this.selectedLeague);
             }));
 
@@ -87,8 +92,8 @@ export class ReviewComponent implements OnInit {
         this.rounds$ = this.selectedLeagueAction.pipe(
             switchMap(() => this.forecastService.getAllReviewRounds(+this.selectedLeague.league_id)),
             tap(rounds => {
-               this.selectedRound = _.last(rounds);
-               this.selectedRoundSubject.next(this.selectedRound);
+                this.selectedRound = _.last(rounds);
+                this.selectedRoundSubject.next(this.selectedRound);
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -107,12 +112,31 @@ export class ReviewComponent implements OnInit {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })).subscribe((forecastObs) => {
-                this.forecastForRoundAndLeague$ = forecastObs;
-                forecastObs.subscribe((data) => {
-                    this.calculateCorrectRoundHits(data);
-                });
-
+            this.forecastForRoundAndLeague$ = forecastObs;
+            forecastObs.subscribe((data) => {
+                this.reviewPointsRound = new ReviewPoints();
+                this.calculateCorrectRoundHits(data, this.reviewPointsRound);
             });
+
+        });
+
+        // calculate correct hits for all rounds for the algorithm and league
+        combineLatest(
+            [this.selectedAlgorithmAction, this.selectedLeagueAction]
+        ).pipe(
+            map(([algorithm, league]) => {
+                return this.forecastService.getReviewForecastsForAlgorithmAndLeague(algorithm.algorithm_id, +league.league_id)
+            }),
+            catchError(err => {
+                this.errorMessageSubject.next(err);
+                return EMPTY;
+            })).subscribe((forecastObsList) => {
+            this.forecastForLeague$ = forecastObsList;
+            forecastObsList.subscribe((data) => {
+                this.reviewPoints = new ReviewPoints();
+                this.calculateCorrectHits(data, this.reviewPoints);
+            })
+        });
     }
 
     public onAlgorithmChange() {
@@ -136,15 +160,19 @@ export class ReviewComponent implements OnInit {
         return forecastDetails;
     }
 
-    private calculateCorrectRoundHits(forecast : Forecast) {
-        console.log('calculate the correct round hits', forecast);
-        this.reviewPoints = new ReviewPoints();
+    private calculateCorrectHits(forecasts : Forecast[], reviewPoints: ReviewPoints) {
+        for(const forecast of forecasts) {
+            this.calculateCorrectRoundHits(forecast, reviewPoints);
+        }
+    }
+
+    private calculateCorrectRoundHits(forecast : Forecast, reviewPoints: ReviewPoints) {
         const forecastDetails =  forecast.forecastDetails;
         for(const forecastDetail of forecastDetails) {
             if (this.needColorValue(forecastDetail)) {
-                debugger;
-                this.reviewPoints.totalRoundHits++;
-                this.calculateReviewPoints(forecastDetail, this.reviewPoints);
+                reviewPoints.totalRoundHits++;
+                reviewPoints.totalHits++;
+                this.calculateReviewPoints(forecastDetail, reviewPoints);
             }
         }
 
@@ -153,17 +181,23 @@ export class ReviewComponent implements OnInit {
     private calculateReviewPoints(forecastDetail: ForecastDetail, reviewPoints: ReviewPoints) {
         if (this.forecastUtility.isSameHomeTeam(forecastDetail)) {
             reviewPoints.totalRoundHomeHits++
+            reviewPoints.totalHomeHits++
             if (forecastDetail.nextGame.goalsHomeTeam > forecastDetail.nextGame.goalsAwayTeam) {
                 // home team is the selected and has won
                 reviewPoints.totalRoundHomeCorrectHits++;
                 reviewPoints.totalRoundCorrectHits++;
+                reviewPoints.totalHomeCorrectHits++;
+                reviewPoints.totalCorrectHits++;
             }
         } else if (this.forecastUtility.isSameAwayTeam(forecastDetail)) {
             reviewPoints.totalRoundAwayHits++
+            reviewPoints.totalAwayHits++;
             if (forecastDetail.nextGame.goalsAwayTeam > forecastDetail.nextGame.goalsHomeTeam) {
                 // away team is the selected and has won
                 reviewPoints.totalRoundAwayCorrectHits++;
                 reviewPoints.totalRoundCorrectHits++;
+                reviewPoints.totalAwayCorrectHits++;
+                reviewPoints.totalCorrectHits++;
             }
         }
     }
