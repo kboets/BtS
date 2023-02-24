@@ -3,6 +3,13 @@
                             RELEASE NOTES
 
 *********************************************************************************
+1.9.0
+new features:
+    add dynamic booster to an algorithm FE
+
+bugfixes:
+    handle the java.net.unknownHostException in ResultService and RoundService
+
 (23/02/2023) 1.8.0
 new features:
     allow updates of threshold algorithm
@@ -11,7 +18,6 @@ new features:
     show option of multi algorithms in review page
     show totals on review page
 bugfixes:
-    handle the java.net.unknownHostException in ResultService and RoundService
 
 
 1.7.0
