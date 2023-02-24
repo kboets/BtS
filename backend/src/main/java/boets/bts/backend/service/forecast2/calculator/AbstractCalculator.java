@@ -98,7 +98,7 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         // get all finished results
         List<Result> gamesForTeam = allResults.stream().filter(result -> result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
         if (gamesForTeam.size() != 6) {
-            // get the round(s) with the not finished
+            // get the round(s) with the not finished games
             List<Integer> unfinishedRounds = allResults.stream().filter(result -> !result.getMatchStatus().equals("Match Finished")).map(Result::getRoundNumber).collect(Collectors.toList());
             rounds = calculateRequestedRounds(round, unfinishedRounds);
             allResults = resultRepository.findAll(ResultSpecs.forLeague(forecast.getLeague()).and(ResultSpecs.forTeam(team).and(ResultSpecs.forRounds(rounds))));
@@ -185,15 +185,23 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         return false;
     }
 
+    protected synchronized void handleNotEnoughGames(List<Result> results, ForecastDetail forecastDetail) {
+        forecastDetail.setErrorMessage(String.format("Team %s has not played 3 home games, can not calculate correct home points", forecastDetail.getTeam().getName()));
+        if (results.size() == 2) {
+            forecastDetail.setForecastResult(ForecastResult.WARNING);
+        } else {
+            forecastDetail.setForecastResult(ForecastResult.FATAL);
+        }
+    }
 
-    protected String appendResultMessage(String winOrLose, Result result, boolean isHomeGame) {
+
+    protected String appendResultMessage(String winOrLose, Result result, boolean isHomeGame, int index) {
         StringBuilder infoMessage = new StringBuilder();
         String opponent = isHomeGame?result.getAwayTeam().getName():result.getHomeTeam().getName();
         infoMessage.append("<br>")
                 .append("<b>")
-                .append("(")
-                .append(result.getEventDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                .append(")  ")
+                .append(index)
+                .append(". ")
                 .append(winOrLose)
                 .append(" tegen ")
                 .append(opponent)
@@ -201,35 +209,38 @@ public abstract class AbstractCalculator implements ScoreCalculator {
                 .append(result.getGoalsHomeTeam())
                 .append(" - ")
                 .append(result.getGoalsAwayTeam())
+                .append("  (")
+                .append(result.getEventDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .append(")  ")
                 .append("</b>");
         return infoMessage.toString();
     }
 
-    protected String appendScoreMessageWinDraw(int totalTeams, int opponentStanding, int finalScore, int initScore) {
+    protected String appendScoreMessageWinDraw(CalculatorMessage calculatorMessage) {
         StringBuilder infoMessage = new StringBuilder();
         infoMessage
                 .append("<br>")
                 .append("score: ")
-                .append(initScore)
+                .append(calculatorMessage.getInitScore())
                 .append(" + (")
-                .append(totalTeams).append("-")
-                .append(opponentStanding)
+                .append(calculatorMessage.getTotalTeams()).append("-")
+                .append(calculatorMessage.getOpponentStanding())
                 .append(") = ")
-                .append(finalScore);
+                .append(calculatorMessage.getFinalScore());
         return infoMessage.toString();
     }
 
-    protected String appendScoreLostMessage(int opponentStanding, int totalScore, Algorithm algorithm, boolean isHome) {
+    protected String appendScoreLostMessage(CalculatorMessage calculatorMessage) {
         StringBuilder infoMessage = new StringBuilder();
-        int points = isHome?algorithm.getHomePoints().getLose():algorithm.getAwayPoints().getLose();
+        int points = calculatorMessage.isHome()?calculatorMessage.getAlgorithm().getHomePoints().getLose():calculatorMessage.getAlgorithm().getAwayPoints().getLose();
         infoMessage
                 .append("<br>")
                 .append("score: ")
                 .append(points)
                 .append(" - ")
-                .append(opponentStanding)
+                .append(calculatorMessage.getOpponentStanding())
                 .append(" = ")
-                .append(totalScore);
+                .append(calculatorMessage.getTotalScore());
         return infoMessage.toString();
     }
 

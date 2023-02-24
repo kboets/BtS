@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Order(1)
@@ -26,45 +28,53 @@ public class HomeGame extends AbstractCalculator {
         List<Result> homeResults = super.getPlayedGamesForTeam(forecast, forecastDetail.getTeam(), true);
         if (homeResults.size() < 3) {
             logger.warn("Team {} has played {} home games instead of 3 for forecast of round {}, can not calculate correct home points", forecastDetail.getTeam().getName(), homeResults.size(), forecast.getRound());
-            forecastDetail.setErrorMessage(String.format("Team %s has not played 3 home games, can not calculate correct home points", forecastDetail.getTeam().getName()));
-            if (homeResults.size() == 2) {
-                forecastDetail.setForecastResult(ForecastResult.WARNING);
-            } else {
-                forecastDetail.setForecastResult(ForecastResult.FATAL);
-            }
+            handleNotEnoughGames(homeResults, forecastDetail);
         }
+        // sort the list on roundNumber, most recent first
+        List<Result> sortedHomeResults = homeResults.stream().sorted(Comparator.comparingInt(Result::getRoundNumber).reversed()).collect(Collectors.toList());
         //get algorithm
         Algorithm algorithm = forecast.getAlgorithm();
         int teams = forecast.getLeague().getTeams().size();
         // set init message
         messageBuilder.append(this.createInitMessage(algorithm, forecastDetail.getTeam()));
-        //calculate score
         int homeScore = 0;
-        for (Result result : homeResults) {
+        int index = 1;
+        for (Result result : sortedHomeResults) {
             Team opponent = result.getAwayTeam();
             int rankingOpponent = super.getOpponentRanking(forecast, opponent, result.getRoundNumber());
+            CalculatorMessage calculatorMessage = new CalculatorMessage();
+            calculatorMessage.setAlgorithm(algorithm);
+            calculatorMessage.setOpponentStanding(rankingOpponent);
+            calculatorMessage.setTotalTeams(teams);
             if (isWinGame(forecastDetail.getTeam(), result)) {
-                messageBuilder.append(this.appendResultMessage(WIN,result, true));
+                messageBuilder.append(this.appendResultMessage(WIN,result, true, index));
                 int homeWinPoints = algorithm.getHomePoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentWinPoints = homeWinPoints + opponentStandingPoints;
                 homeScore = homeScore + currentWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentWinPoints, homeWinPoints));
+                calculatorMessage.setFinalScore(currentWinPoints);
+                calculatorMessage.setInitScore(homeWinPoints);
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
-                messageBuilder.append(this.appendResultMessage(LOST,result, true));
+                messageBuilder.append(this.appendResultMessage(LOST,result, true, index));
                 int homeLosePoints = algorithm.getHomePoints().getLose();
                 int totalScore = homeLosePoints - rankingOpponent;
                 homeScore = homeScore + totalScore;
-                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, true));
+                calculatorMessage.setTotalScore(totalScore);
+                calculatorMessage.setHome(true);
+                messageBuilder.append(this.appendScoreLostMessage(calculatorMessage));
             } else {
                 // draw
-                messageBuilder.append(this.appendResultMessage(DRAW,result, true));
+                messageBuilder.append(this.appendResultMessage(DRAW,result, true, index));
                 int homeDrawPoints = algorithm.getHomePoints().getDraw();
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentDrawPoints = homeDrawPoints + opponentStandingPoints;
                 homeScore = homeScore + currentDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentDrawPoints, homeDrawPoints));
+                calculatorMessage.setFinalScore(currentDrawPoints);
+                calculatorMessage.setInitScore(homeDrawPoints);
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
             }
+            index++;
         }
         messageBuilder.append("<br><br>")
                 .append("<b>")

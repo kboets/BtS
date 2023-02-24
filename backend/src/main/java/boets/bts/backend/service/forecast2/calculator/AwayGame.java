@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Order(2)
@@ -27,13 +29,10 @@ public class AwayGame extends AbstractCalculator {
         if (awayResults.size() < 3) {
             logger.warn("Team {} has not played 3 away games for forecast of round {}, can not calculate correct away points", forecastDetail.getTeam().getName(), forecast.getRound());
             forecastDetail.setErrorMessage(String.format("Team %s has not played 3 away games, can not calculate correct away points", forecastDetail.getTeam().getName()));
-            if (awayResults.size() == 2) {
-                forecastDetail.setForecastResult(ForecastResult.WARNING);
-            } else {
-                forecastDetail.setForecastResult(ForecastResult.FATAL);
-                return;
-            }
+            handleNotEnoughGames(awayResults, forecastDetail);
         }
+        // sort the list on roundNumber, most recent first
+        List<Result> sortedAwayResults = awayResults.stream().sorted(Comparator.comparingInt(Result::getRoundNumber).reversed()).collect(Collectors.toList());
         //get algorithm
         Algorithm algorithm = forecast.getAlgorithm();
         int teams = forecast.getLeague().getTeams().size();
@@ -41,31 +40,44 @@ public class AwayGame extends AbstractCalculator {
         messageBuilder.append(this.createInitMessage(algorithm));
         //calculate score
         int awayScore = 0;
-        for (Result result : awayResults) {
+        int index = 1;
+        for (Result result : sortedAwayResults) {
             Team opponent = result.getHomeTeam();
             int rankingOpponent = getOpponentRanking(forecast, opponent, result.getRoundNumber());
+            CalculatorMessage calculatorMessage = new CalculatorMessage();
+            calculatorMessage.setAlgorithm(algorithm);
+            calculatorMessage.setOpponentStanding(rankingOpponent);
+            calculatorMessage.setTotalTeams(teams);
+            calculatorMessage.setIndex(index);
             if (isWinGame(forecastDetail.getTeam(), result)) {
-                messageBuilder.append(this.appendResultMessage(WIN,result, false));
+                messageBuilder.append(this.appendResultMessage(WIN,result, false, index));
                 int awayWinPoints = algorithm.getAwayPoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentWinPoints = awayWinPoints + opponentStandingPoints;
+                calculatorMessage.setFinalScore(currentWinPoints);
+                calculatorMessage.setInitScore(awayWinPoints);
                 awayScore = awayScore + currentWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentWinPoints, awayWinPoints));
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
-                messageBuilder.append(this.appendResultMessage(LOST,result, false));
+                messageBuilder.append(this.appendResultMessage(LOST,result, false, index));
                 int awayLosePoints = algorithm.getAwayPoints().getLose();
                 int totalScore = awayLosePoints - rankingOpponent;
                 awayScore = awayScore + totalScore;
-                messageBuilder.append(this.appendScoreLostMessage(rankingOpponent, totalScore, algorithm, false));
+                calculatorMessage.setTotalScore(totalScore);
+                calculatorMessage.setHome(false);
+                messageBuilder.append(this.appendScoreLostMessage(calculatorMessage));
             } else {
                 // draw
-                messageBuilder.append(this.appendResultMessage(DRAW,result, false));
+                messageBuilder.append(this.appendResultMessage(DRAW,result, false, index));
                 int awayDrawPoints = algorithm.getAwayPoints().getDraw();
                 int opponentStandingPoints = teams - rankingOpponent;
                 int currentDrawPoints = awayDrawPoints + opponentStandingPoints;
                 awayScore = awayScore + currentDrawPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(teams, rankingOpponent, currentDrawPoints, awayDrawPoints));
+                calculatorMessage.setFinalScore(currentDrawPoints);
+                calculatorMessage.setInitScore(awayDrawPoints);
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
             }
+            index++;
         }
         messageBuilder.append("<br><br>")
                 .append("<b>")
