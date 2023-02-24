@@ -22,5 +22,6 @@
     <include file="/liquibase/changelog/014_createAlgorithm.xml" />
     <include file="/liquibase/changelog/015_createForecast.xml" />
     <include file="/liquibase/changelog/016_createForecastDetail.xml" />
+    <include file="/liquibase/changelog/017_add_booster.xml" />
 
 </databaseChangeLog>

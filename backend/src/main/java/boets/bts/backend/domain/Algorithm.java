@@ -48,6 +48,8 @@ public class Algorithm {
     private boolean current;
     @Column
     private Integer threshold;
+    @Column
+    private Integer booster;
 
     public Algorithm() {
         this.type = "WIN";
@@ -124,4 +126,13 @@ public class Algorithm {
     public void setThreshold(Integer threshold) {
         this.threshold = threshold;
     }
+
+    public Integer getBooster() {
+        return booster;
+    }
+
+    public void setBooster(Integer booster) {
+        this.booster = booster;
+    }
+
 }
