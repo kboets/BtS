@@ -100,6 +100,14 @@
                 <label><strong>{{currentAlgorithm?.awayMalus}}</strong></label>
             </div>
         </div>
+        <ng-container *ngIf="currentAlgorithm.booster != null">
+            <h5>booster</h5>
+            <div class="p-grid p-mt-1">
+                <div class="p-col-1">
+                    <label><strong>{{currentAlgorithm?.booster}}</strong></label>
+                </div>
+            </div>
+        </ng-container>
         <div class="p-field p-grid p-mt-5">
             <div class="p-col-2" *ngIf="!addAlgorithm && !viewOthers && !editAlgorithm">
                 <button pButton type="button" label="Voeg toe" style="margin-right: .5rem"
@@ -131,6 +139,7 @@
                     <th>Uit gelijk</th>
                     <th>Uit verlies</th>
                     <th>Uit malus</th>
+                    <th>booster</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -146,6 +155,7 @@
                     <td>{{algorithme.awayPoints.draw}}</td>
                     <td>{{algorithme.awayPoints.lose}}</td>
                     <td>{{algorithme.awayMalus}}</td>
+                    <td>{{algorithme.booster}}</td>
                     <td><button pButton type="button" label="maak huidig" style="margin-right: .5rem"
                             (click)="setAlgorithmCurrent(algorithme)"></button></td>
                     <td><p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
@@ -175,7 +185,7 @@
                 </div>
                 <div class="p-field p-col-12 p-md-3 p-ml-6">
                         <label for="threshold">Threshold</label>
-                        <p-inputNumber [showButtons]="true" id="threshold" inputId="threshold" [min]="0" [max]="150"
+                        <p-inputNumber [showButtons]="true" id="threshold" inputId="threshold" [min]="0" [max]="180"
                                        [step]="10" formControlName="threshold"></p-inputNumber>
                 </div>
             </div>
@@ -234,6 +244,14 @@
                                        [step]="5" formControlName="awayMalus"></p-inputNumber>
                     </div>
                 </div>
+                <h5>booster</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-2">
+                        <p-inputNumber [showButtons]="true" id="booster" inputId="booster" [min]="0" [max]="60"
+                                       [step]="10" formControlName="booster"></p-inputNumber>
+                    </div>
+                </div>
+
             </fieldset>
             <!-- end add form -->
             <div class="p-fluid p-grid p-formgrid p-mt-6">

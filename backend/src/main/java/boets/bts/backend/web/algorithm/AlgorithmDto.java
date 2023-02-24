@@ -13,6 +13,8 @@ public class AlgorithmDto {
     private Integer awayMalus;
     private boolean current;
     private Integer threshold;
+    private Integer booster;
+
 
 
     public Long getAlgorithm_id() {
@@ -85,5 +87,13 @@ public class AlgorithmDto {
 
     public void setThreshold(Integer threshold) {
         this.threshold = threshold;
+    }
+
+    public Integer getBooster() {
+        return booster;
+    }
+
+    public void setBooster(Integer booster) {
+        this.booster = booster;
     }
 }

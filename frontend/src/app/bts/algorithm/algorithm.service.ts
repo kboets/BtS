@@ -55,6 +55,7 @@ export class AlgorithmService {
     }
 
     saveAlgorithm(algorithm: Algorithm): Observable<Algorithm> {
+        console.log('saveAlgorithm ', algorithm);
         return this.http.post<Algorithm>(`/btsapi/api/algorithm/save`, algorithm, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'

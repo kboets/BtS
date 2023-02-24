@@ -113,6 +113,7 @@ export class AlgorithmComponent implements OnInit {
             awayDraw: 0,
             awayLost: 0,
             awayMalus: 0,
+            booster: 0,
             name: ['', Validators.required],
             current: {value: false},
             threshold: 0
@@ -247,6 +248,7 @@ export class AlgorithmComponent implements OnInit {
         this.newAlgorithm.type = 'WIN';
         this.newAlgorithm.homeBonus = this.crudAlgorithmForm.get('homeBonus').value;
         this.newAlgorithm.awayMalus = this.crudAlgorithmForm.get('awayMalus').value;
+        this.newAlgorithm.booster = this.crudAlgorithmForm.get('booster').value;
 
     }
 
@@ -258,7 +260,8 @@ export class AlgorithmComponent implements OnInit {
             && this.newAlgorithm.awayPoints.draw === algorithm.awayPoints.draw
             && this.newAlgorithm.homePoints.win === algorithm.homePoints.win
             && this.newAlgorithm.homePoints.lose === algorithm.homePoints.lose
-            && this.newAlgorithm.homePoints.draw === algorithm.homePoints.draw;
+            && this.newAlgorithm.homePoints.draw === algorithm.homePoints.draw
+            && this.newAlgorithm.booster === algorithm.booster;
     }
 
 

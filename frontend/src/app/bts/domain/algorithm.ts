@@ -10,4 +10,6 @@ export interface Algorithm {
     homeBonus: number;
     awayPoints: AlgorithmPoints;
     awayMalus: number;
+    booster: number;
+
 }
