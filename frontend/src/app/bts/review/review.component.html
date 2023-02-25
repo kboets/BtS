@@ -11,13 +11,13 @@
         </div>
         <div class="p-grid">
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalCorrectHits}}/{{reviewPoints.totalHits}}</strong>
+                <strong>{{reviewPoints.totalCorrectHits}}/{{reviewPoints.totalHits}}  ({{calculatePercentage(reviewPoints.totalCorrectHits, reviewPoints.totalHits)}}%) </strong>
             </div>
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalHomeCorrectHits}}/{{reviewPoints.totalHomeHits}}</strong>
+                <strong>{{reviewPoints.totalHomeCorrectHits}}/{{reviewPoints.totalHomeHits}} ({{calculatePercentage(reviewPoints.totalHomeCorrectHits, reviewPoints.totalHomeHits)}}%)</strong>
             </div>
             <div class="p-col-2">
-                <strong>{{reviewPoints.totalAwayCorrectHits}}/{{reviewPoints.totalAwayHits}}</strong>
+                <strong>{{reviewPoints.totalAwayCorrectHits}}/{{reviewPoints.totalAwayHits}} ({{calculatePercentage(reviewPoints.totalAwayCorrectHits, reviewPoints.totalAwayHits)}}%)</strong>
             </div>
         </div>
         <div class="p-grid">

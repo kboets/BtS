@@ -7,10 +7,13 @@ public class CalculatorMessage {
     private int opponentStanding;
     private int finalScore;
     private int initScore;
-    private int totalScore;
     private Algorithm algorithm;
     private boolean isHome;
     private int index;
+    private int booster;
+
+    private boolean hasBooster;
+
 
     public int getTotalTeams() {
         return totalTeams;
@@ -44,14 +47,6 @@ public class CalculatorMessage {
         this.initScore = initScore;
     }
 
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
-    }
-
     public Algorithm getAlgorithm() {
         return algorithm;
     }
@@ -74,5 +69,21 @@ public class CalculatorMessage {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getBooster() {
+        return booster;
+    }
+
+    public void setBooster(int booster) {
+        this.booster = booster;
+    }
+
+    public boolean isHasBooster() {
+        return hasBooster;
+    }
+
+    public void setHasBooster(boolean hasBooster) {
+        this.hasBooster = hasBooster;
     }
 }

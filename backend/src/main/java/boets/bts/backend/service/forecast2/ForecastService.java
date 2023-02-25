@@ -192,6 +192,7 @@ public class ForecastService {
                 List<Forecast> forecasts = forecastCalculatorManager.calculateForecasts(league, roundNumbers, algorithm);
                 if (!forecasts.isEmpty()) {
                     forecastRepository.saveAll(forecasts);
+                    forecastRepository.flush();
                 }
                 //logger.info("Forecast calculated :");
                 index++;

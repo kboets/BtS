@@ -19,8 +19,7 @@
                             </p-header>
                             <div class="card-text">start : {{league.startSeason | date: 'dd/MM/yyyy'}}</div>
                             <div class="card-text">einde : {{league.endSeason | date: 'dd/MM/yyyy'}}</div>
-                            <div class="card-text">seizoen : {{league.season}} - {{(league.season +1)}} </div>
-                            <div class="card-text">nbsp;</div>
+                            <div class="card-text p-mb-2">seizoen : {{league.season}} - {{(league.season +1)}} </div>
                             <img [src]="league.logo" alt="" class="img-responsive" style="height: 150px">
                         </p-card>
                     </div>

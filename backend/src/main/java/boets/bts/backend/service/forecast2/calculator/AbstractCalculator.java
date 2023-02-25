@@ -230,6 +230,22 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         return infoMessage.toString();
     }
 
+    protected String appendScoreMessageWinWithBooster(CalculatorMessage calculatorMessage) {
+        StringBuilder infoMessage = new StringBuilder();
+        infoMessage
+                .append("<br>")
+                .append("score: ")
+                .append(calculatorMessage.getInitScore())
+                .append(" + (")
+                .append(calculatorMessage.getTotalTeams()).append("-")
+                .append(calculatorMessage.getOpponentStanding())
+                .append(" + booster:  ")
+                .append(calculatorMessage.getBooster())
+                .append(") = ")
+                .append(calculatorMessage.getFinalScore());
+        return infoMessage.toString();
+    }
+
     protected String appendScoreLostMessage(CalculatorMessage calculatorMessage) {
         StringBuilder infoMessage = new StringBuilder();
         int points = calculatorMessage.isHome()?calculatorMessage.getAlgorithm().getHomePoints().getLose():calculatorMessage.getAlgorithm().getAwayPoints().getLose();
@@ -240,8 +256,55 @@ public abstract class AbstractCalculator implements ScoreCalculator {
                 .append(" - ")
                 .append(calculatorMessage.getOpponentStanding())
                 .append(" = ")
-                .append(calculatorMessage.getTotalScore());
+                .append(calculatorMessage.getFinalScore());
         return infoMessage.toString();
+    }
+
+    protected String appendScoreLostMessageWithBooster(CalculatorMessage calculatorMessage) {
+        StringBuilder infoMessage = new StringBuilder();
+        int points = calculatorMessage.isHome()?calculatorMessage.getAlgorithm().getHomePoints().getLose():calculatorMessage.getAlgorithm().getAwayPoints().getLose();
+        infoMessage
+                .append("<br>")
+                .append("score: ")
+                .append(points)
+                .append(" - ")
+                .append(calculatorMessage.getOpponentStanding())
+                .append(" - (neg booster) ")
+                .append(calculatorMessage.getBooster())
+                .append(" = ")
+                .append(calculatorMessage.getFinalScore());
+        return infoMessage.toString();
+    }
+
+    protected void determineMessage(CalculatorMessage calculatorMessage, StringBuilder messageBuilder, boolean isWin) {
+        if (isWin) {
+            if (calculatorMessage.isHasBooster()) {
+                messageBuilder.append(this.appendScoreMessageWinWithBooster(calculatorMessage));
+            } else {
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
+            }
+        } else {
+            if (calculatorMessage.isHasBooster()) {
+                messageBuilder.append(this.appendScoreLostMessageWithBooster(calculatorMessage));
+            } else {
+                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
+            }
+        }
+    }
+
+    protected int calculateBoosting(Algorithm algorithm, int index, CalculatorMessage calculatorMessage) {
+        int boosterResult = 0;
+        if (algorithm.getBooster() != null) {
+            calculatorMessage.setHasBooster(true);
+            if (index == 1) {
+                boosterResult = algorithm.getBooster();
+                calculatorMessage.setBooster(boosterResult);
+            } else if (index == 2) {
+                boosterResult = algorithm.getBooster()/2;
+                calculatorMessage.setBooster(boosterResult);
+            }
+        }
+        return boosterResult;
     }
 
 }

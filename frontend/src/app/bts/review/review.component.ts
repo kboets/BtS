@@ -153,7 +153,10 @@ export class ReviewComponent implements OnInit {
 
     public sortRound(rounds: Round[]) {
         return rounds.sort((n1, n2) => +n2.playRound - +n1.playRound);
+    }
 
+    public calculatePercentage(correct: number, total: number): number {
+        return Math.round(correct/total * 100);
     }
     private handleChange(forecastDetails: ForecastDetail[]): ForecastDetail[] {
         forecastDetails.sort((n1, n2) => n2.finalScore - n1.finalScore);

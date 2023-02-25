@@ -3,9 +3,10 @@
                             RELEASE NOTES
 
 *********************************************************************************
-1.9.0
+(25/02/2023) 1.9.0
 new features:
-    add dynamic booster to an algorithm FE
+    add dynamic booster to an algorithm
+    use the booster when available to calculate the forecast
 
 bugfixes:
     handle the java.net.unknownHostException in ResultService and RoundService

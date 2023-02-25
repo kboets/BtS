@@ -53,19 +53,22 @@ public class AwayGame extends AbstractCalculator {
                 messageBuilder.append(this.appendResultMessage(WIN,result, false, index));
                 int awayWinPoints = algorithm.getAwayPoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
-                int currentWinPoints = awayWinPoints + opponentStandingPoints;
-                calculatorMessage.setFinalScore(currentWinPoints);
+                // get boosting result
+                int boosterResult = calculateBoosting(algorithm, index, calculatorMessage);
+                int currentTotalScore = awayWinPoints + opponentStandingPoints + boosterResult;
+                calculatorMessage.setFinalScore(currentTotalScore);
                 calculatorMessage.setInitScore(awayWinPoints);
-                awayScore = awayScore + currentWinPoints;
-                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
+                awayScore = awayScore + currentTotalScore;
+                this.determineMessage(calculatorMessage, messageBuilder,  true);
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, false, index));
                 int awayLosePoints = algorithm.getAwayPoints().getLose();
-                int totalScore = awayLosePoints - rankingOpponent;
+                int boosterResult = calculateBoosting(algorithm, index, calculatorMessage);
+                int totalScore = awayLosePoints - rankingOpponent - boosterResult;
                 awayScore = awayScore + totalScore;
-                calculatorMessage.setTotalScore(totalScore);
+                calculatorMessage.setFinalScore(totalScore);
                 calculatorMessage.setHome(false);
-                messageBuilder.append(this.appendScoreLostMessage(calculatorMessage));
+                this.determineMessage(calculatorMessage, messageBuilder,  false);
             } else {
                 // draw
                 messageBuilder.append(this.appendResultMessage(DRAW,result, false, index));
@@ -91,6 +94,23 @@ public class AwayGame extends AbstractCalculator {
     }
 
     private String createInitMessage(Algorithm algorithm) {
+        if (algorithm.getBooster() != null) {
+            return  "<h3>Berekening uit wedstrijden</h3>" +
+                    "Winst : " +
+                    algorithm.getAwayPoints().getWin() +
+                    " punten + (aantal teams - rank tegenstrever) " +
+                    "+ booster 1 = + "+ algorithm.getBooster() + " booster 2 = + " + algorithm.getBooster()/2 + " booster 3 = 0" +
+                    "<br>" +
+                    "verlies : " +
+                    algorithm.getAwayPoints().getLose() +
+                    " punten - (rank tegenstrever)" +
+                    " booster 1 = - "+ algorithm.getBooster() + " booster 2 = - " + algorithm.getBooster()/2 + " booster 3 = - 0" +
+                    "<br>" +
+                    "gelijk spel : " +
+                    algorithm.getAwayPoints().getDraw() +
+                    " punten  + (aantal teams - rank tegenstrever)" +
+                    "<br>";
+        }
         return  "<h3>Berekening uit wedstrijden</h3>" +
                 "Winst : " +
                 algorithm.getAwayPoints().getWin() +

@@ -50,19 +50,22 @@ public class HomeGame extends AbstractCalculator {
                 messageBuilder.append(this.appendResultMessage(WIN,result, true, index));
                 int homeWinPoints = algorithm.getHomePoints().getWin();
                 int opponentStandingPoints = teams - rankingOpponent;
-                int currentWinPoints = homeWinPoints + opponentStandingPoints;
-                homeScore = homeScore + currentWinPoints;
-                calculatorMessage.setFinalScore(currentWinPoints);
+                // get boosting result
+                int boosterResult = calculateBoosting(algorithm, index, calculatorMessage);
+                int totalScore = homeWinPoints + opponentStandingPoints + boosterResult;
+                homeScore = homeScore + totalScore;
+                calculatorMessage.setFinalScore(totalScore);
                 calculatorMessage.setInitScore(homeWinPoints);
-                messageBuilder.append(this.appendScoreMessageWinDraw(calculatorMessage));
+                this.determineMessage(calculatorMessage, messageBuilder,  true);
             } else if (isLoseGame(forecastDetail.getTeam(), result)) {
                 messageBuilder.append(this.appendResultMessage(LOST,result, true, index));
                 int homeLosePoints = algorithm.getHomePoints().getLose();
-                int totalScore = homeLosePoints - rankingOpponent;
-                homeScore = homeScore + totalScore;
-                calculatorMessage.setTotalScore(totalScore);
+                int boosterResult = calculateBoosting(algorithm, index, calculatorMessage);
+                int finalScore = homeLosePoints - rankingOpponent - boosterResult;
+                homeScore = homeScore + finalScore;
+                calculatorMessage.setFinalScore(finalScore);
                 calculatorMessage.setHome(true);
-                messageBuilder.append(this.appendScoreLostMessage(calculatorMessage));
+                this.determineMessage(calculatorMessage, messageBuilder,  false);
             } else {
                 // draw
                 messageBuilder.append(this.appendResultMessage(DRAW,result, true, index));
@@ -89,21 +92,43 @@ public class HomeGame extends AbstractCalculator {
 
 
     private String createInitMessage(Algorithm algorithm, Team team) {
-        return "<h2>Overzicht ploeg " +
-                team.getName() +
-                "</h2><h3>Berekening thuiswedstrijden</h3>" +
-                "Winst : " +
-                algorithm.getHomePoints().getWin() +
-                " punten + (aantal teams - rank tegenstrever)" +
-                "<br>" +
-                "verlies : " +
-                algorithm.getHomePoints().getLose() +
-                " punten - (rank tegenstrever)" +
-                "<br>" +
-                "geijkspel : " +
-                algorithm.getHomePoints().getDraw() +
-                " punten  + (aantal teams - rank tegenstrever)"+
-                "<br>";
+        if (algorithm.getBooster() != null) {
+            return "<h2>Overzicht ploeg " +
+                    team.getName() +
+                    "</h2><h3>Berekening thuiswedstrijden</h3>" +
+                    "Winst : " +
+                    algorithm.getHomePoints().getWin() +
+                    " punten + (aantal teams - rank tegenstrever) " +
+                    "+ booster 1 = + "+ algorithm.getBooster() + " booster 2 = + " + algorithm.getBooster()/2 + " booster 3 = + 0" +
+                    "<br>" +
+                    "verlies : " +
+                    algorithm.getHomePoints().getLose() +
+                    " punten - (rank tegenstrever)" +
+                    " booster 1 = - "+ algorithm.getBooster() + " booster 2 = - " + algorithm.getBooster()/2 + " booster 3 = - 0" +
+                    "<br>" +
+                    "geijkspel : " +
+                    algorithm.getHomePoints().getDraw() +
+                    " punten  + (aantal teams - rank tegenstrever)"+
+                    "<br>";
+        } else {
+            return "<h2>Overzicht ploeg " +
+                    team.getName() +
+                    "</h2><h3>Berekening thuiswedstrijden</h3>" +
+                    "Winst : " +
+                    algorithm.getHomePoints().getWin() +
+                    " punten + (aantal teams - rank tegenstrever)" +
+                    "<br>" +
+                    "verlies : " +
+                    algorithm.getHomePoints().getLose() +
+                    " punten - (rank tegenstrever)" +
+                    "<br>" +
+                    "geijkspel : " +
+                    algorithm.getHomePoints().getDraw() +
+                    " punten  + (aantal teams - rank tegenstrever)"+
+                    "<br>";
+        }
 
     }
+
+
 }
