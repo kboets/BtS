@@ -280,7 +280,12 @@ public class ForecastService {
         List<Integer> roundNumbers = new ArrayList<>();
         int start = 7;
         Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), WebUtils.getCurrentSeason());
-        IntStream.range(start, currentRound.getRoundNumber()).forEach(roundNumbers::add);
+        if (WebUtils.isWeekend()) {
+            IntStream.range(start, currentRound.getRoundNumber()).forEach(roundNumbers::add);
+        } else {
+            IntStream.rangeClosed(start, currentRound.getRoundNumber()).forEach(roundNumbers::add);
+        }
+
         return roundNumbers;
     }
 
