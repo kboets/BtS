@@ -3,7 +3,7 @@ import {EMPTY, Observable, Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {Forecast} from "../domain/forecast";
 import {ForecastService} from "./forecast.service";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {League} from "../domain/league";
 import {ForecastDetail} from "../domain/forecastDetail";
 import * as _ from 'underscore';
@@ -11,6 +11,8 @@ import {AdminService} from "../admin/admin.service";
 import {AdminKeys} from "../domain/adminKeys";
 import {Table} from "primeng/table";
 import {ForecastUtility} from "../common/forecastUtility";
+import {Algorithm} from "../domain/algorithm";
+import {AlgorithmService} from "../algorithm/algorithm.service";
 
 @Component({
     selector: 'bts-forecast',
@@ -22,9 +24,12 @@ export class ForecastComponent implements OnInit {
     forecastUtility: ForecastUtility;
     private errorMessageSubject = new Subject<GeneralError>();
     errorMessage$ = this.errorMessageSubject.asObservable();
-
+    // forecast data
     public forecastData: Forecast[];
     public forecastDetails: ForecastDetail[];
+    // algorithm
+    public algorithms$: Observable<Algorithm[]>;
+    public selectedAlgorithm: Algorithm;
     public isHistoricData: boolean;
     // sorting and expanding on table
     public isExpanded: boolean;
@@ -38,7 +43,6 @@ export class ForecastComponent implements OnInit {
     public displayWarningMessage: boolean;
     public warningForecastDetail: ForecastDetail;
 
-
     currentSeason: number;
     displayScoreInfo: boolean;
     selectedForecastLeague: League;
@@ -46,7 +50,7 @@ export class ForecastComponent implements OnInit {
     rowGroupMetadata: any;
 
 
-    constructor(private forecastService: ForecastService, private adminService: AdminService) {
+    constructor(private forecastService: ForecastService, private adminService: AdminService, private algorithmService: AlgorithmService) {
         this.forecastDetails = [];
         this.forecastData = [];
         this.displayScoreInfo = false;
@@ -66,13 +70,27 @@ export class ForecastComponent implements OnInit {
 
 
     ngOnInit(): void {
+        // 1. get all algorithms + select current
+        this.algorithms$ = this.algorithmService.getAlgorithms()
+            .pipe(
+                tap(algorithms => {
+                    for (const algorithm of algorithms) {
+                        if (algorithm.current) {
+                            this.selectedAlgorithm = algorithm;
+                            this.forecastService.forecastRefreshNeeded$.next();
+                        }
+                    }
+                }),
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                }));
+
         this.forecastService.forecastRefreshNeeded$.subscribe(() => {
             this.getForecastData();
         })
 
-        this.getForecastData();
-
-        //retrieve the current season as number.
+         //retrieve the current season as number.
         this.adminService.currentSeason$.subscribe((data) => {
             this.currentSeason = data;
         });
@@ -90,6 +108,10 @@ export class ForecastComponent implements OnInit {
             .subscribe((data) => {
                 this.isHistoricData = data;
             })
+    }
+
+    public onAlgorithmChange() {
+        this.forecastService.forecastRefreshNeeded$.next();
     }
 
     onSort() {
@@ -173,7 +195,7 @@ export class ForecastComponent implements OnInit {
     }
 
     private getForecastData() {
-        this.forecastService.getFilteredForecasts(this.selectedScores)
+        this.forecastService.getFilteredForecasts(this.selectedScores, this.selectedAlgorithm.algorithm_id)
             .pipe(
                 catchError(err => {
                     this.errorMessageSubject.next(err);

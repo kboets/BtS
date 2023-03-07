@@ -20,18 +20,14 @@ public class ForecastResource {
         this.forecastService = forecastService;
     }
 
-    @PutMapping("requested")
-    public List<ForecastDto> getRequestedForecasts(@RequestBody List<Integer> scores) {
+    @PutMapping("requested/{algorithmId}")
+    public List<ForecastDto> getRequestedForecasts(@RequestBody List<Integer> scores, @PathVariable("algorithmId") Long algorithmId) {
         try {
-            return forecastService.getRequestedForecasts(scores);
+            return forecastService.getRequestedForecasts(scores, algorithmId);
         } catch (Exception e) {
             logger.error("Exception while calculating forecasts {} ", e.getMessage(), e);
             throw new GeneralException(e.getMessage());
         }
-    }
-    @GetMapping("allExceptCurrent")
-    public List<ForecastDto> getAllButCurrentForecasts() {
-        return forecastService.getAllExceptCurrentForecasts();
     }
 
     @GetMapping("all")

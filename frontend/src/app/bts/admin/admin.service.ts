@@ -38,7 +38,7 @@ export class AdminService {
 
     environment$ = this.http.get<Environment>(`/btsapi/api/admin/currentVersion`)
         .pipe(
-            tap(data => console.log('all admin data ', JSON.stringify(data))),
+            //tap(data => console.log('all admin data ', JSON.stringify(data))),
             catchError(this.handleHttpError)
         );
 

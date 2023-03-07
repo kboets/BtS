@@ -2,7 +2,6 @@ package boets.bts.backend.service.forecast2;
 
 import boets.bts.backend.domain.*;
 import boets.bts.backend.repository.algorithm.AlgorithmRepository;
-import boets.bts.backend.repository.algorithm.AlgorithmSpecs;
 import boets.bts.backend.repository.forecast.ForecastRepository;
 import boets.bts.backend.repository.forecast.ForecastSpecs;
 import boets.bts.backend.repository.league.LeagueRepository;
@@ -68,22 +67,6 @@ public class ForecastService {
         this.roundMapper = roundMapper;
     }
 
-    /**
-     * Retrieves all the forecasts except the current.
-     * @return List of ForecastDto
-     */
-    public List<ForecastDto> getAllExceptCurrentForecasts() {
-        List<Forecast> allForecasts = forecastRepository.findAll();
-        List<Forecast> currentForecasts = this.getCurrentForecasts();
-        List<Forecast> filteredForecasts = allForecasts.stream()
-                .filter(forecast -> !currentForecasts.contains(forecast))
-                .sorted(Comparator.comparingInt(Forecast::getRound).reversed())
-                .sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()))
-                .collect(Collectors.toList());
-        return forecastMapper.toDtos(filteredForecasts);
-
-    }
-
     public List<ForecastDto> getReviewForecastForAlgorithm(Long algorithmId) {
         Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
         List<Forecast> reviewForecasts = new ArrayList<>();
@@ -134,8 +117,8 @@ public class ForecastService {
      * @param scores - a list with scores, can be empty
      * @return List
      */
-    public List<ForecastDto> getRequestedForecasts(List<Integer> scores)  {
-        List<ForecastDto> currentForecasts = forecastMapper.toDtos(getCurrentForecasts());
+    public List<ForecastDto> getRequestedForecasts(List<Integer> scores, Long algorithmId)  {
+        List<ForecastDto> currentForecasts = forecastMapper.toDtos(getCurrentForecasts(algorithmId));
         if (!scores.isEmpty()) {
             List<ForecastDto> filteredForecasts = new ArrayList<>();
             for (ForecastDto forecastDto : currentForecasts) {
@@ -163,13 +146,13 @@ public class ForecastService {
      * Retrieves all the forecasts for the next round.
      * @return List
      */
-    public List<Forecast> getCurrentForecasts() {
+    public List<Forecast> getCurrentForecasts(Long algorithmId) {
         List<Forecast> currentForecasts = new ArrayList<>();
         int season = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
-        Algorithm algorithm = algorithmRepository.findAll(AlgorithmSpecs.current()).get(0);
+        Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
         for(League league: leagues) {
-            Round nextRound = getLastestRound(league);
+            Round nextRound = getLatestRound(league);
             currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
         }
         return currentForecasts;
@@ -194,7 +177,6 @@ public class ForecastService {
                     forecastRepository.saveAll(forecasts);
                     forecastRepository.flush();
                 }
-                //logger.info("Forecast calculated :");
                 index++;
             }
         } catch (Exception e) {
@@ -308,7 +290,7 @@ public class ForecastService {
     }
 
 
-    private Round getLastestRound(League league) {
+    private Round getLatestRound(League league) {
         LocalDate now = LocalDate.now();
         DayOfWeek today = now.getDayOfWeek();
         Round currentRound = roundService.getCurrentRoundForLeague(league.getId(), league.getSeason());

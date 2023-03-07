@@ -54,8 +54,8 @@ export class ForecastService {
             );
     }
 
-    getFilteredForecasts(scores: number[]) : Observable<Forecast[]> {
-        return this.http.put<Forecast[]>(`/btsapi/api/forecast/requested`, scores, {
+    getFilteredForecasts(scores: number[], algorithmId: number) : Observable<Forecast[]> {
+        return this.http.put<Forecast[]>(`/btsapi/api/forecast/requested/${algorithmId}`, scores, {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })
