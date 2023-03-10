@@ -43,7 +43,7 @@ public class League implements Serializable {
     @OneToMany(mappedBy = "league", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Team> teams;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.DETACH, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Round> rounds;
 
     public Long getId() {

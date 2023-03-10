@@ -74,6 +74,7 @@ public class RoundService {
         }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
         if(league.getRounds().isEmpty()) {
+            logger.warn("The league has no rounds {} ", league.getName());
             this.updateLeagueWithRounds(league);
         } else {
             Set<Round> allRoundsForLeague = league.getRounds();

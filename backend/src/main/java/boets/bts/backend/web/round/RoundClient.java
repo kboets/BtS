@@ -72,7 +72,7 @@ public class RoundClient extends ParentClient implements IRoundClient{
                 return Optional.ofNullable(mapJsonToRoundDto(leagueJsonArray,season));
             }
         } catch (IOException e) {
-            logger.warn("Exception on calling getAllRoundsForLeagueAndSeason" + e);
+            logger.error("Exception on calling getAllRoundsForLeagueAndSeason " + e);
         } finally {
             if(response != null && response.body()!= null) {
                 response.body().close();
