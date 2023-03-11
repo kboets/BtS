@@ -192,10 +192,7 @@ public class RoundService {
         numberOfAttempts = new AtomicInteger();
     }
 
-    /**
-     * Cron job each day at 2 AM
-     */
-    @Scheduled(cron ="0 0 * * * *")
+    @Scheduled(cron ="0 18/30 * * * *")
     public void scheduleRound() {
         this.initRounds();
     }
