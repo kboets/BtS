@@ -16,7 +16,7 @@
                             <p-dropdown [options]="algorithms" [(ngModel)]="selectedAlgorithm" optionLabel="name" (onChange)="onAlgorithmChange()"></p-dropdown>
                         </ng-container>
                     </div>
-                    <div class="p-col-1 p-mr-2">(threshold: {{selectedAlgorithm?.threshold}})</div>
+                    <div class="p-col-2 p-mr-2">(threshold: {{selectedAlgorithm?.threshold}})</div>
                     <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
                     <button pButton label="Herbereken" class="p-ml-auto"   type="button"  (click)="runForecast() "></button>
                 </div>
