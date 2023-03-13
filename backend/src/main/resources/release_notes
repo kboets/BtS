@@ -7,7 +7,7 @@
 new features:
     add dynamic booster to an algorithm
     use the booster when available to calculate the forecast
-
+    Give the possibility to select the algorithm in the forecast section
 bugfixes:
     handle the java.net.unknownHostException in ResultService and RoundService
 
