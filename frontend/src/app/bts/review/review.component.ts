@@ -82,7 +82,7 @@ export class ReviewComponent implements OnInit {
                 }));
 
         //2. get all leagues
-        this.leagues$ = this.leagueService.leagues$.pipe(
+        this.leagues$ = this.leagueService.leaguesSelected$.pipe(
             tap(leagues => {
                 this.selectedLeague = _.first(leagues);
                 this.selectedLeagueSubject.next(this.selectedLeague);

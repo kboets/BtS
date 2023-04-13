@@ -217,7 +217,7 @@ public class ForecastService {
 
     private boolean initCalculateForecast(List<Algorithm> algorithms) {
         int season = adminService.getCurrentSeason();
-        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(season));
+        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(season, true));
         int index = 0;
 
         while (index < leagues.size()) {

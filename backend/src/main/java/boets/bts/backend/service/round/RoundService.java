@@ -214,7 +214,7 @@ public class RoundService {
                     adminService.executeAdmin(AdminKeys.CRON_ROUNDS, "NOK");
                 })
                 .run(() -> {
-                    List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason()));
+                    List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(adminService.getCurrentSeason(), true));
                     leagues.forEach(league -> this.getCurrentRoundForLeague(league.getId(), adminService.getCurrentSeason()));
                 });
     }

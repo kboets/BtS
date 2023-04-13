@@ -28,6 +28,11 @@ public class LeagueResource {
         return leagueService.getCurrentLeagues();
     }
 
+    @GetMapping("currentSeasonAndSelected")
+    public List<LeagueDto> getLeaguesCurrentSeasonAndSelected() {
+        return leagueService.getCurrentAndSelectedLeagues();
+    }
+
     @GetMapping("get/{id}")
     public LeagueDto getLeagueById(@PathVariable("id") Long id)  {
         logger.info("GetLeagueById with id {} ",id);

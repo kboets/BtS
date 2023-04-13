@@ -159,7 +159,10 @@ public class ResultService {
                     adminService.executeAdmin(AdminKeys.CRON_RESULTS, "NOK");
                 })
                 .run(() -> {
-                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
+                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(adminService.getCurrentSeason(), true))
+                            .stream()
+                            .map(League::getId)
+                            .collect(Collectors.toList());
                     boolean allValidated = true;
                     for (Long leagueId : leagueIds) {
                         List<ResultDto> results = this.verifyMissingResults(leagueId);

@@ -138,7 +138,10 @@ public class StandingService {
                 })
                 .run(() -> {
                     boolean allValidated = true;
-                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(adminService.getCurrentSeason())).stream().map(League::getId).collect(Collectors.toList());
+                    List<Long> leagueIds = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(adminService.getCurrentSeason(), true))
+                            .stream()
+                            .map(League::getId)
+                            .collect(Collectors.toList());
                     for (Long leagueId: leagueIds) {
                         this.removeAllStandingForLeague(leagueId);
                         if(!verifyAllStandings(leagueId)) {

@@ -28,6 +28,12 @@ export class LeagueService {
             catchError(this.handleHttpError)
         );
 
+    leaguesSelected$ = this.http.get<League[]>(`/btsapi/api/league/currentSeasonAndSelected`)
+        .pipe(
+            //tap(data => console.log('selectable leagues ', JSON.stringify(data))),
+            catchError(this.handleHttpError)
+        );
+
 
     leaguesCurrentSeason$ = this._leagueRefreshNeeded$
         .pipe(() =>

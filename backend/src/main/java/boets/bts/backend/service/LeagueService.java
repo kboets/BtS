@@ -83,6 +83,12 @@ public class LeagueService  {
         return leagueMapper.toLeagueDtoList(leagues);
     }
 
+    public List<LeagueDto> getCurrentAndSelectedLeagues() {
+        int currentSeason = adminService.getCurrentSeason();
+        List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(currentSeason, true));
+        return leagueMapper.toLeagueDtoList(leagues);
+    }
+
     public List<League> initCurrentLeagues() {
         int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
@@ -128,13 +134,12 @@ public class LeagueService  {
 
     public List<LeagueDto> updateLeagueAvailableOrSelectable(List<Long> leagueIds, boolean toSelected) {
         List<League> updatedLeagues = leagueIds.stream()
-                .map(id -> leagueRepository.findById(id))
-                .flatMap(league -> league.isPresent() ? Stream.of(league.get()) : Stream.empty())
+                .map(leagueRepository::findById)
+                .flatMap(Optional::stream)
                 .peek(league -> league.setSelected(toSelected))
                 .collect(Collectors.toList());
 
-        List<LeagueDto> leagueDtoList = leagueMapper.toLeagueDtoList(leagueRepository.saveAll(updatedLeagues));
-        return leagueDtoList;
+        return leagueMapper.toLeagueDtoList(leagueRepository.saveAll(updatedLeagues));
     }
 
 
