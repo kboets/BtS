@@ -71,7 +71,7 @@ public class WebUtils {
 
     public static synchronized int getCurrentSeason() {
         LocalDate now = LocalDate.now();
-        if(now.getMonthValue() < Month.JULY.getValue()) {
+        if(now.getMonthValue() < Month.JUNE.getValue()) {
             return now.getYear() - 1;
         }
         return  now.getYear();
