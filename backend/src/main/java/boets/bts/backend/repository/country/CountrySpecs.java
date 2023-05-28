@@ -9,8 +9,11 @@ public class CountrySpecs {
 
     public static Specification<Country> getAvailableCountryByCountryCode(String countryCode) {
         return (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("countryCode"), countryCode);
-            return predicate;
+            return criteriaBuilder.equal(root.get("countryCode"), countryCode);
         };
+    }
+
+    public static Specification<Country> getCountryBySelected() {
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("e"), true);
     }
 }

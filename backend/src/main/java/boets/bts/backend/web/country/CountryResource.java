@@ -17,12 +17,12 @@ public class CountryResource {
 
     @GetMapping("get")
     public List<CountryDto> retrieveAllSelectableCountries() {
-        List<CountryDto> countryDtoList = countryService.retrieveAllCountries();
+        List<CountryDto> countryDtoList = countryService.retrieveAllowedCountries();
         return countryDtoList;
     }
 
-//    @PostMapping("save")
-//    public void saveAvailableCountries(@RequestBody List<CountryDto> countryDtoList) {
-//        countryServi(countryDtoList);
-//    }
+    @PutMapping("/toSelected")
+    public List<CountryDto> updateToSelectedCountry(@RequestBody List<String> countryCodes) {
+        return countryService.updateToSelectedCountries(countryCodes);
+    }
 }

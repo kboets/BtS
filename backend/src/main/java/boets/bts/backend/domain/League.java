@@ -40,7 +40,7 @@ public class League implements Serializable {
     @Column
     private boolean selected;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.DETACH, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Team> teams;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.DETACH, orphanRemoval = true, fetch = FetchType.EAGER)

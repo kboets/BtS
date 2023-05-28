@@ -22,9 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static boets.bts.backend.service.CountryService.allowedCountries;
+
+
 
 @Service
 @Transactional
@@ -40,11 +40,12 @@ public class LeagueService  {
     private final RoundService roundService;
     private final ResultService resultService;
     private final AdminService adminService;
+    private final CountryService countryService;
 
 
     public LeagueService(LeagueRepository leagueRepository, ILeagueClient leagueClient, LeagueMapper leagueMapper, StandingService standingService,
                          LeagueBettingDefinerFactory leagueBettingDefinerFactory, RoundService roundService, AdminService adminService,
-                         ResultService resultService) {
+                         ResultService resultService, CountryService countryService) {
         this.leagueClient = leagueClient;
         this.leagueRepository = leagueRepository;
         this.leagueMapper = leagueMapper;
@@ -53,6 +54,7 @@ public class LeagueService  {
         this.roundService = roundService;
         this.adminService = adminService;
         this.resultService = resultService;
+        this.countryService = countryService;
     }
     //each day at 1 am
     @Scheduled(cron ="0 0 1,13 * * *")
@@ -92,7 +94,7 @@ public class LeagueService  {
     public List<League> initCurrentLeagues() {
         int currentSeason = adminService.getCurrentSeason();
         List<League> leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
-        if(leagues.isEmpty() || leagues.size() < allowedCountries.size()) {
+        if(leagues.isEmpty() || leagues.size() < countryService.retrieveAllowedCountries().size()) {
             logger.info("The number of leagues {} is lower as requested, retrieving missing leagues ", leagues.size());
             this.retrieveAndFilterAndPersistLeagues(currentSeason, leagues);
             leagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeason(currentSeason));
@@ -113,7 +115,7 @@ public class LeagueService  {
         List<League> clientLeagues = retrieveLeaguesFromWebService(currentSeason);
         //2. filter the leagues for the allowed country's
         Map<String, List<League>> leaguesForCountry = clientLeagues.stream()
-                .filter(league -> allowedCountries.contains(league.getCountryCode()))
+                .filter(league -> countryService.getAllowedCountryCodes().contains(league.getCountryCode()))
                 .collect(Collectors.groupingBy(League::getCountryCode));
         List<League> selectedLeagues = new ArrayList<>();
         //3. filter the leagues further for the allowed betting sides
@@ -128,6 +130,8 @@ public class LeagueService  {
         if (!selectedLeagues.isEmpty()) {
             leagueRepository.saveAll(selectedLeagues);
         }
+        //5. get the teams
+
         //6. check if league is still current
         verifyPersistedLeagueIsCurrent();
     }
