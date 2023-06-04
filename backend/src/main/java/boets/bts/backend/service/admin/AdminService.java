@@ -61,7 +61,7 @@ public class AdminService {
 
     public int getCurrentSeason() {
         Admin admin = getAdmin(AdminKeys.SEASON);
-        if(admin.getValue() == null || LocalDate.now().getMonthValue() == Month.JULY.getValue()) {
+        if(admin.getValue() == null || LocalDate.now().getMonthValue() == Month.JUNE.getValue()) {
             int season = WebUtils.getCurrentSeason();
             admin.setValue(Integer.toString(season));
             admin.setDate(LocalDateTime.now());

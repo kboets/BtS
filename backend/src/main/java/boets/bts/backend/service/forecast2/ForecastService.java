@@ -155,7 +155,7 @@ public class ForecastService {
             Round nextRound = getLatestRound(league);
             // check if last round
             Round lastRound = roundService.getLastRound(league.getId());
-            if (nextRound.getRoundNumber() != lastRound.getRoundNumber()) {
+            if (nextRound.getRoundNumber().equals(lastRound.getRoundNumber())) {
                 currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
             }
         }
