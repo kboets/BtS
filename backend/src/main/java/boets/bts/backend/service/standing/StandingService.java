@@ -114,7 +114,7 @@ public class StandingService {
     /**
      * Cron job each day at 4 AM/PM
      */
-    @Scheduled(cron ="* */5 * * * *")
+    @Scheduled(cron ="* */10 * * * *")
     public void scheduleStandings() {
         this.initStanding();
     }

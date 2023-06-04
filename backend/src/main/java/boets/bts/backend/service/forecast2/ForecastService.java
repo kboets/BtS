@@ -153,7 +153,11 @@ public class ForecastService {
         Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
         for(League league: leagues) {
             Round nextRound = getLatestRound(league);
-            currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
+            // check if last round
+            Round lastRound = roundService.getLastRound(league.getId());
+            if (nextRound.getRoundNumber() != lastRound.getRoundNumber()) {
+                currentForecasts.addAll(forecastRepository.findAll(ForecastSpecs.forRound(nextRound.getRoundNumber()).and(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)))));
+            }
         }
         return currentForecasts;
     }
