@@ -131,6 +131,7 @@ public class StandingService {
                 .onSuccess(result -> {
                     logger.info("Daily calculation of standings successfully done");
                     adminService.executeAdmin(AdminKeys.CRON_STANDINGS, "OK");
+                    numberOfAttempts = new AtomicInteger();
                 })
                 .onFailure(result -> {
                     logger.error("Daily calculation of standing was not successfully after {} attempts, final attempt failed", numberOfAttempts.get());

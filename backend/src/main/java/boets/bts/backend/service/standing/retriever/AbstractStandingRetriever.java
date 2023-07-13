@@ -21,11 +21,13 @@ import boets.bts.backend.web.standing.StandingMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public abstract class AbstractStandingRetriever implements StandingRetriever {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractStandingRetriever.class);
@@ -57,7 +59,7 @@ public abstract class AbstractStandingRetriever implements StandingRetriever {
     }
 
     protected List<Standing> saveAndReturn(List<Standing> standings, League league, int roundNumber) {
-        //logger.info("Collecting all info before save of  standing");
+        //logger.info("Collecting all info before save of standing of league {} and round  {}", league.getName(), roundNumber);
         List<Standing> expandedStandings = standings.stream()
                 .peek(standing -> standing.setLeague(league))
                 .peek(standing -> standing.setTeam(teamRepository.findOne(TeamSpecs.getTeamByTeamId(standing.getTeam().getTeamId(), league))
