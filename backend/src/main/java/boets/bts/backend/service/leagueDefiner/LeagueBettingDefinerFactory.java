@@ -27,10 +27,12 @@ public class LeagueBettingDefinerFactory {
         definerMap.put("NO", new NOLeagueBettingDefiner());
         definerMap.put("KR", new KRLeagueBettingDefiner());
         definerMap.put("CN", new CNLeagueBettingDefiner());
-        definerMap.put("US", new USLeagueBettingDefiner());
         definerMap.put("JP", new JPLeagueBettingDefiner());
+        definerMap.put("TR", new TRLeagueBettingDefiner());
+        definerMap.put("AT", new ATLeagueBettingDefiner());
+        definerMap.put("CH", new CHLeagueBettingDefiner());
     }
-    public LeagueBettingDefiner retieveLeagueDefiner(String countryCode) {
+    public LeagueBettingDefiner retrieveLeagueDefiner(String countryCode) {
         LeagueBettingDefiner leagueBettingDefiner = definerMap.getOrDefault(countryCode, null);
         if (leagueBettingDefiner == null) {
             throw new IllegalArgumentException(String.format("Country code %s not yet implemented", countryCode));

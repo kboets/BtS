@@ -120,12 +120,12 @@ public class LeagueService  {
         List<League> selectedLeagues = new ArrayList<>();
         //3. filter the leagues further for the allowed betting sides
         for(String countryCode: leaguesForCountry.keySet()) {
-            LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retieveLeagueDefiner(countryCode);
+            LeagueBettingDefiner leagueBettingDefiner = leagueBettingDefinerFactory.retrieveLeagueDefiner(countryCode);
             selectedLeagues.addAll(leagueBettingDefiner.retrieveAllowedBettingLeague(leaguesForCountry.get(countryCode)));
         }
         //4. filter the existing leagues out of the selected
-        List<String> leagueNames = leagues.stream().map(League::getName).collect(Collectors.toList());
-        selectedLeagues = selectedLeagues.stream().filter(league -> !leagueNames.contains(league.getName())).collect(Collectors.toList());
+        List<String> leagueCountryCodes = leagues.stream().map(League::getCountryCode).collect(Collectors.toList());
+        selectedLeagues = selectedLeagues.stream().filter(league -> !leagueCountryCodes.contains(league.getCountryCode())).collect(Collectors.toList());
         //4. persist to database
         if (!selectedLeagues.isEmpty()) {
             leagueRepository.saveAll(selectedLeagues);
