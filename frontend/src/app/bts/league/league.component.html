@@ -1,3 +1,6 @@
+<ng-container *ngIf="errorMessage$ | async as errorMessage">
+    <p-message severity="error" text="{{errorMessage}}"></p-message>
+</ng-container>
 <p-panel header="Competities">
     <form [formGroup]="leagueForm">
         <h4 class="p-d-flex p-flex-column p-flex-md-row">Geselecteerde competities :
@@ -12,6 +15,7 @@
                         <div class="p-col-3">
                             <p-card header="{{league.name}}"  [style]="{'width': '25rem', 'margin-bottom': '2em'}" >
                                 <p-header class="p-d-flex">
+                                    <span class="p-mt-2 p-ml-3">{{league.country}}</span>
                                     <p-checkbox label="Verwijder" class="p-ml-auto p-mt-1 p-mr-2" name="selectedCheckBox"
                                                 value="{{league.league_id}}"
                                                 inputId="{{league.league_id}}"
@@ -42,6 +46,7 @@
                         <div class="p-col-3">
                             <p-card header="{{league.name}}"  [style]="{'width': '25rem', 'margin-bottom': '2em'}">
                                 <p-header class="p-d-flex">
+                                    <span class="p-mt-2 p-ml-3">{{league.country}}</span>
                                     <p-checkbox label="Selecteer" class="p-ml-auto p-mt-1 p-mr-2" name="availableCheckBox"
                                                 value="{{league.league_id}}"
                                                 inputId="{{league.league_id}}"

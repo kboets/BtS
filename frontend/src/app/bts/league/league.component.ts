@@ -1,20 +1,20 @@
 import {Component, OnInit} from "@angular/core";
 import {LeagueService} from "./league.service";
-import {catchError, map, tap} from "rxjs/operators";
-import {combineLatest, EMPTY} from "rxjs";
+import {Subject} from "rxjs";
 import {GeneralError} from "../domain/generalError";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import * as _ from 'underscore';
-import {element} from "protractor";
 import {League} from "../domain/league";
 import {CountryService} from "./country.service";
-import {AdminService} from "../admin/admin.service";
 
 @Component({
     selector: 'bts-league',
     templateUrl: './league.component.html'
 })
 export class LeagueComponent implements OnInit {
+
+    private errorMessageSubject = new Subject<GeneralError>();
+    errorMessage$ = this.errorMessageSubject.asObservable();
 
     error: GeneralError;
     leagueForm : FormGroup;
@@ -42,8 +42,10 @@ export class LeagueComponent implements OnInit {
         this.getLeaguesCurrentSeason();
     }
 
+
+
     private getLeaguesCurrentSeason() {
-        this.leagueService.getLeaguesCurrentSeason()
+        this.leagueService.selectedLeaguesWithCountries$
             .subscribe(
                 (result: League[]) => this.currentLeagues = result
             );

@@ -1,6 +1,5 @@
 <ng-container *ngIf="errorMessage$ | async as errorMessage">
-    <p-message severity="error" text="{{errorMessage.errorMessage}}"></p-message>
-    <p-message severity="error" text="{{errorMessage.userFriendlyMessage}}"></p-message>
+    <p-message severity="error" text="{{errorMessage}}"></p-message>
 </ng-container>
 
 <!-- overview leagues -->
