@@ -78,6 +78,20 @@ public class ForecastService {
         return forecastMapper.toDtos(reviewForecasts);
     }
 
+    public List<League> getLeaguesWithForecasts(Long algorithmId) {
+        Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
+        List<League> leaguesWithForecasts = new ArrayList<>();
+        List<League> getSelectedLeagues = leagueRepository.findAll(LeagueSpecs.getLeagueBySeasonAndSelected(WebUtils.getCurrentSeason(), true));
+        for(League league: getSelectedLeagues) {
+            List<Forecast> forecasts = forecastRepository.findAll(ForecastSpecs.forLeague(league).and(ForecastSpecs.forAlgorithm(algorithm)));
+            if (!forecasts.isEmpty()) {
+                leaguesWithForecasts.add(league);
+            }
+        }
+        return leaguesWithForecasts;
+    }
+
+
     public ForecastDto getReviewForecast(Long algorithmId, Long leagueId, Integer roundNumber) {
         Algorithm algorithm = algorithmRepository.getReferenceById(algorithmId);
         League league = leagueRepository.getReferenceById(leagueId);

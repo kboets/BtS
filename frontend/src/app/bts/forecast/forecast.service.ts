@@ -4,8 +4,8 @@ import {Forecast} from "../domain/forecast";
 import {catchError, shareReplay} from "rxjs/operators";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {GeneralError} from "../domain/generalError";
-import {Standing} from "../domain/standing";
 import {Round} from "../domain/round";
+import {League} from "../domain/league";
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +22,14 @@ export class ForecastService {
 
     getAllReviewRounds(leagueId: number): Observable<Round[]> {
         return this.http.get<Round[]>(`/btsapi/api/forecast/reviewRounds/${leagueId}`)
+            .pipe(
+                shareReplay(1),
+                catchError(ForecastService.handleHttpError)
+            );
+    }
+
+    getAllLeaguesWithForecasts(algorithmId: number) : Observable<League[]> {
+        return this.http.get<League[]>(`/btsapi/api/forecast/allLeaguesWithForecasts/${algorithmId}`)
             .pipe(
                 shareReplay(1),
                 catchError(ForecastService.handleHttpError)

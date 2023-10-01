@@ -1,6 +1,9 @@
 package boets.bts.backend.web.forecast;
+
 import boets.bts.backend.service.forecast2.ForecastService;
 import boets.bts.backend.web.exception.GeneralException;
+import boets.bts.backend.web.league.LeagueDto;
+import boets.bts.backend.web.league.LeagueMapper;
 import boets.bts.backend.web.round.RoundDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +18,11 @@ public class ForecastResource {
     private static final Logger logger = LoggerFactory.getLogger(ForecastResource.class);
 
     private final ForecastService forecastService;
+    private final LeagueMapper leagueMapper;
 
-    public ForecastResource(ForecastService forecastService) {
+    public ForecastResource(ForecastService forecastService, LeagueMapper leagueMapper) {
         this.forecastService = forecastService;
+        this.leagueMapper = leagueMapper;
     }
 
     @PutMapping("requested/{algorithmId}")
@@ -58,5 +63,10 @@ public class ForecastResource {
     @GetMapping("reviewRounds/{leagueId}")
     public List<RoundDto> getReviewRounds(@PathVariable ("leagueId") Long leagueId) {
         return forecastService.getReviewRounds(leagueId);
+    }
+
+    @GetMapping("allLeaguesWithForecasts/{algorithmId}")
+    public List<LeagueDto> getLeaguesWithForecast(@PathVariable("algorithmId") Long algorithmId) {
+        return leagueMapper.toLeagueDtoList(forecastService.getLeaguesWithForecasts(algorithmId));
     }
 }

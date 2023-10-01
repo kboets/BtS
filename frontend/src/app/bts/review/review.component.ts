@@ -81,12 +81,14 @@ export class ReviewComponent implements OnInit {
                     return EMPTY;
                 }));
 
-        //2. get all leagues
-        this.leagues$ = this.leagueService.leaguesSelected$.pipe(
+        //2. get all leagues with forecasts
+        this.leagues$ = this.selectedAlgorithmAction.pipe(
+            switchMap(() => this.forecastService.getAllLeaguesWithForecasts(this.selectedAlgorithm.algorithm_id)),
             tap(leagues => {
                 this.selectedLeague = _.first(leagues);
                 this.selectedLeagueSubject.next(this.selectedLeague);
-            }));
+            })
+        )
 
         //3.  get all review rounds for selected league
         this.rounds$ = this.selectedLeagueAction.pipe(
@@ -152,7 +154,8 @@ export class ReviewComponent implements OnInit {
     }
 
     public sortRound(rounds: Round[]) {
-        return rounds.sort((n1, n2) => +n2.playRound - +n1.playRound);
+        console.log('sorting rounds ', rounds);
+        return rounds.sort((n1, n2) => +n2?.playRound - +n1?.playRound);
     }
 
     public calculatePercentage(correct: number, total: number): number {
