@@ -19,8 +19,7 @@ public interface IRoundClient {
     default JsonArray parseAllRoundsForLeaguesRawJson(String jsonAsString) {
         JsonElement jsonElement = JsonParser.parseString(jsonAsString);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonObject api =  jsonObject.getAsJsonObject("api");
-        return api.getAsJsonArray("fixtures");
+        return jsonObject.getAsJsonArray("response");
     }
 
     default List<RoundDto> mapJsonToRoundDto(JsonArray jsonArray, int season) {

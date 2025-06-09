@@ -39,7 +39,7 @@ public class ResultsMockTestClientTest  {
 
     @Test
     public void RetrieveAllResultForLeagueAndRound_givenResultJPL2020Round3_shouldReturnResults() {
-        Optional<List<ResultDto>> optionalResultDtos = resultsMockClient.retrieveAllResultForLeagueAndRound(jupilerLeague2020_id, "ROUND3");
+        Optional<List<ResultDto>> optionalResultDtos = resultsMockClient.retrieveAllResultForLeagueAndRound(jupilerLeague2020_id, "ROUND3", 2020);
         assertThat(optionalResultDtos.isPresent()).isTrue();
         List<ResultDto> results = optionalResultDtos.get();
         assertThat(results.isEmpty()).isFalse();

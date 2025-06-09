@@ -30,7 +30,7 @@ public class RoundClient extends ParentClient implements IRoundClient{
     public Optional<RoundDto> getCurrentRoundForLeagueAndSeason(long leagueId, int season) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
-        String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId), "current");
+        String url = WebUtils.BASE_URL +  "fixtures/rounds?league=" + leagueId+ "&season="+season+ "&current=true";
         Request request = createRequest(url);
         Response response = null;
         try {
@@ -60,7 +60,8 @@ public class RoundClient extends ParentClient implements IRoundClient{
     public Optional<List<RoundDto>> getAllRoundsForLeagueAndSeason(int season, long leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
-        String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId));
+        //String url = WebUtils.buildUrl("fixtures", "rounds", Long.toString(leagueId));
+        String url = WebUtils.BASE_URL +  "fixtures/rounds?league=" + leagueId+ "&season="+season;
         Request request = createRequest(url);
         Response response = null;
         try {

@@ -37,7 +37,7 @@ public class ResultMockClient implements IResultClient {
     }
 
     @Override
-    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round) {
+    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round, int season) {
         //1. get json file
         String fileName = fixturesForLeagueAndSeason.get(2661L);
         //2. make fake call

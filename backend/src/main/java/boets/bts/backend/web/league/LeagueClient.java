@@ -27,6 +27,7 @@ public class LeagueClient extends ParentClient implements ILeagueClient {
     }
 
     @Override
+    @Deprecated
     public List<LeagueDto> allLeaguesFromCountryForSeason(String countryCode, int year) {
         //1. make call
         String url = WebUtils.buildUrl("leagues", "country", countryCode, Integer.toString(year));
@@ -37,7 +38,7 @@ public class LeagueClient extends ParentClient implements ILeagueClient {
     @Override
     public List<LeagueDto> allLeaguesForSeason(int year) {
         //1. make call
-        String url = WebUtils.buildUrl("leagues", "season", Integer.toString(year));
+        String url = WebUtils.BASE_URL +  "leagues?season=" + year;
         Request request = createRequest(url);
         return this.handleAndMapResponse(request);
     }

@@ -21,39 +21,56 @@ public interface ILeagueClient {
     default JsonArray parseAllLeaguesRawJson(String jsonAsString) {
         JsonElement jsonElement = JsonParser.parseString(jsonAsString);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonObject api =  jsonObject.getAsJsonObject("api");
-        return api.getAsJsonArray("leagues");
+        return jsonObject.getAsJsonArray("response");
     }
 
     default List<LeagueDto> mapJsonToLeagueDto(JsonArray jsonArray) {
         List<LeagueDto> dtos = new ArrayList<>();
         for(JsonElement leagueJsonElement : jsonArray) {
-
             JsonObject leagueJson = leagueJsonElement.getAsJsonObject();
-            if(!leagueJson.get("country_code").isJsonNull()) {
-                LeagueDto dto = new LeagueDto();
-                dto.setCountryCode(leagueJson.get("country_code").getAsString());
-                dto.setLeague_id(leagueJson.get("league_id").getAsString());
-                int isCurrent = leagueJson.get("is_current").getAsInt();
-                dto.setCurrent(isCurrent != 0);
-                String endDate = leagueJson.get("season_end").getAsString();
-                dto.setEndSeason(LocalDate.parse(endDate, dateFormatter));
-                String startDate = leagueJson.get("season_start").getAsString();
-                dto.setStartSeason(LocalDate.parse(startDate, dateFormatter));
-                if(!leagueJson.get("flag").isJsonNull()) {
-                    dto.setFlag(leagueJson.get("flag").getAsString());
+            LeagueDto dto = new LeagueDto();
+            if (!leagueJson.get("league").isJsonNull())  {
+                JsonObject leagueMember = leagueJson.get("league").getAsJsonObject();
+                if (!leagueMember.get("id").isJsonNull()) {
+                    dto.setLeague_id(leagueMember.get("id").getAsString());
                 }
-                if(!leagueJson.get("logo").isJsonNull()) {
-                    dto.setLogo(leagueJson.get("logo").getAsString());
+                if (!leagueMember.get("logo").isJsonNull()) {
+                    dto.setLogo(leagueMember.get("logo").getAsString());
                 }
-                dto.setName(leagueJson.get("name").getAsString());
-
-                dto.setCountryCode(leagueJson.get("country_code").getAsString());
-                dto.setSeason(Integer.parseInt(leagueJson.get("season").getAsString()));
-                dtos.add(dto);
+                if (!leagueMember.get("name").isJsonNull()) {
+                    dto.setName(leagueMember.get("name").getAsString());
+                }
             }
+            if (!leagueJson.get("country").isJsonNull())  {
+                JsonObject countryMember = leagueJson.get("country").getAsJsonObject();
+                if (!countryMember.get("code").isJsonNull()) {
+                    dto.setCountryCode(countryMember.get("code").getAsString());
+                }
+                if (!countryMember.get("flag").isJsonNull()) {
+                    dto.setFlag(countryMember.get("flag").getAsString());
+                }
+            }
+            if (!leagueJson.get("seasons").isJsonNull())  {
+                JsonObject seasonMember = leagueJson.getAsJsonArray("seasons").get(0).getAsJsonObject();
+                if (!seasonMember.get("start").isJsonNull()) {
+                    dto.setStartSeason(LocalDate.parse(seasonMember.get("start").getAsString(), dateFormatter));
+                }
+                if (!seasonMember.get("end").isJsonNull()) {
+                    dto.setEndSeason(LocalDate.parse(seasonMember.get("end").getAsString(), dateFormatter));
+                }
+                if (!seasonMember.get("year").isJsonNull()) {
+                    dto.setSeason(seasonMember.get("year").getAsInt());
+                }
+                if (!seasonMember.get("current").isJsonNull()) {
+                    dto.setCurrent(seasonMember.get("current").getAsBoolean());
+                }
+
+            }
+            dtos.add(dto);
         }
 
         return dtos;
     }
+
+
 }

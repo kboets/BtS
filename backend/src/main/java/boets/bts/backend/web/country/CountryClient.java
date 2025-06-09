@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 public class CountryClient extends ParentClient {
 
-    private Logger logger = LoggerFactory.getLogger(CountryClient.class);
+    protected Logger logger = LoggerFactory.getLogger(CountryClient.class);
 
     public CountryClient(AdminService adminService) {
         super(adminService);

@@ -15,7 +15,7 @@ import java.util.Optional;
 public class WebUtils {
 
     private static final String API = "api";
-    private static String BASE_URL = "https://api-football-v1.p.rapidapi.com/v2/";
+    public static String BASE_URL = "https://api-football-v1.p.rapidapi.com/v3/";
 
 
     public static Optional<String> readJsonFileFromApi(String fileName) {
@@ -67,6 +67,17 @@ public class WebUtils {
         }
         return builder.toString();
     }
+
+    public static synchronized String buildNewUrl(String... vars) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(BASE_URL);
+        for(String arg: vars) {
+            builder.append(arg);
+            builder.append("?");
+        }
+        return builder.toString();
+    }
+
 
 
     public static synchronized int getCurrentSeason() {

@@ -55,7 +55,7 @@ public class ResultSpecs {
                             root.get("roundNumber"), roundNumber));
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("matchStatus"), "Match Finished"));
+                            root.get("matchStatus"), "FT"));
 
             return predicate;
         };
@@ -66,7 +66,7 @@ public class ResultSpecs {
             Predicate predicate = criteriaBuilder.equal(root.get("league"), leagueId);
             predicate = criteriaBuilder.and(
                     predicate, criteriaBuilder.equal(
-                            root.get("matchStatus"), "Match Finished"));
+                            root.get("matchStatus"), "FT"));
 
             return predicate;
         };

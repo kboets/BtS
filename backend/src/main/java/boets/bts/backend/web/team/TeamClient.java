@@ -29,7 +29,8 @@ public class TeamClient extends ParentClient implements ITeamClient{
     public Optional<List<TeamDto>> retrieveTeamsOfLeague(Long leagueId) {
         //1. make call
         OkHttpClient client = new OkHttpClient();
-        String url = WebUtils.buildUrl("teams", "league", leagueId.toString());
+        //String url = WebUtils.buildUrl("teams", "league", leagueId.toString());
+        String url = WebUtils.BASE_URL +  "standings?league=" + leagueId+ "&season="+WebUtils.getCurrentSeason();
         Request request = createRequest(url);
         Response response = null;
         try {

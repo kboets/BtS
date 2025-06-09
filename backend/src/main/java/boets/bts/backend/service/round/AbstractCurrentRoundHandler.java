@@ -40,12 +40,12 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
     protected Round verifyRetrievedRound(Round clientRound) {
         if (!WebUtils.isWeekend())  {
             String round = clientRound.getRound();
-            String strippedRound = StringUtils.substringBeforeLast(round, "_");
-            int roundVal = Integer.parseInt(StringUtils.substringAfterLast(round, "_"));
+            String strippedRound = StringUtils.substringBeforeLast(round, "-").trim();
+            int roundVal = Integer.parseInt(StringUtils.substringAfterLast(round, "-").trim());
             if(roundVal != 1) {
                 String previous = Integer.toString(roundVal-1);
                 String builder = strippedRound +
-                        "_" +
+                        " - " +
                         previous;
                 clientRound.setRound(builder);
             }
@@ -58,7 +58,7 @@ public abstract class AbstractCurrentRoundHandler implements CurrentRoundHandler
 
     private int extractRoundFromStringVersion(Round round) {
         String roundString = round.getRound();
-        return Integer.parseInt(StringUtils.substringAfterLast(roundString, "_"));
+        return Integer.parseInt(StringUtils.substringAfterLast(roundString, "-").trim());
     }
 
     protected Round getLastRound(Set<Round> rounds) {

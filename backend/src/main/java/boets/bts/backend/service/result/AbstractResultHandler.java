@@ -57,7 +57,7 @@ public abstract class AbstractResultHandler implements ResultHandler {
 
     protected int getRoundNumber(String round) {
         if(StringUtils.startsWith(round, "Regular")) {
-            String roundNumber = StringUtils.substringAfterLast(round, "_");
+            String roundNumber = StringUtils.substringAfterLast(round, "-").trim();
             return Integer.parseInt(roundNumber);
         }
         return 0;

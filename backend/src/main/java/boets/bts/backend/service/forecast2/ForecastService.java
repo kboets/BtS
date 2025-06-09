@@ -319,7 +319,7 @@ public class ForecastService {
         // if current round does not contain any finished matches, return current, otherwise return next
         List<Result> nextResults = resultRepository.findAll(ResultSpecs.forLeague(league)
                 .and(ResultSpecs.forRound(currentRound.getRoundNumber())));
-        if (nextResults.stream().anyMatch(result -> result.getMatchStatus().equalsIgnoreCase("Match Finished"))) {
+        if (nextResults.stream().anyMatch(result -> result.getMatchStatus().equalsIgnoreCase("FT"))) {
             return roundService.getNextRound(league.getId());
         } else {
             return currentRound;

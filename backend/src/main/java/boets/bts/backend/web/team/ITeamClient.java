@@ -16,32 +16,36 @@ public interface ITeamClient {
     default  JsonArray parseTeamsRawJson(String jsonAsString) {
         JsonElement jsonElement = JsonParser.parseString(jsonAsString);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonObject api =  jsonObject.getAsJsonObject("api");
-        return api.getAsJsonArray("teams");
+        //JsonObject api =  jsonObject.getAsJsonObject("api");
+        return jsonObject.getAsJsonArray("response");
     }
 
     default List<TeamDto> mapJsonToTeamDto(JsonArray jsonArray) {
         List<TeamDto> dtos = new ArrayList<>();
-        for(JsonElement teamJsonElement : jsonArray) {
-            TeamDto dto = new TeamDto();
-            JsonObject teamJson = teamJsonElement.getAsJsonObject();
-            dto.setId(null);
-            dto.setTeamId(teamJson.get("team_id").getAsString());
-            dto.setName(teamJson.get("name").getAsString());
-            if(!teamJson.get("logo").isJsonNull()) {
-                dto.setLogo(teamJson.get("logo").getAsString());
+        for(JsonElement standingJsonElement : jsonArray) {
+            JsonObject standingJson = standingJsonElement.getAsJsonObject();
+            if (!standingJson.get("league").isJsonNull())  {
+                JsonObject leagueMember = standingJson.get("league").getAsJsonObject();
+                JsonArray standingMembers = leagueMember.getAsJsonArray("standings").get(0).getAsJsonArray();
+                for(JsonElement standingMember : standingMembers) {
+                    if (!standingMember.isJsonNull()) {
+                        JsonElement teamMember = standingMember.getAsJsonObject().get("team");
+                        TeamDto dto = new TeamDto();
+                        if (teamMember != null) {
+                            JsonObject teamJson = teamMember.getAsJsonObject();
+                            dto.setId(null);
+                            dto.setTeamId(teamJson.get("id").getAsString());
+                            dto.setName(teamJson.get("name").getAsString());
+                            if(!teamJson.get("logo").isJsonNull()) {
+                                dto.setLogo(teamJson.get("logo").getAsString());
+                            }
+                            dtos.add(dto);
+                        }
+                    }
+                }
+
             }
-            if(!teamJson.get("venue_city").isJsonNull()) {
-                dto.setCity(teamJson.get("venue_city").getAsString());
-            }
-            if(!teamJson.get("venue_name").isJsonNull()) {
-                dto.setStadiumName(teamJson.get("venue_name").getAsString());
-            }
-            if(!teamJson.get("venue_capacity").isJsonNull()) {
-                int capacity = teamJson.get("venue_capacity").getAsInt();
-                dto.setStadiumCapacity(capacity);
-            }
-            dtos.add(dto);
+
         }
 
         return dtos;

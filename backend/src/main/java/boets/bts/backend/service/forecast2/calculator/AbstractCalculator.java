@@ -96,13 +96,13 @@ public abstract class AbstractCalculator implements ScoreCalculator {
         List<Integer> rounds = calculateRequestedRounds(round);
         List<Result> allResults = resultRepository.findAll(ResultSpecs.forLeague(forecast.getLeague()).and(ResultSpecs.forTeam(team).and(ResultSpecs.forRounds(rounds))));
         // get all finished results
-        List<Result> gamesForTeam = allResults.stream().filter(result -> result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
+        List<Result> gamesForTeam = allResults.stream().filter(result -> result.getMatchStatus().equals("FT")).collect(Collectors.toList());
         if (gamesForTeam.size() != 6) {
             // get the round(s) with the not finished games
-            List<Integer> unfinishedRounds = allResults.stream().filter(result -> !result.getMatchStatus().equals("Match Finished")).map(Result::getRoundNumber).collect(Collectors.toList());
+            List<Integer> unfinishedRounds = allResults.stream().filter(result -> !result.getMatchStatus().equals("FT")).map(Result::getRoundNumber).collect(Collectors.toList());
             rounds = calculateRequestedRounds(round, unfinishedRounds);
             allResults = resultRepository.findAll(ResultSpecs.forLeague(forecast.getLeague()).and(ResultSpecs.forTeam(team).and(ResultSpecs.forRounds(rounds))));
-            gamesForTeam = allResults.stream().filter(result -> result.getMatchStatus().equals("Match Finished")).collect(Collectors.toList());
+            gamesForTeam = allResults.stream().filter(result -> result.getMatchStatus().equals("FT")).collect(Collectors.toList());
         }
 
         return gamesForTeam;

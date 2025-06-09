@@ -28,14 +28,14 @@ public class ResultClient extends ParentClient implements IResultClient {
 
     public Optional<List<ResultDto>> retrieveAllResultForLeague(Long leagueId, int season) {
         //1. make call
-        String url = WebUtils.buildUrl("fixtures", "league", leagueId.toString());
+        String url = WebUtils.BASE_URL +  "fixtures?league=" + leagueId + "&season=" +season;
         return makeCallAndMap(url);
     }
 
     @Override
-    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round) {
+    public Optional<List<ResultDto>> retrieveAllResultForLeagueAndRound(Long leagueId, String round, int season) {
         //1. make call
-        String url = WebUtils.buildUrl("fixtures", "league", leagueId.toString(), round);
+        String url = WebUtils.BASE_URL +  "fixtures?league=" + leagueId + "&season=" +season + "&round=" + round;
         return makeCallAndMap(url);
     }
 

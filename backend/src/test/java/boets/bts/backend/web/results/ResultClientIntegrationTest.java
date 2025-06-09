@@ -28,7 +28,7 @@ public class ResultClientIntegrationTest {
 
     @Test
     public void retrieveAllResultForLeagueAndRound_givenJupilerLeague_shouldReturnList() {
-        Optional<List<ResultDto>> resultDtosOptional = resultClient.retrieveAllResultForLeagueAndRound(2660L, "Regular_Season_-_9");
+        Optional<List<ResultDto>> resultDtosOptional = resultClient.retrieveAllResultForLeagueAndRound(2660L, "Regular_Season_-_9", 2019);
         assertThat(resultDtosOptional.isPresent()).isTrue();
         assertThat(resultDtosOptional.get().size()).isGreaterThan(0);
     }
