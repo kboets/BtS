@@ -73,13 +73,14 @@ public class RoundService {
             return null;
         }
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new NotFoundException(String.format("Could not found league with id %s", leagueId)));
+        logger.info("Get current round for league id  {} ", league.getName());
         if(league.getRounds().isEmpty()) {
             logger.warn("The league has no rounds {} ", league.getName());
             this.updateLeagueWithRounds(league);
         } else {
             Set<Round> allRoundsForLeague = league.getRounds();
-            //verify if round number is already calculated
-            if(allRoundsForLeague.iterator().next().getRoundNumber() == null) {
+            logger.info("Found {} rounds for this league {} ", allRoundsForLeague.size(), league.getName());
+            if(allRoundsForLeague.iterator().next().getRoundNumber() == null || allRoundsForLeague.iterator().next().getRoundNumber() == 0) {
                 this.updateRoundWithRoundNumber(allRoundsForLeague);
             }
         }
