@@ -6,6 +6,6 @@ export interface Round {
     season: number;
     current: boolean;
     currentDate: Date;
-    leagueDto : League;
+    leagueDto: League;
     playRound: string;
 }

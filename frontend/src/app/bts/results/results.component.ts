@@ -27,26 +27,26 @@ export class ResultsComponent implements OnInit {
     private selectedRoundSubject = new Subject<Round>();
     selectedRoundAction = this.selectedRoundSubject.asObservable();
 
-    //selected results for the team
-    private selectedResult4TeamSubject = new BehaviorSubject<String>("5");
+    // selected results for the team
+    private selectedResult4TeamSubject = new BehaviorSubject<string>('5');
     selectedResult4TeamAction = this.selectedResult4TeamSubject.asObservable();
 
     selectedRound$: Observable<Round>;
     selectedNextRound$: Observable<Round>;
-    currentRound$ : Observable<Round>;
-    nextRound$ : Observable<Round>;
-    allRounds$ : Observable<Round[]>;
-    results$ : Observable<Result[]>;
-    //results for specific round
-    result4Round$ : Observable<Result[]>;
-    //results for next round
-    result4NextRound$ : Observable<Result[]>;
-    //all results until next round
-    resultAllUntilNextRound$: Observable<Result[]>
+    currentRound$: Observable<Round>;
+    nextRound$: Observable<Round>;
+    allRounds$: Observable<Round[]>;
+    results$: Observable<Result[]>;
+    // results for specific round
+    result4Round$: Observable<Result[]>;
+    // results for next round
+    result4NextRound$: Observable<Result[]>;
+    // all results until next round
+    resultAllUntilNextRound$: Observable<Result[]>;
 
     standings$: Observable<Standing[]>;
     requestedStanding$: Observable<Standing[]>;
-    //last 5 or 8 results for specific team
+    // last 5 or 8 results for specific team
     resultsLatest4Teams$: Observable<Result[]>;
     resultsAll4Teams$: Observable<Result[]>;
 
@@ -91,7 +91,7 @@ export class ResultsComponent implements OnInit {
     toggleLeagueResult(league_id: string) {
         this.showLeagues = false;
 
-        //get the current round for this league
+        // get the current round for this league
         this.currentRound$ = this.roundService.getCurrentRoundForLeague(+league_id)
             .pipe(
                 catchError(err => {
@@ -110,7 +110,7 @@ export class ResultsComponent implements OnInit {
             .subscribe((data) => this.initialCurrentRound = data);
 
 
-        //get all rounds for this league
+        // get all rounds for this league
         this.allRounds$ =  this.roundService.getAllRoundsForLeague(+league_id)
             .pipe(
                 catchError(err => {
@@ -120,7 +120,7 @@ export class ResultsComponent implements OnInit {
             );
 
 
-        //get the next round
+        // get the next round
         this.nextRound$ = combineLatest(
             [this.allRounds$, this.currentRound$]
         ).pipe(
@@ -134,14 +134,14 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        //merge the current and the selected of the dropdown to selected round
+        // merge the current and the selected of the dropdown to selected round
         this.selectedRound$ = merge(
             this.currentRound$,
             this.selectedRoundAction
         );
 
 
-        //get all results for this league
+        // get all results for this league
         this.results$ = this.resultService.getAllResultForLeague(+league_id)
             .pipe(
                 catchError(err => {
@@ -151,7 +151,7 @@ export class ResultsComponent implements OnInit {
             );
 
 
-        //results for each selected round
+        // results for each selected round
         this.result4Round$ = combineLatest([
             this.results$, this.selectedRound$
         ]).pipe(
@@ -165,7 +165,7 @@ export class ResultsComponent implements OnInit {
         );
 
 
-        //results for the next round
+        // results for the next round
         this.result4NextRound$ = combineLatest([
             this.results$, this.nextRound$
         ]).pipe(
@@ -178,7 +178,7 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        //get all results until next round
+        // get all results until next round
         this.resultAllUntilNextRound$ = combineLatest(
             [this.results$, this.currentRound$]
         ).pipe(
@@ -196,7 +196,7 @@ export class ResultsComponent implements OnInit {
             })
         );
 
-        //requested standing for league
+        // requested standing for league
         this.requestedStanding$ = this.selectedRound$
             .pipe(
                 switchMap(selectedRound => this.standingService.getStandingForLeagueAndRound(+league_id, +selectedRound.playRound))
@@ -289,7 +289,7 @@ export class ResultsComponent implements OnInit {
     }
 
     getNextRoundIndex(): number {
-        return this.allRoundsAsString.indexOf(this.initialCurrentRound.round)+1;
+        return this.allRoundsAsString.indexOf(this.initialCurrentRound.round) + 1;
     }
 
     getResultsDescending(results: Result[]) {

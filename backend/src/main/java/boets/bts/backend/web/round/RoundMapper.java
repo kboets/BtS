@@ -12,7 +12,7 @@ public interface RoundMapper {
             @Mapping(target = "roundId", source = "id"),
             @Mapping(target = "leagueDto", source = "league"),
             @Mapping(target = "round", source = "round"),
-            @Mapping(target = "playRound", source = "round", qualifiedByName = "toPlayRound")
+            @Mapping(target = "playRound", source = "roundNumber")
 
     })
     RoundDto toRoundDto(Round round);
@@ -24,14 +24,4 @@ public interface RoundMapper {
     List<RoundDto> toRoundDtos(List<Round> rounds);
 
     List<Round> toRounds(List<RoundDto> roundDtos);
-
-    @Named("toPlayRound")
-    static int toPlayRound(String round) {
-        int roundVal = 0;
-        try {
-            roundVal = new Integer(StringUtils.substringAfterLast(round, "_"));
-        } catch(NumberFormatException e) {    }
-
-        return roundVal;
-    }
 }

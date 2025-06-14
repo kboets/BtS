@@ -22,7 +22,7 @@ export class StandingService {
             );
     }
 
-    getStandingForLeagueAndRound(leagueId: number, roundNumber: number) : Observable<Standing[]> {
+    getStandingForLeagueAndRound(leagueId: number, roundNumber: number): Observable<Standing[]> {
         return this.http.get<Standing[]>(`/btsapi/api/standing/league/${leagueId}/${roundNumber}`)
             .pipe(
                 //tap(data => console.log('get all standing for league  '+leagueId, JSON.stringify(data))),
