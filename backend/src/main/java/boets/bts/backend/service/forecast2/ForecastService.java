@@ -127,6 +127,20 @@ public class ForecastService {
     }
 
     /**
+     * Retrieves all the forecasts.
+     * @return List of ForecastDto
+     */
+    public List<ForecastDto> getAllForecastsCurrenSeason() {
+        List<Forecast> allForecasts = forecastRepository.findAll(ForecastSpecs.forCurrentSeason(WebUtils.getCurrentSeason()));
+        List<Forecast> filteredForecasts = allForecasts.stream()
+                .sorted(Comparator.comparingInt(Forecast::getRound).reversed())
+                .sorted(Comparator.comparing(forecast -> forecast.getLeague().getName()))
+                .collect(Collectors.toList());
+        return forecastMapper.toDtos(filteredForecasts);
+
+    }
+
+    /**
      * Retrieves all the current forecasts with forecast details that have a score that is lower or equal as the given score(s)
      * @param scores - a list with scores, can be empty
      * @return List

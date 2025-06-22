@@ -36,8 +36,9 @@ export class AdminComponent implements OnInit {
     selectedRound: Round;
     adminDataList$: Observable<Admin[]>;
     allLeagues$: Observable<League[]>;
+    allSelectedLeague$: Observable<League[]>;
     allForecasts$: Observable<Forecast[]>;
-    forecastLeagues$: Observable<League[]>
+    forecastLeagues$: Observable<League[]>;
     selectedForecastLeague: League;
     forecastLeagueAndRounds$: Observable<Forecast[]>;
     selectedForecastRoundLeague: Forecast;
@@ -91,7 +92,7 @@ export class AdminComponent implements OnInit {
                 this.adminService.historicDataNeedsUpdate$.next(this.selectedSeason);
             });
 
-        //all admin data
+        // all admin data
         this.adminDataList$ = this.adminService.adminDatas$
             .pipe(
                 catchError(err => {
@@ -101,6 +102,14 @@ export class AdminComponent implements OnInit {
             );
 
         this.allLeagues$ = this.leagueService.leagues$
+            .pipe(
+                catchError(err => {
+                    this.errorMessageSubject.next(err);
+                    return EMPTY;
+                })
+            );
+
+        this.allSelectedLeague$ = this.leagueService.leaguesSelected$
             .pipe(
                 catchError(err => {
                     this.errorMessageSubject.next(err);
@@ -118,13 +127,13 @@ export class AdminComponent implements OnInit {
     }
 
     private initForecastData() {
-        this.allForecasts$ = this.forecastService.getAllForecasts()
+        this.allForecasts$ = this.forecastService.getAllForecastsCurrentSeason()
             .pipe(catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             }));
 
-        //get all unique leagues from forecast data
+        // get all unique leagues from forecast data
         this.forecastLeagues$ = this.allForecasts$.pipe(
             map(forecasts => {
                 return _.map(forecasts, function (forecast) {

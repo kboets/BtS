@@ -40,6 +40,12 @@ public class ForecastResource {
         return forecastService.getAllForecasts();
     }
 
+    @GetMapping("allCurrentSeason")
+    public List<ForecastDto> getAllForecastsCurrentSeason() {
+        return forecastService.getAllForecastsCurrenSeason();
+    }
+
+
     @GetMapping("recalculate")
     public boolean calculateForecasts() {
         return this.forecastService.initCalculateForecasts();

@@ -57,7 +57,7 @@ public class ForecastCalculatorManager {
                 .findFirst();
         if (optionalForecast.isPresent()) {
             Forecast forecast = optionalForecast.get();
-            //logger.info("Forecast for League {} with round {} and algorithm {} was already calculated ", league.getName(), roundNumber, algorithm.getName());
+            logger.info("Forecast for League {} with round {} and algorithm {} was already calculated ", league.getName(), roundNumber, algorithm.getName());
             if(ForecastResult.OK.equals(forecast.getForecastResult())) {
                 return Optional.empty();
             } else {

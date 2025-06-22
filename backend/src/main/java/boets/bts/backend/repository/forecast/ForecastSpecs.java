@@ -31,4 +31,8 @@ public class ForecastSpecs {
     public static Specification<Forecast> forLeague(League league) {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("league"), league);
     }
+
+    public static Specification<Forecast> forCurrentSeason(int season) {
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("season"), season);
+    }
 }

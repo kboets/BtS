@@ -54,8 +54,8 @@ export class ForecastService {
 
     }
 
-    getAllForecasts(): Observable<Forecast[]> {
-        return this.http.get<Forecast[]>(`/btsapi/api/forecast/all`)
+    getAllForecastsCurrentSeason(): Observable<Forecast[]> {
+        return this.http.get<Forecast[]>(`/btsapi/api/forecast/allCurrentSeason`)
             .pipe(
                 shareReplay(1),
                 catchError(ForecastService.handleHttpError)

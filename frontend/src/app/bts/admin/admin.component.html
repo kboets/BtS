@@ -51,7 +51,7 @@
                 <div class="box">Verwijder resultaten</div>
             </div>
             <div class="p-col-2">
-                <ng-container *ngIf="allLeagues$ | async as leagues">
+                <ng-container *ngIf="allSelectedLeague$ | async as leagues">
                     <div class="box">
                         <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeague" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
                     </div>
@@ -71,7 +71,7 @@
                 <div class="box">Verwijder rangschikking</div>
             </div>
             <div class="p-col-2">
-                <ng-container *ngIf="allLeagues$ | async as leagues">
+                <ng-container *ngIf="allSelectedLeague$ | async as leagues">
                     <div class="box">
                         <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeagueStanding" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
                     </div>
@@ -91,7 +91,7 @@
                 <div class="box">Verwijder competitie</div>
             </div>
             <div class="p-col-2">
-                <ng-container *ngIf="allLeagues$ | async as leagues">
+                <ng-container *ngIf="allSelectedLeague$ | async as leagues">
                     <div class="box">
                         <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeagueDelete" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
                     </div>
@@ -136,7 +136,7 @@
                 <div class="box">Wijzig huidige speeldag</div>
             </div>
             <div class="p-col-2">
-                <ng-container *ngIf="allLeagues$ | async as leagues">
+                <ng-container *ngIf="allSelectedLeague$ | async as leagues">
                     <div class="box">
                         <p-dropdown [options]="leagues" dataKey="round" [(ngModel)]="selectedLeagueRound" optionLabel="name"  placeholder="Kies een competitie"></p-dropdown>
                     </div>
