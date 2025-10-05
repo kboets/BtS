@@ -30,6 +30,8 @@ export class ResultsComponent implements OnInit {
     // selected results for the team
     private selectedResult4TeamSubject = new BehaviorSubject<string>('5');
     selectedResult4TeamAction = this.selectedResult4TeamSubject.asObservable();
+    private selectedResult4TeamSubject2 = new BehaviorSubject<string>('5');
+    selectedResult4TeamAction2 = this.selectedResult4TeamSubject2.asObservable();
 
     selectedRound$: Observable<Round>;
     selectedNextRound$: Observable<Round>;
@@ -60,6 +62,13 @@ export class ResultsComponent implements OnInit {
     showStanding: boolean;
     selectedTeam: Teams;
 
+    public static sortByStandingRank(a, b) {
+        if (a.rank > b.rank) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 
     constructor(private resultService: ResultService, private leagueService: LeagueService,
                 private roundService: RoundService, private standingService: StandingService) {
@@ -125,8 +134,9 @@ export class ResultsComponent implements OnInit {
             [this.allRounds$, this.currentRound$]
         ).pipe(
             map(([rounds, currentRound]) => {
-                return _.chain(rounds).filter(function (round) {
-                    return round.playRound === currentRound.playRound+1}).first().value();
+                return _.chain(rounds).filter(round =>
+                    round.playRound === currentRound.playRound + 1)
+                    .first().value();
             }),
             catchError(err => {
                 this.errorMessageSubject.next(err);
@@ -182,14 +192,14 @@ export class ResultsComponent implements OnInit {
         this.resultAllUntilNextRound$ = combineLatest(
             [this.results$, this.currentRound$]
         ).pipe(
-            //tap(()=> console.log('arrived in the results all until next round')),
+            // tap(()=> console.log('arrived in the results all until next round')),
             map(([results, currentRound]) => {
                 const sortedResults = results.sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
                 return _.filter(sortedResults, function (result) {
                     return result.round <= currentRound.round;
-                })
+                });
             }),
-            //tap(data => console.log('all results until the next round', JSON.stringify(data.length))),
+            // tap(data => console.log('all results until the next round', JSON.stringify(data.length))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
@@ -206,27 +216,28 @@ export class ResultsComponent implements OnInit {
             this.allRounds = data;
             this.allRoundsAsString = _.map(this.allRounds, function (round) {
                 return round.round;
-            })
-        })
+            });
+        });
 
     }
 
-    onClickTeam(teamId: string) {
-        //console.log('Arrived in the onClickTeam '+teamId);
+    onClickTeam(teamId: string, id: string) {
+        console.log('Arrived in the onClickTeam ' + teamId + ' ' + id);
         this.showStanding = false;
         this.selectedResult4TeamSubject.next(teamId);
+        this.selectedResult4TeamSubject2.next(id);
 
         // all results for a specific team
         this.resultsAll4Teams$ = combineLatest(
-            [this.results$, this.selectedResult4TeamAction]
+            [this.results$, this.selectedResult4TeamAction2]
         ).pipe(
-            map(([results, teamId]) => {
-                return _.filter(results, function (result) {
-                    //console.log('total number of results ', results.length);
-                    return result.matchStatus === 'Match Finished' && (result.awayTeam?.teamId === teamId || result.homeTeam?.teamId === teamId);
-                })
+            map(([results, id]) => {
+                return _.filter(results, result => {
+                    return result.matchStatus === 'FT'
+                        && (result.awayTeam?.id === id || result.homeTeam?.id === id);
+                });
             }),
-            //tap(data => console.log('all results 4 team ', JSON.stringify(data.length))),
+            // tap(data => console.log('all results 4 team ', JSON.stringify(data.length))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
@@ -237,13 +248,14 @@ export class ResultsComponent implements OnInit {
         this.resultsLatest4Teams$ = combineLatest(
             [this.results$, this.selectedResult4TeamAction]
         ).pipe(
-            //tap(()=> console.log('arrived in the results latest for team')),
+            // tap(()=> console.log('arrived in the results latest for team')),
             map(([results, teamId]) => {
-                return _.chain(results).filter(function (result) {
-                    return result.matchStatus === 'Match Finished' && (result.awayTeam.teamId === teamId || result.homeTeam.teamId === teamId);
-                }).first(5).value();
+                return _.chain(results).filter(result =>
+                    result.matchStatus === 'FT'
+                    && (result.awayTeam?.teamId === teamId || result.homeTeam?.teamId === teamId))
+                    .first(5).value();
             }),
-            //tap(data => console.log('latest 5 results for team team ', JSON.stringify(data))),
+            // tap(data => console.log('latest 5 results for team team ', JSON.stringify(data))),
             catchError(err => {
                 console.log('exception ',err);
                 this.errorMessageSubject.next(err);
@@ -253,31 +265,23 @@ export class ResultsComponent implements OnInit {
 
 
 
-        //get team
+        // get team
         combineLatest(
             [this.resultAllUntilNextRound$, this.selectedResult4TeamAction]
         ).pipe(
             map(([results, teamId]) => {
                 return _.chain(results)
-                    .filter(function (result) { return result.homeTeam.teamId === teamId})
+                    .filter(result => result.homeTeam.teamId === teamId)
                     .first()
                     .value();
             }),
-            //tap(data => console.log('all results 4 team ', JSON.stringify(data))),
+            // tap(data => console.log('all results 4 team ', JSON.stringify(data))),
             catchError(err => {
                 this.errorMessageSubject.next(err);
                 return EMPTY;
             })
         ).subscribe(data => this.selectedTeam = data.homeTeam);
 
-    }
-
-    public static sortByStandingRank(a, b) {
-        if(a.rank > b.rank) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
 
     paginate(event) {
@@ -305,17 +309,17 @@ export class ResultsComponent implements OnInit {
         this.showStanding = true;
     }
 
-    determineColor(result: Result) : string {
-        if(result.homeTeam?.name === this.selectedTeam.name) {
+    determineColor(result: Result): string {
+        if (result.homeTeam?.name === this.selectedTeam.name) {
             return this.getColor(result, false);
-        } else if(result.awayTeam?.name == this.selectedTeam.name) {
+        } else if(result.awayTeam?.name === this.selectedTeam.name) {
             return this.getColor(result, true);
         }
-        return 'background-color:transparent'
+        return 'background-color:transparent';
     }
 
     private getColor(result: Result, isAwayTeam: boolean): string {
-        if (result.goalsHomeTeam == result.goalsAwayTeam) {
+        if (result.goalsHomeTeam === result.goalsAwayTeam) {
             return 'background-color:#f9c851';
         }
         if (isAwayTeam) {
