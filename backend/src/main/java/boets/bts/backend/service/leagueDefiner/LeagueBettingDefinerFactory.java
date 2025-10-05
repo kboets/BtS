@@ -15,7 +15,7 @@ public class LeagueBettingDefinerFactory {
     public LeagueBettingDefinerFactory() {
         definerMap = new HashMap<>();
         definerMap.put("BE", new BELeagueBettingDefiner());
-        definerMap.put("GB", new GBLeagueBettingDefiner());
+        definerMap.put("GB-ENG", new GBLeagueBettingDefiner());
         definerMap.put("IT", new ITLeagueBettingDefiner());
         definerMap.put("NL", new NLLeagueBettingDefiner());
         definerMap.put("ES", new ESLeagueBettingDefiner());
